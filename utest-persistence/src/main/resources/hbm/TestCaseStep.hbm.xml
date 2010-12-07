@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 3, 2010 1:57:11 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.utest.domain.TestCaseStep" table="TestCaseStep" catalog="tcm">
+        <id name="id" type="java.lang.Integer">
+            <column name="testCaseStepId" />
+            <generator class="identity" />
+        </id>
+        <property name="testCaseVersionId" type="java.lang.Integer">
+            <column name="testCaseVersionId" not-null="true">
+                <comment>Associated test case id.</comment>
+            </column>
+        </property>
+        <property name="stepNumber" type="java.lang.Integer">
+            <column name="stepNumber" not-null="true">
+                <comment>Execution step number.</comment>
+            </column>
+        </property>
+        <property name="name" type="string">
+            <column name="name" not-null="true" />
+        </property>
+        <property name="instruction" type="string">
+            <column name="instruction" length="65535" not-null="true">
+                <comment>Descriptions of tasks required t execute this step.</comment>
+            </column>
+        </property>
+        <property name="expectedResult" type="string">
+            <column name="expectedResult" length="65535" not-null="true">
+                <comment>Description of the outcome.</comment>
+            </column>
+        </property>
+        <property name="estimatedTimeInMin" type="java.lang.Integer">
+            <column name="estimatedTimeInMin" />
+        </property>
+        <property name="createdBy" type="java.lang.Integer">
+            <column name="createdBy" >
+                <comment>UserID who created this.</comment>
+            </column>
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="createDate" length="19" >
+                <comment>Date when this step was created.</comment>
+            </column>
+        </property>
+        <property name="lastChangedBy" type="java.lang.Integer">
+            <column name="lastChangedBy"  />
+        </property>
+        <property name="lastChangeDate" type="timestamp">
+            <column name="lastChangeDate" length="19"  />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CopyTestTarget" default="copy" basedir=".">
+	<target name="copy">
+    	<copy todir="target/classes">
+	      	<fileset dir="target/test-classes">
+			    <include name="**"/>
+	  		</fileset>
+		</copy>
+    </target>
+</project>

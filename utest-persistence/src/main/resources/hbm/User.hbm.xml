@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+	<!-- Generated Oct 7, 2009 11:18:37 AM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+	<class name="com.utest.domain.User" table="User" catalog="tcm">
+       <id name="id" type="java.lang.Integer" unsaved-value="0">
+            <column name="userId" />
+			<generator class="identity"/>
+		</id>
+		<version name="version" type="java.lang.Integer">
+			<column name="version" not-null="true" />
+		</version>
+		<property name="password" type="string">
+			<column name="password" not-null="true" />
+		</property>
+		<property name="firstName" type="string">
+			<column name="firstName" length="50" not-null="true" />
+		</property>
+		<property name="lastName" type="string">
+			<column name="lastName" length="50" not-null="true" />
+		</property>
+		<property name="email" type="string">
+			<column name="email" not-null="true" />
+		</property>
+		<property name="code" type="string">
+			<column name="code" not-null="true" />
+		</property>
+		<property name="confirmedEmail" type="boolean">
+			<column name="confirmedEmail" not-null="true" />
+		</property>
+		<property name="companyId" type="java.lang.Integer">
+			<column name="companyId" not-null="true" />
+		</property>
+		<property name="userStatusId" type="java.lang.Integer">
+			<column name="userStatusId" not-null="true" />
+		</property>
+		<property name="createDate" type="timestamp">
+			<column name="createDate" />
+		</property>
+		<property name="createdBy" type="java.lang.Integer">
+			<column name="createdBy" />
+		</property>
+		<property name="lastChangeDate" type="timestamp">
+			<column name="lastChangeDate" />
+		</property>
+		<property name="lastChangedBy" type="java.lang.Integer">
+			<column name="lastChangedBy" />
+		</property>
+	</class>
+</hibernate-mapping>

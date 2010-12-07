@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                  http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+                  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+                  http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+		
+	<bean id="cronWorker" class="com.utest.service.util.CronWorker">
+		<constructor-arg index="0" ref="settingsService"/>
+		<constructor-arg index="1" ref="customAuthenticationProvider" />
+		<constructor-arg index="2" ref="systemManagementService" />
+	</bean>
+	
+	<!-- ######## JOBS (What to do) ######## -->
+	<!-- Grade Testers based on their activity -->
+	<bean id="job.gradeTesters"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cronWorker" />
+		<property name="targetMethod" value="processScheduledTesterGrading" />
+	</bean>
+	
+	<!-- Generate payments for Approved Bugs and Bonuses -->
+	<bean id="job.generatePayments"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cronWorker" />
+		<property name="targetMethod" value="processScheduledPaymentsGeneration" />
+	</bean>
+	
+	<!-- Pay out generated payments for Testers -->
+	<bean id="job.payoutPayments"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cronWorker" />
+		<property name="targetMethod" value="processScheduledPayouts" />
+	</bean>
+	
+	<!-- Lock Active Test Cycles with deactivationDate past due -->
+	<bean id="job.lockTestCycles"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cronWorker" />
+		<property name="targetMethod" value="processScheduledTestCycleLock" />
+	</bean>
+	
+	<!--  Create invoices for purchase orders that recur in the next 30 days -->
+	<bean id="job.createInvoices"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cronWorker" />
+		<property name="targetMethod" value="createInvoices" />
+	</bean>
+	
+	<!-- ######## TRIGGERS (When to do it) ######## -->
+	<bean id="trigger.cron.lockTestCycles"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="job.lockTestCycles" />
+		<!-- run every day at 10:00 AM -->
+		<property name="cronExpression" value="0 0 14 * * ?" />
+	</bean>
+	<bean id="trigger.cron.gradeTesters"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="job.gradeTesters" />
+		<!-- run every day at 7:00 PM -->
+		<property name="cronExpression" value="0 0 19 * * ?" />
+	</bean>
+	<bean id="trigger.cron.generatePayments"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="job.generatePayments" />
+		<!-- run every day at 1:00 AM -->
+		<property name="cronExpression" value="0 0 15 15 * ?" />
+	</bean>
+	<bean id="trigger.cron.payoutPayments"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="job.payoutPayments" />
+		<!-- run every 15th  at 2:00  -->
+		<property name="cronExpression" value="0 0 2 15,28 * ?" />
+	</bean>
+	
+	<!-- ######## SCHEDULER FACTORY ######## -->
+	<bean id="schedulerFactory"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean"
+		lazy-init="false">
+		<property name="triggers">
+			<list>
+				<ref bean="trigger.cron.lockTestCycles" />
+				<ref bean="trigger.cron.generatePayments" />
+				<!-- ref bean="trigger.cron.payoutPayments" / -->
+				<ref bean="trigger.cron.gradeTesters" />
+			</list>
+		</property>
+	</bean>
+	
+</beans>

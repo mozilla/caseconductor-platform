@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 3, 2010 1:57:11 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.utest.domain.TestRunTestCase" table="TestRunTestCase" catalog="tcm">
+        <id name="id" type="java.lang.Integer">
+            <column name="testRunTestCaseId" />
+            <generator class="identity" />
+        </id>
+        <version name="version" type="java.lang.Integer">
+            <column name="version" not-null="true" />
+        </version>
+        <property name="testRunId" type="java.lang.Integer">
+            <column name="testRunId" not-null="true" />
+        </property>
+        <property name="testCaseVersionId" type="java.lang.Integer">
+            <column name="testCaseVersionId" not-null="true" />
+        </property>
+        <property name="testCaseId" type="java.lang.Integer">
+            <column name="testCaseId" not-null="true" />
+        </property>
+        <property name="priorityId" type="java.lang.Integer">
+            <column name="priorityId" not-null="true" />
+        </property>
+        <property name="runOrder" type="java.lang.Integer">
+            <column name="runOrder" not-null="true" />
+        </property>
+        <property name="blocking" type="boolean">
+            <column name="blocking" not-null="true" />
+        </property>
+        <property name="selfAssignAllowed" type="boolean">
+            <column name="selfAssignAllowed" not-null="true" />
+        </property>
+        <property name="selfAssignLimit" type="java.lang.Integer">
+            <column name="selfAssignLimit" not-null="true" />
+        </property>
+        <property name="selfAssignPerEnvironment" type="boolean">
+            <column name="selfAssignPerEnvironment" not-null="true" />
+        </property>
+        <property name="environmentProfileId" type="java.lang.Integer">
+            <column name="environmentProfileId" />
+        </property>
+        <property name="testSuiteId" type="java.lang.Integer">
+            <column name="testSuiteId">
+                <comment>Optional, if Test Case came from a Test Suite or null.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="java.lang.Integer">
+            <column name="createdBy" not-null="true" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="createDate" length="19" not-null="true" />
+        </property>
+        <property name="lastChangedBy" type="java.lang.Integer">
+            <column name="lastChangedBy" not-null="true" />
+        </property>
+        <property name="lastChangeDate" type="timestamp">
+            <column name="lastChangeDate" length="19" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

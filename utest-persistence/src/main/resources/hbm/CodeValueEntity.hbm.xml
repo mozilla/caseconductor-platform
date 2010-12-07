@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+	<!-- Generated Oct 7, 2009 11:18:37 AM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+	<class name="com.utest.domain.CodeValueEntity" table="NamedQueryResult_CodeValueEntity">
+		<id name="id" type="string">
+			<column name="id" />
+		</id>
+		<property name="description" type="string">
+			<column name="description" not-null="true" />
+		</property>
+		<property name="sortOrder" type="java.lang.Integer">
+			<column name="sortOrder" not-null="true" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 3, 2010 1:57:11 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.utest.domain.TestRunExternalBug" table="TestRunExternalBug" catalog="tcm">
+        <id name="id" type="java.lang.Integer">
+            <column name="testRunExternalBugId" />
+            <generator class="identity" />
+        </id>
+ 		<property name="testRunResultId" type="java.lang.Integer">
+			<column name="testRunResultId" />
+		</property>
+        <property  name="externalBugId" type="string">
+            <column  name="externalBugId" length="50" />
+        </property>
+        <property  name="externalBugUrl" type="string">
+            <column  name="externalBugUrl" length="50" />
+        </property>
+  		<property name="createDate" type="timestamp">
+			<column name="createDate" />
+		</property>
+		<property name="createdBy" type="java.lang.Integer">
+			<column name="createdBy" />
+		</property>
+		<property name="lastChangeDate" type="timestamp">
+			<column name="lastChangeDate" />
+		</property>
+		<property name="lastChangedBy" type="java.lang.Integer">
+			<column name="lastChangedBy" />
+		</property>
+    </class>
+</hibernate-mapping>

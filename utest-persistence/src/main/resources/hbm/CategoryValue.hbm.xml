@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+	<!-- Generated Oct 7, 2009 11:18:37 AM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+	<class name="com.utest.domain.CategoryValue" table="NamedQueryResult_CategoryValue">
+		<id name="id" type="java.lang.Integer">
+			<column name="id" />
+			<generator class="identity" />
+		</id>
+		<property name="categoryName" type="string">
+			<column name="categoryName" not-null="true" />
+		</property>
+		<property name="categoryValue" type="java.lang.Double">
+			<column name="categoryValue" not-null="true" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources>
+    <local-tx-datasource>
+        <jndi-name>JForumDS</jndi-name>
+        <rar-name>jboss-local-jdbc.rar</rar-name>
+        <use-java-context>true</use-java-context>
+        <connection-definition>javax.sql.DataSource</connection-definition>
+        <jmx-invoker-name>jboss:service=invoker,type=jrmp</jmx-invoker-name>
+        <min-pool-size>10</min-pool-size>
+        <max-pool-size>20</max-pool-size>
+        <blocking-timeout-millis>30000</blocking-timeout-millis>
+        <idle-timeout-minutes>30</idle-timeout-minutes>
+        <prefill>false</prefill>
+        <background-validation>false</background-validation>
+        <background-validation-millis>0</background-validation-millis>
+        <validate-on-match>true</validate-on-match>
+        <statistics-formatter>org.jboss.resource.statistic.pool.JBossDefaultSubPoolStatisticFormatter</statistics-formatter>
+        <isSameRM-override-value>false</isSameRM-override-value>
+        <allocation-retry>0</allocation-retry>
+        <allocation-retry-wait-millis>5000</allocation-retry-wait-millis>
+        <application-managed-security xsi:type="securityMetaData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+        <metadata/>
+        <local-transaction/>
+        <user-name>root</user-name>
+        <password></password>
+        <prepared-statement-cache-size>0</prepared-statement-cache-size>
+        <share-prepared-statements>false</share-prepared-statements>
+        <set-tx-query-timeout>false</set-tx-query-timeout>
+        <query-timeout>0</query-timeout>
+        <use-try-lock>0</use-try-lock>
+        <driver-class>${jdbc.driverClassName}</driver-class>
+        <connection-url>jdbc:mysql://localhost::3306/jforum</connection-url>
+		<exception-sorter-class-name>
+			com.mysql.jdbc.integration.jboss.ExtendedMysqlExceptionSorter
+		</exception-sorter-class-name>
+		<valid-connection-checker-class-name>
+			com.mysql.jdbc.integration.jboss.MysqlValidConnectionChecker
+			</valid-connection-checker-class-name>
+		<check-valid-connection-sql>select 1 from jforum_config limit 1</check-valid-connection-sql>
+		<new-connection-sql>select 1 from jforum_config limit 1</new-connection-sql>
+        
+    </local-tx-datasource>
+
+</datasources>

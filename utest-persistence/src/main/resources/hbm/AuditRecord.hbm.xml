@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 7, 2009 11:18:37 AM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.utest.domain.AuditRecord" table="AuditRecord" >
+        <id name="id" type="java.lang.Integer">
+            <column name="auditEntryId" />
+            <generator class="identity" />
+        </id>
+        <property name="entityId" type="java.lang.Integer">
+            <column name="entityId" />
+        </property>
+        <property name="eventId" type="java.lang.Integer">
+            <column name="eventId" />
+        </property>
+        <property name="userId" type="java.lang.Integer">
+            <column name="userId" />
+        </property>
+ 		<property name="userName" type="string"
+			formula="( select concat(u.firstName, ' ', u.lastName) from User u where u.userId = userId)" />
+
+        <property name="propertyValue" type="string">
+            <column name="propertyValue" />
+        </property>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" />
+        </property>
+        <property name="entity" type="string">
+            <column name="entity" />
+        </property>
+        <property name="propertyName" type="string">
+            <column name="propertyName" />
+        </property>
+    </class>
+</hibernate-mapping>

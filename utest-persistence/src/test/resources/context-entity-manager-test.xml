@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">  
+  
+  	<bean id="dataSourceTest" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName.test}" />
+		<property name="url" value="${jdbc.url.test}" />
+		<property name="username" value="${jdbc.username.test}" />
+		<property name="password" value="${jdbc.password.test}" />
+	</bean>
+	
+	<bean id="sessionFactoryTest" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref local="dataSourceTest" />
+		</property>
+		<property name="mappingLocations">
+			<list>
+				<value>
+					classpath*:/hbm/*.hbm.xml
+				</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql.test}</prop>
+				<prop key="hibernate.connection.isolation">${hibernate.connection.isolation}</prop>
+			</props>
+		</property>
+     	<property name="eventListeners">
+            <map>
+                <entry key="flush-entity">
+                    <ref local="utestFlushEntityEventListener" />
+                </entry>
+           </map>
+		</property>
+	</bean>
+	
+ 	<bean id="utestFlushEntityEventListener" class="com.utest.dao.UtestFlushEntityEventListener">
+	</bean>
+	
+	<bean id="auditInterseptor" class="com.utest.dao.AuditTrailInterceptor">
+		<property name="sessionFactory" ref="sessionFactoryTest" />
+	</bean>
+
+  	<bean id="transactionManagerTest" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactoryTest" />
+		<property name="entityInterceptor">
+			<ref local="auditInterseptor" />
+		</property>
+	</bean>
+ 
+</beans>

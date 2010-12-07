@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 3, 2010 1:57:11 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.utest.domain.TestCaseProductComponent" table="TestCaseProductComponent" catalog="tcm">
+        <id name="id" type="java.lang.Integer">
+            <column name="testCaseProductComponentId" />
+            <generator class="identity" />
+        </id>
+        <property name="testCaseId" type="java.lang.Integer">
+            <column name="testCaseId" not-null="true">
+                <comment>Associated test case id.</comment>
+            </column>
+        </property>
+        <property name="productComponentId" type="java.lang.Integer">
+            <column name="productComponentId" not-null="true">
+                <comment>Associated test case id.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="java.lang.Integer">
+            <column name="createdBy" not-null="true">
+                <comment>UserID who created this.</comment>
+            </column>
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="createDate" length="19" not-null="true">
+                <comment>Date when this step was created.</comment>
+            </column>
+        </property>
+        <property name="lastChangedBy" type="java.lang.Integer">
+            <column name="lastChangedBy" not-null="true" />
+        </property>
+        <property name="lastChangeDate" type="timestamp">
+            <column name="lastChangeDate" length="19" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

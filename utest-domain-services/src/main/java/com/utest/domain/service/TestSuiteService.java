@@ -1,0 +1,68 @@
+/**
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * 
+ * @author Vadim Kisen
+ *
+ * copyright 2010 by uTest 
+ */
+package com.utest.domain.service;
+
+import java.util.List;
+
+import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.TestSuite;
+import com.utest.domain.TestSuiteTestCase;
+import com.utest.domain.search.UtestSearch;
+import com.utest.domain.search.UtestSearchResult;
+import com.utest.exception.UnsupportedEnvironmentSelectionException;
+
+/**
+ * Service to handle all domain operations related to the Test Suite Management.
+ */
+public interface TestSuiteService
+{
+	// TestSuite related methods
+	TestSuite addTestSuite(Integer productId, boolean useLatestVersiuons, String name, String description) throws Exception;
+
+	void deleteTestSuite(Integer testSuiteId_) throws Exception;
+
+	TestSuite getTestSuite(Integer testSuiteId_) throws Exception;
+
+	UtestSearchResult findTestSuites(UtestSearch search_) throws Exception;
+
+	void deleteTestSuiteTestCase(Integer testSuiteTestCaseId_) throws Exception;
+
+	List<TestSuiteTestCase> findTestSuiteTestCases(Integer testSuiteId) throws Exception;
+
+	List<EnvironmentGroup> findEnvironmentGroupsForTestSuite(Integer testSuiteId) throws Exception;
+
+	TestSuiteTestCase getTestSuiteTestCase(Integer testSuiteTestCaseId) throws Exception;
+
+	TestSuiteTestCase addTestSuiteTestCase(Integer testSuiteId, Integer testCaseVersionId) throws Exception;
+
+	TestSuiteTestCase addTestSuiteTestCase(Integer testSuiteId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, boolean blocking) throws Exception;
+
+	void saveEnvironmentGroupsForTestSuite(Integer testSuiteId, List<Integer> environmentGroupIds, Integer originalVersionId) throws UnsupportedEnvironmentSelectionException,
+			Exception;
+
+	TestSuite saveTestSuite(Integer testSuiteId, String name, String description, Integer originalVersionId) throws Exception;
+
+	TestSuite activateTestSuite(Integer testSuiteId, Integer originalVersionId) throws Exception;
+
+	TestSuite lockTestSuite(Integer testSuiteId, Integer originalVersionId) throws Exception;
+
+	TestSuiteTestCase saveTestSuiteTestCase(Integer includedTestCaseId, Integer priorityId, Integer runOrder, boolean blocking, Integer originalVersionId);
+
+}

@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 3, 2010 1:57:11 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.utest.domain.TestRunResult" table="TestRunResult" catalog="tcm">
+        <id name="id" type="java.lang.Integer">
+            <column name="testRunResultId" />
+            <generator class="identity" />
+        </id>
+        <version name="version" type="java.lang.Integer">
+            <column name="version" not-null="true" />
+        </version>
+        <property name="testRunAssignmentId" type="java.lang.Integer">
+            <column name="testRunAssignmentId" not-null="true" />
+        </property>
+        <property name="testRunId" type="java.lang.Integer">
+            <column name="testRunId" not-null="true" />
+        </property>
+        <property name="productId" type="java.lang.Integer">
+            <column name="productId" not-null="true" />
+        </property>
+        <property name="testCaseId" type="java.lang.Integer">
+            <column name="testCaseId" not-null="true" />
+        </property>
+        <property name="testCaseVersionId" type="java.lang.Integer">
+            <column name="testCaseVersionId" not-null="true" />
+        </property>
+        <property name="testerId" type="java.lang.Integer">
+            <column name="testerId" not-null="true" />
+        </property>
+        <property name="testRunResultStatusId" type="java.lang.Integer">
+            <column name="testRunResultStatusId" not-null="true">
+                <comment>Status: NOT TESTED, BLOCKED, FAILED, PASSED</comment>
+            </column>
+        </property>
+        <property name="runDate" type="timestamp">
+            <column name="runDate" length="19" />
+        </property>
+        <property name="actualResult" type="string">
+            <column name="actualResult" length="65535" />
+        </property>
+        <property name="failedStepNumber" type="java.lang.Integer">
+            <column name="failedStepNumber" />
+        </property>
+        <property name="actualTimeInMin" type="java.lang.Integer">
+            <column name="actualTimeInMin" />
+        </property>
+        <property name="comment" type="string">
+            <column name="comment" length="65535" />
+        </property>
+        <property name="approvalStatusId" type="java.lang.Integer">
+            <column name="approvalStatusId" not-null="true">
+                <comment>Approved/Rejected</comment>
+            </column>
+        </property>
+        <property name="approvedBy" type="java.lang.Integer">
+            <column name="approvedBy">
+                <comment>TM (or anyone with permission to Approve).</comment>
+            </column>
+        </property>
+        <property name="approveDate" type="timestamp">
+            <column name="approveDate" length="19" />
+        </property>
+        <property name="environmentGroupId" type="java.lang.Integer">
+            <column name="environmentGroupId" />
+        </property>
+		<property name="createDate" type="timestamp">
+			<column name="createDate" />
+		</property>
+		<property name="createdBy" type="java.lang.Integer">
+			<column name="createdBy" />
+		</property>
+		<property name="lastChangeDate" type="timestamp">
+			<column name="lastChangeDate" />
+		</property>
+		<property name="lastChangedBy" type="java.lang.Integer">
+			<column name="lastChangedBy" />
+		</property>
+    </class>
+</hibernate-mapping>

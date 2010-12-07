@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<server>
+    <mbean xmbean-dd="xmdesc/Queue-xmbean.xml" name="jboss.messaging.destination:service=Queue,name=JForumErrorQueue" code="org.jboss.jms.server.destination.QueueService">
+        <attribute name="Clustered">false</attribute>
+        <attribute name="PageSize">2000</attribute>
+        <attribute name="FullSize">20000</attribute>
+        <attribute name="JNDIName">/queue/JForumErrorQueue</attribute>
+        <attribute name="RedeliveryDelay">-1</attribute>
+        <attribute name="DownCacheSize">2000</attribute>
+        <attribute name="MaxSize">-1</attribute>
+        <attribute name="MaxDeliveryAttempts">-1</attribute>
+        <depends optional-attribute-name="ServerPeer">jboss.messaging:service=ServerPeer</depends>
+        <depends>jboss.messaging:service=PostOffice</depends>
+    </mbean>
+</server>

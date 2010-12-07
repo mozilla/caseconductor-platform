@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 3, 2010 1:57:11 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.utest.domain.TestCaseVersion" table="TestCaseVersion" catalog="tcm">
+        <id name="id" type="java.lang.Integer">
+            <column name="testCaseVersionId" />
+            <generator class="identity" />
+        </id>
+        <version name="version" type="java.lang.Integer">
+            <column name="version" not-null="true" />
+        </version>
+        <property name="testCaseId" type="java.lang.Integer">
+            <column name="testCaseId" not-null="true" />
+        </property>
+        <property name="productId" type="java.lang.Integer">
+            <column name="productId" not-null="true" />
+        </property>
+        <property name="name" type="string">
+            <column name="name" not-null="true" />
+        </property>
+        <property name="testCaseStatusId" type="java.lang.Integer">
+            <column name="testCaseStatusId" not-null="true">
+                <comment>active, pending, etc.</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="65535" not-null="true" />
+        </property>
+        <property name="majorVersion" type="java.lang.Integer">
+            <column name="majorVersion" not-null="true" />
+        </property>
+        <property name="minorVersion" type="java.lang.Integer">
+            <column name="minorVersion" not-null="true" />
+        </property>
+        <property name="latestVersion" type="boolean">
+            <column name="latestVersion" not-null="true" />
+        </property>
+        <property name="approvalStatusId" type="java.lang.Integer">
+            <column name="approvalStatusId" not-null="true">
+                <comment>Pending/Approved/Rejected</comment>
+            </column>
+        </property>
+        <property name="approvedBy" type="java.lang.Integer">
+            <column name="approvedBy">
+                <comment>TM (or anyone with permission to Approve).</comment>
+            </column>
+        </property>
+        <property name="approveDate" type="timestamp">
+            <column name="approveDate" length="19" />
+        </property>
+        <property name="environmentProfileId" type="java.lang.Integer">
+            <column name="environmentProfileId">
+                <comment>Optional association to a set of Environments.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="java.lang.Integer">
+            <column name="createdBy" not-null="true" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="createDate" length="19" not-null="true" />
+        </property>
+        <property name="lastChangedBy" type="java.lang.Integer">
+            <column name="lastChangedBy" not-null="true" />
+        </property>
+        <property name="lastChangeDate" type="timestamp">
+            <column name="lastChangeDate" length="19" not-null="true" />
+        </property>
+		<!-- 
+		<bag name="steps" table="TestCaseStep" lazy="false" inverse="true" cascade="all" order-by="stepNumber">
+			<key column="testCaseVersionId" />
+			<one-to-many class="com.utest.domain.TestCaseStep"/>
+		</bag>
+         -->
+    </class>
+</hibernate-mapping>

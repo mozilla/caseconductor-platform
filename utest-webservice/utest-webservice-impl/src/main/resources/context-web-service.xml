@@ -1,0 +1,155 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://cxf.apache.org/core"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:wsp="http://www.w3.org/2006/07/ws-policy" xmlns:p="http://cxf.apache.org/policy"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+ 		http://www.springframework.org/schema/beans
+ 		http://www.springframework.org/schema/beans/spring-beans.xsd
+ 		http://cxf.apache.org/jaxrs
+ 		http://cxf.apache.org/schemas/jaxrs.xsd
+ 		http://cxf.apache.org/jaxws
+ 		http://cxf.apache.org/schemas/jaxws.xsd
+ 		http://cxf.apache.org/core 
+ 		http://cxf.apache.org/schemas/core.xsd
+ 		http://www.w3.org/2006/07/ws-policy
+ 		http://www.w3.org/2006/11/ws-policy.xsd
+ 		http://cxf.apache.org/policy
+ 		http://cxf.apache.org/schemas/policy.xsd
+ 		http://www.springframework.org/schema/context
+ 		http://www.springframework.org/schema/context/spring-context-2.5.xsd
+ 		http://www.springframework.org/schema/util
+ 		http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+	<!--
+		default-autowire="byName"
+	-->
+	<!-- Load CXF modules from cxf.jar -->
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-jaxrs-binding.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-http-binding.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-xml.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-ws-security.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-policy.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-jaxws.xml" />
+
+	<!-- Services bean -->
+	<bean id="companyWebService" class="com.utest.webservice.impl.v2.CompanyWebServiceImpl">
+		<constructor-arg ref="objectBuilderFactory" />
+		<constructor-arg ref="companyService" />
+		<constructor-arg ref="userService" />
+	</bean>
+
+	<bean id="userWebService" class="com.utest.webservice.impl.v2.UserWebServiceImpl">
+		<constructor-arg ref="objectBuilderFactory" />
+		<constructor-arg ref="userService" />
+	</bean>
+
+	<bean id="environmentWebService" class="com.utest.webservice.impl.v2.EnvironmentWebServiceImpl">
+		<constructor-arg ref="objectBuilderFactory" />
+		<constructor-arg ref="environmentService" />
+	</bean>
+
+	<bean id="staticDataWebService" class="com.utest.webservice.impl.v2.StaticDataWebServiceImpl">
+		<constructor-arg ref="objectBuilderFactory" />
+		<constructor-arg ref="staticDataService" />
+	</bean>
+
+	<bean id="objectBuilderFactory" class="com.utest.webservice.builders.ObjectBuilderFactoryImpl">
+	</bean>
+
+	<!-- Security -->
+	<!-- Basic authorization -->
+	<bean id="securityInterceptor"
+		class=" com.utest.webservice.auth.BasicAuthAuthorizationInterceptor">
+		<property name="authenticationProvider" ref="customAuthenticationProvider" />
+	</bean>
+	<!-- Enable message logging using the CXF logging feature -->
+	<cxf:bus>
+		<cxf:features>
+			<cxf:logging />
+		</cxf:features>
+	</cxf:bus>
+
+
+	<!-- REST -->
+
+	<!-- JSON -->
+	<util:map id="jsonNamespaceMap" map-class="java.util.Hashtable">
+		<entry key="http://utest.com/service/model/v2" value="" />
+		<entry key="urn:org.apache.cxf.aegis.types" value="cxf"/> 
+	</util:map>
+	<util:list id="jsonKeys">
+		<value>companyInfo</value>
+		<value>testCycleInfo</value>
+		<value>userInfo</value>
+		<value>roleInfo</value>
+		<value>permissionInfo</value>
+		<value>testerInfo</value>
+		<value>TesterProfileMobileInfo</value>
+		<value>BugEnvironmentMobileInfo</value>
+		<value>BugEnvironmentDesktopInfo</value>
+		<value>MatchingProfileDesktopInfo</value>
+		<value>MatchingProfileMobileInfo</value>
+		<value>DashboardInfo</value>
+	</util:list>
+
+	<util:list id="jsonTypes">
+		<value>application/json</value>
+		<value>application/jettison</value>
+	</util:list>
+
+	<bean id="jsonProvider" class="org.apache.cxf.jaxrs.provider.AegisJSONProvider">
+		<property name="namespaceMap" ref="jsonNamespaceMap" />
+		<property name="serializeAsArray" value="true" />
+		<property name="arrayKeys" ref="jsonKeys" />
+	</bean>
+	<bean id="aegisProvider" class="org.apache.cxf.jaxrs.provider.AegisElementProvider">
+		<property name="writeXsiType" value="true"/>
+	</bean>
+
+	<bean id="faultInterceptor" class="com.utest.webservice.interceptors.UtestRestFaultOutInterceptor"/>
+	
+	<!-- SECURED SERVICE ENDPOINT -->
+	<jaxrs:server id="rest2" address="/v2/rest">
+		<jaxrs:serviceBeans>
+			<ref bean="companyWebService" />
+			<ref bean="userWebService" />
+			<ref bean="environmentWebService" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<ref bean="jsonProvider" />
+			<ref bean="aegisProvider" />
+		</jaxrs:providers>
+		<jaxrs:inInterceptors>
+			<ref bean="securityInterceptor" />
+		</jaxrs:inInterceptors>
+		<jaxrs:properties>
+			<entry key="overrideTypesList">
+				<list>
+					<value>com.utest.webservice.model.v2.TesterInfo</value>
+					<value>com.utest.webservice.model.v2.TestingManagerInfo</value>
+				</list>
+			</entry>
+		</jaxrs:properties>
+		<jaxrs:outFaultInterceptors>
+			<ref bean="faultInterceptor"/>
+		</jaxrs:outFaultInterceptors>
+	</jaxrs:server>
+	<!-- UNSECURED SERVICE ENDPOINT -->
+	<jaxrs:server id="rest2-static" address="/v2/rest/staticData">
+		<jaxrs:serviceBeans>
+			<ref bean="staticDataWebService" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<ref bean="jsonProvider" />
+			<ref bean="aegisProvider" />
+		</jaxrs:providers>
+		<jaxrs:outFaultInterceptors>
+			<ref bean="faultInterceptor"/>
+		</jaxrs:outFaultInterceptors>
+	</jaxrs:server>
+</beans>

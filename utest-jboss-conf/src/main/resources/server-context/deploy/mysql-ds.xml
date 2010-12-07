@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources>
+	<local-tx-datasource>
+		<jndi-name>messagingDS</jndi-name>
+		<connection-url>${jdbc.mq.url}</connection-url>
+		<driver-class>${jdbc.mq.driverClassName}</driver-class>
+		<user-name>${jdbc.mq.username}</user-name>
+		<password>${jdbc.mq.password}</password>
+		<exception-sorter-class-name>
+			com.mysql.jdbc.integration.jboss.ExtendedMysqlExceptionSorter
+		</exception-sorter-class-name>
+		<metadata>
+			<type-mapping>mySQL</type-mapping>
+		</metadata>
+	</local-tx-datasource>
+
+</datasources>

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+	<!-- Generated Oct 7, 2009 11:18:37 AM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+	<class name="com.utest.domain.TestCycle" table="TestCycle" catalog="tcm"
+		polymorphism="explicit">
+		<id name="id" type="java.lang.Integer">
+			<column name="testCycleId" />
+			<generator class="identity" />
+		</id>
+		<version name="version" type="java.lang.Integer">
+			<column name="version" />
+		</version>
+		<property name="productId" type="java.lang.Integer">
+			<column name="productId" />
+		</property>
+		<property name="communityAuthoringAllowed" type="boolean">
+			<column name="communityAuthoringAllowed" />
+		</property>
+		<property name="communityAccessAllowed" type="boolean">
+			<column name="communityAccessAllowed" />
+		</property>
+		<property name="name" type="string">
+			<column name="name" />
+		</property>
+		<property name="description" type="string">
+			<column name="description" />
+		</property>
+		<property name="startDate" type="timestamp">
+			<column name="startDate" length="10" />
+		</property>
+		<property name="endDate" type="timestamp">
+			<column name="endDate" length="10" />
+		</property>
+		<property name="testCycleStatusId" type="java.lang.Integer">
+			<column name="testCycleStatusId" not-null="true" />
+		</property>
+		<property name="environmentProfileId" type="java.lang.Integer">
+			<column name="environmentProfileId"/>
+		</property>
+		<property name="createDate" type="timestamp">
+			<column name="createDate" />
+		</property>
+		<property name="createdBy" type="java.lang.Integer">
+			<column name="createdBy" />
+		</property>
+		<property name="lastChangeDate" type="timestamp">
+			<column name="lastChangeDate" />
+		</property>
+		<property name="lastChangedBy" type="java.lang.Integer">
+			<column name="lastChangedBy" />
+		</property>
+	</class>
+</hibernate-mapping>
+

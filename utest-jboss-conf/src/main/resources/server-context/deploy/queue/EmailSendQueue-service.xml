@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<server>
+    <mbean xmbean-dd="xmdesc/Queue-xmbean.xml" 
+    		name="jboss.messaging.destination:service=Queue,name=EmailSendQueue" 
+    		code="org.jboss.jms.server.destination.QueueService">
+        <attribute name="Clustered">false</attribute>
+        <attribute name="JNDIName">/queue/EmailSendQueue</attribute>
+		<attribute name="DLQ">jboss.messaging.destination:service=Queue,name=EmailSenderErrorQueue</attribute>
+		<attribute name="ExpiryQueue">jboss.messaging.destination:service=Queue,name=ExpiryQueue</attribute>
+ 		<attribute name="MaxDeliveryAttempts">2</attribute>
+ 		<depends optional-attribute-name="ServerPeer">jboss.messaging:service=ServerPeer</depends>
+        <depends>jboss.messaging:service=PostOffice</depends>
+    </mbean>
+</server>

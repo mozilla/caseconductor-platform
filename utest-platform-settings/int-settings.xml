@@ -1,0 +1,54 @@
+<settings xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+	  http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+	<!-- This settings.xml file must be placed in the .m2/ folder -->
+	<!--
+		Define the different types of profile (just for keep the local
+		variables that need for the plugins ,etc).
+	-->
+	<!-- Remove comment for this section for development local machine  -->
+	<localRepository>/vol0/repository</localRepository>
+
+	<servers>
+		<server>
+			<id>utest-snapshots</id>
+			<username>tcm</username>
+			<password>tcm</password>
+		</server>
+	</servers>
+
+	<profiles>
+		<profile>
+			<id>properties-to-inject</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+
+                        <!-- Settings for build revision -->
+                        <!-- Do check - set to false always -->
+                        <build.number.docheck>false</build.number.docheck>
+                        <!-- false - prevent updating from svn, set true - updates from svn -->
+                        <build.number.doupdate>false</build.number.doupdate>
+                        <!-- default revision # in case svn fails -->
+                        <build.number.default.revision>dev</build.number.default.revision>
+
+				<!-- System -->
+				<!-- Database -->
+				<jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+				<jdbc.url>jdbc:mysql://localhost:3306/utest30</jdbc.url>
+				<jdbc.username>root</jdbc.username>
+				<jdbc.password></jdbc.password>
+			</properties>
+		</profile>
+		<profile>
+		    <id>deploy-server</id>
+	            <properties>
+			    <deploy.host.user>utest</deploy.host.user>
+			    <deploy.host>tcm.utest.com</deploy.host>
+			    <deploy.host.password>tcmtest321</deploy.host.password>
+		    </properties>
+		</profile>
+	</profiles>
+</settings>

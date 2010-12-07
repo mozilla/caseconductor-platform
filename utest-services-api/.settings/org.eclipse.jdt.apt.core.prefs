@@ -1,0 +1,6 @@
+#Thu Oct 22 14:14:28 EDT 2009
+eclipse.preferences.version=1
+org.eclipse.jdt.apt.aptEnabled=true
+org.eclipse.jdt.apt.genSrcDir=.apt_generated
+org.eclipse.jdt.apt.processorOptions/-Acom.faratasystems.dto2fx.output=C\:\\dev\\generated-flex-domain
+org.eclipse.jdt.apt.reconcileEnabled=true
