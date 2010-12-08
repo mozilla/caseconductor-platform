@@ -7,7 +7,7 @@
         <groupId>com.utest</groupId>
 		<version>3.0.6</version>
     </parent>
-    
+
 	<groupId>com.utest</groupId>
     <artifactId>utest-services-impl</artifactId>
     <name>uTest Services - Implementation</name>
@@ -54,14 +54,6 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
         </dependency>
- 		<dependency>
-			 <groupId>org.apache.xmlrpc</groupId>
-			<artifactId>xmlrpc-client</artifactId>	 
-		</dependency>
-		<dependency>
-		   <groupId>org.apache.xmlrpc</groupId>
-		   <artifactId>xmlrpc-common</artifactId>		  
-		</dependency>
 		<dependency>
 		 <groupId>commons-httpclient</groupId>
   		  <artifactId>commons-httpclient</artifactId>
@@ -71,8 +63,8 @@
 				<artifactId>servlet-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.security</groupId>  
-               <artifactId>spring-security-web</artifactId>    
+			<groupId>org.springframework.security</groupId>
+               <artifactId>spring-security-web</artifactId>
 		</dependency>
         <dependency>
 			<groupId>javax.jms</groupId>
@@ -93,7 +85,7 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
              	<scope>test</scope>
-			</dependency>    
+			</dependency>
 			<dependency>
 		        <groupId>javassist</groupId>
 		        <artifactId>javassist</artifactId>
@@ -112,7 +104,7 @@
 		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
-			<scope>test</scope>	
-		</dependency>  
+			<scope>test</scope>
+		</dependency>
     </dependencies>
 </project>

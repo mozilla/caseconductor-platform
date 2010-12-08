@@ -18,23 +18,6 @@
 		<finalName>${context.root}</finalName>
 		<plugins>
 			<plugin>
-				<groupId>org.sonatype.flexmojos</groupId>
-				<artifactId>flexmojos-maven-plugin</artifactId>
-				<version>${flex.mojo.version}</version>
-				<configuration>
-					<webappDirectory>
-						${project.build.directory}/exploded/${context.root}.war
-					</webappDirectory>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>copy-flex-resources</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 			</plugin>
 			<plugin>
@@ -117,10 +100,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.flex</groupId>
-			<artifactId>spring-flex</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
