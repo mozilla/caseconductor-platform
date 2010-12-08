@@ -23,10 +23,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.StaleObjectStateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.TestCase;
@@ -34,12 +32,11 @@ import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.User;
 import com.utest.domain.VersionIncrement;
-import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 {
 	@Autowired
-	private TypelessDAO				dao;
+	private TypelessDAO			dao;
 	@Autowired
 	private TestCaseService		testCaseService;
 	@Autowired
@@ -47,7 +44,7 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 	@Autowired
 	private EnvironmentService	environmentService;
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddTestCase() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -79,7 +76,7 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddTestCaseStep() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -98,7 +95,8 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		// logout();
 	}
 
-	//@Test(groups = { "integration" }, expectedExceptions = { UnsupportedEnvironmentSelectionException.class })
+	// @Test(groups = { "integration" }, expectedExceptions = {
+	// UnsupportedEnvironmentSelectionException.class })
 	public void testSaveTestCaseInvalidEnvironmentGroups() throws Exception
 	{
 
@@ -110,12 +108,12 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		environmentGroupsIds.add(37);
 		environmentGroupsIds.add(2);
 
-		testCaseService.saveEnvironmentGroupsForTestCaseVersion(3, environmentGroupsIds, 1);
+		testCaseService.saveEnvironmentGroupsForTestCaseVersion(3, environmentGroupsIds);
 		Assert.assertTrue(true);
 
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testSaveTestCaseValidEnvironmentGroups() throws Exception
 	{
 
@@ -125,13 +123,13 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		environmentGroupsIds.add(51);
 		environmentGroupsIds.add(52);
 		final TestCaseVersion testCaseVersion = testCaseService.getTestCaseVersion(60);// testCase11.getLatestVersion().getId()
-		testCaseService.saveEnvironmentGroupsForTestCaseVersion(testCaseVersion.getId(), environmentGroupsIds, testCaseVersion.getVersion());
+		testCaseService.saveEnvironmentGroupsForTestCaseVersion(testCaseVersion.getId(), environmentGroupsIds);
 		Assert.assertTrue(true);
 
 	}
 
 	// saveProductComponentsForTestCase(Integer, List<Integer>)
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testSaveTestCaseValidProductComponents() throws Exception
 	{
 
@@ -147,7 +145,8 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 
 	}
 
-	//@Test(groups = { "integration" }, expectedExceptions = { UnsupportedEnvironmentSelectionException.class })
+	// @Test(groups = { "integration" }, expectedExceptions = {
+	// UnsupportedEnvironmentSelectionException.class })
 	public void testSaveTestCaseInvalidProductComponents() throws Exception
 	{
 
@@ -162,7 +161,7 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		Assert.assertTrue(true);
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testCloneTestCase() throws Exception
 	{
 
@@ -173,7 +172,8 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		Assert.assertTrue(clonedTestCase != null);
 	}
 
-	//@Test(groups = { "integration" }, expectedExceptions = { StaleObjectStateException.class })
+	// @Test(groups = { "integration" }, expectedExceptions = {
+	// StaleObjectStateException.class })
 	public void testSaveTestCaseVersion() throws Exception
 	{
 		// saveTestCaseVersion(final User auth_, final TestCaseVersion
@@ -182,11 +182,11 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		loginUser(user);
 		final Integer testCaseId = 3;
 		final TestCaseVersion testCaseVersion = testCaseService.getTestCaseVersion(testCaseId);
-		final TestCaseVersion clonedTestCase = testCaseService.saveTestCaseVersion(3, testCaseVersion.getName(), testCaseVersion.getDescription(), 19, VersionIncrement.BOTH);
+		final TestCaseVersion clonedTestCase = testCaseService.saveTestCaseVersion(3, testCaseVersion.getDescription(), 19, VersionIncrement.BOTH);
 		Assert.assertTrue(clonedTestCase != null);
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testActivateAndApproveTestCaseVersion() throws Exception
 	{
 		// saveTestCaseVersion(final User auth_, final TestCaseVersion
@@ -194,7 +194,7 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		final User user = userService.getUser(1);
 		loginUser(user);
 
-		final Integer id = 49;
+		final Integer id = 1;
 		final TestCaseVersion testCaseVersion = testCaseService.getTestCaseVersion(id);
 		testCaseService.approveTestCaseVersion(testCaseVersion.getId(), testCaseVersion.getVersion());
 		testCaseService.activateTestCaseVersion(testCaseVersion.getId(), testCaseVersion.getVersion());

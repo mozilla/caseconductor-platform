@@ -53,6 +53,11 @@
 		<constructor-arg ref="environmentService" />
 	</bean>
 
+	<bean id="testCaseWebService" class="com.utest.webservice.impl.v2.TestCaseWebServiceImpl">
+		<constructor-arg ref="objectBuilderFactory" />
+		<constructor-arg ref="testCaseService" />
+	</bean>
+
 	<bean id="staticDataWebService" class="com.utest.webservice.impl.v2.StaticDataWebServiceImpl">
 		<constructor-arg ref="objectBuilderFactory" />
 		<constructor-arg ref="staticDataService" />
@@ -119,6 +124,7 @@
 			<ref bean="companyWebService" />
 			<ref bean="userWebService" />
 			<ref bean="environmentWebService" />
+			<ref bean="testCaseWebService" />
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>
 			<ref bean="jsonProvider" />
