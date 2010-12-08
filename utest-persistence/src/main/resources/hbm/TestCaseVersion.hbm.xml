@@ -11,15 +11,18 @@
         <version name="version" type="java.lang.Integer">
             <column name="version" not-null="true" />
         </version>
+        <many-to-one name="testCase" class="com.utest.domain.TestCase" column="testCaseId" fetch="join" lazy="false"  update="false" insert="false"/>
         <property name="testCaseId" type="java.lang.Integer">
             <column name="testCaseId" not-null="true" />
         </property>
         <property name="productId" type="java.lang.Integer">
             <column name="productId" not-null="true" />
         </property>
+        <!-- 
         <property name="name" type="string">
             <column name="name" not-null="true" />
         </property>
+         -->
         <property name="testCaseStatusId" type="java.lang.Integer">
             <column name="testCaseStatusId" not-null="true">
                 <comment>active, pending, etc.</comment>

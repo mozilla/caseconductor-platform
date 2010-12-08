@@ -34,6 +34,7 @@ import com.utest.domain.TcmEntityStatus;
 import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseProductComponent;
 import com.utest.domain.TestCaseStep;
+import com.utest.domain.TestCaseTag;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.VersionIncrement;
 import com.utest.domain.search.UtestSearch;
@@ -46,6 +47,7 @@ import com.utest.exception.ActivatingNotApprovedEntityException;
 import com.utest.exception.ApprovingIncompleteEntityException;
 import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingActivatedEntityException;
+import com.utest.exception.DuplicateTestCaseStepException;
 import com.utest.exception.InvalidUserException;
 import com.utest.exception.NotFoundException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
@@ -84,16 +86,16 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		{
 			throw new NotFoundException("Product not found: " + productId_);
 		}
-		checkForDuplicateNameWithinParent(TestCaseVersion.class, name_, productId_, "productId", null);
+		checkForDuplicateNameWithinParent(TestCase.class, name_, productId_, "productId", null);
 
-		final TestCase testCase = new TestCase(productId_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, testCycleId_);
+		final TestCase testCase = new TestCase(name_, productId_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, testCycleId_);
 		final Integer testCaseId = dao.addAndReturnId(testCase);
 
 		final TestCaseVersion testCaseVersion = new TestCaseVersion();
 		testCaseVersion.setTestCaseId(testCaseId);
 		initializeTestCaseVersion(testCaseVersion, 0, 0, VersionIncrement.INITIAL);
 		testCaseVersion.setProductId(productId_);
-		testCaseVersion.setName(name_);
+		// testCaseVersion.setName(name_);
 		testCaseVersion.setDescription(description_);
 		// set environment profile from the product by default
 		testCaseVersion.setEnvironmentProfileId(product.getEnvironmentProfileId());
@@ -112,9 +114,9 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			throw new NotFoundException("TestCaseVersion not found: " + testCaseVersionId_);
 		}
 		checkForDuplicateNameWithinParent(TestCaseStep.class, name_, testCaseVersionId_, "testCaseVersionId", null);
+		checkForDuplicateStepNumber(testCaseVersionId_, stepNumber_);
 
 		final TestCaseStep step = new TestCaseStep();
-		// DomainUtil.loadAddedTimeline(step);
 		step.setTestCaseVersionId(testCaseVersionId_);
 		step.setName(name_);
 		step.setStepNumber(stepNumber_);
@@ -123,6 +125,19 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		step.setExpectedResult(expectedResult_);
 		final Integer id = dao.addAndReturnId(step);
 		return dao.getById(TestCaseStep.class, id);
+	}
+
+	private void checkForDuplicateStepNumber(final Integer testCaseVersionId_, final Integer stepNumber_) throws DuplicateTestCaseStepException
+	{
+		// check for duplicate name within a product
+		final Search search = new Search(TestCaseStep.class);
+		search.addFilterEqual("stepNumber", stepNumber_);
+		search.addFilterEqual("testCaseVersionId", testCaseVersionId_);
+		final List<TestCaseStep> foundEntities = dao.search(TestCaseStep.class, search);
+		if ((foundEntities != null) && !foundEntities.isEmpty())
+		{
+			throw new DuplicateTestCaseStepException("Duplicate step " + stepNumber_ + " for TestCaseVersion " + testCaseVersionId_);
+		}
 	}
 
 	/**
@@ -306,7 +321,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			throw new DeletingActivatedEntityException(TestCaseVersion.class.getSimpleName());
 		}
 		// delete all steps
-		final List<TestCaseStep> steps = findTestCaseVersionSteps(testCaseVersionId_);
+		final List<TestCaseStep> steps = getTestCaseVersionSteps(testCaseVersionId_);
 		dao.delete(steps);
 		dao.delete(TestCaseVersion.class, testCaseVersionId_);
 	}
@@ -318,7 +333,28 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public List<ProductComponent> findComponentsForTestCase(final Integer testCaseId_) throws Exception
+	public UtestSearchResult findTestCases(final UtestSearch search_) throws Exception
+	{
+		return dao.getBySearch(TestCase.class, search_);
+	}
+
+	@Override
+	public UtestSearchResult findLatestTestCaseVersions() throws Exception
+	{
+		final UtestSearch search = new UtestSearch();
+		search.addFilterEqual("latestVersion", true);
+		return dao.getBySearch(TestCaseVersion.class, search);
+	}
+
+	@Override
+	public UtestSearchResult findLatestTestCaseVersions(final UtestSearch search_) throws Exception
+	{
+		search_.addFilterEqual("latestVersion", true);
+		return dao.getBySearch(TestCaseVersion.class, search_);
+	}
+
+	@Override
+	public List<ProductComponent> getComponentsForTestCase(final Integer testCaseId_) throws Exception
 	{
 		Search search = new Search(TestCaseProductComponent.class);
 		search.addFilterEqual("testCaseId", testCaseId_);
@@ -373,14 +409,14 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public List<EnvironmentGroup> findEnvironmentGroupsForTestCaseVersion(final Integer testCaseVersionId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(final Integer testCaseVersionId_) throws Exception
 	{
 		final TestCaseVersion testCaseVersion = dao.getById(TestCaseVersion.class, testCaseVersionId_);
 		if (testCaseVersion != null)
 		{
 			if (testCaseVersion.getEnvironmentProfileId() != null)
 			{
-				return environmentService.findEnvironmentGroupsForProfile(testCaseVersion.getEnvironmentProfileId());
+				return environmentService.getEnvironmentGroupsForProfile(testCaseVersion.getEnvironmentProfileId());
 			}
 		}
 		return new ArrayList<EnvironmentGroup>();
@@ -394,12 +430,12 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		{
 			throw new NotFoundException("TestCase not found: " + testCaseId_);
 		}
-		testCase.setLatestVersion(findLatestTestCaseVersion(testCaseId_));
+		testCase.setLatestVersion(getLatestTestCaseVersion(testCaseId_));
 		return testCase;
 	}
 
 	@Override
-	public List<TestCaseStep> findTestCaseVersionSteps(final Integer testCaseVersionId_) throws Exception
+	public List<TestCaseStep> getTestCaseVersionSteps(final Integer testCaseVersionId_) throws Exception
 	{
 		final Search search = new Search(TestCaseStep.class);
 		search.addFilterEqual("testCaseVersionId", testCaseVersionId_);
@@ -407,7 +443,24 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public TestCaseVersion findLatestTestCaseVersion(final Integer testCaseId_) throws Exception
+	public List<TestCaseVersion> getTestCaseVersions(final Integer testCaseId_) throws Exception
+	{
+		final Search search = new Search(TestCaseVersion.class);
+		search.addFilterEqual("testCaseId", testCaseId_);
+		return dao.search(TestCaseVersion.class, search);
+	}
+
+	@Override
+	public List<TestCaseTag> getTestCaseTags(final Integer testCaseId_) throws Exception
+	{
+
+		final Search search = new Search(TestCaseTag.class);
+		search.addFilterEqual("testCaseId", testCaseId_);
+		return dao.search(TestCaseTag.class, search);
+	}
+
+	@Override
+	public TestCaseVersion getLatestTestCaseVersion(final Integer testCaseId_) throws Exception
 	{
 		final Search search = new Search(TestCaseVersion.class);
 		search.addFilterEqual("testCaseId", testCaseId_);
@@ -415,13 +468,13 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		final TestCaseVersion testCaseVersion = (TestCaseVersion) dao.searchUnique(TestCaseVersion.class, search);
 		if (testCaseVersion != null)
 		{
-			testCaseVersion.setSteps(findTestCaseVersionSteps(testCaseVersion.getId()));
+			testCaseVersion.setSteps(getTestCaseVersionSteps(testCaseVersion.getId()));
 		}
 		return testCaseVersion;
 	}
 
 	@Override
-	public TestCaseVersion findLastApprovedTestCaseVersion(final Integer testCaseId_) throws Exception
+	public TestCaseVersion getLastApprovedTestCaseVersion(final Integer testCaseId_) throws Exception
 	{
 		final Search search = new Search(TestCaseVersion.class);
 		search.addFilterEqual("testCaseId", testCaseId_);
@@ -446,13 +499,24 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		{
 			throw new NotFoundException("TestCaseVersion not found: " + testCaseVersionId_);
 		}
-		testCaseVersion.setSteps(findTestCaseVersionSteps(testCaseVersionId_));
+		testCaseVersion.setSteps(getTestCaseVersionSteps(testCaseVersionId_));
 		return testCaseVersion;
 	}
 
 	@Override
-	public void saveEnvironmentGroupsForTestCaseVersion(final Integer testCaseVersionId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
-			throws ChangingActivatedEntityException, UnsupportedEnvironmentSelectionException, Exception
+	public TestCaseStep getTestCaseStep(final Integer testCaseStepId_) throws Exception
+	{
+		final TestCaseStep testCaseStep = dao.getById(TestCaseStep.class, testCaseStepId_);
+		if (testCaseStep == null)
+		{
+			throw new NotFoundException("TestCaseStep not found: " + testCaseStepId_);
+		}
+		return testCaseStep;
+	}
+
+	@Override
+	public void saveEnvironmentGroupsForTestCaseVersion(final Integer testCaseVersionId_, final List<Integer> environmentGroupIds_) throws ChangingActivatedEntityException,
+			UnsupportedEnvironmentSelectionException, Exception
 	{
 		final TestCaseVersion testCaseVersion = dao.getById(TestCaseVersion.class, testCaseVersionId_);
 		if (testCaseVersion == null)
@@ -476,18 +540,20 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test case version: " + testCaseVersionId_,
 				"Included environments: " + environmentGroupIds_.toString(), environmentGroupIds_);
 		testCaseVersion.setEnvironmentProfileId(environmentProfile.getId());
-		testCaseVersion.setVersion(originalVersionId_);
 		dao.merge(testCaseVersion);
 	}
 
 	@Override
-	public TestCase saveTestCase(final Integer testCaseId_, final Integer maxAttachmentSizeInMbytes_, final Integer maxNumberOfAttachments_) throws Exception
+	public TestCase saveTestCase(final Integer testCaseId_, final String name_, final Integer maxAttachmentSizeInMbytes_, final Integer maxNumberOfAttachments_) throws Exception
 	{
 		final TestCase testCase = dao.getById(TestCase.class, testCaseId_);
 		if (testCase == null)
 		{
 			throw new NotFoundException("TestCase not found:" + testCaseId_);
 		}
+		checkForDuplicateNameWithinParent(TestCase.class, name_, testCase.getProductId(), "productId", testCaseId_);
+
+		testCase.setName(name_);
 		testCase.setMaxAttachmentSizeInMbytes(maxAttachmentSizeInMbytes_);
 		testCase.setMaxNumberOfAttachments(maxNumberOfAttachments_);
 		dao.addOrUpdate(testCase);
@@ -496,7 +562,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 
 	@Override
 	public TestCaseStep saveTestCaseStep(final Integer testCaseStepId_, final String name_, final Integer stepNumber_, final String instruction_, final String expectedResult_,
-			final Integer estimatedTimeInMin_, final String description_, final Integer originalVersionId_) throws Exception
+			final Integer estimatedTimeInMin_, final Integer originalVersionId_) throws Exception
 	{
 		final TestCaseStep step = dao.getById(TestCaseStep.class, testCaseStepId_);
 		if (step == null)
@@ -523,19 +589,16 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public TestCaseVersion saveTestCaseVersion(final Integer testCaseVersionId_, final String name_, final String description_, final Integer originalVersion_,
-			final VersionIncrement versionIncrement_) throws Exception
+	public TestCaseVersion saveTestCaseVersion(final Integer testCaseVersionId_, final String description_, final Integer originalVersion_, final VersionIncrement versionIncrement_)
+			throws Exception
 	{
 		final TestCaseVersion testCaseVersion = dao.getById(TestCaseVersion.class, testCaseVersionId_);
 		if (testCaseVersion == null)
 		{
 			throw new NotFoundException(TestCaseVersion.class.getSimpleName() + " not found: " + testCaseVersionId_);
 		}
-		checkForDuplicateNameWithinParent(TestCaseVersion.class, name_, testCaseVersion.getProductId(), "productId", testCaseVersionId_);
-
 		if (versionIncrement_.equals(VersionIncrement.NONE))
 		{
-			testCaseVersion.setName(name_);
 			testCaseVersion.setDescription(description_);
 			testCaseVersion.setVersion(originalVersion_);
 			return dao.merge(testCaseVersion);
@@ -549,7 +612,6 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			// insert new version
 			final TestCaseVersion newTestCaseVersion = new TestCaseVersion();
 			newTestCaseVersion.setTestCaseId(testCaseVersion.getTestCaseId());
-			newTestCaseVersion.setName(testCaseVersion.getName());
 			newTestCaseVersion.setDescription(testCaseVersion.getDescription());
 			newTestCaseVersion.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
 			initializeTestCaseVersion(newTestCaseVersion, testCaseVersion.getMajorVersion(), testCaseVersion.getMinorVersion(), versionIncrement_);
@@ -584,13 +646,13 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		}
 		final TestCaseVersion testCaseVersion = testCase.getLatestVersion();
 		// clone test case
-		final TestCase clonedTestCase = new TestCase(testCase.getProductId(), testCase.getMaxAttachmentSizeInMbytes(), testCase.getMaxNumberOfAttachments());
+		final TestCase clonedTestCase = new TestCase("Cloned [" + new Date() + "] " + testCase.getName(), testCase.getProductId(), testCase.getMaxAttachmentSizeInMbytes(),
+				testCase.getMaxNumberOfAttachments());
 		final Integer clonedTestCaseId = dao.addAndReturnId(clonedTestCase);
 		// clone latest version
 		final TestCaseVersion clonedTestCaseVersion = new TestCaseVersion();
 		clonedTestCaseVersion.setTestCaseId(clonedTestCaseId);
 		initializeTestCaseVersion(clonedTestCaseVersion, 0, 0, VersionIncrement.INITIAL);
-		clonedTestCaseVersion.setName("Cloned [" + new Date() + "] " + testCaseVersion.getName());
 		clonedTestCaseVersion.setDescription(testCaseVersion.getDescription());
 		clonedTestCaseVersion.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
 		clonedTestCaseVersion.setProductId(testCaseVersion.getProductId());
@@ -611,7 +673,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			}
 		}
 		// clone product components
-		final List<ProductComponent> components = findComponentsForTestCase(testCaseId_);
+		final List<ProductComponent> components = getComponentsForTestCase(testCaseId_);
 		if ((components != null) && !components.isEmpty())
 		{
 			saveProductComponentsForTestCase(clonedTestCaseId, DomainUtil.extractEntityIds(components));

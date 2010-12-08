@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "environmenttype")
+@XmlType(name = "environment")
 public class EnvironmentInfo extends BaseInfo
 {
 	@XmlElement(required = false)

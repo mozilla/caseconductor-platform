@@ -188,7 +188,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final TestRun testRun = dao.getById(TestRun.class, testRunId_);
 		if (testRun.getEnvironmentProfileId() != null)
 		{
-			return environmentService.findEnvironmentGroupsForProfile(testRun.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfile(testRun.getEnvironmentProfileId());
 		}
 		else
 		{
@@ -371,7 +371,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	private void addResultsForAssignment(final TestRunTestCaseAssignment assignment_) throws Exception
 	{
 
-		final List<EnvironmentGroup> groups = environmentService.findEnvironmentGroupsForProfile(assignment_.getEnvironmentProfileId());
+		final List<EnvironmentGroup> groups = environmentService.getEnvironmentGroupsForProfile(assignment_.getEnvironmentProfileId());
 		for (final EnvironmentGroup group : groups)
 		{
 			addResultForEnvironmentGroup(assignment_, group.getId());

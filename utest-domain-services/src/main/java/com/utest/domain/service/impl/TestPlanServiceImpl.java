@@ -310,7 +310,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 		}
 		if (testPlan.getEnvironmentProfileId() != null)
 		{
-			return environmentService.findEnvironmentGroupsForProfile(testPlan.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfile(testPlan.getEnvironmentProfileId());
 		}
 		else
 		{

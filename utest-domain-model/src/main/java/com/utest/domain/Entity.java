@@ -21,10 +21,38 @@ package com.utest.domain;
 
 import java.io.Serializable;
 
+import com.farata.dto2fx.annotations.FXIgnore;
+
+import flex.messaging.util.UUIDUtils;
+
 public class Entity implements Serializable
 {
 
+	private String	uid;
 	private Integer	id;
+
+	@FXIgnore
+	public String getUid()
+	{
+		if (uid == null)
+		{
+			final Integer id = getId();
+			if (id == null)
+			{
+				uid = UUIDUtils.createUUID(false);
+			}
+			else
+			{
+				uid = String.valueOf(id);
+			}
+		}
+		return uid;
+	}
+
+	public void setUid(final String uid)
+	{
+		this.uid = uid;
+	}
 
 	public Integer getId()
 	{

@@ -117,7 +117,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 		}
 		if (product.getEnvironmentProfileId() != null)
 		{
-			return environmentService.findEnvironmentGroupsForProfile(product.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfile(product.getEnvironmentProfileId());
 		}
 		else
 		{

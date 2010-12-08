@@ -90,7 +90,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 		final TestSuite testSuite = dao.getById(TestSuite.class, testSuiteId_);
 		if ((testSuite != null) && (testSuite.getEnvironmentProfileId() != null))
 		{
-			return environmentService.findEnvironmentGroupsForProfile(testSuite.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfile(testSuite.getEnvironmentProfileId());
 		}
 		else
 		{

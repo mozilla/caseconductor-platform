@@ -45,7 +45,8 @@ public class DomainException extends RuntimeException
 				"changingUsedEntity"), activatingNotApprovedEntity("activatingNotApprovedEntity"), includingMultipleTestCaseVersions("includingMultipleTestCaseVersions"), testCaseExecutionBlockedException(
 				"testCaseExecutionBlockedException"), testCaseExecutionWithoutRestartException("testCaseExecutionWithoutRestartException"), includingNotActiveEntity(
 				"includingNotActiveEntity"), entityNotFound("entityNotFound"), unsupportedEnvironmentSelection("unsupportedEnvironmentSelection"), testCycleStepsLimitException(
-				"steps.limit.reached"), approvingIncompleteEntity("approvingIncompleteEntity");
+				"steps.limit.reached"), duplicateStepNumberException("duplicate.step.number"), invalidParentChildRelationship("invalid.parent.child"), approvingIncompleteEntity(
+				"approvingIncompleteEntity");
 
 		private String	messageKey;
 

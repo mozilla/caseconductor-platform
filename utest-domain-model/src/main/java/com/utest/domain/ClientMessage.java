@@ -2,7 +2,9 @@ package com.utest.domain;
 
 import java.util.Map;
 
+import com.farata.dto2fx.annotations.FXClass;
 
+@FXClass
 public class ClientMessage implements java.io.Serializable
 {
 	public static final String DESTINATION_ID = "clientMessage";

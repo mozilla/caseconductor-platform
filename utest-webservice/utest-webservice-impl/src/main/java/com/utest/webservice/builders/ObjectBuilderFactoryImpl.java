@@ -38,6 +38,9 @@ import com.utest.domain.EnvironmentType;
 import com.utest.domain.Permission;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
+import com.utest.domain.TestCase;
+import com.utest.domain.TestCaseStep;
+import com.utest.domain.TestCaseVersion;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestFilter;
 import com.utest.domain.search.UtestSearch;
@@ -60,6 +63,12 @@ import com.utest.webservice.model.v2.ProductInfo;
 import com.utest.webservice.model.v2.ProductResultInfo;
 import com.utest.webservice.model.v2.RoleInfo;
 import com.utest.webservice.model.v2.RoleResultInfo;
+import com.utest.webservice.model.v2.TestCaseInfo;
+import com.utest.webservice.model.v2.TestCaseResultInfo;
+import com.utest.webservice.model.v2.TestCaseStepInfo;
+import com.utest.webservice.model.v2.TestCaseStepResultInfo;
+import com.utest.webservice.model.v2.TestCaseVersionInfo;
+import com.utest.webservice.model.v2.TestCaseVersionResultInfo;
 import com.utest.webservice.model.v2.UserInfo;
 import com.utest.webservice.model.v2.UserResultInfo;
 import com.utest.webservice.model.v2.UtestResult;
@@ -91,6 +100,9 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 		builders.put(CompanyInfo.class, new Builder<CompanyInfo, Company>(this, CompanyInfo.class, CompanyResultInfo.class));
 		builders.put(ProductInfo.class, new Builder<ProductInfo, Product>(this, ProductInfo.class, ProductResultInfo.class));
 		builders.put(ProductComponentInfo.class, new Builder<ProductComponentInfo, ProductComponent>(this, ProductComponentInfo.class, ProductComponentResultInfo.class));
+		builders.put(TestCaseStepInfo.class, new Builder<TestCaseStepInfo, TestCaseStep>(this, TestCaseStepInfo.class, TestCaseStepResultInfo.class));
+		builders.put(TestCaseInfo.class, new Builder<TestCaseInfo, TestCase>(this, TestCaseInfo.class, TestCaseResultInfo.class));
+		builders.put(TestCaseVersionInfo.class, new TestCaseVersionBuilder<TestCaseVersionInfo, TestCaseVersion>(this, TestCaseVersionInfo.class, TestCaseVersionResultInfo.class));
 	}
 
 	@SuppressWarnings("unchecked")

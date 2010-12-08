@@ -96,7 +96,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 		}
 		if (testCycle.getEnvironmentProfileId() != null)
 		{
-			return environmentService.findEnvironmentGroupsForProfile(testCycle.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfile(testCycle.getEnvironmentProfileId());
 		}
 		else
 		{

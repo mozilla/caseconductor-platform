@@ -39,6 +39,7 @@ import com.utest.domain.EnvironmentProfileEnvironmentGroup;
 import com.utest.domain.EnvironmentType;
 import com.utest.domain.EnvironmentTypeLocale;
 import com.utest.domain.Locale;
+import com.utest.domain.ParentDependableEnvironment;
 import com.utest.domain.Product;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.TestPlan;
@@ -55,6 +56,7 @@ import com.utest.domain.util.DomainUtil;
 import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingUsedEntityException;
 import com.utest.exception.DuplicateNameException;
+import com.utest.exception.InvalidParentChildEnvironmentException;
 import com.utest.exception.NotFoundException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
 import com.utest.util.NumberUtil;
@@ -143,6 +145,83 @@ public class EnvironmentServiceImpl implements EnvironmentService
 				&& !companyId_.equals(environmentType.getCompanyId()))
 		{
 			throw new IllegalArgumentException("Different companies for environment and its type.");
+		}
+	}
+
+	@Override
+	public void saveParentDependableEnvironments(final Integer companyId_, final Integer parentEnvironmentId_, final List<Integer> environmentIds_) throws Exception
+	{
+		final Environment parentEnvironment = dao.getById(Environment.class, parentEnvironmentId_);
+		if (parentEnvironment == null)
+		{
+			throw new NotFoundException("Parent environment not found: " + parentEnvironmentId_);
+		}
+		// check if valid parent environment for company
+		List<Integer> ids = new ArrayList<Integer>();
+		ids.add(parentEnvironmentId_);
+		checkValidEnvironmentSelectionForCompany(companyId_, ids, Environment.class);
+		// find all children environments and check if they match valid type
+		Search search = new Search(Environment.class);
+		search.addFilterIn("id", environmentIds_);
+		final List<Environment> environments = dao.search(Environment.class, search);
+		// check if valid children environments for company
+		checkValidEnvironmentSelectionForCompany(companyId_, environments);
+		// check if all children of the same type and this type is a valid
+		// child for parent
+		checkValidParentChildSelection(parentEnvironment, environments);
+		// delete old environments for parent
+		search = new Search(ParentDependableEnvironment.class);
+		search.addFilterEqual("parentEnvironmentId", parentEnvironmentId_);
+		final List<?> foundTypes = dao.search(ParentDependableEnvironment.class, search);
+		dao.delete(foundTypes);
+		// add new group environments
+		if (environmentIds_ != null)
+		{
+			for (final Integer environmentId : environmentIds_)
+			{
+				final ParentDependableEnvironment childEnvironment = new ParentDependableEnvironment();
+				childEnvironment.setCompanyId(companyId_);
+				childEnvironment.setEnvironmentId(environmentId);
+				childEnvironment.setParentEnvironmentId(parentEnvironmentId_);
+				dao.addAndReturnId(childEnvironment);
+			}
+		}
+	}
+
+	private void checkValidParentChildSelection(Environment parentEnvironment_, List<Environment> environments_)
+	{
+		if (environments_ == null || environments_.isEmpty())
+		{
+			return;
+		}
+
+		Search search = new Search(EnvironmentType.class);
+		search.addFilterEqual("parentEnvironmentTypeId", parentEnvironment_.getEnvironmentTypeId());
+		final List<EnvironmentType> childrenTypes = dao.search(EnvironmentType.class, search);
+		if (childrenTypes == null || childrenTypes.isEmpty())
+		{
+			throw new InvalidParentChildEnvironmentException("No children types defined for parent environment: " + parentEnvironment_.getId());
+		}
+		final List<Integer> childrenTypeIds = DomainUtil.extractEntityIds(childrenTypes);
+
+		Integer typeId = null;
+		for (Environment child : environments_)
+		{
+			// only for first record
+			if (typeId == null)
+			{
+				typeId = child.getEnvironmentTypeId();
+			}
+			// all types should match
+			if (child.getEnvironmentTypeId() != typeId)
+			{
+				throw new InvalidParentChildEnvironmentException("Children are of different types: " + typeId + " and " + child.getEnvironmentTypeId());
+			}
+			if (!childrenTypeIds.contains(child.getEnvironmentTypeId()))
+			{
+				throw new InvalidParentChildEnvironmentException("Parent type: " + parentEnvironment_.getEnvironmentTypeId() + " doesn't support child type "
+						+ child.getEnvironmentTypeId());
+			}
 		}
 	}
 
@@ -375,8 +454,7 @@ public class EnvironmentServiceImpl implements EnvironmentService
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.utest.domain.service.EnvironmentService#deleteEnvironmentProfile
+	 * @see com.utest.domain.service.EnvironmentService#deleteEnvironmentProfile
 	 * (com.utest.domain.User, java.lang.Integer)
 	 */
 	@Override
@@ -497,7 +575,7 @@ public class EnvironmentServiceImpl implements EnvironmentService
 	}
 
 	@Override
-	public List<EnvironmentGroup> findEnvironmentGroupsForProfile(final Integer environmentProfileId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForProfile(final Integer environmentProfileId_) throws Exception
 	{
 		Search search = new Search(EnvironmentProfileEnvironmentGroup.class);
 		search.addFilterEqual("environmentProfileId", environmentProfileId_);
@@ -521,6 +599,30 @@ public class EnvironmentServiceImpl implements EnvironmentService
 	}
 
 	@Override
+	public List<Environment> getParentDependableEnvironments(final Integer companyId_, final Integer parentEnvironmentId_) throws Exception
+	{
+		Search search = new Search(ParentDependableEnvironment.class);
+		search.addFilterEqual("parentEnvironmentId", parentEnvironmentId_);
+		search.addFilterEqual("companyId", companyId_);
+		final List<ParentDependableEnvironment> foundGroups = dao.search(ParentDependableEnvironment.class, search);
+		if ((foundGroups != null) && !foundGroups.isEmpty())
+		{
+			final List<Integer> ids = new ArrayList<Integer>();
+			for (final ParentDependableEnvironment idHolder : foundGroups)
+			{
+				ids.add(idHolder.getEnvironmentId());
+			}
+			search = new Search(Environment.class);
+			search.addFilterIn("id", ids);
+			return dao.search(Environment.class, search);
+		}
+		else
+		{
+			return new ArrayList<Environment>();
+		}
+	}
+
+	@Override
 	public UtestSearchResult findEnvironmentProfiles(final UtestSearch search_) throws Exception
 	{
 		return dao.getBySearch(EnvironmentProfile.class, search_);
@@ -539,7 +641,7 @@ public class EnvironmentServiceImpl implements EnvironmentService
 	}
 
 	@Override
-	public List<Environment> findEnvironmentsForGroup(final Integer environmentGroupId_) throws Exception
+	public List<Environment> getEnvironmentsForGroup(final Integer environmentGroupId_) throws Exception
 	{
 		Search search = new Search(EnvironmentGroupEnvironment.class);
 		search.addFilterEqual("environmentGroupId", environmentGroupId_);
@@ -562,7 +664,7 @@ public class EnvironmentServiceImpl implements EnvironmentService
 	}
 
 	@Override
-	public List<Environment> findEnvironmentsForType(final Integer environmentTypeId_) throws Exception
+	public List<Environment> getEnvironmentsForType(final Integer environmentTypeId_) throws Exception
 	{
 		final Search search = new Search(Environment.class);
 		search.addFilterEqual("environmentTypeId", environmentTypeId_);
@@ -798,7 +900,19 @@ public class EnvironmentServiceImpl implements EnvironmentService
 	{
 		if (!isValidEnvironmentSelectionForCompany(companyId_, companyDependableEntitiesIds_, type_))
 		{
-			throw new IllegalArgumentException("Different companies for environments and group.");
+			throw new IllegalArgumentException("Invalid environment selection for company: " + companyId_);
+		}
+	}
+
+	private <T extends CompanyDependable> void checkValidEnvironmentSelectionForCompany(final Integer companyId_, final List<T> companyDependableEntities_) throws Exception
+	{
+		if (companyDependableEntities_ == null || companyDependableEntities_.isEmpty())
+		{
+			return;
+		}
+		if (!isValidEnvironmentSelectionForCompany(companyId_, companyDependableEntities_))
+		{
+			throw new IllegalArgumentException("Invalid environment selection for company: " + companyId_);
 		}
 	}
 
@@ -808,10 +922,15 @@ public class EnvironmentServiceImpl implements EnvironmentService
 	{
 		final Search search = new Search(type_);
 		search.addFilterIn("id", companyDependableEntitiesIds_);
-		final List<?> foundTypes = dao.search(type_, search);
-		for (final Object foundType : foundTypes)
+		final List<T> foundTypes = dao.search(type_, search);
+		return isValidEnvironmentSelectionForCompany(companyId_, foundTypes);
+	}
+
+	private <T extends CompanyDependable> boolean isValidEnvironmentSelectionForCompany(final Integer companyId_, final List<T> companyDependableEntities_) throws Exception
+	{
+		for (final T foundType : companyDependableEntities_)
 		{
-			final Integer companyId = ((CompanyDependable) foundType).getCompanyId();
+			final Integer companyId = foundType.getCompanyId();
 			if (!Company.SYSTEM_WIDE_COMPANY_ID.equals(companyId) && !companyId.equals(companyId_))
 			{
 				return false;
@@ -829,7 +948,7 @@ public class EnvironmentServiceImpl implements EnvironmentService
 		{
 			return true;
 		}
-		final List<EnvironmentGroup> parentGroups = findEnvironmentGroupsForProfile(parentEnvironmentProfile_);
+		final List<EnvironmentGroup> parentGroups = getEnvironmentGroupsForProfile(parentEnvironmentProfile_);
 		final List<Integer> parentGroupIds = DomainUtil.extractEntityIds(parentGroups);
 		return parentGroupIds.containsAll(environmentGroupIds_);
 	}

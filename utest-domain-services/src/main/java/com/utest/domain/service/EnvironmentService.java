@@ -52,7 +52,7 @@ public interface EnvironmentService
 
 	Environment getEnvironment(Integer environmentId_) throws Exception;
 
-	List<Environment> findEnvironmentsForType(Integer environmentTypeId_) throws Exception;
+	List<Environment> getEnvironmentsForType(Integer environmentTypeId_) throws Exception;
 
 	UtestSearchResult findEnvironments(UtestSearch search_) throws Exception;
 
@@ -64,7 +64,7 @@ public interface EnvironmentService
 
 	EnvironmentGroup getEnvironmentGroup(Integer environmentGroupId_) throws Exception;
 
-	List<Environment> findEnvironmentsForGroup(Integer environmentGroupId_) throws Exception;
+	List<Environment> getEnvironmentsForGroup(Integer environmentGroupId_) throws Exception;
 
 	UtestSearchResult findEnvironmentGroups(UtestSearch search_) throws Exception;
 
@@ -77,7 +77,7 @@ public interface EnvironmentService
 
 	EnvironmentProfile getEnvironmentProfile(Integer environmentProfileId_) throws Exception;
 
-	List<EnvironmentGroup> findEnvironmentGroupsForProfile(Integer environmentProfileId_) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForProfile(Integer environmentProfileId_) throws Exception;
 
 	UtestSearchResult findEnvironmentProfiles(UtestSearch search_) throws Exception;
 
@@ -126,5 +126,9 @@ public interface EnvironmentService
 	<T extends CompanyDependable> boolean isValidEnvironmentSelectionForCompany(Integer companyId, List<Integer> companyDependableEntitiesIds, Class<T> type) throws Exception;
 
 	EnvironmentGroup saveEnvironmentGroup(Integer environmentGroupId, String name, String description, String externalIdentifier, Integer originalVersionId) throws Exception;
+
+	void saveParentDependableEnvironments(Integer companyId, Integer parentEnvironmentId, List<Integer> environmentIds) throws Exception;
+
+	List<Environment> getParentDependableEnvironments(Integer companyId, Integer parentEnvironmentId) throws Exception;
 
 }

@@ -24,6 +24,8 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.cxf.jaxrs.ext.MessageContext;
+
 import com.utest.webservice.model.v2.PermissionInfo;
 import com.utest.webservice.model.v2.PermissionResultInfo;
 import com.utest.webservice.model.v2.RoleInfo;
@@ -77,5 +79,9 @@ public interface UserWebService
 	Boolean updateUserRoles(UriInfo ui, Integer userId, ArrayList<Integer> roleIds) throws Exception;
 
 	Boolean deleteUserRole(UriInfo ui, Integer userId, Integer roleId) throws Exception;
+
+	Boolean login(MessageContext context) throws Exception;
+
+	Boolean logout(MessageContext context) throws Exception;
 
 }

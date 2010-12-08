@@ -20,7 +20,6 @@
 package com.utest.webservice.builders;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +27,7 @@ import java.util.List;
 
 import javax.ws.rs.core.UriBuilder;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.beanutils.BeanUtils;
 
 import com.utest.domain.Locale;
 import com.utest.domain.LocaleDescriptable;
@@ -43,19 +42,15 @@ import com.utest.webservice.model.v2.UtestResult;
 import com.utest.webservice.model.v2.UtestResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
-public class Builder<Ti, To>
+public class TestCaseBuilder<Ti, To> extends Builder<Ti, To>
 {
-	protected final ObjectBuilderFactory		factory;
-	protected Class<Ti>							infoClass;
-	protected Class<? extends UtestResult<Ti>>	resultClass;
 
-	Builder(final ObjectBuilderFactory factory, final Class<Ti> clazz, final Class<? extends UtestResult<Ti>> resultClass)
+	TestCaseBuilder(final ObjectBuilderFactory factory, final Class<Ti> clazz, final Class<? extends UtestResult<Ti>> resultClass)
 	{
-		this.factory = factory;
-		infoClass = clazz;
-		this.resultClass = resultClass;
+		super(factory, clazz, resultClass);
 	}
 
+	@Override
 	List<Ti> toInfo(final List<To> objects, final UriBuilder ub, final Object... uriBuilderArgs) throws Exception
 	{
 		final List<Ti> ret = new ArrayList<Ti>();
@@ -85,6 +80,7 @@ public class Builder<Ti, To>
 
 	}
 
+	@Override
 	public Ti toInfo(final To object, final UriBuilder ub, Object... uriBuilderArgs) throws Exception
 	{
 		Ti result;
@@ -94,46 +90,38 @@ public class Builder<Ti, To>
 			throw new IllegalArgumentException("No default constructor found for " + infoClass.getName());
 		}
 		result = constr.newInstance(new Object[] {});
-		PropertyUtils.copyProperties(result, object);
+		BeanUtils.copyProperties(result, object);
 		if (object instanceof LocalizedEntity)
 		{
 			LocalizedEntity localizedEntity = (LocalizedEntity) object;
 			LocaleDescriptable localDescriptable = localizedEntity.getLocale(Locale.DEFAULT_LOCALE);
-			PropertyUtils.copyProperties(result, localDescriptable);
+			BeanUtils.copyProperties(result, localDescriptable);
 		}
 		// don't return password field
-		if (PropertyUtils.describe(result).containsKey("password"))
-		{
-			PropertyUtils.setProperty(result, "password", null);
-		}
+		BeanUtils.setProperty(result, "password", null);
 		//
 		if (result instanceof BaseInfo)
 		{
-			populateIdentityAndTimeline((BaseInfo) result, object, ub, uriBuilderArgs);
+			ResourceIdentity resourceIdentity = new ResourceIdentity();
+			BeanUtils.copyProperties(resourceIdentity, object);
+			if (uriBuilderArgs.length == 0)
+			{
+				uriBuilderArgs = new Object[] { "" };
+			}
+			resourceIdentity.setUrl(ub != null ? ub.build(uriBuilderArgs).toString() : "");
+			((BaseInfo) result).setResourceIdentity(resourceIdentity);
+
+			if (object instanceof TimelineVersionable)
+			{
+				Timeline timeline = new Timeline();
+				BeanUtils.copyProperties(timeline, object);
+				((BaseInfo) result).setTimeline(timeline);
+			}
 		}
 		return result;
 	}
 
-	public void populateIdentityAndTimeline(BaseInfo result, final To object, final UriBuilder ub, Object... uriBuilderArgs) throws IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException
-	{
-		ResourceIdentity resourceIdentity = new ResourceIdentity();
-		PropertyUtils.copyProperties(resourceIdentity, object);
-		if (uriBuilderArgs.length == 0)
-		{
-			uriBuilderArgs = new Object[] { "" };
-		}
-		resourceIdentity.setUrl(ub != null ? ub.build(uriBuilderArgs).toString() : "");
-		(result).setResourceIdentity(resourceIdentity);
-
-		if (object instanceof TimelineVersionable)
-		{
-			Timeline timeline = new Timeline();
-			PropertyUtils.copyProperties(timeline, object);
-			(result).setTimeline(timeline);
-		}
-	}
-
+	@Override
 	@SuppressWarnings("unchecked")
 	public UtestResult<Ti> createResult(final UtestSearchRequest request, final UtestSearchResult result, final UriBuilder ub) throws Exception
 	{
@@ -159,6 +147,7 @@ public class Builder<Ti, To>
 		return info;
 	}
 
+	@Override
 	public void updateSearch(final UtestSearchRequest request, final UtestSearch search)
 	{
 		search.setPage(request.getPageNumber());
@@ -166,6 +155,7 @@ public class Builder<Ti, To>
 		return;
 	}
 
+	@Override
 	public To toObject(final Class<To> objectClass, final Ti info) throws Exception
 	{
 		To result;
@@ -175,7 +165,7 @@ public class Builder<Ti, To>
 			throw new IllegalArgumentException("No default constructor found for " + infoClass.getName());
 		}
 		result = constr.newInstance(new Object[] {});
-		PropertyUtils.copyProperties(result, info);
+		BeanUtils.copyProperties(result, info);
 		return result;
 	}
 

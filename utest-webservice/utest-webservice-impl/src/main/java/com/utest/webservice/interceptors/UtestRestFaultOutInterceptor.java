@@ -40,11 +40,14 @@ import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingActivatedEntityException;
 import com.utest.exception.DeletingUsedEntityException;
 import com.utest.exception.DuplicateNameException;
+import com.utest.exception.DuplicateTestCaseStepException;
 import com.utest.exception.IncludingMultileVersionsOfSameEntityException;
 import com.utest.exception.IncludingNotActivatedEntityException;
+import com.utest.exception.InvalidParentChildEnvironmentException;
 import com.utest.exception.NotFoundException;
 import com.utest.exception.TestCaseExecutionBlockedException;
 import com.utest.exception.TestCaseExecutionWithoutRestartException;
+import com.utest.exception.UnsupportedEnvironmentSelectionException;
 import com.utest.exception.ValidationException;
 
 public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingInterceptor
@@ -137,6 +140,15 @@ public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingIntercep
 		{
 			responseCode = HttpURLConnection.HTTP_CONFLICT;// conflict
 		}
+
+		else if (fault.getCause() instanceof InvalidParentChildEnvironmentException)
+		{
+			responseCode = HttpURLConnection.HTTP_CONFLICT;// conflict
+		}
+		else if (fault.getCause() instanceof DuplicateTestCaseStepException)
+		{
+			responseCode = HttpURLConnection.HTTP_CONFLICT;// conflict
+		}
 		else if (fault.getCause() instanceof DuplicateNameException)
 		{
 			responseCode = HttpURLConnection.HTTP_CONFLICT;// conflict
@@ -150,6 +162,10 @@ public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingIntercep
 			responseCode = HttpURLConnection.HTTP_CONFLICT;// not allowed
 		}
 		else if (fault.getCause() instanceof ActivatingIncompleteEntityException)
+		{
+			responseCode = HttpURLConnection.HTTP_CONFLICT;// not allowed
+		}
+		else if (fault.getCause() instanceof UnsupportedEnvironmentSelectionException)
 		{
 			responseCode = HttpURLConnection.HTTP_CONFLICT;// not allowed
 		}

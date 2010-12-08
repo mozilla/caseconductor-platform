@@ -21,6 +21,9 @@ package com.utest.domain;
 
 import java.io.Serializable;
 
+import com.farata.dto2fx.annotations.FXClass;
+
+@FXClass
 public interface ProfileDependable extends Serializable
 {
 	public Integer getProfileId();

@@ -22,6 +22,7 @@ package com.utest.webservice.impl.v2;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -36,14 +37,19 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.cxf.jaxrs.ext.MessageContext;
+import org.jboss.util.Base64;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.utest.domain.AccessRole;
+import com.utest.domain.AuthenticatedUserInfo;
 import com.utest.domain.Permission;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.UserService;
+import com.utest.domain.service.util.UserUtil;
 import com.utest.webservice.api.v2.UserWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.PermissionInfo;
@@ -53,6 +59,7 @@ import com.utest.webservice.model.v2.RoleResultInfo;
 import com.utest.webservice.model.v2.UserInfo;
 import com.utest.webservice.model.v2.UserResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
+import com.utest.webservice.util.SessionUtil;
 
 @Path("/usr/")
 public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebService
@@ -63,6 +70,46 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	{
 		super(objectBuildFactory);
 		this.userService = userService;
+	}
+
+	@PUT
+	@Path("/login")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	public Boolean login(@Context MessageContext context) throws Exception
+	{
+		Integer auth = UserUtil.getCurrentUserId();
+		if (auth == null)
+		{
+			throw new org.apache.cxf.interceptor.security.AccessDeniedException("No logged in user!");
+		}
+		final AuthenticatedUserInfo authInfo = (AuthenticatedUserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String sessionId = SessionUtil.extractSession(context, true);
+		userService.login(authInfo, sessionId);
+
+		String token = Base64.encodeObject(SecurityContextHolder.getContext().getAuthentication(), Base64.GZIP | Base64.DONT_BREAK_LINES);
+		context.getHttpServletResponse().addCookie(new Cookie(SessionUtil.AUTH_TOKEN, token));
+		return Boolean.TRUE;
+	}
+
+	@PUT
+	@Path("/logout")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	public Boolean logout(@Context MessageContext context) throws Exception
+	{
+		Integer auth = UserUtil.getCurrentUserId();
+		if (auth == null)
+		{
+			throw new org.apache.cxf.interceptor.security.AccessDeniedException("No logged in user!");
+		}
+
+		final AuthenticatedUserInfo authInfo = (AuthenticatedUserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		userService.logout(authInfo, SessionUtil.extractSession(context, false));
+		context.getHttpServletResponse().addCookie(new Cookie(SessionUtil.AUTH_TOKEN, null));
+		return Boolean.TRUE;
 	}
 
 	@PUT

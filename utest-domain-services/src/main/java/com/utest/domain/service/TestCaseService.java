@@ -25,6 +25,7 @@ import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseStep;
+import com.utest.domain.TestCaseTag;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.VersionIncrement;
 import com.utest.domain.search.UtestSearch;
@@ -37,15 +38,13 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
  */
 public interface TestCaseService
 {
-	TestCaseVersion findLatestTestCaseVersion(Integer testCaseId) throws Exception;
+	TestCaseVersion getLatestTestCaseVersion(Integer testCaseId) throws Exception;
 
 	TestCase getTestCase(Integer testCaseId) throws Exception;
 
-	TestCase saveTestCase(Integer testCaseId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments) throws Exception;
-
 	void deleteTestCase(Integer testCaseId_) throws Exception;
 
-	List<ProductComponent> findComponentsForTestCase(Integer testCaseId_) throws Exception;
+	List<ProductComponent> getComponentsForTestCase(Integer testCaseId_) throws Exception;
 
 	void saveProductComponentsForTestCase(Integer testCaseId_, List<Integer> productComponentIds_) throws Exception;
 
@@ -57,9 +56,9 @@ public interface TestCaseService
 
 	UtestSearchResult findTestCaseVersions(UtestSearch search_) throws Exception;
 
-	List<EnvironmentGroup> findEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId_) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId_) throws Exception;
 
-	TestCaseVersion findLastApprovedTestCaseVersion(Integer testCaseId) throws Exception;
+	TestCaseVersion getLastApprovedTestCaseVersion(Integer testCaseId) throws Exception;
 
 	TestCase cloneTestCase(Integer testCaseId) throws Exception;
 
@@ -68,17 +67,15 @@ public interface TestCaseService
 
 	TestCase addTestCase(Integer productId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, String description) throws Exception;
 
-	TestCaseVersion saveTestCaseVersion(Integer testCaseVersionId, String name, String description, Integer originalVersion, VersionIncrement versionIncrement) throws Exception;
-
 	TestCaseVersion approveTestCaseVersion(Integer testCaseVersionId, Integer originalVersionId) throws Exception;
 
 	TestCaseVersion rejectTestCaseVersion(Integer testCaseVersionId, Integer originalVersionId) throws Exception;
 
-	void saveEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId, List<Integer> environmentGroupIds, Integer originalVersionId) throws ChangingActivatedEntityException,
+	void saveEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId, List<Integer> environmentGroupIds) throws ChangingActivatedEntityException,
 			UnsupportedEnvironmentSelectionException, Exception;
 
 	TestCaseStep saveTestCaseStep(Integer testCaseStepId, String name, Integer stepNumber, String instruction, String expectedResult, Integer estimatedTimeInMin,
-			String description, Integer originalVersionId) throws Exception;
+			Integer originalVersionId) throws Exception;
 
 	TestCaseVersion lockTestCaseVersion(Integer testCaseVersionId, Integer originalVersionId) throws Exception;
 
@@ -87,5 +84,21 @@ public interface TestCaseService
 
 	TestCaseVersion activateTestCaseVersion(Integer testCaseVersionId, Integer originalVersionId) throws Exception;
 
-	List<TestCaseStep> findTestCaseVersionSteps(Integer testCaseVersionId) throws Exception;
+	List<TestCaseStep> getTestCaseVersionSteps(Integer testCaseVersionId) throws Exception;
+
+	UtestSearchResult findLatestTestCaseVersions() throws Exception;
+
+	UtestSearchResult findLatestTestCaseVersions(UtestSearch search) throws Exception;
+
+	List<TestCaseVersion> getTestCaseVersions(Integer testCaseId) throws Exception;
+
+	List<TestCaseTag> getTestCaseTags(Integer testCaseId) throws Exception;
+
+	TestCaseStep getTestCaseStep(Integer testCaseStepId) throws Exception;
+
+	TestCase saveTestCase(Integer testCaseId, String name, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments) throws Exception;
+
+	TestCaseVersion saveTestCaseVersion(Integer testCaseVersionId, String description, Integer originalVersion, VersionIncrement versionIncrement) throws Exception;
+
+	UtestSearchResult findTestCases(UtestSearch search) throws Exception;
 }
