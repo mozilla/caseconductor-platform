@@ -34,10 +34,6 @@
 		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
 	</listener>
 	
-	<listener>
-		<listener-class>flex.messaging.HttpFlexSession</listener-class>
-	</listener>
-
 	<!-- Spring listener for web-scopes (request, session) -->
 	<listener>
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
