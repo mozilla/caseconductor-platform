@@ -4,9 +4,9 @@
 	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
-	
+
 	<display-name>uTest</display-name>
-	
+
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
@@ -15,50 +15,16 @@
 		</param-value>
 	</context-param>
 
-    <filter>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-    </filter>
-    
-    <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-    
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-
-	<!-- For concurrent session, and for session time out -->
-	<listener>
-		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
-	</listener>
-	
-	<!-- Spring listener for web-scopes (request, session) -->
-	<listener>
-		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-	</listener>
-	
 	<listener>
    		<listener-class>com.utest.portal.log.LogContextListener</listener-class>
 	</listener>
 
-    <servlet>
-        <servlet-name>MessageBrokerServlet</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>/WEB-INF/spring-web.xml</param-value>
-        </init-param>
-      <load-on-startup>1</load-on-startup>
-    </servlet>
-  
 	<servlet>
 		<servlet-name>CXFServlet</servlet-name>
 		<servlet-class>
 			org.apache.cxf.transport.servlet.CXFServlet
 		</servlet-class>
-		<load-on-startup>2</load-on-startup>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
@@ -66,11 +32,6 @@
 		<url-pattern>/services/*</url-pattern>
 	</servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>MessageBrokerServlet</servlet-name>
-        <url-pattern>/messagebroker/*</url-pattern>
-    </servlet-mapping>
-	
 	<welcome-file-list>
         <welcome-file>index.html</welcome-file>
         <welcome-file>index.htm</welcome-file>
@@ -81,7 +42,7 @@
 		<error-code>404</error-code>
 		<location>/app/nonExistentPage</location>
 	</error-page>
-	
+
 	<session-config>
 		<session-timeout>30</session-timeout>
 	</session-config>
