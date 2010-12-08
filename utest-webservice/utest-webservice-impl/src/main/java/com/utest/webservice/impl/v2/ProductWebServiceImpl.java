@@ -1,3 +1,22 @@
+/**
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ *
+ * @author Greg Zheng
+ *
+ * copyright 2010 by uTest
+ */
 package com.utest.webservice.impl.v2;
 
 import javax.ws.rs.Consumes;
@@ -46,10 +65,10 @@ implements ProductWebService
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
-	public ProductInfo createProduct(@FormParam("") final ProductInfo productInfo) throws Exception 
+	public ProductInfo createProduct(@FormParam("") final ProductInfo productInfo) throws Exception
 	{
 		final Product product = productService.addProduct(
-				productInfo.getCompanyId(), productInfo.getName(), 
+				productInfo.getCompanyId(), productInfo.getName(),
 				productInfo.getDescription());
 		return objectBuilderFactory.toInfo(ProductInfo.class, product, null);
 	}
@@ -60,8 +79,8 @@ implements ProductWebService
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
-	public void deleteProduct(@Context final UriInfo ui_, 
-			@PathParam("id") final Integer productId) throws Exception 
+	public void deleteProduct(@Context final UriInfo ui_,
+			@PathParam("id") final Integer productId) throws Exception
 	{
 		productService.deleteProduct(productId);
 	}
@@ -72,41 +91,41 @@ implements ProductWebService
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
-	public ProductInfo updateProduct(@Context final UriInfo ui_, 
-			@PathParam("id") final Integer productId, 
+	public ProductInfo updateProduct(@Context final UriInfo ui_,
+			@PathParam("id") final Integer productId,
 			@FormParam("") final ProductInfo productInfo) throws Exception
 	{
 		Product product = productService.saveProduct(
-				productId, productInfo.getName(), productInfo.getDescription(), 
+				productId, productInfo.getName(), productInfo.getDescription(),
 				productInfo.getResourceIdentity().getVersion());
 		return objectBuilderFactory.toInfo(ProductInfo.class, product, ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
-	
+
 	@GET
 	@Path("/{id}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.PRODUCT_VIEW)
-	public ProductInfo getProduct(@Context final UriInfo ui_, 
-			@PathParam("id") final Integer productId) throws Exception 
+	public ProductInfo getProduct(@Context final UriInfo ui_,
+			@PathParam("id") final Integer productId) throws Exception
 	{
 		Product product = productService.getProduct(productId);
 		return objectBuilderFactory.toInfo(ProductInfo.class, product, null);
 	}
-	
+
 	@GET
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.PRODUCT_VIEW)
-	public ProductResultInfo findProducts(@Context final UriInfo ui_, 
+	public ProductResultInfo findProducts(@Context final UriInfo ui_,
 			@QueryParam("") final UtestSearchRequest request) throws Exception
 	{
 		UtestSearch search = objectBuilderFactory.createSearch(ProductInfo.class, request, ui_);
 		UtestSearchResult result = productService.findProducts(search);
 		return (ProductResultInfo) objectBuilderFactory.createResult(
-				ProductInfo.class, Product.class, request, result, 
+				ProductInfo.class, Product.class, request, result,
 				ui_.getAbsolutePathBuilder().path(this.getClass(),
 				"getProduct"));
 	}
