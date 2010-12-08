@@ -19,9 +19,6 @@
  */
 package com.utest.domain;
 
-import com.farata.dto2fx.annotations.FXClass;
-
-@FXClass
 public interface CompanyDependable
 {
 	Integer getCompanyId();
