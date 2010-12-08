@@ -4,16 +4,15 @@
     <name>uTest Web Services</name>
     <artifactId>utest-webservice</artifactId>
     <packaging>pom</packaging>
-    
+
     <parent>
         <groupId>com.utest</groupId>
         <artifactId>utest-parent</artifactId>
 	<version>3.0.6</version>
     </parent>
-    
+
     <modules>
         <module>utest-webservice-api</module>
         <module>utest-webservice-impl</module>
-        <module>utest-webservice-client</module>
     </modules>
 </project>
