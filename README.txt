@@ -12,6 +12,9 @@ Build
 First make sure we've got a JDK and Maven both available::
 
     $ sudo aptitude install maven2 openjdk-6-jdk
+	Mac: Follow: http://maven.apache.org/download.html.  
+		May need to add this to your .bashrc: 
+		export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home"
 
 Now build the project::
 
