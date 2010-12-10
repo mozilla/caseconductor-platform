@@ -28,6 +28,7 @@ import com.utest.domain.EnvironmentLocale;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.EnvironmentType;
 import com.utest.domain.EnvironmentTypeLocale;
+import com.utest.domain.Tag;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
@@ -130,5 +131,13 @@ public interface EnvironmentService
 	void saveParentDependableEnvironments(Integer companyId, Integer parentEnvironmentId, List<Integer> environmentIds) throws Exception;
 
 	List<Environment> getParentDependableEnvironments(Integer companyId, Integer parentEnvironmentId) throws Exception;
+
+	Tag addTag(Integer companyId, String tag) throws Exception;
+
+	UtestSearchResult findTags(UtestSearch search) throws Exception;
+
+	Tag getTag(Integer tagId) throws Exception;
+
+	void deleteTag(Integer tagId) throws Exception;
 
 }

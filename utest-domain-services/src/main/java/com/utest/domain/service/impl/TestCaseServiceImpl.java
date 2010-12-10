@@ -30,6 +30,7 @@ import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
+import com.utest.domain.Tag;
 import com.utest.domain.TcmEntityStatus;
 import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseProductComponent;
@@ -102,6 +103,30 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 
 		dao.addAndReturnId(testCaseVersion);
 		return getTestCase(testCaseId);
+	}
+
+	@Override
+	public void addTestCaseTag(final Integer testCaseId_, final Integer tagId_)
+	{
+		final TestCase testCase = dao.getById(TestCase.class, testCaseId_);
+		if (testCase == null)
+		{
+			throw new NotFoundException("TestCase not found: " + testCaseId_);
+		}
+		final Tag tag = dao.getById(Tag.class, tagId_);
+		if (tag == null)
+		{
+			throw new NotFoundException("Tag not found: " + tagId_);
+		}
+		final Search search = new Search(TestCaseTag.class);
+		search.addFilterEqual("testCaseId", testCaseId_);
+		search.addFilterEqual("tagId", tagId_);
+		TestCaseTag testCaseTag = (TestCaseTag) dao.searchUnique(TestCaseTag.class, search);
+		if (testCaseTag == null)
+		{
+			testCaseTag = new TestCaseTag(testCaseId_, tagId_);
+			dao.addAndReturnId(testCaseTag);
+		}
 	}
 
 	@Override
@@ -309,6 +334,20 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
+	public void deleteTestCaseTag(final Integer testCaseId_, final Integer tagId_)
+	{
+		final Search search = new Search(TestCaseTag.class);
+		search.addFilterEqual("testCaseId", testCaseId_);
+		search.addFilterEqual("tagId", tagId_);
+		final TestCaseTag testCaseTag = (TestCaseTag) dao.searchUnique(TestCaseTag.class, search);
+		if (testCaseTag == null)
+		{
+			throw new NotFoundException("Tag not found. Id: " + tagId_ + " For TestCase: " + testCaseId_);
+		}
+		dao.delete(testCaseTag);
+	}
+
+	@Override
 	public void deleteTestCaseVersion(final Integer testCaseVersionId_) throws Exception
 	{
 		final TestCaseVersion testCaseVersion = dao.getById(TestCaseVersion.class, testCaseVersionId_);
@@ -451,12 +490,16 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public List<TestCaseTag> getTestCaseTags(final Integer testCaseId_) throws Exception
+	public List<Tag> getTestCaseTags(final Integer testCaseId_) throws Exception
 	{
-
-		final Search search = new Search(TestCaseTag.class);
+		Search search = new Search(TestCaseTag.class);
+		search.addField("tagId");
 		search.addFilterEqual("testCaseId", testCaseId_);
-		return dao.search(TestCaseTag.class, search);
+		final List<?> tagIdList = dao.search(TestCaseTag.class, search);
+		search = new Search(Tag.class);
+		search.addFilterIn("id", tagIdList);
+		final List<Tag> list = dao.search(Tag.class, search);
+		return list;
 	}
 
 	@Override
@@ -512,6 +555,24 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			throw new NotFoundException("TestCaseStep not found: " + testCaseStepId_);
 		}
 		return testCaseStep;
+	}
+
+	@Override
+	public void saveTagsForTestCase(final Integer testCaseId_, final List<Integer> tagIds_) throws Exception
+	{
+		// delete old tags before inserting new ones
+		Search search = new Search(TestCaseTag.class);
+		search.addFilterEqual("testCaseId", testCaseId_);
+		final List<TestCaseTag> foundTags = dao.search(TestCaseTag.class, search);
+		dao.delete(foundTags);
+		// insert new ones
+		if (tagIds_ != null && !tagIds_.isEmpty())
+		{
+			for (Integer tagId : tagIds_)
+			{
+				addTestCaseTag(testCaseId_, tagId);
+			}
+		}
 	}
 
 	@Override
@@ -606,6 +667,9 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		else
 		{
 			// undo latest version flag for existing version
+			// TODO - change to be able to edit older version and still mark the
+			// prior latest version as not latest anymore
+
 			testCaseVersion.setLatestVersion(false);
 			testCaseVersion.setVersion(originalVersion_);
 			dao.addOrUpdate(testCaseVersion);

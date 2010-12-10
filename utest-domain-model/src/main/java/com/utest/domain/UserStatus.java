@@ -27,10 +27,9 @@ package com.utest.domain;
 public class UserStatus extends LocalizedEntity
 {
 
-	public static final Integer	USER_STATUS_ACTIVE		= new Integer(1);
-	public static final Integer	USER_STATUS_INACTIVE	= new Integer(2);
-	public static final Integer	USER_STATUS_DISABLED	= new Integer(3);
-	public static final Integer	USER_STATUS_WATCH_LIST	= new Integer(4);
+	public static final Integer	ACTIVE		= new Integer(1);
+	public static final Integer	INACTIVE	= new Integer(2);
+	public static final Integer	DISABLED	= new Integer(3);
 
 	public UserStatus()
 	{

@@ -114,7 +114,7 @@ public class Builder<Ti, To>
 		return result;
 	}
 
-	public void populateIdentityAndTimeline(BaseInfo result, final To object, final UriBuilder ub, Object... uriBuilderArgs) throws IllegalAccessException,
+	protected void populateIdentityAndTimeline(BaseInfo result, final To object, final UriBuilder ub, Object... uriBuilderArgs) throws IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException
 	{
 		ResourceIdentity resourceIdentity = new ResourceIdentity();

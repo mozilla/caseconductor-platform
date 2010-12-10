@@ -41,6 +41,8 @@ import com.utest.domain.EnvironmentTypeLocale;
 import com.utest.domain.Locale;
 import com.utest.domain.ParentDependableEnvironment;
 import com.utest.domain.Product;
+import com.utest.domain.Tag;
+import com.utest.domain.TestCaseTag;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.TestPlan;
 import com.utest.domain.TestRun;
@@ -72,6 +74,27 @@ public class EnvironmentServiceImpl implements EnvironmentService
 	{
 		super();
 		this.dao = dao;
+	}
+
+	@Override
+	public Tag addTag(Integer companyId_, String tag_) throws Exception
+	{
+
+		if (companyId_ == null)
+		{
+			companyId_ = Company.SYSTEM_WIDE_COMPANY_ID;
+		}
+		final Search search = new Search(Tag.class);
+		search.addFilterEqual("companyId", companyId_);
+		search.addFilterEqual("name", tag_);
+		final List<Tag> tags = dao.search(Tag.class, search);
+		if ((tags != null) && !tags.isEmpty())
+		{
+			throw new DuplicateNameException();
+		}
+		final Tag tag = new Tag(companyId_, tag_);
+		final Integer tagId = dao.addAndReturnId(tag);
+		return dao.getById(Tag.class, tagId);
 	}
 
 	@Override
@@ -424,6 +447,22 @@ public class EnvironmentServiceImpl implements EnvironmentService
 	}
 
 	@Override
+	public void deleteTag(final Integer tagId_) throws Exception
+	{
+
+		// check if used in any groups before deleting
+		Search search = new Search(TestCaseTag.class);
+		search.addFilterEqual("tagId", tagId_);
+		List<?> foundTypes = dao.search(TestCaseTag.class, search);
+		if ((foundTypes != null) && !foundTypes.isEmpty())
+		{
+			throw new DeletingUsedEntityException(TestCaseTag.class.getSimpleName());
+		}
+		// delete if not used anywhere
+		dao.delete(Tag.class, tagId_);
+	}
+
+	@Override
 	public void deleteEnvironmentGroup(final Integer environmentGroupId_) throws Exception
 	{
 		// check if used in any environments before deleting
@@ -641,6 +680,12 @@ public class EnvironmentServiceImpl implements EnvironmentService
 	}
 
 	@Override
+	public UtestSearchResult findTags(final UtestSearch search_) throws Exception
+	{
+		return dao.getBySearch(Tag.class, search_);
+	}
+
+	@Override
 	public List<Environment> getEnvironmentsForGroup(final Integer environmentGroupId_) throws Exception
 	{
 		Search search = new Search(EnvironmentGroupEnvironment.class);
@@ -680,6 +725,17 @@ public class EnvironmentServiceImpl implements EnvironmentService
 			throw new NotFoundException("Environment not found: " + environmentId_);
 		}
 		return environment;
+	}
+
+	@Override
+	public Tag getTag(final Integer tagId_) throws Exception
+	{
+		final Tag tag = dao.getById(Tag.class, tagId_);
+		if (tag == null)
+		{
+			throw new NotFoundException("Tag not found: " + tagId_);
+		}
+		return tag;
 	}
 
 	@Override

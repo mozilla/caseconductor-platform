@@ -41,9 +41,9 @@ import org.springframework.security.access.annotation.Secured;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.Permission;
 import com.utest.domain.ProductComponent;
+import com.utest.domain.Tag;
 import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseStep;
-import com.utest.domain.TestCaseTag;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.VersionIncrement;
 import com.utest.domain.search.UtestSearch;
@@ -54,10 +54,10 @@ import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.ResourceIdentity;
+import com.utest.webservice.model.v2.TagInfo;
 import com.utest.webservice.model.v2.TestCaseInfo;
 import com.utest.webservice.model.v2.TestCaseResultInfo;
 import com.utest.webservice.model.v2.TestCaseStepInfo;
-import com.utest.webservice.model.v2.TestCaseTagInfo;
 import com.utest.webservice.model.v2.TestCaseVersionInfo;
 import com.utest.webservice.model.v2.TestCaseVersionResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
@@ -224,10 +224,23 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	/**
 	 * Returns all tags of a test case
 	 */
-	public List<TestCaseTagInfo> getTestCaseTags(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
+	public List<TagInfo> getTestCaseTags(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
 	{
-		final List<TestCaseTag> tags = testCaseService.getTestCaseTags(testCaseId_);
-		return objectBuilderFactory.toInfo(TestCaseTagInfo.class, tags, ui_.getAbsolutePathBuilder().path("/{id}/tags/"));
+		final List<Tag> tags = testCaseService.getTestCaseTags(testCaseId_);
+		return objectBuilderFactory.toInfo(TagInfo.class, tags, ui_.getAbsolutePathBuilder().path("/{id}/tags/"));
+	}
+
+	@PUT
+	@Path("/{id}/tags/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_CASE_EDIT })
+	public Boolean updateTestCaseTags(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_, @FormParam("tagIds") final ArrayList<Integer> tagIds_)
+			throws Exception
+	{
+		testCaseService.saveTagsForTestCase(testCaseId_, tagIds_);
+		return Boolean.TRUE;
 	}
 
 	@PUT

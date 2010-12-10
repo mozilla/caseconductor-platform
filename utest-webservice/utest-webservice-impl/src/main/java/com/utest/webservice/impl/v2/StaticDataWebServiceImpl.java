@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentMap;
@@ -55,7 +56,18 @@ public class StaticDataWebServiceImpl extends BaseWebServiceImpl implements Stat
 
 	@Override
 	@GET
-	@Path("/{id}")
+	@Path("/keys/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Set<String> getCodeKeys() throws Exception
+	{
+		return staticDataService.getCodeKeys();
+
+	}
+
+	@Override
+	@GET
+	@Path("/values/{id}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public List<CodeValue> getCodeValues(@PathParam("id") final String id) throws Exception
@@ -76,7 +88,7 @@ public class StaticDataWebServiceImpl extends BaseWebServiceImpl implements Stat
 
 	@Override
 	@GET
-	@Path("/{id}/parent/{parentId}")
+	@Path("/values/{id}/parent/{parentId}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public List<CodeValue> getParentCodeValues(@PathParam("id") final String id, @PathParam("parentId") final Integer parentId) throws Exception
@@ -110,7 +122,7 @@ public class StaticDataWebServiceImpl extends BaseWebServiceImpl implements Stat
 
 	@Override
 	@GET
-	@Path("/{id}/parent/")
+	@Path("/values/{id}/parent/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Map<String, List<CodeValue>> getParentMap(@PathParam("id") final String id) throws Exception

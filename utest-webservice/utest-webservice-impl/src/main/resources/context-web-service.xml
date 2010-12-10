@@ -130,6 +130,7 @@
 			<ref bean="userWebService" />
 			<ref bean="environmentWebService" />
 			<ref bean="testCaseWebService" />
+			<ref bean="productWebService" />
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>
 			<ref bean="jsonProvider" />

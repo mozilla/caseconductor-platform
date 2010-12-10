@@ -20,6 +20,7 @@
 package com.utest.domain.service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentMap;
 
@@ -73,5 +74,7 @@ public interface StaticDataService extends Initializable
 	List<CodeValueEntity> getCodeDescriptions(String className);
 
 	List<CodeValueEntity> getCodeDescriptions(String className, String localeCode);
+
+	Set<String> getCodeKeys();
 
 }

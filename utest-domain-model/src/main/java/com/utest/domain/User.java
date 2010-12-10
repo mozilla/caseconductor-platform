@@ -115,7 +115,7 @@ public class User extends TimelineEntity
 
 	public boolean isEnabled()
 	{
-		return !UserStatus.USER_STATUS_DISABLED.equals(userStatusId);
+		return !UserStatus.DISABLED.equals(userStatusId);
 	}
 
 	public boolean isForumUser()

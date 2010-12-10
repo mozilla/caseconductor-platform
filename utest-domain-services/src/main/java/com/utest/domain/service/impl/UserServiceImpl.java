@@ -81,7 +81,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		user.setEmail(email_);
 		user.setCode(EncodeUtil.encode(email_));
 		user.setPassword(EncodeUtil.encode(password_));
-		user.setUserStatusId(UserStatus.USER_STATUS_INACTIVE);
+		user.setUserStatusId(UserStatus.INACTIVE);
 		user.setConfirmedEmail(false);
 		final Integer userId = dao.addAndReturnId(user);
 		return getUser(userId);
@@ -119,7 +119,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		{
 			throw new InvalidUserException();
 		}
-		user.setUserStatusId(UserStatus.USER_STATUS_DISABLED);
+		user.setUserStatusId(UserStatus.DISABLED);
 		return dao.merge(user);
 	}
 
@@ -132,7 +132,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 			throw new InvalidUserException();
 		}
 		DomainUtil.loadUpdatedTimeline(user, user, user.getVersion());
-		user.setUserStatusId(UserStatus.USER_STATUS_ACTIVE);
+		user.setUserStatusId(UserStatus.ACTIVE);
 		user.setConfirmedEmail(true);
 		return dao.merge(user);
 	}
@@ -182,7 +182,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		}
 		user.setEmail(newEmail_);
 		user.setConfirmedEmail(false);
-		user.setUserStatusId(UserStatus.USER_STATUS_INACTIVE);
+		user.setUserStatusId(UserStatus.INACTIVE);
 		return dao.merge(user);
 	}
 
@@ -226,7 +226,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		{
 			throw new NotFoundException("UserId#" + userId_);
 		}
-		user.setUserStatusId(UserStatus.USER_STATUS_ACTIVE);
+		user.setUserStatusId(UserStatus.ACTIVE);
 		return dao.merge(user);
 	}
 
