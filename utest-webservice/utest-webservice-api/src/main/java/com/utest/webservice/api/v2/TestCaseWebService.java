@@ -46,54 +46,55 @@ public interface TestCaseWebService
 
 	TestCaseVersionInfo createTestCase(UriInfo ui, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
 
-	TestCaseStepInfo createTestCaseStep(UriInfo ui, Integer testCaseId, Integer testCaseVersionId, TestCaseStepInfo testCaseStepInfo) throws Exception;
-
-	TestCaseVersionInfo deactivateTestCaseVersion(UriInfo ui, Integer testCaseId, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
-
 	Boolean deleteTestCase(UriInfo ui, Integer testCaseId) throws Exception;
-
-	Boolean deleteTestCaseStep(UriInfo ui, Integer testCaseId, Integer testCaseVersionId, Integer testCaseStepId) throws Exception;
-
-	Boolean deleteTestCaseVersion(UriInfo ui, Integer testCaseId, Integer testCaseVersionId) throws Exception;
 
 	TestCaseVersionResultInfo findLatestTestCaseVersions(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	TestCaseVersionInfo getLatestTestCaseVersion(UriInfo ui, Integer testCaseId) throws Exception;
 
-	TestCaseVersionInfo getTestCaseVersion(UriInfo ui, Integer testCaseId, Integer testCaseVersionId) throws Exception;
-
 	List<TestCaseVersionInfo> getTestCaseVersions(UriInfo ui, Integer testCaseId) throws Exception;
-
-	List<TestCaseStepInfo> getTestCaseVersionSteps(UriInfo ui, Integer testCaseId, Integer testCaseVersionId) throws Exception;
-
-	TestCaseVersionInfo rejectTestCaseVersion(UriInfo ui, Integer testCaseId, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
-
-	TestCaseStepInfo updateTestCaseStep(UriInfo ui, Integer testCaseId, Integer testCaseVersionId, Integer testCaseStepId, TestCaseStepInfo testCaseStepInfo) throws Exception;
-
-	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseId, Integer testCaseVersionId, String versionIncrement, TestCaseVersionInfo testCaseVersionInfo)
-			throws Exception;
-
-	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseId, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
 
 	Boolean updateTestCaseComponents(UriInfo ui, Integer testCaseId, ArrayList<Integer> productComponentIds) throws Exception;
 
 	List<ProductComponentInfo> getTestCaseComponents(UriInfo ui, Integer testCaseId) throws Exception;
 
-	Boolean updateTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseId, Integer testCaseVersionId, ArrayList<Integer> environmentGroupIds,
-			ResourceIdentity testCaseVersionIdentity) throws Exception;
-
 	List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseId, Integer testCaseVersionId) throws Exception;
 
 	List<TagInfo> getTestCaseTags(UriInfo ui, Integer testCaseId) throws Exception;
-
-	TestCaseStepInfo getTestCaseVersionStep(UriInfo ui, Integer testCaseId, Integer testCaseVersionId, Integer testCaseStepId) throws Exception;
 
 	TestCaseInfo getTestCase(UriInfo ui, Integer testCaseId) throws Exception;
 
 	TestCaseResultInfo findTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	TestCaseVersionInfo updateTestCase(UriInfo ui, Integer testCaseId, TestCaseInfo testCaseInfo) throws Exception;
+	TestCaseInfo updateTestCase(UriInfo ui, Integer testCaseId, TestCaseInfo testCaseInfo) throws Exception;
 
 	Boolean updateTestCaseTags(UriInfo ui, Integer testCaseId, ArrayList<Integer> tagIds) throws Exception;
+
+	TestCaseVersionResultInfo findTestCaseVersions(UriInfo ui, UtestSearchRequest request) throws Exception;
+
+	TestCaseStepInfo createTestCaseStep(UriInfo ui, Integer testCaseVersionId, TestCaseStepInfo testCaseStepInfo) throws Exception;
+
+	TestCaseVersionInfo deactivateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
+
+	Boolean deleteTestCaseStep(UriInfo ui, Integer testCaseVersionId, Integer testCaseStepId) throws Exception;
+
+	Boolean deleteTestCaseVersion(UriInfo ui, Integer testCaseVersionId) throws Exception;
+
+	TestCaseVersionInfo getTestCaseVersion(UriInfo ui, Integer testCaseVersionId) throws Exception;
+
+	List<TestCaseStepInfo> getTestCaseVersionSteps(UriInfo ui, Integer testCaseVersionId) throws Exception;
+
+	TestCaseVersionInfo rejectTestCaseVersion(UriInfo ui, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
+
+	Boolean updateTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseVersionId, ArrayList<Integer> environmentGroupIds, ResourceIdentity testCaseVersionIdentity)
+			throws Exception;
+
+	TestCaseStepInfo updateTestCaseStep(UriInfo ui, Integer testCaseVersionId, Integer testCaseStepId, TestCaseStepInfo testCaseStepInfo) throws Exception;
+
+	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String versionIncrement, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
+
+	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
+
+	TestCaseStepInfo getTestCaseVersionStep(UriInfo ui, Integer testCaseVersionId, Integer testCaseStepId) throws Exception;
 
 }
