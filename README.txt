@@ -2,9 +2,13 @@ uTest TCM Platform
 ==================
 
 Documentation of setup on an Ubuntu 10.10 (Maverick) desktop system.
+  * Build: Get Java and Maven installed and build the tcmplatform source
+  * Run: Setup JBoss, and copy the tcmplatform .war file to the right place
+  * Cheats: .bashrc settings to make re-building and running easier once 
+             you're already setup
 
 Assumes that $TCMPLATFORM is the root directory of the checked-out tcmplatform
-repo.
+repo. (see Cheats section)
 
 Build
 -----
@@ -60,3 +64,28 @@ Now you should be able to connect to http://localhost:8080/tcm/services/ and
 see the web-service WADL file links listed, and connect to
 e.g. http://localhost:8080/tcm/services/v2/rest/companies/ and see the list of
 companies.
+
+
+Cheats
+------
+
+You can add these lines to your .bashrc to make updating and running a tad easier.
+Please modify the environment variables to match your system config:
+
+export TCMPLATFORM=$HOME/gitspace/tcmplatform
+export M2_HOME=/usr/local/apache-maven/apache-maven-2.2.1
+export M2=$M2_HOME/bin
+export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home
+export JBOSS_HOME=$HOME/CodeLibraries/jboss-5.1.0.GA
+export PATH=$M2:$PATH
+
+# TCM
+function tcmupdate() {
+	cd $TCMPLATFORM
+	mvn clean install
+	cp $TCMPLATFORM/utest-portal-webapp/target/tcm.war $JBOSS_HOME/server/default/deploy/
+	echo "DONE: tcm.war copied to JBoss"; echo
+}
+function tcmrun() {
+	$JBOSS_HOME/bin/run.sh
+}
