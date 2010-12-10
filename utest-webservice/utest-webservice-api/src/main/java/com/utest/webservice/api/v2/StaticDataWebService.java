@@ -34,4 +34,6 @@ public interface StaticDataWebService
 	Map<String, List<CodeValue>> getParentMap(String dataType) throws Exception;
 
 	Set<String> getCodeKeys() throws Exception;
+
+	List<CodeValue> getCodeValues(String id, String locale) throws Exception;
 }

@@ -67,30 +67,39 @@ public class StaticDataWebServiceImpl extends BaseWebServiceImpl implements Stat
 
 	@Override
 	@GET
-	@Path("/values/{id}")
+	@Path("/values/{key}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public List<CodeValue> getCodeValues(@PathParam("id") final String id) throws Exception
+	public List<CodeValue> getCodeValues(@PathParam("key") final String id) throws Exception
 	{
 		if (id == null)
 		{
 			throw new IllegalArgumentException("Data type is null.");
 		}
-		String name = id.substring(0, 1).toUpperCase() + id.substring(1);
-		if (id.endsWith("Id"))
-		{
-			name = name.substring(0, name.lastIndexOf("Id"));
-		}
-
+		String name = id.toUpperCase();
 		return objectBuilderFactory.toInfo(CodeValue.class, staticDataService.getCodeDescriptions(name), null);
-
 	}
 
 	@Override
 	@GET
-	@Path("/values/{id}/parent/{parentId}")
+	@Path("/values/{key}/locale/{locale}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public List<CodeValue> getCodeValues(@PathParam("key") final String id, @PathParam("locale") final String locale) throws Exception
+	{
+		if (id == null)
+		{
+			throw new IllegalArgumentException("Data type is null.");
+		}
+		String name = id.toUpperCase();
+		return objectBuilderFactory.toInfo(CodeValue.class, staticDataService.getCodeDescriptions(name, locale), null);
+	}
+
+	// @Override
+	// @GET
+	// @Path("/values/{id}/parent/{parentId}")
+	// @Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	// @Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public List<CodeValue> getParentCodeValues(@PathParam("id") final String id, @PathParam("parentId") final Integer parentId) throws Exception
 	{
 		if (id == null)
@@ -120,11 +129,11 @@ public class StaticDataWebServiceImpl extends BaseWebServiceImpl implements Stat
 		return objectBuilderFactory.toInfo(CodeValue.class, list, null);
 	}
 
-	@Override
-	@GET
-	@Path("/values/{id}/parent/")
-	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	// @Override
+	// @GET
+	// @Path("/values/{id}/parent/")
+	// @Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	// @Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Map<String, List<CodeValue>> getParentMap(@PathParam("id") final String id) throws Exception
 	{
 		if (id == null)
