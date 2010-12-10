@@ -17,9 +17,8 @@ Now build the project::
 
     $ cd $TCMPLATFORM; mvn clean install
 
-This should generate the file ``utest-portal-webapp/target/tcm.war``, and an
-unzipped version of it in ``utest-portal-webapp/target/exploded/tcm.war/``. In
-the next step, we'll install the latter into jBoss.
+This should generate the file ``utest-portal-webapp/target/tcm.war``. In the
+next step, we'll install this into jBoss.
 
 
 Run
@@ -29,6 +28,10 @@ Download and unzip jBoss 5.1::
 
     $ wget -O jboss-5.1.0.GA.zip http://sourceforge.net/projects/jboss/files/JBoss/JBoss-5.1.0.GA/jboss-5.1.0.GA.zip/download
     $ unzip jboss-5.1.GA.zip
+
+Copy the .war file in::
+
+    $ cp $TCMPLATFORM/utest-portal-webapp/target/tcm.war jboss-5.1.0.GA/server/default/deploy/
 
 Add the MySQL connector jar and the datasource configuration into jBoss::
 
