@@ -23,9 +23,9 @@ import java.util.List;
 
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.ProductComponent;
+import com.utest.domain.Tag;
 import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseStep;
-import com.utest.domain.TestCaseTag;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.VersionIncrement;
 import com.utest.domain.search.UtestSearch;
@@ -92,7 +92,7 @@ public interface TestCaseService
 
 	List<TestCaseVersion> getTestCaseVersions(Integer testCaseId) throws Exception;
 
-	List<TestCaseTag> getTestCaseTags(Integer testCaseId) throws Exception;
+	List<Tag> getTestCaseTags(Integer testCaseId) throws Exception;
 
 	TestCaseStep getTestCaseStep(Integer testCaseStepId) throws Exception;
 
@@ -101,4 +101,10 @@ public interface TestCaseService
 	TestCaseVersion saveTestCaseVersion(Integer testCaseVersionId, String description, Integer originalVersion, VersionIncrement versionIncrement) throws Exception;
 
 	UtestSearchResult findTestCases(UtestSearch search) throws Exception;
+
+	void deleteTestCaseTag(Integer testCaseId, Integer tagId);
+
+	void addTestCaseTag(Integer testCaseId, Integer tagId);
+
+	void saveTagsForTestCase(Integer testCaseId, List<Integer> tagIds) throws Exception;
 }

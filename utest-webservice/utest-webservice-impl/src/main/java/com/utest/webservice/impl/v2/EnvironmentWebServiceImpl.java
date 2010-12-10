@@ -42,6 +42,7 @@ import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentType;
 import com.utest.domain.Permission;
+import com.utest.domain.Tag;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
@@ -53,6 +54,8 @@ import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.EnvironmentResultInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeResultInfo;
+import com.utest.webservice.model.v2.TagInfo;
+import com.utest.webservice.model.v2.TagResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 @Path("/env/")
@@ -171,10 +174,9 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.ENVIRONMENT_EDIT })
-	public EnvironmentInfo createEnvironment(@Context final UriInfo ui_, @FormParam("") final EnvironmentInfo environmentInfo_) throws Exception
+	public EnvironmentInfo createEnvironment(@Context final UriInfo ui_, @FormParam("") final EnvironmentInfo tagInfo_) throws Exception
 	{
-		final Environment environment = environmentService.addEnvironment(environmentInfo_.getCompanyId(), environmentInfo_.getEnvironmentTypeId(), environmentInfo_.getName(),
-				environmentInfo_.getLocaleCode());
+		final Environment environment = environmentService.addEnvironment(tagInfo_.getCompanyId(), tagInfo_.getEnvironmentTypeId(), tagInfo_.getName(), tagInfo_.getLocaleCode());
 
 		return objectBuilderFactory.toInfo(EnvironmentInfo.class, environment, ui_.getAbsolutePathBuilder().path("/{id}/"));
 	}
@@ -221,6 +223,62 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	}
 
 	// /////////////
+
+	@POST
+	@Path("/tags/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.ENVIRONMENT_EDIT })
+	public TagInfo createTag(@Context final UriInfo ui_, @FormParam("") final TagInfo tagInfo_) throws Exception
+	{
+		final Tag tag = environmentService.addTag(tagInfo_.getCompanyId(), tagInfo_.getTag());
+
+		return objectBuilderFactory.toInfo(TagInfo.class, tag, ui_.getAbsolutePathBuilder().path("/{id}/"));
+	}
+
+	@DELETE
+	@Path("/tags/{id}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.ENVIRONMENT_EDIT)
+	public Boolean deleteTag(@Context final UriInfo ui_, @PathParam("id") final Integer tagId_) throws Exception
+	{
+		environmentService.deleteTag(tagId_);
+
+		return Boolean.TRUE;
+	}
+
+	@GET
+	@Path("/tags/{id}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.ENVIRONMENT_VIEW)
+	public TagInfo getTag(@Context final UriInfo ui_, @PathParam("id") final Integer tagId_) throws Exception
+	{
+		final Tag tag = environmentService.getTag(tagId_);
+
+		return objectBuilderFactory.toInfo(TagInfo.class, tag, ui_.getAbsolutePathBuilder().path(""));
+	}
+
+	@GET
+	@Path("/tags/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.ENVIRONMENT_VIEW)
+	public TagResultInfo findTags(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	{
+		final UtestSearch search = objectBuilderFactory.createSearch(TagInfo.class, request_, ui_);
+		final UtestSearchResult result = environmentService.findEnvironments(search);
+
+		return (TagResultInfo) objectBuilderFactory.createResult(TagInfo.class, Tag.class, request_, result, ui_.getBaseUriBuilder().path("/tags/{id}"));
+	}
+
+	// /////////////
+
 	@GET
 	@Path("/companies/{id}/parentchildenvironments/{parentId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

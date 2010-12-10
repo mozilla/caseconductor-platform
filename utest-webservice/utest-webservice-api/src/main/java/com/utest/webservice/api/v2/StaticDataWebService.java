@@ -21,6 +21,7 @@ package com.utest.webservice.api.v2;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.utest.webservice.model.v2.CodeValue;
 
@@ -31,4 +32,8 @@ public interface StaticDataWebService
 	List<CodeValue> getParentCodeValues(String dataType, Integer parentId) throws Exception;
 
 	Map<String, List<CodeValue>> getParentMap(String dataType) throws Exception;
+
+	Set<String> getCodeKeys() throws Exception;
+
+	List<CodeValue> getCodeValues(String id, String locale) throws Exception;
 }

@@ -3,10 +3,10 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Oct 7, 2009 11:18:37 AM by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class  mutable="false" name="com.utest.domain.ApprovalStatusLocale" table="ApprovalStatusLocale" catalog="tcm">
-        <composite-id  name="id" class="com.utest.domain.ApprovalStatusLocaleId">
-            <key-property  name="approvalStatusId" type="java.lang.Integer">
-                <column  name="approvalStatusId" />
+    <class  mutable="false" name="com.utest.domain.TestRunResultStatusLocale" table="TestRunResultStatusLocale"  catalog="tcm">
+        <composite-id  name="id" class="com.utest.domain.TestRunResultStatusLocaleId">
+            <key-property  name="testRunResultStatusId" type="java.lang.Integer">
+                <column  name="testRunResultStatusId" />
             </key-property>
             <key-property  name="localeCode" type="string">
                 <column  name="localeCode" length="10" />

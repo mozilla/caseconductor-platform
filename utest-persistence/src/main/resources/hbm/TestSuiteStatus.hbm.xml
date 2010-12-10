@@ -3,15 +3,15 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Oct 7, 2009 11:18:37 AM by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class  mutable="false" name="com.utest.domain.UserStatus" table="UserStatus" catalog="tcm" >
+    <class  mutable="false" name="com.utest.domain.TestSuiteStatus" table="TestSuiteStatus" catalog="tcm">
         <id  name="id" type="java.lang.Integer">
-            <column  name="userStatusId" />
+            <column  name="testSuiteStatusId" />
             <generator class="identity" />
         </id>
-        <map fetch="join"  name="locales" table="UserStatusLocale">
-        	<key column="userStatusId"/>
+        <map fetch="join"  name="locales" table="TestSuiteStatusLocale">
+        	<key column="testSuiteStatusId"/>
         	<map-key type="string" formula="localeCode"/>
-        	<one-to-many class="com.utest.domain.UserStatusLocale" />
+        	<one-to-many class="com.utest.domain.TestSuiteStatusLocale" />
         </map>
     </class>
 </hibernate-mapping>

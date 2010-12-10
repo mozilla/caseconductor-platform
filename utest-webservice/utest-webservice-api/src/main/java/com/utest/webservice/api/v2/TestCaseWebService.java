@@ -27,10 +27,10 @@ import javax.ws.rs.core.UriInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.ResourceIdentity;
+import com.utest.webservice.model.v2.TagInfo;
 import com.utest.webservice.model.v2.TestCaseInfo;
 import com.utest.webservice.model.v2.TestCaseResultInfo;
 import com.utest.webservice.model.v2.TestCaseStepInfo;
-import com.utest.webservice.model.v2.TestCaseTagInfo;
 import com.utest.webservice.model.v2.TestCaseVersionInfo;
 import com.utest.webservice.model.v2.TestCaseVersionResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
@@ -84,7 +84,7 @@ public interface TestCaseWebService
 
 	List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseId, Integer testCaseVersionId) throws Exception;
 
-	List<TestCaseTagInfo> getTestCaseTags(UriInfo ui, Integer testCaseId) throws Exception;
+	List<TagInfo> getTestCaseTags(UriInfo ui, Integer testCaseId) throws Exception;
 
 	TestCaseStepInfo getTestCaseVersionStep(UriInfo ui, Integer testCaseId, Integer testCaseVersionId, Integer testCaseStepId) throws Exception;
 
@@ -93,5 +93,7 @@ public interface TestCaseWebService
 	TestCaseResultInfo findTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	TestCaseVersionInfo updateTestCase(UriInfo ui, Integer testCaseId, TestCaseInfo testCaseInfo) throws Exception;
+
+	Boolean updateTestCaseTags(UriInfo ui, Integer testCaseId, ArrayList<Integer> tagIds) throws Exception;
 
 }

@@ -48,9 +48,9 @@ public class AccessRole extends TimelineEntity implements Named
 	{
 	}
 
-	public AccessRole(final Integer id, final String name, final Integer sortOrder)
+	public AccessRole(final Integer companyId, final String name, final Integer sortOrder)
 	{
-		setId(id);
+		this.companyId = companyId;
 		this.name = name;
 		this.sortOrder = sortOrder;
 	}

@@ -30,6 +30,8 @@ import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.EnvironmentResultInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeResultInfo;
+import com.utest.webservice.model.v2.TagInfo;
+import com.utest.webservice.model.v2.TagResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface EnvironmentWebService
@@ -79,4 +81,12 @@ public interface EnvironmentWebService
 	Boolean updateParentDependableEnvironments(UriInfo ui, Integer companyId, Integer parentEnvironmentId, ArrayList<Integer> environmentIds) throws Exception;
 
 	List<EnvironmentInfo> getParentDependableEnvironments(UriInfo ui, Integer companyId, Integer parentEnvironmentId, UtestSearchRequest request) throws Exception;
+
+	TagInfo createTag(UriInfo ui, TagInfo tagInfo) throws Exception;
+
+	Boolean deleteTag(UriInfo ui, Integer tagId) throws Exception;
+
+	TagInfo getTag(UriInfo ui, Integer tagId) throws Exception;
+
+	TagResultInfo findTags(UriInfo ui, UtestSearchRequest request) throws Exception;
 }

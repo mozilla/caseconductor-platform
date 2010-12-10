@@ -45,6 +45,13 @@ import com.utest.domain.LocaleDescriptable;
 import com.utest.domain.LocalizedEntity;
 import com.utest.domain.ParentDependable;
 import com.utest.domain.ProfileDependable;
+import com.utest.domain.TestCaseStatus;
+import com.utest.domain.TestCycleStatus;
+import com.utest.domain.TestPlanStatus;
+import com.utest.domain.TestRunResultStatus;
+import com.utest.domain.TestRunStatus;
+import com.utest.domain.TestSuiteStatus;
+import com.utest.domain.UserStatus;
 import com.utest.domain.service.StaticDataService;
 import com.utest.domain.util.DescriptionComparator;
 import com.utest.domain.util.DomainUtil;
@@ -82,14 +89,16 @@ public class StaticDataServiceImpl implements StaticDataService
 	static
 	{
 		localizedData.add(Country.class);
-		// localizedData.add(TestCycleStatus.class);
-		// localizedData.add(TestingType.class);
-		// localizedData.add(EntityType.class);
-		// localizedData.add(UserStatus.class);
+		localizedData.add(TestCaseStatus.class);
+		localizedData.add(TestSuiteStatus.class);
+		localizedData.add(TestPlanStatus.class);
+		localizedData.add(TestRunStatus.class);
+		localizedData.add(TestRunResultStatus.class);
+		localizedData.add(TestCycleStatus.class);
+		localizedData.add(UserStatus.class);
 		localizedData.add(ApprovalStatus.class);
 
-		// nonTranslatableData.add(Locale.class);
-		// nonTranslatableData.add(OperatingSystem.class);
+		nonTranslatableData.add(Locale.class);
 	}
 
 	public StaticDataServiceImpl(final TypelessDAO dao)
@@ -301,7 +310,7 @@ public class StaticDataServiceImpl implements StaticDataService
 						{
 							sortLoadedData(filteredValues);
 						}
-						localeMap.put(clazz.getSimpleName(), filtered);
+						localeMap.put(clazz.getSimpleName().toUpperCase(), filtered);
 					}
 					ConcurrentMap<String, Vector<CodeValueEntity>> localeMap = _localizedCodeMap.get(key);
 					if (localeMap == null)
@@ -309,10 +318,10 @@ public class StaticDataServiceImpl implements StaticDataService
 						localeMap = new ConcurrentHashMap<String, Vector<CodeValueEntity>>();
 						_localizedCodeMap.put(key, localeMap);
 					}
-					localeMap.put(clazz.getSimpleName(), sortLoadedData(DomainUtil.convertToCodeValues(list, key)));
+					localeMap.put(clazz.getSimpleName().toUpperCase(), sortLoadedData(DomainUtil.convertToCodeValues(list, key)));
 				}
 			}
-			_nativeObjects.put(clazz.getSimpleName(), list);
+			_nativeObjects.put(clazz.getSimpleName().toUpperCase(), list);
 		}
 	}
 
@@ -342,12 +351,12 @@ public class StaticDataServiceImpl implements StaticDataService
 					{
 						filteredValues = sortLoadedData(filteredValues);
 					}
-					_parentDependable.put(clazz.getSimpleName(), filtered);
+					_parentDependable.put(clazz.getSimpleName().toUpperCase(), filtered);
 
 				}
-				_codeMap.put(clazz.getSimpleName(), sortLoadedData(DomainUtil.convertToCodeValues(list)));
+				_codeMap.put(clazz.getSimpleName().toUpperCase(), sortLoadedData(DomainUtil.convertToCodeValues(list)));
 			}
-			_nativeObjects.put(clazz.getSimpleName(), list);
+			_nativeObjects.put(clazz.getSimpleName().toUpperCase(), list);
 		}
 	}
 
@@ -361,13 +370,13 @@ public class StaticDataServiceImpl implements StaticDataService
 	public String getCodeDescription(final String className, final Integer id_, final String localeCode_)
 	{
 		final List<CodeValueEntity> list;
-		if (_codeMap.containsKey(className))
+		if (_codeMap.containsKey(className.toUpperCase()))
 		{
-			list = _codeMap.get(className);
+			list = _codeMap.get(className.toUpperCase());
 		}
 		else
 		{
-			list = _localizedCodeMap.get(localeCode_).get(className);
+			list = _localizedCodeMap.get(localeCode_).get(className.toUpperCase());
 		}
 		if (list != null)
 		{
@@ -379,10 +388,10 @@ public class StaticDataServiceImpl implements StaticDataService
 				}
 			}
 		}
-		String description = getParentDependableDescription(className, id_);
+		String description = getParentDependableDescription(className.toUpperCase(), id_);
 		if (description == null)
 		{
-			description = getLocalizedParentDependableDescription(className, id_, localeCode_);
+			description = getLocalizedParentDependableDescription(className.toUpperCase(), id_, localeCode_);
 		}
 		return description;
 	}
@@ -390,41 +399,42 @@ public class StaticDataServiceImpl implements StaticDataService
 	@Override
 	public List<CodeValueEntity> getCodeDescriptions(final String className)
 	{
-		return getCodeDescriptions(className, Locale.DEFAULT_LOCALE);
+		return getCodeDescriptions(className.toUpperCase(), Locale.DEFAULT_LOCALE);
 	}
 
 	@Override
 	public List<CodeValueEntity> getCodeDescriptions(final String className, final String localeCode_)
 	{
 		List<CodeValueEntity> list;
-		if (_codeMap.containsKey(className))
+		if (_codeMap.containsKey(className.toUpperCase()))
 		{
-			list = _codeMap.get(className);
+			list = _codeMap.get(className.toUpperCase());
 		}
 		else
 		{
-			list = _localizedCodeMap.get(localeCode_).get(className);
+			list = _localizedCodeMap.get(localeCode_).get(className.toUpperCase());
 		}
 		if (list != null)
 		{
 			return list;
 		}
 		list = new ArrayList<CodeValueEntity>();
-		if (_parentDependable.get(className) != null)
+		if (_parentDependable.get(className.toUpperCase()) != null)
 		{
 
-			for (final List<CodeValueEntity> lst : _parentDependable.get(className).values())
+			for (final List<CodeValueEntity> lst : _parentDependable.get(className.toUpperCase()).values())
 			{
 				list.addAll(lst);
 			}
 			return list;
 		}
 
-		if ((_localizedParentDependable == null) || (_localizedParentDependable.get(localeCode_) == null) || (_localizedParentDependable.get(localeCode_).get(className) == null))
+		if ((_localizedParentDependable == null) || (_localizedParentDependable.get(localeCode_) == null)
+				|| (_localizedParentDependable.get(localeCode_).get(className.toUpperCase()) == null))
 		{
 			return list;
 		}
-		for (final List<CodeValueEntity> lst : _localizedParentDependable.get(localeCode_).get(className).values())
+		for (final List<CodeValueEntity> lst : _localizedParentDependable.get(localeCode_).get(className.toUpperCase()).values())
 		{
 			list.addAll(lst);
 		}
@@ -433,11 +443,11 @@ public class StaticDataServiceImpl implements StaticDataService
 
 	private String getParentDependableDescription(final String className, final Integer id_)
 	{
-		if (_parentDependable.get(className) == null)
+		if (_parentDependable.get(className.toUpperCase()) == null)
 		{
 			return null;
 		}
-		for (final List<CodeValueEntity> list : _parentDependable.get(className).values())
+		for (final List<CodeValueEntity> list : _parentDependable.get(className.toUpperCase()).values())
 		{
 			for (final CodeValueEntity entity : list)
 			{
@@ -452,11 +462,12 @@ public class StaticDataServiceImpl implements StaticDataService
 
 	private String getLocalizedParentDependableDescription(final String className, final Integer id_, final String localeCode_)
 	{
-		if ((_localizedParentDependable == null) || (_localizedParentDependable.get(localeCode_) == null) || (_localizedParentDependable.get(localeCode_).get(className) == null))
+		if ((_localizedParentDependable == null) || (_localizedParentDependable.get(localeCode_) == null)
+				|| (_localizedParentDependable.get(localeCode_).get(className.toUpperCase()) == null))
 		{
 			return null;
 		}
-		for (final List<CodeValueEntity> list : _localizedParentDependable.get(localeCode_).get(className).values())
+		for (final List<CodeValueEntity> list : _localizedParentDependable.get(localeCode_).get(className.toUpperCase()).values())
 		{
 			for (final CodeValueEntity entity : list)
 			{
@@ -472,13 +483,19 @@ public class StaticDataServiceImpl implements StaticDataService
 	@Override
 	public String getCodeDescription(final Class<?> type_, final Integer id_)
 	{
-		return getCodeDescription(type_.getSimpleName(), id_, Locale.DEFAULT_LOCALE);
+		return getCodeDescription(type_.getSimpleName().toUpperCase(), id_, Locale.DEFAULT_LOCALE);
 	}
 
 	@Override
 	public String getCodeDescription(final Class<?> type_, final Integer id_, final String localeCode_)
 	{
-		return getCodeDescription(type_.getSimpleName(), id_, localeCode_);
+		return getCodeDescription(type_.getSimpleName().toUpperCase(), id_, localeCode_);
+	}
+
+	@Override
+	public Set<String> getCodeKeys()
+	{
+		return _nativeObjects.keySet();
 	}
 
 	@Override
@@ -509,7 +526,7 @@ public class StaticDataServiceImpl implements StaticDataService
 	@Override
 	public <T> Vector<T> getNativeDataObjects(final Class<T> clazz_)
 	{
-		return (Vector<T>) _nativeObjects.get(clazz_.getSimpleName());
+		return (Vector<T>) _nativeObjects.get(clazz_.getSimpleName().toUpperCase());
 	}
 
 	@Override

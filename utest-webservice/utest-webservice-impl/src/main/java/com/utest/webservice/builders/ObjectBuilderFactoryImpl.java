@@ -38,6 +38,7 @@ import com.utest.domain.EnvironmentType;
 import com.utest.domain.Permission;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
+import com.utest.domain.Tag;
 import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseVersion;
@@ -63,6 +64,8 @@ import com.utest.webservice.model.v2.ProductInfo;
 import com.utest.webservice.model.v2.ProductResultInfo;
 import com.utest.webservice.model.v2.RoleInfo;
 import com.utest.webservice.model.v2.RoleResultInfo;
+import com.utest.webservice.model.v2.TagInfo;
+import com.utest.webservice.model.v2.TagResultInfo;
 import com.utest.webservice.model.v2.TestCaseInfo;
 import com.utest.webservice.model.v2.TestCaseResultInfo;
 import com.utest.webservice.model.v2.TestCaseStepInfo;
@@ -91,12 +94,14 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 	@Override
 	public void initialize()
 	{
+
 		builders.put(UserInfo.class, new Builder<UserInfo, User>(this, UserInfo.class, UserResultInfo.class));
 		builders.put(RoleInfo.class, new Builder<RoleInfo, AccessRole>(this, RoleInfo.class, RoleResultInfo.class));
 		builders.put(PermissionInfo.class, new Builder<PermissionInfo, Permission>(this, PermissionInfo.class, PermissionResultInfo.class));
 		builders.put(EnvironmentInfo.class, new Builder<EnvironmentInfo, Environment>(this, EnvironmentInfo.class, EnvironmentResultInfo.class));
 		builders.put(EnvironmentTypeInfo.class, new Builder<EnvironmentTypeInfo, EnvironmentType>(this, EnvironmentTypeInfo.class, EnvironmentTypeResultInfo.class));
 		builders.put(EnvironmentGroupInfo.class, new Builder<EnvironmentGroupInfo, EnvironmentGroup>(this, EnvironmentGroupInfo.class, EnvironmentGroupResultInfo.class));
+		builders.put(TagInfo.class, new Builder<TagInfo, Tag>(this, TagInfo.class, TagResultInfo.class));
 		builders.put(CompanyInfo.class, new Builder<CompanyInfo, Company>(this, CompanyInfo.class, CompanyResultInfo.class));
 		builders.put(ProductInfo.class, new Builder<ProductInfo, Product>(this, ProductInfo.class, ProductResultInfo.class));
 		builders.put(ProductComponentInfo.class, new Builder<ProductComponentInfo, ProductComponent>(this, ProductComponentInfo.class, ProductComponentResultInfo.class));
