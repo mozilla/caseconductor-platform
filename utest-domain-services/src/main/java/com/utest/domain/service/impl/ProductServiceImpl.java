@@ -108,7 +108,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	}
 
 	@Override
-	public List<EnvironmentGroup> findEnvironmentGroupsForProduct(final Integer productId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForProduct(final Integer productId_) throws Exception
 	{
 		final Product product = dao.getById(Product.class, productId_);
 		if (product == null)
@@ -172,7 +172,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 			throw new DeletingUsedEntityException(Product.class.getSimpleName() + " : " + productId_);
 		}
 		// delete all product components
-		final List<ProductComponent> components = findComponentsForProduct(productId_);
+		final List<ProductComponent> components = getComponentsForProduct(productId_);
 		dao.delete(components);
 		// delete product
 		dao.delete(product);
@@ -233,7 +233,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	}
 
 	@Override
-	public List<ProductComponent> findComponentsForProduct(final Integer productId_) throws Exception
+	public List<ProductComponent> getComponentsForProduct(final Integer productId_) throws Exception
 	{
 		final Search search = new Search(ProductComponent.class);
 		search.addFilterEqual("productId", productId_);

@@ -19,6 +19,8 @@
  */
 package com.utest.webservice.impl.v2;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -35,23 +37,24 @@ import javax.ws.rs.core.UriInfo;
 
 import org.springframework.security.access.annotation.Secured;
 
-import com.utest.domain.Product;
 import com.utest.domain.Permission;
+import com.utest.domain.Product;
+import com.utest.domain.ProductComponent;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.ProductService;
 import com.utest.webservice.api.v2.ProductWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
+import com.utest.webservice.model.v2.ProductComponentInfo;
+import com.utest.webservice.model.v2.ProductComponentResultInfo;
 import com.utest.webservice.model.v2.ProductInfo;
 import com.utest.webservice.model.v2.ProductResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 @Path("/products/")
-public class ProductWebServiceImpl
-extends BaseWebServiceImpl
-implements ProductWebService
+public class ProductWebServiceImpl extends BaseWebServiceImpl implements ProductWebService
 {
-	private ProductService	productService;
+	private final ProductService	productService;
 
 	public ProductWebServiceImpl(ObjectBuilderFactory objectBuildFactory, ProductService productService)
 	{
@@ -59,18 +62,28 @@ implements ProductWebService
 		this.productService = productService;
 	}
 
+	@POST
+	@Path("/{id}/components/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.PRODUCT_EDIT })
+	public ProductComponentInfo createProductComponent(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
+			@FormParam("") final ProductComponentInfo productComponentInfo_) throws Exception
+	{
+		final ProductComponent productComponent = productService.addProductComponent(productId_, productComponentInfo_.getName(), productComponentInfo_.getDescription());
+		return objectBuilderFactory.toInfo(ProductComponentInfo.class, productComponent, ui_.getAbsolutePathBuilder().path("/{id}"));
+	}
 
 	@POST
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
-	public ProductInfo createProduct(@FormParam("") final ProductInfo productInfo) throws Exception
+	public ProductInfo createProduct(@Context final UriInfo ui_, @FormParam("") final ProductInfo productInfo) throws Exception
 	{
-		final Product product = productService.addProduct(
-				productInfo.getCompanyId(), productInfo.getName(),
-				productInfo.getDescription());
-		return objectBuilderFactory.toInfo(ProductInfo.class, product, null);
+		final Product product = productService.addProduct(productInfo.getCompanyId(), productInfo.getName(), productInfo.getDescription());
+		return objectBuilderFactory.toInfo(ProductInfo.class, product, ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@DELETE
@@ -79,10 +92,24 @@ implements ProductWebService
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
-	public void deleteProduct(@Context final UriInfo ui_,
-			@PathParam("id") final Integer productId) throws Exception
+	public Boolean deleteProduct(@Context final UriInfo ui_, @PathParam("id") final Integer productId) throws Exception
 	{
 		productService.deleteProduct(productId);
+
+		return Boolean.TRUE;
+	}
+
+	@DELETE
+	@Path("/components/{id}")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.PRODUCT_EDIT })
+	public Boolean deleteProductComponent(@Context final UriInfo ui_, @PathParam("id") final Integer productComponentId_) throws Exception
+	{
+		productService.deleteProductComponent(productComponentId_);
+
+		return Boolean.TRUE;
 	}
 
 	@PUT
@@ -91,14 +118,24 @@ implements ProductWebService
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
-	public ProductInfo updateProduct(@Context final UriInfo ui_,
-			@PathParam("id") final Integer productId,
-			@FormParam("") final ProductInfo productInfo) throws Exception
+	public ProductInfo updateProduct(@Context final UriInfo ui_, @PathParam("id") final Integer productId, @FormParam("") final ProductInfo productInfo) throws Exception
 	{
-		Product product = productService.saveProduct(
-				productId, productInfo.getName(), productInfo.getDescription(),
-				productInfo.getResourceIdentity().getVersion());
+		Product product = productService.saveProduct(productId, productInfo.getName(), productInfo.getDescription(), productInfo.getResourceIdentity().getVersion());
 		return objectBuilderFactory.toInfo(ProductInfo.class, product, ui_.getAbsolutePathBuilder().path("/{id}"));
+	}
+
+	@PUT
+	@Path("/components/{id}")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.PRODUCT_EDIT })
+	public ProductComponentInfo updateProductComponent(@Context final UriInfo ui_, @PathParam("id") final Integer productComponentId_,
+			@FormParam("") final ProductComponentInfo productComponentInfo_) throws Exception
+	{
+		ProductComponent productComponent = productService.saveProductComponent(productComponentId_, productComponentInfo_.getName(), productComponentInfo_.getDescription(),
+				productComponentInfo_.getResourceIdentity().getVersion());
+		return objectBuilderFactory.toInfo(ProductComponentInfo.class, productComponent, ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@GET
@@ -107,11 +144,22 @@ implements ProductWebService
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.PRODUCT_VIEW)
-	public ProductInfo getProduct(@Context final UriInfo ui_,
-			@PathParam("id") final Integer productId) throws Exception
+	public ProductInfo getProduct(@Context final UriInfo ui_, @PathParam("id") final Integer productId) throws Exception
 	{
 		Product product = productService.getProduct(productId);
-		return objectBuilderFactory.toInfo(ProductInfo.class, product, null);
+		return objectBuilderFactory.toInfo(ProductInfo.class, product, ui_.getAbsolutePathBuilder().path("/{id}"));
+	}
+
+	@GET
+	@Path("/components/{id}")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.PRODUCT_VIEW)
+	public ProductComponentInfo getProductComponent(@Context final UriInfo ui_, @PathParam("id") final Integer productComponentId_) throws Exception
+	{
+		ProductComponent productComponent = productService.getProductComponent(productComponentId_);
+		return objectBuilderFactory.toInfo(ProductComponentInfo.class, productComponent, ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@GET
@@ -119,15 +167,41 @@ implements ProductWebService
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.PRODUCT_VIEW)
-	public ProductResultInfo findProducts(@Context final UriInfo ui_,
-			@QueryParam("") final UtestSearchRequest request) throws Exception
+	public ProductResultInfo findProducts(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
 	{
 		UtestSearch search = objectBuilderFactory.createSearch(ProductInfo.class, request, ui_);
 		UtestSearchResult result = productService.findProducts(search);
-		return (ProductResultInfo) objectBuilderFactory.createResult(
-				ProductInfo.class, Product.class, request, result,
-				ui_.getAbsolutePathBuilder().path(this.getClass(),
+		return (ProductResultInfo) objectBuilderFactory.createResult(ProductInfo.class, Product.class, request, result, ui_.getAbsolutePathBuilder().path(this.getClass(),
 				"getProduct"));
+	}
+
+	@GET
+	@Path("/components/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.PRODUCT_VIEW)
+	public ProductComponentResultInfo findProductComponents(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
+	{
+		UtestSearch search = objectBuilderFactory.createSearch(ProductComponentInfo.class, request, ui_);
+		UtestSearchResult result = productService.findProductComponents(search);
+		return (ProductComponentResultInfo) objectBuilderFactory.createResult(ProductComponentInfo.class, ProductComponent.class, request, result, ui_.getAbsolutePathBuilder()
+				.path(this.getClass(), "getProductComponent"));
+	}
+
+	@GET
+	@Path("/{id}/components/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CASE_VIEW)
+	/**
+	 * Returns all product components of a test case
+	 */
+	public List<ProductComponentInfo> getProductComponents(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
+	{
+		final List<ProductComponent> components = productService.getComponentsForProduct(productId_);
+		return objectBuilderFactory.toInfo(ProductComponentInfo.class, components, ui_.getAbsolutePathBuilder().path(this.getClass(), "getProductComponent"));
 	}
 
 }

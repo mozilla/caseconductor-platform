@@ -85,7 +85,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 
 		final TestCaseVersion testCaseVersion = testCaseService.saveTestCaseVersion(testCaseVersionId_, testCaseVersionInfo_.getDescription(), testCaseVersionInfo_
 				.getResourceIdentity().getVersion(), VersionIncrement.valueOf(versionIncrement_));
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder().path("/testcases/versions/{id}/"));
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@PUT
@@ -100,7 +100,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 
 		final TestCaseVersion testCaseVersion = testCaseService.saveTestCaseVersion(testCaseVersionId_, testCaseVersionInfo_.getDescription(), testCaseVersionInfo_
 				.getResourceIdentity().getVersion(), VersionIncrement.NONE);
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder().path("/testcases/versions/{id}/"));
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@PUT
@@ -114,7 +114,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	{
 
 		final TestCaseVersion testCaseVersion = testCaseService.approveTestCaseVersion(testCaseVersionId_, testCaseVersionInfo_.getResourceIdentity().getVersion());
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder().path("/testcases/versions/{id}/"));
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@PUT
@@ -128,7 +128,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	{
 
 		final TestCaseVersion testCaseVersion = testCaseService.rejectTestCaseVersion(testCaseVersionId_, testCaseVersionInfo_.getResourceIdentity().getVersion());
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder().path("/testcases/versions/{id}/"));
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@PUT
@@ -142,7 +142,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	{
 
 		final TestCaseVersion testCaseVersion = testCaseService.activateTestCaseVersion(testCaseVersionId_, testCaseVersionInfo_.getResourceIdentity().getVersion());
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder().path("/testcases/versions/{id}/"));
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@PUT
@@ -156,7 +156,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	{
 
 		final TestCaseVersion testCaseVersion = testCaseService.lockTestCaseVersion(testCaseVersionId_, testCaseVersionInfo_.getResourceIdentity().getVersion());
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder().path("/testcases/versions/{id}/"));
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@PUT
@@ -182,11 +182,11 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	{
 		final TestCase testCase = testCaseService.cloneTestCase(testCaseId_);
 
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCase.getLatestVersion(), ui_.getBaseUriBuilder().path("/testcases/versions/{id}/"));
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCase.getLatestVersion(), ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@PUT
-	@Path("/{id}/productcomponents/")
+	@Path("/{id}/components/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -199,7 +199,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	}
 
 	@GET
-	@Path("/{id}/productcomponents/")
+	@Path("/{id}/components/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -210,7 +210,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	public List<ProductComponentInfo> getTestCaseComponents(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
 	{
 		final List<ProductComponent> components = testCaseService.getComponentsForTestCase(testCaseId_);
-		return objectBuilderFactory.toInfo(ProductComponentInfo.class, components, ui_.getAbsolutePathBuilder().path("/{id}/productcomponents/"));
+		return objectBuilderFactory.toInfo(ProductComponentInfo.class, components, ui_.getAbsolutePathBuilder().path("/{id}/components/"));
 	}
 
 	@GET
@@ -281,7 +281,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 		final TestCase testCase = testCaseService.addTestCase(testCaseVersionInfo_.getProductId(), testCaseVersionInfo_.getMaxAttachmentSizeInMbytes(), testCaseVersionInfo_
 				.getMaxNumberOfAttachments(), testCaseVersionInfo_.getName(), testCaseVersionInfo_.getDescription());
 
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCase.getLatestVersion(), ui_.getBaseUriBuilder().path("/testcases/versions/{id}/"));
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCase.getLatestVersion(), ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@DELETE
@@ -366,7 +366,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	public TestCaseVersionInfo getLatestTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
 	{
 		final TestCase testCase = testCaseService.getTestCase(testCaseId_);
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCase.getLatestVersion(), ui_.getBaseUriBuilder().path("/testcases/versions/{id}/"));
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCase.getLatestVersion(), ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@GET
@@ -396,7 +396,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	public TestCaseVersionInfo getTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_) throws Exception
 	{
 		final TestCaseVersion testCaseVersion = testCaseService.getTestCaseVersion(testCaseVersionId_);
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder().path("/testcases/versions/{id}/"));
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@GET
@@ -495,6 +495,6 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	public List<TestCaseVersionInfo> getTestCaseVersions(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
 	{
 		final List<TestCaseVersion> testCaseVersions = testCaseService.getTestCaseVersions(testCaseId_);
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersions, ui_.getBaseUriBuilder().path("/testcases/versions/{id}/"));
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersions, ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 }

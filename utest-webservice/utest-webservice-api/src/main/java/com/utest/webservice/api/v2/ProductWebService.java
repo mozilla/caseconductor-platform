@@ -17,24 +17,40 @@
  *
  * copyright 2010 by uTest
  */
- package com.utest.webservice.api.v2;
+package com.utest.webservice.api.v2;
+
+import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
+import com.utest.webservice.model.v2.ProductComponentInfo;
+import com.utest.webservice.model.v2.ProductComponentResultInfo;
 import com.utest.webservice.model.v2.ProductInfo;
 import com.utest.webservice.model.v2.ProductResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface ProductWebService
 {
-	ProductInfo createProduct(ProductInfo productInfo) throws Exception;
-
-	void deleteProduct(UriInfo ui, Integer productId) throws Exception;
+	Boolean deleteProduct(UriInfo ui, Integer productId) throws Exception;
 
 	ProductInfo updateProduct(UriInfo ui, Integer productId, ProductInfo productInfo) throws Exception;
 
 	ProductInfo getProduct(UriInfo ui, Integer productId) throws Exception;
 
 	ProductResultInfo findProducts(UriInfo ui, UtestSearchRequest request) throws Exception;
+
+	ProductInfo createProduct(UriInfo ui, ProductInfo productInfo) throws Exception;
+
+	ProductComponentInfo createProductComponent(UriInfo ui, Integer productId, ProductComponentInfo productComponentInfo) throws Exception;
+
+	Boolean deleteProductComponent(UriInfo ui, Integer productComponentId) throws Exception;
+
+	ProductComponentInfo updateProductComponent(UriInfo ui, Integer productComponentId, ProductComponentInfo productComponentInfo) throws Exception;
+
+	ProductComponentInfo getProductComponent(UriInfo ui, Integer productComponentId) throws Exception;
+
+	ProductComponentResultInfo findProductComponents(UriInfo ui, UtestSearchRequest request) throws Exception;
+
+	List<ProductComponentInfo> getProductComponents(UriInfo ui, Integer productId) throws Exception;
 
 }

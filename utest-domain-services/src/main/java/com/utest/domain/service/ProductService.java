@@ -37,7 +37,7 @@ public interface ProductService
 
 	Product getProduct(Integer productId) throws Exception;
 
-	List<ProductComponent> findComponentsForProduct(Integer productId) throws Exception;
+	List<ProductComponent> getComponentsForProduct(Integer productId) throws Exception;
 
 	void deleteProduct(Integer productId) throws Exception;
 
@@ -51,7 +51,7 @@ public interface ProductService
 
 	void deleteProductComponent(Integer productComponentId) throws Exception;
 
-	List<EnvironmentGroup> findEnvironmentGroupsForProduct(Integer productId) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForProduct(Integer productId) throws Exception;
 
 	void saveEnvironmentGroupsForProduct(Integer productId, List<Integer> environmentGroupIds, Integer originalVersionId) throws UnsupportedEnvironmentSelectionException,
 			Exception;
