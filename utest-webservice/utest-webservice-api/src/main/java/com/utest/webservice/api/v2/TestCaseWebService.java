@@ -26,7 +26,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
-import com.utest.webservice.model.v2.ResourceIdentity;
 import com.utest.webservice.model.v2.TagInfo;
 import com.utest.webservice.model.v2.TestCaseInfo;
 import com.utest.webservice.model.v2.TestCaseResultInfo;
@@ -86,9 +85,6 @@ public interface TestCaseWebService
 
 	TestCaseVersionInfo rejectTestCaseVersion(UriInfo ui, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
 
-	Boolean updateTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseVersionId, ArrayList<Integer> environmentGroupIds, ResourceIdentity testCaseVersionIdentity)
-			throws Exception;
-
 	TestCaseStepInfo updateTestCaseStep(UriInfo ui, Integer testCaseVersionId, Integer testCaseStepId, TestCaseStepInfo testCaseStepInfo) throws Exception;
 
 	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String versionIncrement, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
@@ -96,5 +92,7 @@ public interface TestCaseWebService
 	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
 
 	TestCaseStepInfo getTestCaseVersionStep(UriInfo ui, Integer testCaseVersionId, Integer testCaseStepId) throws Exception;
+
+	Boolean updateTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseVersionId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
 
 }

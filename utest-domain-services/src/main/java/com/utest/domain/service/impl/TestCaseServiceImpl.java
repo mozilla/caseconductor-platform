@@ -576,8 +576,8 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public void saveEnvironmentGroupsForTestCaseVersion(final Integer testCaseVersionId_, final List<Integer> environmentGroupIds_) throws ChangingActivatedEntityException,
-			UnsupportedEnvironmentSelectionException, Exception
+	public void saveEnvironmentGroupsForTestCaseVersion(final Integer testCaseVersionId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
+			throws ChangingActivatedEntityException, UnsupportedEnvironmentSelectionException, Exception
 	{
 		final TestCaseVersion testCaseVersion = dao.getById(TestCaseVersion.class, testCaseVersionId_);
 		if (testCaseVersion == null)
@@ -601,6 +601,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test case version: " + testCaseVersionId_,
 				"Included environments: " + environmentGroupIds_.toString(), environmentGroupIds_);
 		testCaseVersion.setEnvironmentProfileId(environmentProfile.getId());
+		testCaseVersion.setVersion(originalVersionId_);
 		dao.merge(testCaseVersion);
 	}
 

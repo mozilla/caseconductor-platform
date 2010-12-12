@@ -97,12 +97,19 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	public List<EnvironmentGroup> addGeneratedEnvironmentGroupsForProduct(final Integer productId_, final List<Integer> environmentIds_, final Integer originalVersionId_)
 			throws Exception
 	{
+		return addGeneratedEnvironmentGroupsForProduct(productId_, null, environmentIds_, originalVersionId_);
+	}
+
+	@Override
+	public List<EnvironmentGroup> addGeneratedEnvironmentGroupsForProduct(final Integer productId_, final Integer environmentTypeId_, final List<Integer> environmentIds_,
+			final Integer originalVersionId_) throws Exception
+	{
 		final Product product = dao.getById(Product.class, productId_);
 		if (product == null)
 		{
 			throw new NotFoundException("Product not found:" + productId_);
 		}
-		final List<EnvironmentGroup> groups = environmentService.addGeneratedEnvironmentGroups(product.getCompanyId(), environmentIds_);
+		final List<EnvironmentGroup> groups = environmentService.addGeneratedEnvironmentGroups(product.getCompanyId(), environmentTypeId_, environmentIds_);
 		saveEnvironmentGroupsForProduct(productId_, DomainUtil.extractEntityIds(groups), originalVersionId_);
 		return groups;
 	}

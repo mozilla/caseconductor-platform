@@ -53,7 +53,6 @@ import com.utest.webservice.api.v2.TestCaseWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
-import com.utest.webservice.model.v2.ResourceIdentity;
 import com.utest.webservice.model.v2.TagInfo;
 import com.utest.webservice.model.v2.TestCaseInfo;
 import com.utest.webservice.model.v2.TestCaseResultInfo;
@@ -210,7 +209,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	public List<ProductComponentInfo> getTestCaseComponents(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
 	{
 		final List<ProductComponent> components = testCaseService.getComponentsForTestCase(testCaseId_);
-		return objectBuilderFactory.toInfo(ProductComponentInfo.class, components, ui_.getAbsolutePathBuilder().path("/{id}/components/"));
+		return objectBuilderFactory.toInfo(ProductComponentInfo.class, components, ui_.getAbsolutePathBuilder().path("/{id}"));
 	}
 
 	@GET
@@ -248,27 +247,23 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
 	public Boolean updateTestCaseEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
-			@FormParam("environmentGroupIds") final ArrayList<Integer> environmentGroupIds_, @FormParam("environmentGroupIds") final ResourceIdentity testCaseVersionIdentity_)
-			throws Exception
+			@FormParam("environmentGroupIds") final ArrayList<Integer> environmentGroupIds_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
-		testCaseService.saveEnvironmentGroupsForTestCaseVersion(testCaseVersionId_, environmentGroupIds_);
+		testCaseService.saveEnvironmentGroupsForTestCaseVersion(testCaseVersionId_, environmentGroupIds_, originalVesionId_);
 		return Boolean.TRUE;
 	}
 
 	@GET
-	@Path("/{id}/versions/{versionId}/environmentgroups/")
+	@Path("/versions/{id}/environmentgroups/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_VIEW)
-	/**
-	 * Returns all versions of a test case
-	 */
 	public List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_,
 			@PathParam("versionId") final Integer testCaseVersionId_) throws Exception
 	{
 		final List<EnvironmentGroup> groups = testCaseService.getEnvironmentGroupsForTestCaseVersion(testCaseVersionId_);
-		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getAbsolutePathBuilder().path("/{id}/versions/{versionId}/environmentgroups/"));
+		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getAbsolutePathBuilder().path("/{id}/"));
 	}
 
 	@POST

@@ -71,9 +71,6 @@ public interface TestCaseService
 
 	TestCaseVersion rejectTestCaseVersion(Integer testCaseVersionId, Integer originalVersionId) throws Exception;
 
-	void saveEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId, List<Integer> environmentGroupIds) throws ChangingActivatedEntityException,
-			UnsupportedEnvironmentSelectionException, Exception;
-
 	TestCaseStep saveTestCaseStep(Integer testCaseStepId, String name, Integer stepNumber, String instruction, String expectedResult, Integer estimatedTimeInMin,
 			Integer originalVersionId) throws Exception;
 
@@ -107,4 +104,7 @@ public interface TestCaseService
 	void addTestCaseTag(Integer testCaseId, Integer tagId);
 
 	void saveTagsForTestCase(Integer testCaseId, List<Integer> tagIds) throws Exception;
+
+	void saveEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId, List<Integer> environmentGroupIds, Integer originalVersionId) throws ChangingActivatedEntityException,
+			UnsupportedEnvironmentSelectionException, Exception;
 }

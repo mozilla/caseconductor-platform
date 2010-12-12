@@ -19,10 +19,12 @@
  */
 package com.utest.webservice.api.v2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
+import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.ProductComponentResultInfo;
 import com.utest.webservice.model.v2.ProductInfo;
@@ -52,5 +54,15 @@ public interface ProductWebService
 	ProductComponentResultInfo findProductComponents(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	List<ProductComponentInfo> getProductComponents(UriInfo ui, Integer productId) throws Exception;
+
+	List<EnvironmentGroupInfo> getProducEnvironmentGroups(UriInfo ui, Integer productId) throws Exception;
+
+	Boolean updateProductEnvironmentGroups(UriInfo ui, Integer productId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
+
+	List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(UriInfo ui, Integer productId, ArrayList<Integer> environmentIds, Integer originalVesionId)
+			throws Exception;
+
+	List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(UriInfo ui, Integer productId, Integer environmentTypeId, ArrayList<Integer> environmentIds,
+			Integer originalVesionId) throws Exception;
 
 }

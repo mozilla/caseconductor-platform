@@ -19,6 +19,7 @@
  */
 package com.utest.webservice.impl.v2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -37,6 +38,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.springframework.security.access.annotation.Secured;
 
+import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.Permission;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
@@ -45,6 +47,7 @@ import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.ProductService;
 import com.utest.webservice.api.v2.ProductWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
+import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.ProductComponentResultInfo;
 import com.utest.webservice.model.v2.ProductInfo;
@@ -194,7 +197,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.TEST_CASE_VIEW)
+	@Secured(Permission.PRODUCT_VIEW)
 	/**
 	 * Returns all product components of a test case
 	 */
@@ -202,6 +205,65 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	{
 		final List<ProductComponent> components = productService.getComponentsForProduct(productId_);
 		return objectBuilderFactory.toInfo(ProductComponentInfo.class, components, ui_.getAbsolutePathBuilder().path(this.getClass(), "getProductComponent"));
+	}
+
+	@GET
+	@Path("/{id}/environmentgroups/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.PRODUCT_VIEW)
+	/**
+	 * Returns all versions of a test case
+	 */
+	public List<EnvironmentGroupInfo> getProducEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
+	{
+		final List<EnvironmentGroup> groups = productService.getEnvironmentGroupsForProduct(productId_);
+		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getAbsolutePathBuilder().path("/{id}/"));
+	}
+
+	@PUT
+	@Path("/{id}/environmentgroups/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.PRODUCT_EDIT })
+	public Boolean updateProductEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
+			@FormParam("environmentGroupIds") final ArrayList<Integer> environmentGroupIds_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
+	{
+		productService.saveEnvironmentGroupsForProduct(productId_, environmentGroupIds_, originalVesionId_);
+		return Boolean.TRUE;
+	}
+
+	@PUT
+	@Path("/{id}/environmentgroups/autogenerate/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.ENVIRONMENT_EDIT })
+	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
+			@FormParam("environmentIds") final ArrayList<Integer> environmentIds_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
+	{
+		List<EnvironmentGroup> environmentGroups = productService.addGeneratedEnvironmentGroupsForProduct(productId_, environmentIds_, originalVesionId_);
+		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder().path(
+				"/environmentgroups/{id}"));
+		return environmentGroupsInfo;
+	}
+
+	@PUT
+	@Path("/{id}/environmentgroups/environmenttypes/{typeId}/autogenerate/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.ENVIRONMENT_EDIT })
+	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
+			@PathParam("typeId") final Integer environmentTypeId_, @FormParam("environmentIds") final ArrayList<Integer> environmentIds_,
+			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
+	{
+		List<EnvironmentGroup> environmentGroups = productService.addGeneratedEnvironmentGroupsForProduct(productId_, environmentTypeId_, environmentIds_, originalVesionId_);
+		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder().path(
+				"/environmentgroups/{id}"));
+		return environmentGroupsInfo;
 	}
 
 }

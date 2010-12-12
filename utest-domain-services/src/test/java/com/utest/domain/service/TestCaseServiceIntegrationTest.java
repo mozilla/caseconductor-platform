@@ -107,8 +107,9 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		environmentGroupsIds.add(36);
 		environmentGroupsIds.add(37);
 		environmentGroupsIds.add(2);
+		final TestCaseVersion testCaseVersion = testCaseService.getTestCaseVersion(3);// testCase11.getLatestVersion().getId()
 
-		testCaseService.saveEnvironmentGroupsForTestCaseVersion(3, environmentGroupsIds);
+		testCaseService.saveEnvironmentGroupsForTestCaseVersion(testCaseVersion.getId(), environmentGroupsIds, testCaseVersion.getVersion());
 		Assert.assertTrue(true);
 
 	}
@@ -123,7 +124,7 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		environmentGroupsIds.add(51);
 		environmentGroupsIds.add(52);
 		final TestCaseVersion testCaseVersion = testCaseService.getTestCaseVersion(60);// testCase11.getLatestVersion().getId()
-		testCaseService.saveEnvironmentGroupsForTestCaseVersion(testCaseVersion.getId(), environmentGroupsIds);
+		testCaseService.saveEnvironmentGroupsForTestCaseVersion(testCaseVersion.getId(), environmentGroupsIds, testCaseVersion.getVersion());
 		Assert.assertTrue(true);
 
 	}

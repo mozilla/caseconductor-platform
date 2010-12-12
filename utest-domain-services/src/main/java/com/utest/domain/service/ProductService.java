@@ -53,12 +53,14 @@ public interface ProductService
 
 	List<EnvironmentGroup> getEnvironmentGroupsForProduct(Integer productId) throws Exception;
 
-	void saveEnvironmentGroupsForProduct(Integer productId, List<Integer> environmentGroupIds, Integer originalVersionId) throws UnsupportedEnvironmentSelectionException,
-			Exception;
+	void saveEnvironmentGroupsForProduct(Integer productId, List<Integer> environmentGroupIds, Integer originalVesionId) throws UnsupportedEnvironmentSelectionException, Exception;
 
 	Product saveProduct(Integer productId, String name, String description, Integer originalVersionId) throws Exception;
 
 	ProductComponent saveProductComponent(Integer productComponentId, String name, String description, Integer originalVersionId) throws Exception;
 
 	List<EnvironmentGroup> addGeneratedEnvironmentGroupsForProduct(Integer productId, List<Integer> environmentIds, Integer originalVersionId) throws Exception;
+
+	List<EnvironmentGroup> addGeneratedEnvironmentGroupsForProduct(Integer productId, Integer environmentTypeId, List<Integer> environmentIds, Integer originalVersionId)
+			throws Exception;
 }
