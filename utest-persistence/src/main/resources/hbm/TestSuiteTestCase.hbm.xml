@@ -11,6 +11,7 @@
         <version name="version" type="java.lang.Integer">
             <column name="version" not-null="true" />
         </version>
+        <many-to-one name="testCaseVersion" class="com.utest.domain.TestCaseVersion" column="testCaseVersionId" fetch="join" lazy="false"  update="false" insert="false"/>
         <property name="testSuiteId" type="java.lang.Integer">
             <column name="testSuiteId" not-null="true" />
         </property>

@@ -43,7 +43,7 @@ public class TestPlanResultInfo implements UtestResult<TestPlanInfo>
 		rows.add(row);
 	}
 
-	@XmlElement(name = "testPlans")
+	@XmlElement(name = "testplans")
 	@Override
 	public List<TestPlanInfo> getRows()
 	{

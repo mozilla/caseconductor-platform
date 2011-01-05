@@ -19,9 +19,6 @@
  */
 package com.utest.webservice.model.v2;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -30,42 +27,40 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "searchResult")
-public class TestSuiteResultInfo implements UtestResult<TestSuiteInfo>
+@XmlType(name = "includedtestcase")
+public class IncludedTestCaseInfo extends TestCaseVersionInfo
 {
-	List<TestSuiteInfo>	rows	= new ArrayList<TestSuiteInfo>();
-	@XmlElement(required = true)
-	Integer				totalResults;
+	@XmlElement(required = false)
+	private Integer			containerId;
+	@XmlElement(required = false)
+	private final Integer	priorityId	= 0;
+	@XmlElement(required = false)
+	private final Integer	runOrder	= 0;
+	@XmlElement(required = false)
+	private final boolean	blocking	= false;
 
-	@Override
-	public void addRow(final TestSuiteInfo row)
+	public Integer getContainerId()
 	{
-		rows.add(row);
+		return containerId;
 	}
 
-	@XmlElement(name = "testsuites")
-	@Override
-	public List<TestSuiteInfo> getRows()
+	public void setContainerId(Integer containerId)
 	{
-		return rows;
+		this.containerId = containerId;
 	}
 
-	@Override
-	public Integer getTotalResults()
+	public Integer getPriorityId()
 	{
-		return totalResults;
+		return priorityId;
 	}
 
-	@Override
-	public void setRows(final List<TestSuiteInfo> rows)
+	public Integer getRunOrder()
 	{
-		this.rows = rows;
+		return runOrder;
 	}
 
-	@Override
-	public void setTotalResults(final Integer totalResults)
+	public boolean isBlocking()
 	{
-		this.totalResults = totalResults;
+		return blocking;
 	}
-
 }

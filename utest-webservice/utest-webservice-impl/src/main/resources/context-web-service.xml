@@ -88,34 +88,13 @@
 	<!-- REST -->
 
 	<!-- JSON -->
-	<util:map id="jsonNamespaceMap" map-class="java.util.Hashtable">
-		<entry key="http://utest.com/service/model/v2" value="" />
-		<entry key="urn:org.apache.cxf.aegis.types" value="cxf"/> 
-	</util:map>
-	<util:list id="jsonKeys">
-		<value>companyInfo</value>
-		<value>testCycleInfo</value>
-		<value>userInfo</value>
-		<value>roleInfo</value>
-		<value>permissionInfo</value>
-		<value>testerInfo</value>
-		<value>TesterProfileMobileInfo</value>
-		<value>BugEnvironmentMobileInfo</value>
-		<value>BugEnvironmentDesktopInfo</value>
-		<value>MatchingProfileDesktopInfo</value>
-		<value>MatchingProfileMobileInfo</value>
-		<value>DashboardInfo</value>
-	</util:list>
-
 	<util:list id="jsonTypes">
 		<value>application/json</value>
 		<value>application/jettison</value>
 	</util:list>
 
 	<bean id="jsonProvider" class="org.apache.cxf.jaxrs.provider.AegisJSONProvider">
-		<property name="namespaceMap" ref="jsonNamespaceMap" />
 		<property name="serializeAsArray" value="true" />
-		<property name="arrayKeys" ref="jsonKeys" />
 	</bean>
 	<bean id="aegisProvider" class="org.apache.cxf.jaxrs.provider.AegisElementProvider">
 		<property name="writeXsiType" value="true"/>

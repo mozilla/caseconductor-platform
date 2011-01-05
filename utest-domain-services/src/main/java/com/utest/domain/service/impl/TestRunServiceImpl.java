@@ -161,7 +161,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 
 	private Integer addTestCasesFromTestSuite(final TestRun testRun_, final Integer testSuiteId_, final Integer startingRunOrder_) throws Exception
 	{
-		final List<TestSuiteTestCase> includedTestCases = testSuiteService.findTestSuiteTestCases(testSuiteId_);
+		final List<TestSuiteTestCase> includedTestCases = testSuiteService.getTestSuiteTestCases(testSuiteId_);
 		Integer lastRunOrder = startingRunOrder_;
 		for (final TestSuiteTestCase testSuiteTestCase : includedTestCases)
 		{

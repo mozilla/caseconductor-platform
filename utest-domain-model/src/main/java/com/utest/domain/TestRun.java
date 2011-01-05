@@ -36,7 +36,7 @@ public class TestRun extends TimelineEntity implements ProductDependable, Enviro
 	private Integer	productId;
 	private Date	startDate;
 	private Date	endDate;
-	private boolean	useLatestVesrions;
+	private boolean	useLatestVersions;
 	private boolean	selfAssignAllowed;
 	private Integer	selfAssignLimit;
 	private boolean	selfAssignPerEnvironment;
@@ -76,7 +76,7 @@ public class TestRun extends TimelineEntity implements ProductDependable, Enviro
 		this.testRunStatusId = testRunStatusId;
 		this.testCycleId = testCycleId;
 		this.productId = productId;
-		this.useLatestVesrions = useLatestVesrions;
+		this.useLatestVersions = useLatestVesrions;
 		this.selfAssignAllowed = selfAssignAllowed;
 	}
 
@@ -92,7 +92,7 @@ public class TestRun extends TimelineEntity implements ProductDependable, Enviro
 		this.productId = productId;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.useLatestVesrions = useLatestVesrions;
+		this.useLatestVersions = useLatestVesrions;
 		this.selfAssignAllowed = selfAssignAllowed;
 		this.environmentProfileId = environmentProfileId;
 	}
@@ -167,14 +167,14 @@ public class TestRun extends TimelineEntity implements ProductDependable, Enviro
 		this.endDate = endDate;
 	}
 
-	public boolean isUseLatestVesrions()
+	public boolean isUseLatestVersions()
 	{
-		return this.useLatestVesrions;
+		return this.useLatestVersions;
 	}
 
-	public void setUseLatestVesrions(final boolean useLatestVesrions)
+	public void setUseLatestVersions(final boolean useLatestVersions)
 	{
-		this.useLatestVesrions = useLatestVesrions;
+		this.useLatestVersions = useLatestVersions;
 	}
 
 	public boolean isSelfAssignAllowed()

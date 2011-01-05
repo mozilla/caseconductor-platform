@@ -34,8 +34,8 @@
         <property name="endDate" type="timestamp">
             <column name="endDate" length="19" />
         </property>
-        <property name="useLatestVesrions" type="boolean">
-            <column name="useLatestVesrions" not-null="true" />
+        <property name="useLatestVersions" type="boolean">
+            <column name="useLatestVersions" not-null="true" />
         </property>
         <property name="selfAssignAllowed" type="boolean">
             <column name="selfAssignAllowed" not-null="true" />

@@ -44,9 +44,9 @@ public interface TestSuiteService
 
 	void deleteTestSuiteTestCase(Integer testSuiteTestCaseId_) throws Exception;
 
-	List<TestSuiteTestCase> findTestSuiteTestCases(Integer testSuiteId) throws Exception;
+	List<TestSuiteTestCase> getTestSuiteTestCases(Integer testSuiteId) throws Exception;
 
-	List<EnvironmentGroup> findEnvironmentGroupsForTestSuite(Integer testSuiteId) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestSuite(Integer testSuiteId) throws Exception;
 
 	TestSuiteTestCase getTestSuiteTestCase(Integer testSuiteTestCaseId) throws Exception;
 

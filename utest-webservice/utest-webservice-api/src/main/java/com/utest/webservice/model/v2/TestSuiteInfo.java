@@ -39,7 +39,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "testSuite")
+@XmlType(name = "testsuite")
 public class TestSuiteInfo extends BaseInfo
 {
 	@XmlElement(required = true)

@@ -85,7 +85,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
-	public List<EnvironmentGroup> findEnvironmentGroupsForTestSuite(final Integer testSuiteId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForTestSuite(final Integer testSuiteId_) throws Exception
 	{
 		final TestSuite testSuite = dao.getById(TestSuite.class, testSuiteId_);
 		if ((testSuite != null) && (testSuite.getEnvironmentProfileId() != null))
@@ -210,7 +210,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 			throw new DeletingActivatedEntityException(TestSuite.class.getSimpleName());
 		}
 		// delete all included test cases
-		final List<TestSuiteTestCase> includedTestCases = findTestSuiteTestCases(testSuiteId_);
+		final List<TestSuiteTestCase> includedTestCases = getTestSuiteTestCases(testSuiteId_);
 		dao.delete(includedTestCases);
 		// delete test suite
 		dao.delete(testSuite);
@@ -266,7 +266,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
-	public List<TestSuiteTestCase> findTestSuiteTestCases(final Integer testSuiteId_) throws Exception
+	public List<TestSuiteTestCase> getTestSuiteTestCases(final Integer testSuiteId_) throws Exception
 	{
 		final Search search = new Search(TestSuiteTestCase.class);
 		search.addFilterEqual("testSuiteId", testSuiteId_);
@@ -339,7 +339,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 		}
 		if (activationStatusId_ != testSuite.getTestSuiteStatusId())
 		{
-			final List<TestSuiteTestCase> includedTestCases = findTestSuiteTestCases(testSuiteId_);
+			final List<TestSuiteTestCase> includedTestCases = getTestSuiteTestCases(testSuiteId_);
 			if ((includedTestCases == null) || includedTestCases.isEmpty())
 			{
 				throw new ActivatingIncompleteEntityException(TestCaseVersion.class.getSimpleName() + " : " + testSuiteId_);

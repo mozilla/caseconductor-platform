@@ -1,0 +1,190 @@
+/**
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * 
+ * @author Vadim Kisen
+ *
+ * copyright 2010 by uTest 
+ */
+package com.utest.webservice.impl.v2;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+
+import org.springframework.security.access.annotation.Secured;
+
+import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.Permission;
+import com.utest.domain.TestSuite;
+import com.utest.domain.search.UtestSearch;
+import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.service.TestSuiteService;
+import com.utest.webservice.api.v2.TestSuiteWebService;
+import com.utest.webservice.builders.ObjectBuilderFactory;
+import com.utest.webservice.model.v2.EnvironmentGroupInfo;
+import com.utest.webservice.model.v2.TestSuiteInfo;
+import com.utest.webservice.model.v2.TestSuiteResultInfo;
+import com.utest.webservice.model.v2.UtestSearchRequest;
+
+@Path("/testsuites/")
+public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestSuiteWebService
+{
+	private final TestSuiteService	testSuiteService;
+
+	public TestSuiteWebServiceImpl(final ObjectBuilderFactory objectBuildFactory, final TestSuiteService testSuiteService)
+	{
+		super(objectBuildFactory);
+		this.testSuiteService = testSuiteService;
+	}
+
+	@PUT
+	@Path("/{id}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_SUITE_EDIT })
+	public TestSuiteInfo updateTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_, @FormParam("") final TestSuiteInfo testSuiteInfo_)
+			throws Exception
+	{
+
+		final TestSuite testSuite = testSuiteService.saveTestSuite(testSuiteId_, testSuiteInfo_.getName(), testSuiteInfo_.getDescription(), testSuiteInfo_.getResourceIdentity()
+				.getVersion());
+		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getAbsolutePathBuilder().path("/{id}"));
+	}
+
+	@PUT
+	@Path("/{id}/activate/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_SUITE_EDIT })
+	public TestSuiteInfo activateTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_, @FormParam("") final TestSuiteInfo testSuiteInfo_)
+			throws Exception
+	{
+
+		final TestSuite testSuite = testSuiteService.activateTestSuite(testSuiteId_, testSuiteInfo_.getResourceIdentity().getVersion());
+		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getAbsolutePathBuilder().path("/{id}"));
+	}
+
+	@PUT
+	@Path("/{id}/deactivate/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_SUITE_EDIT })
+	public TestSuiteInfo deactivateTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_, @FormParam("") final TestSuiteInfo testSuiteInfo_)
+			throws Exception
+	{
+
+		final TestSuite testSuite = testSuiteService.lockTestSuite(testSuiteId_, testSuiteInfo_.getResourceIdentity().getVersion());
+		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getAbsolutePathBuilder().path("/{id}"));
+	}
+
+	@PUT
+	@Path("/{id}/environmentgroups/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_SUITE_EDIT })
+	public Boolean updateTestSuiteEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_,
+			@FormParam("environmentGroupIds") final ArrayList<Integer> environmentGroupIds_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
+	{
+		testSuiteService.saveEnvironmentGroupsForTestSuite(testSuiteId_, environmentGroupIds_, originalVesionId_);
+		return Boolean.TRUE;
+	}
+
+	@GET
+	@Path("/{id}/environmentgroups/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_SUITE_VIEW)
+	public List<EnvironmentGroupInfo> getTestSuiteEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_) throws Exception
+	{
+		final List<EnvironmentGroup> groups = testSuiteService.getEnvironmentGroupsForTestSuite(testSuiteId_);
+		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getAbsolutePathBuilder().path("/{id}/"));
+	}
+
+	@POST
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_SUITE_EDIT })
+	public TestSuiteInfo createTestSuite(@Context final UriInfo ui_, @FormParam("") final TestSuiteInfo testSuiteInfo_) throws Exception
+	{
+		final TestSuite testSuite = testSuiteService.addTestSuite(testSuiteInfo_.getProductId(), testSuiteInfo_.isUseLatestVersions(), testSuiteInfo_.getName(), testSuiteInfo_
+				.getDescription());
+
+		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getAbsolutePathBuilder().path("/{id}"));
+	}
+
+	@DELETE
+	@Path("/{id}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_SUITE_EDIT)
+	public Boolean deleteTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_) throws Exception
+	{
+		testSuiteService.deleteTestSuite(testSuiteId_);
+
+		return Boolean.TRUE;
+	}
+
+	@GET
+	@Path("/{id}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_SUITE_VIEW)
+	/**
+	 * Returns latest version of test case by default
+	 */
+	public TestSuiteInfo getTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_) throws Exception
+	{
+		final TestSuite testSuite = testSuiteService.getTestSuite(testSuiteId_);
+		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getAbsolutePathBuilder().path("/{id}"));
+	}
+
+	@GET
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_SUITE_VIEW)
+	/**
+	 * Returns latest versions of test cases by default
+	 */
+	public TestSuiteResultInfo findTestSuites(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	{
+		final UtestSearch search = objectBuilderFactory.createSearch(TestSuiteInfo.class, request_, ui_);
+		final UtestSearchResult result = testSuiteService.findTestSuites(search);
+
+		return (TestSuiteResultInfo) objectBuilderFactory.createResult(TestSuiteInfo.class, TestSuite.class, request_, result, ui_.getAbsolutePathBuilder().path("/{id}/"));
+	}
+
+}
