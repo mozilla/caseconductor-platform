@@ -126,7 +126,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		}
 		final TestRun testRun = addTestRun(testCycleId_, useLatestVersiuons_, name_, description_, startDate_, endDate_, selfAssignAllowed_, selfAssignPerEnvironment_,
 				selfAssignLimit_);
-		final List<TestPlanTestSuite> includedTestSuites = testPlanService.findTestPlanTestSuites(testPlanId_);
+		final List<TestPlanTestSuite> includedTestSuites = testPlanService.getTestPlanTestSuites(testPlanId_);
 		Integer startingRunOrder = 0;
 		for (final TestPlanTestSuite testPlanTestSuite : includedTestSuites)
 		{

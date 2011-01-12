@@ -66,9 +66,9 @@ public class TestPlanServiceIntegrationTest extends BaseDomainServiceIntegration
 		testSuiteService.activateTestSuite(testSuite2.getId(), testSuite2.getVersion());
 		testSuiteService.activateTestSuite(testSuite3.getId(), testSuite3.getVersion());
 
-		Assert.assertTrue(testPlanService.addTestPlanTestSuite(testPlan11.getId(), testSuite1.getId(), 1) != null);
-		Assert.assertTrue(testPlanService.addTestPlanTestSuite(testPlan11.getId(), testSuite2.getId(), 1) != null);
-		Assert.assertTrue(testPlanService.addTestPlanTestSuite(testPlan11.getId(), testSuite3.getId(), 1) != null);
+		Assert.assertTrue(testPlanService.addTestPlanTestSuite(testPlan11.getId(), testSuite1.getId()) != null);
+		Assert.assertTrue(testPlanService.addTestPlanTestSuite(testPlan11.getId(), testSuite2.getId()) != null);
+		Assert.assertTrue(testPlanService.addTestPlanTestSuite(testPlan11.getId(), testSuite3.getId()) != null);
 	}
 
 	//@Test(groups = { "integration" })

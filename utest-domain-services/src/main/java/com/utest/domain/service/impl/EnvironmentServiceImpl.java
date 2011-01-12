@@ -808,8 +808,7 @@ public class EnvironmentServiceImpl implements EnvironmentService
 	}
 
 	@Override
-	public EnvironmentGroup saveEnvironmentGroup(final Integer environmentGroupId_, String name_, String description_, String externalIdentifier_, Integer originalVersionId_)
-			throws Exception
+	public EnvironmentGroup saveEnvironmentGroup(final Integer environmentGroupId_, String name_, String description_, Integer originalVersionId_) throws Exception
 	{
 		final EnvironmentGroup group = dao.getById(EnvironmentGroup.class, environmentGroupId_);
 		if (group == null)
@@ -818,7 +817,6 @@ public class EnvironmentServiceImpl implements EnvironmentService
 		}
 		group.setName(name_);
 		group.setDescription(description_);
-		group.setExternalIdentifier(externalIdentifier_);
 		group.setVersion(originalVersionId_);
 		return dao.merge(group);
 

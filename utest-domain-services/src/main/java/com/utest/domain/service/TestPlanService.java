@@ -40,21 +40,21 @@ public interface TestPlanService
 
 	TestPlan getTestPlan(Integer testPlanId) throws Exception;
 
-	List<TestPlanTestSuite> findTestPlanTestSuites(Integer testPlanId) throws Exception;
+	List<TestPlanTestSuite> getTestPlanTestSuites(Integer testPlanId) throws Exception;
 
 	TestPlan addTestPlan(Integer productId, String name, String description) throws Exception;
 
-	List<EnvironmentGroup> findEnvironmentGroupsForTestPlan(Integer testPlanId) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestPlan(Integer testPlanId) throws Exception;
 
 	TestPlan activateTestPlan(Integer testPlanId, Integer originalVersionId) throws Exception;
 
 	TestPlan lockTestPlan(Integer testPlanId, Integer originalVersionId) throws Exception;
 
-	TestPlanTestSuite addTestPlanTestSuite(Integer testPlanId, Integer testSuiteId, Integer runOrder, Integer originalVersionId) throws Exception;
+	TestPlanTestSuite addTestPlanTestSuite(Integer testPlanId, Integer testSuiteId, Integer runOrder) throws Exception;
 
-	TestPlanTestSuite addTestPlanTestSuite(Integer testPlanId, Integer testSuiteId, Integer originalVersionId) throws Exception;
+	TestPlanTestSuite addTestPlanTestSuite(Integer testPlanId, Integer testSuiteId) throws Exception;
 
-	void deleteTestPlanTestSuite(Integer testPlanTestSuiteId, Integer originalVersionId) throws Exception;
+	void deleteTestPlanTestSuite(Integer testPlanTestSuiteId) throws Exception;
 
 	void saveEnvironmentGroupsForTestPlan(Integer testPlanId, List<Integer> environmentGroupIds, Integer originalVersionId) throws UnsupportedEnvironmentSelectionException,
 			Exception;

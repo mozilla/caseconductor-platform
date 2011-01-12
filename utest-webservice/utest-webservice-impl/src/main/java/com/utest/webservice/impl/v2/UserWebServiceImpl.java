@@ -61,7 +61,7 @@ import com.utest.webservice.model.v2.UserResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 import com.utest.webservice.util.SessionUtil;
 
-@Path("/usr/")
+@Path("/users/")
 public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebService
 {
 	private final UserService	userService;
@@ -113,7 +113,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	}
 
 	@PUT
-	@Path("/users/{id}/activate/")
+	@Path("/{id}/activate/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -121,11 +121,11 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	public UserInfo activateUser(@Context final UriInfo ui_, @PathParam("id") final Integer userId) throws Exception
 	{
 		final User user = userService.activateUserAccount(userId);
-		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getAbsolutePathBuilder().path("/users/{id}/"));
+		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
-	@Path("/users/{id}/deactivate/")
+	@Path("/{id}/deactivate/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -133,11 +133,11 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	public UserInfo deactivateUser(@Context final UriInfo ui_, @PathParam("id") final Integer userId) throws Exception
 	{
 		final User user = userService.closeUserAccount(userId);
-		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getAbsolutePathBuilder().path("/users/{id}/"));
+		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
-	@Path("/users/{id}/passwordchange/{newpassword}/")
+	@Path("/{id}/passwordchange/{newpassword}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -145,11 +145,11 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	public UserInfo changeUserPassword(@Context final UriInfo ui_, @PathParam("id") final Integer userId, @PathParam("newpassword") final String newPassword) throws Exception
 	{
 		final User user = userService.changeUserPassword(userId, newPassword);
-		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getAbsolutePathBuilder().path("/users/{id}/"));
+		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
-	@Path("/users/{id}/emailchange/{newemail}/")
+	@Path("/{id}/emailchange/{newemail}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -157,11 +157,11 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	public UserInfo changeUserEmail(@Context final UriInfo ui_, @PathParam("id") final Integer userId, @PathParam("newemail") final String newEmail) throws Exception
 	{
 		final User user = userService.changeUserEmail(userId, newEmail);
-		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getAbsolutePathBuilder().path("/users/{id}/"));
+		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
-	@Path("/users/{id}/")
+	@Path("/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -170,24 +170,24 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	{
 		final User user = userService.saveUser(userId, userInfo.getCompanyId(), userInfo.getFirstName(), userInfo.getLastName(), userInfo.getResourceIdentity().getVersion());
 
-		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getAbsolutePathBuilder().path("/users/{id}/"));
+		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getBaseUriBuilder());
 	}
 
 	@POST
-	@Path("/users/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.USER_ACCOUNT_EDIT })
 	public UserInfo createUser(@Context final UriInfo ui_, @FormParam("") final UserInfo userInfo) throws Exception
 	{
-		final User user = userService.addUser(userInfo.getCompanyId(), userInfo.getFirstName(), userInfo.getLastName(), userInfo.getEmail(), userInfo.getPassword());
+		final User user = userService.addUser(userInfo.getCompanyId(), userInfo.getFirstName(), userInfo.getLastName(), userInfo.getEmail(), userInfo.getPassword(), userInfo
+				.getScreenName());
 
-		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getAbsolutePathBuilder().path("/users/{id}/"));
+		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getBaseUriBuilder());
 	}
 
 	@GET
-	@Path("/users/{id}/")
+	@Path("/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -196,11 +196,23 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	{
 		final User user = userService.getUser(userId);
 
-		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getAbsolutePathBuilder().path("/users/{id}/"));
+		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getBaseUriBuilder());
 	}
 
 	@GET
-	@Path("/users/")
+	@Path("/current/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.USER_ACCOUNT_VIEW)
+	public UserInfo getCurrentUser(@Context final UriInfo ui_) throws Exception
+	{
+		final User user = userService.getCurrentUser();
+
+		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getBaseUriBuilder());
+	}
+
+	@GET
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -210,7 +222,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 		final UtestSearch search = objectBuilderFactory.createSearch(UserInfo.class, request, ui_);
 		final UtestSearchResult result = userService.findUsers(search);
 
-		return (UserResultInfo) objectBuilderFactory.createResult(UserInfo.class, User.class, request, result, ui_.getBaseUriBuilder().path("/users/{id}"));
+		return (UserResultInfo) objectBuilderFactory.createResult(UserInfo.class, User.class, request, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -224,7 +236,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 		final UtestSearch search = objectBuilderFactory.createSearch(PermissionInfo.class, request, ui_);
 		final UtestSearchResult result = userService.findPermissions(search);
 
-		return (PermissionResultInfo) objectBuilderFactory.createResult(PermissionInfo.class, Permission.class, request, result, ui_.getBaseUriBuilder().path("/permissions/{id}"));
+		return (PermissionResultInfo) objectBuilderFactory.createResult(PermissionInfo.class, Permission.class, request, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -237,11 +249,11 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	{
 		final Permission permission = userService.getPermission(permissionId_);
 
-		return objectBuilderFactory.toInfo(PermissionInfo.class, permission, ui_.getAbsolutePathBuilder().path("/permissions/{id}/"));
+		return objectBuilderFactory.toInfo(PermissionInfo.class, permission, ui_.getBaseUriBuilder());
 	}
 
 	@GET
-	@Path("/users/{id}/permissions/")
+	@Path("/{id}/permissions/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -249,13 +261,13 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	public List<PermissionInfo> getUserPermissions(@Context UriInfo ui_, @PathParam("id") final Integer userId_, @QueryParam("") UtestSearchRequest request) throws Exception
 	{
 		final List<Permission> permissions = userService.getUserPermissions(userId_);
-		final List<PermissionInfo> permissionsInfo = objectBuilderFactory.toInfo(PermissionInfo.class, permissions, ui_.getBaseUriBuilder().path("/permissions/{id}"));
+		final List<PermissionInfo> permissionsInfo = objectBuilderFactory.toInfo(PermissionInfo.class, permissions, ui_.getBaseUriBuilder());
 		return permissionsInfo;
 
 	}
 
 	@GET
-	@Path("/users/{id}/roles/")
+	@Path("/{id}/roles/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -263,7 +275,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	public List<RoleInfo> getUserRoles(@Context UriInfo ui_, @PathParam("id") final Integer userId_, @QueryParam("") UtestSearchRequest request) throws Exception
 	{
 		final List<AccessRole> roles = userService.getUserRoles(userId_);
-		final List<RoleInfo> rolesInfo = objectBuilderFactory.toInfo(RoleInfo.class, roles, ui_.getBaseUriBuilder().path("/roles/{id}"));
+		final List<RoleInfo> rolesInfo = objectBuilderFactory.toInfo(RoleInfo.class, roles, ui_.getBaseUriBuilder());
 		return rolesInfo;
 	}
 
@@ -277,7 +289,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	{
 		final AccessRole role = userService.addRole(roleInfo.getCompanyId(), roleInfo.getName(), new ArrayList<Integer>());
 
-		return objectBuilderFactory.toInfo(RoleInfo.class, role, ui_.getAbsolutePathBuilder().path("/roles/{id}/"));
+		return objectBuilderFactory.toInfo(RoleInfo.class, role, ui_.getBaseUriBuilder());
 	}
 
 	@DELETE
@@ -306,7 +318,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	}
 
 	@PUT
-	@Path("/users/{id}/roles/")
+	@Path("/{id}/roles/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -330,7 +342,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	}
 
 	@POST
-	@Path("/users/{id}/roles/{roleId}")
+	@Path("/{id}/roles/{roleId}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -355,7 +367,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	}
 
 	@DELETE
-	@Path("/users/{id}/roles/{roleId}")
+	@Path("/{id}/roles/{roleId}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -377,7 +389,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 		final UtestSearch search = objectBuilderFactory.createSearch(PermissionInfo.class, request, ui_);
 		final UtestSearchResult result = userService.findRoles(search);
 
-		return (RoleResultInfo) objectBuilderFactory.createResult(RoleInfo.class, AccessRole.class, request, result, ui_.getBaseUriBuilder().path("/roles/{id}"));
+		return (RoleResultInfo) objectBuilderFactory.createResult(RoleInfo.class, AccessRole.class, request, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -390,7 +402,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	{
 		final AccessRole role = userService.getRole(roleId_);
 
-		return objectBuilderFactory.toInfo(RoleInfo.class, role, ui_.getAbsolutePathBuilder().path("/roles/{id}/"));
+		return objectBuilderFactory.toInfo(RoleInfo.class, role, ui_.getBaseUriBuilder());
 	}
 
 }

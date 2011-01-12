@@ -37,6 +37,23 @@
 	<import resource="classpath:META-INF/cxf/cxf-extension-jaxws.xml" />
 
 	<!-- Services bean -->
+    <bean id="resourceManager" class="com.utest.webservice.builders.ResourceManager">
+        <property name="resourceUrls">
+            <map>
+                <entry key="environmentType" value="/environmenttypes/{id}"/>
+                <entry key="company" value="/companies/{id}"/>
+                <entry key="user" value="/users/{id}"/>
+                <entry key="product" value="/products/{id}"/>
+                <entry key="testCase" value="/testcases/{id}"/>
+                <entry key="testCaseVersion" value="/testcases/versions/{id}"/>
+                <entry key="testSuite" value="/testsuites/{id}"/>
+                <entry key="testPlan" value="/testplans/{id}"/>
+                <entry key="testCycle" value="/testcycles/{id}"/>
+                <entry key="testRun" value="/testruns/{id}"/>
+            </map>
+        </property>
+    </bean>
+	
 	<bean id="companyWebService" class="com.utest.webservice.impl.v2.CompanyWebServiceImpl">
 		<constructor-arg ref="objectBuilderFactory" />
 		<constructor-arg ref="companyService" />
@@ -61,6 +78,16 @@
 	<bean id="testCaseWebService" class="com.utest.webservice.impl.v2.TestCaseWebServiceImpl">
 		<constructor-arg ref="objectBuilderFactory" />
 		<constructor-arg ref="testCaseService" />
+	</bean>
+
+	<bean id="testSuiteWebService" class="com.utest.webservice.impl.v2.TestSuiteWebServiceImpl">
+		<constructor-arg ref="objectBuilderFactory" />
+		<constructor-arg ref="testSuiteService" />
+	</bean>
+
+	<bean id="testPlanWebService" class="com.utest.webservice.impl.v2.TestPlanWebServiceImpl">
+		<constructor-arg ref="objectBuilderFactory" />
+		<constructor-arg ref="testPlanService" />
 	</bean>
 
 	<bean id="staticDataWebService" class="com.utest.webservice.impl.v2.StaticDataWebServiceImpl">
@@ -109,6 +136,8 @@
 			<ref bean="userWebService" />
 			<ref bean="environmentWebService" />
 			<ref bean="testCaseWebService" />
+			<ref bean="testSuiteWebService" />
+			<ref bean="testPlanWebService" />
 			<ref bean="productWebService" />
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>

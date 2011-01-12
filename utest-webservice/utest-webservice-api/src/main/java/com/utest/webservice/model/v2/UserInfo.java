@@ -34,6 +34,8 @@ public class UserInfo extends BaseInfo
 	@XmlElement(required = false)
 	private String	password;
 	@XmlElement(required = false)
+	private String	screenName;
+	@XmlElement(required = false)
 	private String	firstName;
 	@XmlElement(required = false)
 	private String	lastName;
@@ -102,6 +104,16 @@ public class UserInfo extends BaseInfo
 	public void setCompanyId(Integer companyId)
 	{
 		this.companyId = companyId;
+	}
+
+	public void setScreenName(String screenName)
+	{
+		this.screenName = screenName;
+	}
+
+	public String getScreenName()
+	{
+		return screenName;
 	}
 
 }

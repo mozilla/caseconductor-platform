@@ -79,15 +79,14 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	}
 
 	@Override
-	public TestPlanTestSuite addTestPlanTestSuite(final Integer testPlanId_, final Integer testSuiteId_, final Integer originalVersionId_) throws Exception
+	public TestPlanTestSuite addTestPlanTestSuite(final Integer testPlanId_, final Integer testSuiteId_) throws Exception
 	{
 		final Integer runOrder = 0;
-		return addTestPlanTestSuite(testPlanId_, testSuiteId_, runOrder, originalVersionId_);
+		return addTestPlanTestSuite(testPlanId_, testSuiteId_, runOrder);
 	}
 
 	@Override
-	public TestPlanTestSuite addTestPlanTestSuite(final Integer testPlanId_, final Integer testSuiteId_, final Integer runOrder_, final Integer originalVersionId_)
-			throws Exception
+	public TestPlanTestSuite addTestPlanTestSuite(final Integer testPlanId_, final Integer testSuiteId_, final Integer runOrder_) throws Exception
 	{
 		final TestPlan testPlan = dao.getById(TestPlan.class, testPlanId_);
 		if (testPlan == null)
@@ -139,14 +138,14 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 			throw new DeletingActivatedEntityException(TestPlan.class.getSimpleName());
 		}
 		// delete all included test suites
-		final List<TestPlanTestSuite> includedTestSuites = findTestPlanTestSuites(testPlanId_);
+		final List<TestPlanTestSuite> includedTestSuites = getTestPlanTestSuites(testPlanId_);
 		dao.delete(includedTestSuites);
 		// delete test suite
 		dao.delete(testPlan);
 	}
 
 	@Override
-	public void deleteTestPlanTestSuite(final Integer testPlanTestSuiteId_, final Integer originalVersionId_) throws Exception
+	public void deleteTestPlanTestSuite(final Integer testPlanTestSuiteId_) throws Exception
 	{
 		final TestPlanTestSuite includedTestSuite = dao.getById(TestPlanTestSuite.class, testPlanTestSuiteId_);
 		if (includedTestSuite == null)
@@ -180,7 +179,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	}
 
 	@Override
-	public List<TestPlanTestSuite> findTestPlanTestSuites(final Integer testPlanId_) throws Exception
+	public List<TestPlanTestSuite> getTestPlanTestSuites(final Integer testPlanId_) throws Exception
 	{
 		if (testPlanId_ == null)
 		{
@@ -249,7 +248,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 		}
 		if (TcmEntityStatus.ACTIVATED != testPlan.getTestPlanStatusId())
 		{
-			final List<TestPlanTestSuite> includedTestSuites = findTestPlanTestSuites(testPlanId_);
+			final List<TestPlanTestSuite> includedTestSuites = getTestPlanTestSuites(testPlanId_);
 			if ((includedTestSuites == null) || includedTestSuites.isEmpty())
 			{
 				throw new ActivatingIncompleteEntityException(TestPlan.class.getSimpleName() + " : " + testPlanId_);
@@ -301,7 +300,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	}
 
 	@Override
-	public List<EnvironmentGroup> findEnvironmentGroupsForTestPlan(final Integer testPlanId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForTestPlan(final Integer testPlanId_) throws Exception
 	{
 		final TestPlan testPlan = dao.getById(TestPlan.class, testPlanId_);
 		if (testPlan == null)

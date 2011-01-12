@@ -28,26 +28,22 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "includedtestcase")
-public class IncludedTestCaseInfo extends TestCaseVersionInfo
+public class IncludedTestCaseInfo extends BaseInfo
 {
 	@XmlElement(required = false)
-	private Integer			containerId;
+	private Integer			testCaseId;
+	@XmlElement(type = ResourceLocator.class, name = "testCaseLocator")
+	private ResourceLocator	testCaseLocator;
+	@XmlElement(required = true)
+	private Integer			testCaseVersionId;
+	@XmlElement(type = ResourceLocator.class, name = "testCaseVersionLocator")
+	private ResourceLocator	testCaseVersionLocator;
 	@XmlElement(required = false)
-	private final Integer	priorityId	= 0;
+	private Integer			priorityId	= 0;
 	@XmlElement(required = false)
-	private final Integer	runOrder	= 0;
+	private Integer			runOrder	= 0;
 	@XmlElement(required = false)
-	private final boolean	blocking	= false;
-
-	public Integer getContainerId()
-	{
-		return containerId;
-	}
-
-	public void setContainerId(Integer containerId)
-	{
-		this.containerId = containerId;
-	}
+	private boolean			blocking	= false;
 
 	public Integer getPriorityId()
 	{
@@ -62,5 +58,60 @@ public class IncludedTestCaseInfo extends TestCaseVersionInfo
 	public boolean isBlocking()
 	{
 		return blocking;
+	}
+
+	public void setPriorityId(Integer priorityId)
+	{
+		this.priorityId = priorityId;
+	}
+
+	public void setRunOrder(Integer runOrder)
+	{
+		this.runOrder = runOrder;
+	}
+
+	public void setBlocking(boolean blocking)
+	{
+		this.blocking = blocking;
+	}
+
+	public Integer getTestCaseId()
+	{
+		return testCaseId;
+	}
+
+	public void setTestCaseId(Integer testCaseId)
+	{
+		this.testCaseId = testCaseId;
+	}
+
+	public Integer getTestCaseVersionId()
+	{
+		return testCaseVersionId;
+	}
+
+	public void setTestCaseVersionId(Integer testCaseVersionId)
+	{
+		this.testCaseVersionId = testCaseVersionId;
+	}
+
+	public void setTestCaseLocator(ResourceLocator testCaseLocator)
+	{
+		this.testCaseLocator = testCaseLocator;
+	}
+
+	public ResourceLocator getTestCaseLocator()
+	{
+		return testCaseLocator;
+	}
+
+	public void setTestCaseVersionLocator(ResourceLocator testCaseVersionLocator)
+	{
+		this.testCaseVersionLocator = testCaseVersionLocator;
+	}
+
+	public ResourceLocator getTestCaseVersionLocator()
+	{
+		return testCaseVersionLocator;
 	}
 }

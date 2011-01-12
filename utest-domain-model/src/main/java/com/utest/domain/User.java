@@ -29,6 +29,7 @@ public class User extends TimelineEntity
 	public static String		EXTERANAL_PASSWORD	= "__EXTERNAL_PASSWORD__";
 
 	private String				password;
+	private String				screenName;
 	private String				firstName;
 	private String				lastName;
 	private String				email;
@@ -230,6 +231,16 @@ public class User extends TimelineEntity
 	public Integer getCompanyId()
 	{
 		return companyId;
+	}
+
+	public void setScreenName(String screenName)
+	{
+		this.screenName = screenName;
+	}
+
+	public String getScreenName()
+	{
+		return screenName;
 	}
 
 }

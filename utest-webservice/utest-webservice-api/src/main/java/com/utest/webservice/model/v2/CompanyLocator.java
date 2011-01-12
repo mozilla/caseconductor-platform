@@ -21,50 +21,46 @@ package com.utest.webservice.model.v2;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement()
+@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "tag")
-public class TagInfo extends BaseInfo
+@XmlType(name = "companyLocator")
+public class CompanyLocator // extends ResourceLocator
 {
-	@XmlElement(required = false)
-	private Integer			companyId;
-	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
-	private ResourceLocator	companyLocator;
-	@XmlElement(required = true)
-	private String			tag;
+	private final Integer	id;
+	private String			url;
 
-	public Integer getCompanyId()
+	public CompanyLocator(Integer id)
 	{
-		return companyId;
+		super();
+		this.id = id;
 	}
 
-	public void setCompanyId(Integer companyId)
+	@XmlTransient
+	public String getResourcePath()
 	{
-		this.companyId = companyId;
+		// TODO - replace with a Constant
+		return "/companies/{id}";
 	}
 
-	public String getTag()
+	@XmlAttribute(name = "id", required = true)
+	public Integer getId()
 	{
-		return tag;
+		return id;
 	}
 
-	public void setTag(String tag)
+	public void setUrl(String url)
 	{
-		this.tag = tag;
+		this.url = url;
 	}
 
-	public void setCompanyLocator(ResourceLocator companyLocator)
+	@XmlAttribute(name = "url", required = true)
+	public String getUrl()
 	{
-		this.companyLocator = companyLocator;
+		return url;
 	}
-
-	public ResourceLocator getCompanyLocator()
-	{
-		return companyLocator;
-	}
-
 }

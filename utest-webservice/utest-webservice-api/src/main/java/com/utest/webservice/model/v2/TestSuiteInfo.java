@@ -43,15 +43,17 @@ import javax.xml.bind.annotation.XmlType;
 public class TestSuiteInfo extends BaseInfo
 {
 	@XmlElement(required = true)
-	private String	name;
+	private String			name;
 	@XmlElement(required = true)
-	private String	description;
+	private String			description;
 	@XmlElement(required = true)
-	private Integer	productId;
+	private Integer			productId;
+	@XmlElement(type = ResourceLocator.class, name = "productLocator")
+	private ResourceLocator	productLocator;
 	@XmlElement(required = false)
-	private Integer	testSuiteStatusId;
+	private Integer			testSuiteStatusId;
 	@XmlElement(required = false)
-	private boolean	useLatestVersions;
+	private boolean			useLatestVersions;
 
 	public TestSuiteInfo()
 	{
@@ -109,6 +111,16 @@ public class TestSuiteInfo extends BaseInfo
 	public boolean isUseLatestVersions()
 	{
 		return useLatestVersions;
+	}
+
+	public void setProductLocator(ResourceLocator productLocator)
+	{
+		this.productLocator = productLocator;
+	}
+
+	public ResourceLocator getProductLocator()
+	{
+		return productLocator;
 	}
 
 }

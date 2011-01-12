@@ -31,15 +31,19 @@ import javax.xml.bind.annotation.XmlType;
 public class TestCaseInfo extends BaseInfo
 {
 	@XmlElement(required = true)
-	private Integer	productId;
+	private Integer			productId;
+	@XmlElement(type = ResourceLocator.class, name = "productLocator")
+	private ResourceLocator	productLocator;
 	@XmlElement(required = false)
-	private Integer	maxAttachmentSizeInMbytes;
+	private Integer			maxAttachmentSizeInMbytes;
 	@XmlElement(required = false)
-	private Integer	maxNumberOfAttachments;
+	private Integer			maxNumberOfAttachments;
 	@XmlElement(required = false)
-	private Integer	testCycleId;
+	private Integer			testCycleId;
+	@XmlElement(type = ResourceLocator.class, name = "testCycleLocator")
+	private ResourceLocator	testCycleLocator;
 	@XmlElement(required = true)
-	private String	name;
+	private String			name;
 
 	public Integer getProductId()
 	{
@@ -89,5 +93,25 @@ public class TestCaseInfo extends BaseInfo
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	public void setProductLocator(ResourceLocator productLocator)
+	{
+		this.productLocator = productLocator;
+	}
+
+	public ResourceLocator getProductLocator()
+	{
+		return productLocator;
+	}
+
+	public void setTestCycleLocator(ResourceLocator testCycleLocator)
+	{
+		this.testCycleLocator = testCycleLocator;
+	}
+
+	public ResourceLocator getTestCycleLocator()
+	{
+		return testCycleLocator;
 	}
 }

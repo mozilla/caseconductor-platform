@@ -21,10 +21,7 @@ package com.utest.webservice.builders;
 
 import javax.ws.rs.core.UriBuilder;
 
-import org.apache.commons.beanutils.PropertyUtils;
-
 import com.utest.domain.TestCaseVersion;
-import com.utest.webservice.model.v2.BaseInfo;
 import com.utest.webservice.model.v2.TestCaseVersionInfo;
 import com.utest.webservice.model.v2.UtestResult;
 
@@ -36,18 +33,12 @@ public class TestCaseVersionBuilder<Ti, To> extends Builder<Ti, To>
 		super(factory, clazz, resultClass);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public Ti toInfo(final To object, final UriBuilder ub, Object... uriBuilderArgs) throws Exception
+	protected void populateExtendedProperties(Ti result, To object, UriBuilder ub, Object[] uriBuilderArgs)
 	{
-		Ti result = (Ti) new TestCaseVersionInfo();
-		PropertyUtils.copyProperties(result, object);
 		// need to copy some properties from TestCase
 		((TestCaseVersionInfo) result).setName(((TestCaseVersion) object).getTestCase().getName());
 		((TestCaseVersionInfo) result).setMaxAttachmentSizeInMbytes(((TestCaseVersion) object).getTestCase().getMaxAttachmentSizeInMbytes());
 		((TestCaseVersionInfo) result).setMaxNumberOfAttachments(((TestCaseVersion) object).getTestCase().getMaxNumberOfAttachments());
-		//
-		populateIdentityAndTimeline((BaseInfo) result, object, ub, uriBuilderArgs);
-		return result;
 	}
 }

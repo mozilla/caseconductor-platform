@@ -84,4 +84,6 @@ public interface UserWebService
 
 	Boolean logout(MessageContext context) throws Exception;
 
+	UserInfo getCurrentUser(UriInfo ui) throws Exception;
+
 }

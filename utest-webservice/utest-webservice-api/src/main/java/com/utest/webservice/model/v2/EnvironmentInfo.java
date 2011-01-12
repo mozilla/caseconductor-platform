@@ -31,15 +31,19 @@ import javax.xml.bind.annotation.XmlType;
 public class EnvironmentInfo extends BaseInfo
 {
 	@XmlElement(required = false)
-	private Integer	environmentTypeId;
+	private Integer			environmentTypeId;
+	@XmlElement(type = ResourceLocator.class, name = "environmentTypeLocator")
+	private ResourceLocator	environmentTypeLocator;
 	@XmlElement(required = false)
-	private Integer	companyId;
+	private Integer			companyId;
+	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
+	private ResourceLocator	companyLocator;
 	@XmlElement(required = true)
-	private String	name;
+	private String			name;
 	@XmlElement(required = false)
-	private String	localeCode;
+	private String			localeCode;
 	@XmlElement(required = false)
-	private Integer	sortOrder;
+	private Integer			sortOrder;
 
 	public Integer getEnvironmentTypeId()
 	{
@@ -89,6 +93,26 @@ public class EnvironmentInfo extends BaseInfo
 	public void setSortOrder(Integer sortOrder)
 	{
 		this.sortOrder = sortOrder;
+	}
+
+	public ResourceLocator getCompanyLocator()
+	{
+		return companyLocator;
+	}
+
+	public void setCompanyLocator(ResourceLocator companyLocator)
+	{
+		this.companyLocator = companyLocator;
+	}
+
+	public void setEnvironmentTypeLocator(ResourceLocator environmentTypeLocator)
+	{
+		this.environmentTypeLocator = environmentTypeLocator;
+	}
+
+	public ResourceLocator getEnvironmentTypeLocator()
+	{
+		return environmentTypeLocator;
 	}
 
 }

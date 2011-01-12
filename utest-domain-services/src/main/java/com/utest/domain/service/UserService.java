@@ -57,7 +57,7 @@ public interface UserService
 
 	UtestSearchResult findPermissions(UtestSearch search_) throws Exception;
 
-	User addUser(Integer companyId, String firstName, String lastName, String email, String password) throws Exception;
+	User addUser(Integer companyId, String firstName, String lastName, String email, String password, String screenName) throws Exception;
 
 	User getUserByCode(String code);
 
@@ -90,4 +90,8 @@ public interface UserService
 	Permission getPermission(Integer permissionId);
 
 	AccessRole getRole(Integer roleId);
+
+	User getCurrentUser() throws Exception;
+
+	User getUserByScreenName(String screenName);
 }

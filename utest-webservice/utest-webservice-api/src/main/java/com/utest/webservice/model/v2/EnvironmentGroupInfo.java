@@ -31,15 +31,17 @@ import javax.xml.bind.annotation.XmlType;
 public class EnvironmentGroupInfo extends BaseInfo
 {
 	@XmlElement(required = false)
-	private Integer	environmentTypeId;
+	private Integer			environmentTypeId;
+	@XmlElement(type = ResourceLocator.class, name = "environmentTypeLocator")
+	private ResourceLocator	environmentTypeLocator;
 	@XmlElement(required = false)
-	private String	externalIdentifier;
+	private Integer			companyId;
+	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
+	private ResourceLocator	companyLocator;
 	@XmlElement(required = true)
-	private Integer	companyId;
-	@XmlElement(required = true)
-	private String	name;
+	private String			name;
 	@XmlElement(required = false)
-	private String	description;
+	private String			description;
 
 	public Integer getEnvironmentTypeId()
 	{
@@ -49,16 +51,6 @@ public class EnvironmentGroupInfo extends BaseInfo
 	public void setEnvironmentTypeId(Integer environmentTypeId)
 	{
 		this.environmentTypeId = environmentTypeId;
-	}
-
-	public String getExternalIdentifier()
-	{
-		return externalIdentifier;
-	}
-
-	public void setExternalIdentifier(String externalIdentifier)
-	{
-		this.externalIdentifier = externalIdentifier;
 	}
 
 	public Integer getCompanyId()
@@ -89,6 +81,26 @@ public class EnvironmentGroupInfo extends BaseInfo
 	public void setDescription(String description)
 	{
 		this.description = description;
+	}
+
+	public void setEnvironmentTypeLocator(ResourceLocator environmentTypeLocator)
+	{
+		this.environmentTypeLocator = environmentTypeLocator;
+	}
+
+	public ResourceLocator getEnvironmentTypeLocator()
+	{
+		return environmentTypeLocator;
+	}
+
+	public void setCompanyLocator(ResourceLocator companyLocator)
+	{
+		this.companyLocator = companyLocator;
+	}
+
+	public ResourceLocator getCompanyLocator()
+	{
+		return companyLocator;
 	}
 
 }

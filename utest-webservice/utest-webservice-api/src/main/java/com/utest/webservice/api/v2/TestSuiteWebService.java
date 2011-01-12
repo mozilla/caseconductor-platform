@@ -25,6 +25,7 @@ import java.util.List;
 import javax.ws.rs.core.UriInfo;
 
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
+import com.utest.webservice.model.v2.IncludedTestCaseInfo;
 import com.utest.webservice.model.v2.TestSuiteInfo;
 import com.utest.webservice.model.v2.TestSuiteResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
@@ -46,11 +47,16 @@ public interface TestSuiteWebService
 
 	Boolean deleteTestSuite(UriInfo ui, Integer testSuiteId) throws Exception;
 
-	// Boolean deleteTestSuiteTestCase(UriInfo ui, Integer testSuite, Integer
-	// testSuiteTestCaseId) throws Exception;
-
 	TestSuiteInfo getTestSuite(UriInfo ui, Integer testSuiteId) throws Exception;
 
 	TestSuiteResultInfo findTestSuites(UriInfo ui, UtestSearchRequest request) throws Exception;
+
+	List<IncludedTestCaseInfo> getTestSuiteTestCases(UriInfo ui, Integer testSuiteId) throws Exception;
+
+	IncludedTestCaseInfo createTestSuiteTestCase(UriInfo ui, Integer testSuiteId, IncludedTestCaseInfo testCaseInfo) throws Exception;
+
+	Boolean deleteTestSuiteTestCase(UriInfo ui, Integer testSuiteId, Integer includedTestCaseId) throws Exception;
+
+	IncludedTestCaseInfo updateTestSuiteTestCase(UriInfo ui, Integer testSuiteId, Integer includedTestCaseId, IncludedTestCaseInfo includedTestCaseInfo) throws Exception;
 
 }

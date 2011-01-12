@@ -75,7 +75,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 			@FormParam("") final ProductComponentInfo productComponentInfo_) throws Exception
 	{
 		final ProductComponent productComponent = productService.addProductComponent(productId_, productComponentInfo_.getName(), productComponentInfo_.getDescription());
-		return objectBuilderFactory.toInfo(ProductComponentInfo.class, productComponent, ui_.getAbsolutePathBuilder().path("/{id}"));
+		return objectBuilderFactory.toInfo(ProductComponentInfo.class, productComponent, ui_.getBaseUriBuilder());
 	}
 
 	@POST
@@ -86,7 +86,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	public ProductInfo createProduct(@Context final UriInfo ui_, @FormParam("") final ProductInfo productInfo) throws Exception
 	{
 		final Product product = productService.addProduct(productInfo.getCompanyId(), productInfo.getName(), productInfo.getDescription());
-		return objectBuilderFactory.toInfo(ProductInfo.class, product, ui_.getAbsolutePathBuilder().path("/{id}"));
+		return objectBuilderFactory.toInfo(ProductInfo.class, product, ui_.getBaseUriBuilder());
 	}
 
 	@DELETE
@@ -124,7 +124,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	public ProductInfo updateProduct(@Context final UriInfo ui_, @PathParam("id") final Integer productId, @FormParam("") final ProductInfo productInfo) throws Exception
 	{
 		Product product = productService.saveProduct(productId, productInfo.getName(), productInfo.getDescription(), productInfo.getResourceIdentity().getVersion());
-		return objectBuilderFactory.toInfo(ProductInfo.class, product, ui_.getAbsolutePathBuilder().path("/{id}"));
+		return objectBuilderFactory.toInfo(ProductInfo.class, product, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
@@ -138,7 +138,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	{
 		ProductComponent productComponent = productService.saveProductComponent(productComponentId_, productComponentInfo_.getName(), productComponentInfo_.getDescription(),
 				productComponentInfo_.getResourceIdentity().getVersion());
-		return objectBuilderFactory.toInfo(ProductComponentInfo.class, productComponent, ui_.getAbsolutePathBuilder().path("/{id}"));
+		return objectBuilderFactory.toInfo(ProductComponentInfo.class, productComponent, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -150,7 +150,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	public ProductInfo getProduct(@Context final UriInfo ui_, @PathParam("id") final Integer productId) throws Exception
 	{
 		Product product = productService.getProduct(productId);
-		return objectBuilderFactory.toInfo(ProductInfo.class, product, ui_.getAbsolutePathBuilder().path("/{id}"));
+		return objectBuilderFactory.toInfo(ProductInfo.class, product, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -162,7 +162,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	public ProductComponentInfo getProductComponent(@Context final UriInfo ui_, @PathParam("id") final Integer productComponentId_) throws Exception
 	{
 		ProductComponent productComponent = productService.getProductComponent(productComponentId_);
-		return objectBuilderFactory.toInfo(ProductComponentInfo.class, productComponent, ui_.getAbsolutePathBuilder().path("/{id}"));
+		return objectBuilderFactory.toInfo(ProductComponentInfo.class, productComponent, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -174,8 +174,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	{
 		UtestSearch search = objectBuilderFactory.createSearch(ProductInfo.class, request, ui_);
 		UtestSearchResult result = productService.findProducts(search);
-		return (ProductResultInfo) objectBuilderFactory.createResult(ProductInfo.class, Product.class, request, result, ui_.getAbsolutePathBuilder().path(this.getClass(),
-				"getProduct"));
+		return (ProductResultInfo) objectBuilderFactory.createResult(ProductInfo.class, Product.class, request, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -188,8 +187,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	{
 		UtestSearch search = objectBuilderFactory.createSearch(ProductComponentInfo.class, request, ui_);
 		UtestSearchResult result = productService.findProductComponents(search);
-		return (ProductComponentResultInfo) objectBuilderFactory.createResult(ProductComponentInfo.class, ProductComponent.class, request, result, ui_.getAbsolutePathBuilder()
-				.path(this.getClass(), "getProductComponent"));
+		return (ProductComponentResultInfo) objectBuilderFactory.createResult(ProductComponentInfo.class, ProductComponent.class, request, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -204,7 +202,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	public List<ProductComponentInfo> getProductComponents(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
 	{
 		final List<ProductComponent> components = productService.getComponentsForProduct(productId_);
-		return objectBuilderFactory.toInfo(ProductComponentInfo.class, components, ui_.getAbsolutePathBuilder().path(this.getClass(), "getProductComponent"));
+		return objectBuilderFactory.toInfo(ProductComponentInfo.class, components, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -219,7 +217,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	public List<EnvironmentGroupInfo> getProducEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
 	{
 		final List<EnvironmentGroup> groups = productService.getEnvironmentGroupsForProduct(productId_);
-		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getAbsolutePathBuilder().path("/{id}/"));
+		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
@@ -245,8 +243,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 			@FormParam("environmentIds") final ArrayList<Integer> environmentIds_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
 		List<EnvironmentGroup> environmentGroups = productService.addGeneratedEnvironmentGroupsForProduct(productId_, environmentIds_, originalVesionId_);
-		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder().path(
-				"/environmentgroups/{id}"));
+		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder());
 		return environmentGroupsInfo;
 	}
 
@@ -261,8 +258,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
 		List<EnvironmentGroup> environmentGroups = productService.addGeneratedEnvironmentGroupsForProduct(productId_, environmentTypeId_, environmentIds_, originalVesionId_);
-		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder().path(
-				"/environmentgroups/{id}"));
+		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder());
 		return environmentGroupsInfo;
 	}
 

@@ -42,6 +42,7 @@ import com.utest.exception.DuplicateNameException;
 import com.utest.exception.EmailInUseException;
 import com.utest.exception.InvalidUserException;
 import com.utest.exception.NotFoundException;
+import com.utest.exception.ScreenNameInUseException;
 import com.utest.util.EncodeUtil;
 
 public class UserServiceImpl extends BaseServiceImpl implements UserService
@@ -58,7 +59,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	}
 
 	@Override
-	public User addUser(final Integer companyId_, final String firstName_, final String lastName_, final String email_, final String password_) throws Exception
+	public User addUser(final Integer companyId_, final String firstName_, final String lastName_, final String email_, final String password_, String screenName_)
+			throws Exception
 	{
 		// internal users will have company id populated
 		if (companyId_ != null)
@@ -73,6 +75,11 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		if (getUserByEmail(email_) != null)
 		{
 			throw new EmailInUseException();
+		}
+		// check for duplicate screen name
+		if (getUserByScreenName(screenName_) != null)
+		{
+			throw new ScreenNameInUseException();
 		}
 		final User user = new User();
 		user.setCompanyId(companyId_);
@@ -90,6 +97,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public User getUserByCode(final String code_)
 	{
+		if (code_ == null)
+		{
+			throw new IllegalArgumentException("User code is null");
+		}
 		final Search search = new Search(User.class);
 		search.addFilterEqual("code", code_);
 		final User user = (User) dao.searchUnique(User.class, search);
@@ -104,8 +115,26 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public User getUserByEmail(final String email_)
 	{
+		if (email_ == null)
+		{
+			throw new IllegalArgumentException("User email is null");
+		}
 		final Search search = new Search(User.class);
 		search.addFilterEqual("email", email_);
+		final User user = (User) dao.searchUnique(User.class, search);
+		setUserContext(user);
+		return user;
+	}
+
+	@Override
+	public User getUserByScreenName(final String screenName_)
+	{
+		if (screenName_ == null)
+		{
+			throw new IllegalArgumentException("User screen name is null");
+		}
+		final Search search = new Search(User.class);
+		search.addFilterEqual("screenName", screenName_);
 		final User user = (User) dao.searchUnique(User.class, search);
 		setUserContext(user);
 		return user;
@@ -165,6 +194,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		}
 		setUserContext(user);
 		return user;
+	}
+
+	@Override
+	public User getCurrentUser() throws Exception
+	{
+		return getUser(getCurrentUserId());
 	}
 
 	@Override

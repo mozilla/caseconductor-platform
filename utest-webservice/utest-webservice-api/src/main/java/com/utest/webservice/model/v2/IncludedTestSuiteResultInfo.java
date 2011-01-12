@@ -19,6 +19,9 @@
  */
 package com.utest.webservice.model.v2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -27,56 +30,42 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "productComponent")
-public class ProductComponentInfo extends BaseInfo
+@XmlType(name = "searchResult")
+public class IncludedTestSuiteResultInfo implements UtestResult<IncludedTestSuiteInfo>
 {
+	List<IncludedTestSuiteInfo>	rows	= new ArrayList<IncludedTestSuiteInfo>();
 	@XmlElement(required = true)
-	private String			name;
-	@XmlElement(required = true)
-	private Integer			productId;
-	@XmlElement(type = ResourceLocator.class, name = "productLocator")
-	private ResourceLocator	productLocator;
-	@XmlElement(required = true)
-	private String			description;
+	Integer						totalResults;
 
-	public String getName()
+	@Override
+	public void addRow(final IncludedTestSuiteInfo row)
 	{
-		return name;
+		rows.add(row);
 	}
 
-	public void setName(final String name)
+	@Override
+	@XmlElement(name = "includedtestsuites")
+	public List<IncludedTestSuiteInfo> getRows()
 	{
-		this.name = name;
+		return rows;
 	}
 
-	public String getDescription()
+	@Override
+	public Integer getTotalResults()
 	{
-		return description;
+		return totalResults;
 	}
 
-	public void setDescription(final String description)
+	@Override
+	public void setRows(final List<IncludedTestSuiteInfo> rows)
 	{
-		this.description = description;
+		this.rows = rows;
 	}
 
-	public void setProductId(Integer productId)
+	@Override
+	public void setTotalResults(final Integer totalResults)
 	{
-		this.productId = productId;
-	}
-
-	public Integer getProductId()
-	{
-		return productId;
-	}
-
-	public void setProductLocator(ResourceLocator productLocator)
-	{
-		this.productLocator = productLocator;
-	}
-
-	public ResourceLocator getProductLocator()
-	{
-		return productLocator;
+		this.totalResults = totalResults;
 	}
 
 }

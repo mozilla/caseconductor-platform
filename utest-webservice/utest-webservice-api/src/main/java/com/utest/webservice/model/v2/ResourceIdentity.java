@@ -35,16 +35,16 @@ public class ResourceIdentity
 		super();
 	}
 
-	public ResourceIdentity(String url)
-	{
-		super();
-		this.url = url;
-	}
+	// public ResourceIdentity(String url)
+	// {
+	// super();
+	// this.url = url;
+	// }
 
 	@XmlElement(required = true)
 	Integer	id;
-	@XmlElement(required = true)
-	String	url;
+	// @XmlElement(required = true)
+	// String url;
 	@XmlElement(required = false)
 	Integer	version;
 
@@ -58,15 +58,15 @@ public class ResourceIdentity
 		this.id = id;
 	}
 
-	public String getUrl()
-	{
-		return url;
-	}
-
-	public void setUrl(final String url)
-	{
-		this.url = url;
-	}
+	// public String getUrl()
+	// {
+	// return url;
+	// }
+	//
+	// public void setUrl(final String url)
+	// {
+	// this.url = url;
+	// }
 
 	public Integer getVersion()
 	{

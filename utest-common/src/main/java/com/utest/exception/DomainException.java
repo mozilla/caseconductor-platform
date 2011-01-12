@@ -32,7 +32,7 @@ public class DomainException extends RuntimeException
 
 		genericErrorMessage("genericErrorMessage"), noEnoughBudgetMessage("releaseRunOutOfBudget"), requiredAttachmentNotFound("requiredAttachmentNotFound"), releaseInvalidStatus(
 				"releaseInvalidStatus"), tmRegistrationExistentCompanyName("tm.registration.company.existent.name"), tmRegistrationExistentCompanyUrl(
-				"tm.registration.company.existent.url"), emailInUse("email.in.use"), hubspotPostExecution("hubspot.post.execution"), invalidConfigurationExecution(
+				"tm.registration.company.existent.url"), emailInUse("email.in.use"), screenNameInUse("screenName.in.use"), hubspotPostExecution("hubspot.post.execution"), invalidConfigurationExecution(
 				"invalid.configuration"), invalidUserExecution("invalid.user"), dataRequiredNotFoundException("no.data.required"), invalidRemoteAccess("invalid.remote.access"), notApplicableBusinessRule(
 				"not.applicable.business.rule"), paymentTransaction("payment.transaction"), releaseAlreadyExistsError("releaseAlreadyExistsError"), projectAlreadyExistsError(
 				"projectAlreadyExistsError"), notEnoughCreditError("notEnoughCreditError"), applicationTypeIsRequired("applicationTypeIsRequired"), duplicateTestCycleName(

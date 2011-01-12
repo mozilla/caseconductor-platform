@@ -40,8 +40,11 @@ import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.Tag;
 import com.utest.domain.TestCase;
+import com.utest.domain.TestCaseContainerDependable;
 import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseVersion;
+import com.utest.domain.TestPlan;
+import com.utest.domain.TestSuite;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestFilter;
 import com.utest.domain.search.UtestSearch;
@@ -56,6 +59,8 @@ import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.EnvironmentResultInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeResultInfo;
+import com.utest.webservice.model.v2.IncludedTestCaseInfo;
+import com.utest.webservice.model.v2.IncludedTestCaseResultInfo;
 import com.utest.webservice.model.v2.PermissionInfo;
 import com.utest.webservice.model.v2.PermissionResultInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
@@ -72,6 +77,10 @@ import com.utest.webservice.model.v2.TestCaseStepInfo;
 import com.utest.webservice.model.v2.TestCaseStepResultInfo;
 import com.utest.webservice.model.v2.TestCaseVersionInfo;
 import com.utest.webservice.model.v2.TestCaseVersionResultInfo;
+import com.utest.webservice.model.v2.TestPlanInfo;
+import com.utest.webservice.model.v2.TestPlanResultInfo;
+import com.utest.webservice.model.v2.TestSuiteInfo;
+import com.utest.webservice.model.v2.TestSuiteResultInfo;
 import com.utest.webservice.model.v2.UserInfo;
 import com.utest.webservice.model.v2.UserResultInfo;
 import com.utest.webservice.model.v2.UtestResult;
@@ -108,6 +117,11 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 		builders.put(TestCaseStepInfo.class, new Builder<TestCaseStepInfo, TestCaseStep>(this, TestCaseStepInfo.class, TestCaseStepResultInfo.class));
 		builders.put(TestCaseInfo.class, new Builder<TestCaseInfo, TestCase>(this, TestCaseInfo.class, TestCaseResultInfo.class));
 		builders.put(TestCaseVersionInfo.class, new TestCaseVersionBuilder<TestCaseVersionInfo, TestCaseVersion>(this, TestCaseVersionInfo.class, TestCaseVersionResultInfo.class));
+		builders
+				.put(IncludedTestCaseInfo.class, new Builder<IncludedTestCaseInfo, TestCaseContainerDependable>(this, IncludedTestCaseInfo.class, IncludedTestCaseResultInfo.class));
+		builders.put(TestSuiteInfo.class, new Builder<TestSuiteInfo, TestSuite>(this, TestSuiteInfo.class, TestSuiteResultInfo.class));
+		builders.put(TestPlanInfo.class, new Builder<TestPlanInfo, TestPlan>(this, TestPlanInfo.class, TestPlanResultInfo.class));
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -126,6 +140,15 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 	{
 		final Builder<Ti, To> builder = getBuilder(clazz, object.getClass());
 		return builder.toInfo(object, ub, uriBuilderArgs);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <Ti, To> Ti toInfo(final Class<Ti> clazz, final To object, final UriBuilder baseBuilder, final UriBuilder resourceBuilder, final Object... resourceBuilderArgs)
+			throws Exception
+	{
+		final Builder<Ti, To> builder = getBuilder(clazz, object.getClass());
+		return builder.toInfo(object, baseBuilder, resourceBuilder, resourceBuilderArgs);
 	}
 
 	@SuppressWarnings("unchecked")

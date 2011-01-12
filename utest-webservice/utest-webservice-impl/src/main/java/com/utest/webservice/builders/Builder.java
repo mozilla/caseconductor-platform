@@ -25,11 +25,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
+import com.utest.domain.Entity;
 import com.utest.domain.Locale;
 import com.utest.domain.LocaleDescriptable;
 import com.utest.domain.LocalizedEntity;
@@ -38,6 +40,7 @@ import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.webservice.model.v2.BaseInfo;
 import com.utest.webservice.model.v2.ResourceIdentity;
+import com.utest.webservice.model.v2.ResourceLocator;
 import com.utest.webservice.model.v2.Timeline;
 import com.utest.webservice.model.v2.UtestResult;
 import com.utest.webservice.model.v2.UtestResultInfo;
@@ -45,6 +48,7 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public class Builder<Ti, To>
 {
+
 	protected final ObjectBuilderFactory		factory;
 	protected Class<Ti>							infoClass;
 	protected Class<? extends UtestResult<Ti>>	resultClass;
@@ -71,15 +75,11 @@ public class Builder<Ti, To>
 			{
 				args[i] = uriBuilderArgs[i];
 			}
-			try
+			if (obj instanceof Entity)
 			{
-				final Method getId = obj.getClass().getMethod("getId", new Class[] {});
-				args[i] = getId.invoke(obj, new Object[] {});
+				args[i] = ((Entity) obj).getId();
 			}
-			catch (final Exception e)
-			{
-			}
-			ret.add(toInfo(obj, ub, args));
+			ret.add(toInfo(obj, ub.clone(), args));
 		}
 		return ret;
 
@@ -101,17 +101,62 @@ public class Builder<Ti, To>
 			LocaleDescriptable localDescriptable = localizedEntity.getLocale(Locale.DEFAULT_LOCALE);
 			PropertyUtils.copyProperties(result, localDescriptable);
 		}
+		Map<?, ?> resultProperties = PropertyUtils.describe(result);
 		// don't return password field
-		if (PropertyUtils.describe(result).containsKey("password"))
+		if (resultProperties.containsKey("password"))
 		{
 			PropertyUtils.setProperty(result, "password", null);
 		}
+		//
+		populateLocators(result, ub);
 		//
 		if (result instanceof BaseInfo)
 		{
 			populateIdentityAndTimeline((BaseInfo) result, object, ub, uriBuilderArgs);
 		}
+
+		// special handling for descendands of Builder
+		populateExtendedProperties(result, object, ub, uriBuilderArgs);
+
 		return result;
+	}
+
+	protected void populateExtendedProperties(Ti result, To object, UriBuilder ub, Object[] uriBuilderArgs)
+	{
+		// do nothing.this method could be overitten by descendants
+	}
+
+	protected void populateLocators(Ti result, UriBuilder ub) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException
+	{
+		Map<?, ?> resultProperties = PropertyUtils.describe(result);
+		for (Object property : resultProperties.keySet())
+		{
+			if (((String) property).endsWith("Locator"))
+			{
+				String resourceName = ((String) property).substring(0, ((String) property).indexOf("Locator"));
+				if (resultProperties.containsKey(resourceName + "Id"))
+				{
+					Integer resourceId = (Integer) PropertyUtils.getProperty(result, resourceName + "Id");
+					if (resourceId != null)
+					{
+						String resourcePath = getResourcePath(resourceName);
+						ResourceLocator resourceLocator = new ResourceLocator(resourceId, ub.path(resourcePath).build(resourceId).toString());
+						PropertyUtils.setProperty(result, (String) property, resourceLocator);
+					}
+				}
+				// represents a user who performed an operation
+				else if (resourceName.endsWith("By"))
+				{
+					Integer resourceId = (Integer) PropertyUtils.getProperty(result, resourceName);
+					if (resourceId != null)
+					{
+						String resourcePath = getResourcePath("user");
+						ResourceLocator resourceLocator = new ResourceLocator(resourceId, ub.path(resourcePath).build(resourceId).toString());
+						PropertyUtils.setProperty(result, (String) property, resourceLocator);
+					}
+				}
+			}
+		}
 	}
 
 	protected void populateIdentityAndTimeline(BaseInfo result, final To object, final UriBuilder ub, Object... uriBuilderArgs) throws IllegalAccessException,
@@ -119,18 +164,13 @@ public class Builder<Ti, To>
 	{
 		ResourceIdentity resourceIdentity = new ResourceIdentity();
 		PropertyUtils.copyProperties(resourceIdentity, object);
-		if (uriBuilderArgs.length == 0)
-		{
-			uriBuilderArgs = new Object[] { "" };
-		}
-		resourceIdentity.setUrl(ub != null ? ub.build(uriBuilderArgs).toString() : "");
-		(result).setResourceIdentity(resourceIdentity);
+		result.setResourceIdentity(resourceIdentity);
 
 		if (object instanceof TimelineVersionable)
 		{
 			Timeline timeline = new Timeline();
 			PropertyUtils.copyProperties(timeline, object);
-			(result).setTimeline(timeline);
+			result.setTimeline(timeline);
 		}
 	}
 
@@ -179,7 +219,7 @@ public class Builder<Ti, To>
 		return result;
 	}
 
-	public static String toStringFromDescriptable(final Object object)
+	public String toStringFromDescriptable(final Object object)
 	{
 		try
 		{
@@ -192,7 +232,7 @@ public class Builder<Ti, To>
 		}
 	}
 
-	public static List<String> toStringListFromDescriptable(final List<?> objects)
+	public List<String> toStringListFromDescriptable(final List<?> objects)
 	{
 		if ((objects == null) || objects.isEmpty())
 		{
@@ -210,4 +250,8 @@ public class Builder<Ti, To>
 		return results;
 	}
 
+	private String getResourcePath(String resourceKey_)
+	{
+		return ResourceManager.getResourcePath(resourceKey_);
+	}
 }

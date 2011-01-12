@@ -25,7 +25,6 @@ import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.Company;
 import com.utest.domain.Country;
-import com.utest.domain.Product;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
@@ -78,13 +77,13 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 		{
 			throw new NotFoundException("Company not found. Id: " + companyId_);
 		}
-		// check for products
-		Search search = new Search(Product.class);
+		// check for companys
+		Search search = new Search(Company.class);
 		search.addFilterEqual("companyId", companyId_);
-		List<?> foundEntities = dao.search(Product.class, search);
+		List<?> foundEntities = dao.search(Company.class, search);
 		if ((foundEntities != null) && !foundEntities.isEmpty())
 		{
-			throw new DeletingUsedEntityException("Products reference this company : " + companyId_);
+			throw new DeletingUsedEntityException("Companys reference this company : " + companyId_);
 		}
 		// check for internal users
 		search = new Search(User.class);
@@ -137,8 +136,6 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 		company.setUrl(url_);
 		company.setPhone(phone_);
 		return dao.merge(company);
-		// dao.update(company);
-		// return dao.getById(Company.class, companyId_);
 	}
 
 }

@@ -126,7 +126,7 @@ public interface EnvironmentService
 
 	<T extends CompanyDependable> boolean isValidEnvironmentSelectionForCompany(Integer companyId, List<Integer> companyDependableEntitiesIds, Class<T> type) throws Exception;
 
-	EnvironmentGroup saveEnvironmentGroup(Integer environmentGroupId, String name, String description, String externalIdentifier, Integer originalVersionId) throws Exception;
+	EnvironmentGroup saveEnvironmentGroup(Integer environmentGroupId, String name, String description, Integer originalVersionId) throws Exception;
 
 	void saveParentDependableEnvironments(Integer companyId, Integer parentEnvironmentId, List<Integer> environmentIds) throws Exception;
 

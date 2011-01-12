@@ -50,7 +50,7 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 @Path("/companies/")
 public class CompanyWebServiceImpl extends BaseWebServiceImpl implements CompanyWebService
 {
-	private final UserService	userService;
+	private final UserService		userService;
 	private final CompanyService	companyService;
 
 	public CompanyWebServiceImpl(final ObjectBuilderFactory objectBuildFactory, final UserService userService, final CompanyService companyService)
@@ -71,8 +71,7 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 				companyInfo.getUrl(), companyInfo.getPhone());
 
 		// TODO - create default TM if needed ?
-		// ui_.getAbsolutePathBuilder().path(this.getClass(), "getCompany")
-		return objectBuilderFactory.toInfo(CompanyInfo.class, company, ui_.getAbsolutePathBuilder().path("/{id}"));
+		return objectBuilderFactory.toInfo(CompanyInfo.class, company, ui_.getBaseUriBuilder());
 	}
 
 	@DELETE
@@ -97,7 +96,7 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 		final Company company = companyService.saveCompany(companyId, companyInfo.getCountryId(), companyInfo.getName(), companyInfo.getAddress(), companyInfo.getCity(),
 				companyInfo.getZip(), companyInfo.getUrl(), companyInfo.getPhone(), companyInfo.getResourceIdentity().getVersion());
 
-		return objectBuilderFactory.toInfo(CompanyInfo.class, company, ui_.getAbsolutePathBuilder().path("/{id}"));
+		return objectBuilderFactory.toInfo(CompanyInfo.class, company, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -110,7 +109,7 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 	{
 		final Company company = companyService.getCompany(companyId);
 
-		return objectBuilderFactory.toInfo(CompanyInfo.class, company, ui_.getAbsolutePathBuilder().path(""));
+		return objectBuilderFactory.toInfo(CompanyInfo.class, company, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -123,8 +122,6 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 		final UtestSearch search = objectBuilderFactory.createSearch(CompanyInfo.class, request, ui_);
 		final UtestSearchResult result = companyService.findCompanies(search);
 
-		return (CompanyResultInfo) objectBuilderFactory.createResult(CompanyInfo.class, Company.class, request, result, ui_.getAbsolutePathBuilder().path(this.getClass(),
-				"getCompany"));
+		return (CompanyResultInfo) objectBuilderFactory.createResult(CompanyInfo.class, Company.class, request, result, ui_.getBaseUriBuilder());
 	}
-
 }

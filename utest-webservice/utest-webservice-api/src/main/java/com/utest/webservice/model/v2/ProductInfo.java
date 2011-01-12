@@ -31,11 +31,14 @@ import javax.xml.bind.annotation.XmlType;
 public class ProductInfo extends BaseInfo
 {
 	@XmlElement(required = true)
-	private String	name;
+	private String			name;
 	@XmlElement(required = true)
-	private Integer	companyId;
-	@XmlElement(required = true)
-	private String	description;
+	private String			description;
+
+	private Integer			companyId;
+
+	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
+	private ResourceLocator	companyLocator;
 
 	public String getName()
 	{
@@ -65,6 +68,16 @@ public class ProductInfo extends BaseInfo
 	public void setDescription(final String description)
 	{
 		this.description = description;
+	}
+
+	public void setCompanyLocator(ResourceLocator companyLocator)
+	{
+		this.companyLocator = companyLocator;
+	}
+
+	public ResourceLocator getCompanyLocator()
+	{
+		return companyLocator;
 	}
 
 }

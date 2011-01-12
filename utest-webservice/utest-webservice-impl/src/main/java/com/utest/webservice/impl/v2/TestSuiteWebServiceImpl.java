@@ -41,12 +41,14 @@ import org.springframework.security.access.annotation.Secured;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.Permission;
 import com.utest.domain.TestSuite;
+import com.utest.domain.TestSuiteTestCase;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.TestSuiteService;
 import com.utest.webservice.api.v2.TestSuiteWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
+import com.utest.webservice.model.v2.IncludedTestCaseInfo;
 import com.utest.webservice.model.v2.TestSuiteInfo;
 import com.utest.webservice.model.v2.TestSuiteResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
@@ -74,7 +76,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 
 		final TestSuite testSuite = testSuiteService.saveTestSuite(testSuiteId_, testSuiteInfo_.getName(), testSuiteInfo_.getDescription(), testSuiteInfo_.getResourceIdentity()
 				.getVersion());
-		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getAbsolutePathBuilder().path("/{id}"));
+		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
@@ -88,7 +90,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	{
 
 		final TestSuite testSuite = testSuiteService.activateTestSuite(testSuiteId_, testSuiteInfo_.getResourceIdentity().getVersion());
-		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getAbsolutePathBuilder().path("/{id}"));
+		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
@@ -102,7 +104,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	{
 
 		final TestSuite testSuite = testSuiteService.lockTestSuite(testSuiteId_, testSuiteInfo_.getResourceIdentity().getVersion());
-		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getAbsolutePathBuilder().path("/{id}"));
+		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
@@ -127,7 +129,63 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	public List<EnvironmentGroupInfo> getTestSuiteEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_) throws Exception
 	{
 		final List<EnvironmentGroup> groups = testSuiteService.getEnvironmentGroupsForTestSuite(testSuiteId_);
-		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getAbsolutePathBuilder().path("/{id}/"));
+		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/{id}/includedtestcases/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_SUITE_VIEW)
+	public List<IncludedTestCaseInfo> getTestSuiteTestCases(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_) throws Exception
+	{
+		final List<TestSuiteTestCase> includedTestCases = testSuiteService.getTestSuiteTestCases(testSuiteId_);
+		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCases, ui_.getBaseUriBuilder());
+	}
+
+	@POST
+	@Path("/{id}/includedtestcases/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_SUITE_EDIT })
+	public IncludedTestCaseInfo createTestSuiteTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_,
+			@FormParam("") final IncludedTestCaseInfo testCaseInfo_) throws Exception
+	{
+
+		final TestSuiteTestCase includedTestCase = testSuiteService.addTestSuiteTestCase(testSuiteId_, testCaseInfo_.getTestCaseVersionId(), testCaseInfo_.getPriorityId(),
+				testCaseInfo_.getRunOrder(), testCaseInfo_.isBlocking());
+		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
+	}
+
+	@DELETE
+	@Path("/{id}/includedtestcases/{includedTestCaseId}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CASE_EDIT)
+	public Boolean deleteTestSuiteTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_,
+			@PathParam("includedTestCaseId") final Integer includedTestCaseId_) throws Exception
+	{
+		testSuiteService.deleteTestSuiteTestCase(includedTestCaseId_);
+
+		return Boolean.TRUE;
+	}
+
+	@PUT
+	@Path("/{id}/includedtestcases/{includedTestCaseId}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_CASE_EDIT })
+	public IncludedTestCaseInfo updateTestSuiteTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_,
+			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @FormParam("") final IncludedTestCaseInfo includedTestCaseInfo_) throws Exception
+	{
+
+		final TestSuiteTestCase includedTestCase = testSuiteService.saveTestSuiteTestCase(includedTestCaseId_, includedTestCaseInfo_.getPriorityId(), includedTestCaseInfo_
+				.getRunOrder(), includedTestCaseInfo_.isBlocking(), includedTestCaseInfo_.getResourceIdentity().getVersion());
+		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
 	}
 
 	@POST
@@ -140,7 +198,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 		final TestSuite testSuite = testSuiteService.addTestSuite(testSuiteInfo_.getProductId(), testSuiteInfo_.isUseLatestVersions(), testSuiteInfo_.getName(), testSuiteInfo_
 				.getDescription());
 
-		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getAbsolutePathBuilder().path("/{id}"));
+		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getBaseUriBuilder());
 	}
 
 	@DELETE
@@ -168,7 +226,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	public TestSuiteInfo getTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_) throws Exception
 	{
 		final TestSuite testSuite = testSuiteService.getTestSuite(testSuiteId_);
-		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getAbsolutePathBuilder().path("/{id}"));
+		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -184,7 +242,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 		final UtestSearch search = objectBuilderFactory.createSearch(TestSuiteInfo.class, request_, ui_);
 		final UtestSearchResult result = testSuiteService.findTestSuites(search);
 
-		return (TestSuiteResultInfo) objectBuilderFactory.createResult(TestSuiteInfo.class, TestSuite.class, request_, result, ui_.getAbsolutePathBuilder().path("/{id}/"));
+		return (TestSuiteResultInfo) objectBuilderFactory.createResult(TestSuiteInfo.class, TestSuite.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 }

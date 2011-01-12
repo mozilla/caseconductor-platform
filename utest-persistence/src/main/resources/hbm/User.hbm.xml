@@ -11,6 +11,9 @@
 		<version name="version" type="java.lang.Integer">
 			<column name="version" not-null="true" />
 		</version>
+		<property name="screenName" type="string">
+			<column name="screenName" length="12" not-null="true" />
+		</property>
 		<property name="password" type="string">
 			<column name="password" not-null="true" />
 		</property>

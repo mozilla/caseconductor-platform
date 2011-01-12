@@ -39,7 +39,7 @@ public class UserServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 	{
 		final User user = userService.getUser(1);
 		loginUser(user);
-		final User user1 = userService.addUser(null, "admin", "admin", "admin123@utest.com", "admin");
+		final User user1 = userService.addUser(null, "admin", "admin", "admin123@utest.com", "admin", null);
 		Assert.assertTrue(user1 != null);
 	}
 

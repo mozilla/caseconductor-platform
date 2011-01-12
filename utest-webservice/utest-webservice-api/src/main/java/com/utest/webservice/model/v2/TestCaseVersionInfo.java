@@ -33,33 +33,39 @@ import javax.xml.bind.annotation.XmlType;
 public class TestCaseVersionInfo extends BaseInfo
 {
 	@XmlElement(required = false)
-	private Integer	testCaseId;
+	private Integer			testCaseId;
 	@XmlElement(required = true)
-	private Integer	productId;
+	private Integer			productId;
+	@XmlElement(type = ResourceLocator.class, name = "productLocator")
+	private ResourceLocator	productLocator;
 	@XmlElement(required = false)
-	private Integer	maxAttachmentSizeInMbytes;
+	private Integer			maxAttachmentSizeInMbytes;
 	@XmlElement(required = false)
-	private Integer	maxNumberOfAttachments;
+	private Integer			maxNumberOfAttachments;
 	@XmlElement(required = false)
-	private Integer	testCycleId;
+	private Integer			testCycleId;
+	@XmlElement(type = ResourceLocator.class, name = "testCycleLocator")
+	private ResourceLocator	testCycleLocator;
 	@XmlElement(required = true)
-	private Integer	testCaseStatusId;
+	private Integer			testCaseStatusId;
 	@XmlElement(required = true)
-	private String	name;
+	private String			name;
 	@XmlElement(required = false)
-	private String	description;
+	private String			description;
 	@XmlElement(required = false)
-	private Integer	majorVersion;
+	private Integer			majorVersion;
 	@XmlElement(required = false)
-	private Integer	minorVersion;
+	private Integer			minorVersion;
 	@XmlElement(required = false)
-	private boolean	latestVersion;
+	private boolean			latestVersion;
 	@XmlElement(required = false)
-	private Integer	approvalStatusId;
+	private Integer			approvalStatusId;
 	@XmlElement(required = false)
-	private Integer	approvedBy;
+	private Integer			approvedBy;
+	@XmlElement(type = ResourceLocator.class, name = "approvedByLocator")
+	private ResourceLocator	approvedByLocator;
 	@XmlElement(required = false)
-	private Date	approveDate;
+	private Date			approveDate;
 
 	public Integer getTestCaseId()
 	{
@@ -199,6 +205,36 @@ public class TestCaseVersionInfo extends BaseInfo
 	public String getName()
 	{
 		return name;
+	}
+
+	public void setProductLocator(ResourceLocator productLocator)
+	{
+		this.productLocator = productLocator;
+	}
+
+	public ResourceLocator getProductLocator()
+	{
+		return productLocator;
+	}
+
+	public void setApprovedByLocator(ResourceLocator approvedByLocator)
+	{
+		this.approvedByLocator = approvedByLocator;
+	}
+
+	public ResourceLocator getApprovedByLocator()
+	{
+		return approvedByLocator;
+	}
+
+	public void setTestCycleLocator(ResourceLocator testCycleLocator)
+	{
+		this.testCycleLocator = testCycleLocator;
+	}
+
+	public ResourceLocator getTestCycleLocator()
+	{
+		return testCycleLocator;
 	}
 
 }

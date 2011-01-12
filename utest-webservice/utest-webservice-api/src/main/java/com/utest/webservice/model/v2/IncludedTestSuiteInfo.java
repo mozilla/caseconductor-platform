@@ -27,56 +27,31 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "productComponent")
-public class ProductComponentInfo extends BaseInfo
+@XmlType(name = "includedtestsuite")
+public class IncludedTestSuiteInfo extends BaseInfo
 {
-	@XmlElement(required = true)
-	private String			name;
-	@XmlElement(required = true)
-	private Integer			productId;
-	@XmlElement(type = ResourceLocator.class, name = "productLocator")
-	private ResourceLocator	productLocator;
-	@XmlElement(required = true)
-	private String			description;
+	@XmlElement(required = false)
+	private Integer	testSuiteId;
+	@XmlElement(required = false)
+	private Integer	runOrder	= 0;
 
-	public String getName()
+	public Integer getTestSuiteId()
 	{
-		return name;
+		return testSuiteId;
 	}
 
-	public void setName(final String name)
+	public void setTestSuiteId(Integer testSuiteId)
 	{
-		this.name = name;
+		this.testSuiteId = testSuiteId;
 	}
 
-	public String getDescription()
+	public Integer getRunOrder()
 	{
-		return description;
+		return runOrder;
 	}
 
-	public void setDescription(final String description)
+	public void setRunOrder(Integer runOrder)
 	{
-		this.description = description;
+		this.runOrder = runOrder;
 	}
-
-	public void setProductId(Integer productId)
-	{
-		this.productId = productId;
-	}
-
-	public Integer getProductId()
-	{
-		return productId;
-	}
-
-	public void setProductLocator(ResourceLocator productLocator)
-	{
-		this.productLocator = productLocator;
-	}
-
-	public ResourceLocator getProductLocator()
-	{
-		return productLocator;
-	}
-
 }

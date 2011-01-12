@@ -58,7 +58,7 @@ import com.utest.webservice.model.v2.TagInfo;
 import com.utest.webservice.model.v2.TagResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
-@Path("/env/")
+@Path("/")
 public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements EnvironmentWebService
 {
 	private final EnvironmentService	environmentService;
@@ -94,7 +94,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 		final EnvironmentType environmentType = environmentService.addEnvironmentType(environmentTypeInfo_.getCompanyId(), environmentTypeInfo_.getParentEnvironmentTypeId(),
 				environmentTypeInfo_.getName(), environmentTypeInfo_.isGroupType(), environmentTypeInfo_.getLocaleCode());
 
-		return objectBuilderFactory.toInfo(EnvironmentTypeInfo.class, environmentType, ui_.getAbsolutePathBuilder().path("/environmenttypes/{id}/"));
+		return objectBuilderFactory.toInfo(EnvironmentTypeInfo.class, environmentType, ui_.getBaseUriBuilder());
 	}
 
 	@DELETE
@@ -120,7 +120,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	{
 		final EnvironmentType environmentType = environmentService.getEnvironmentType(environmentTypeId_);
 
-		return objectBuilderFactory.toInfo(EnvironmentTypeInfo.class, environmentType, ui_.getAbsolutePathBuilder().path(""));
+		return objectBuilderFactory.toInfo(EnvironmentTypeInfo.class, environmentType, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -134,8 +134,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 		final UtestSearch search = objectBuilderFactory.createSearch(EnvironmentTypeInfo.class, request_, ui_);
 		final UtestSearchResult result = environmentService.findEnvironmentTypes(search);
 
-		return (EnvironmentTypeResultInfo) objectBuilderFactory.createResult(EnvironmentTypeInfo.class, EnvironmentType.class, request_, result, ui_.getBaseUriBuilder().path(
-				"/environmenttypes/{id}"));
+		return (EnvironmentTypeResultInfo) objectBuilderFactory.createResult(EnvironmentTypeInfo.class, EnvironmentType.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -148,11 +147,9 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 			throws Exception
 	{
 		final List<Environment> environments = environmentService.getEnvironmentsForType(environmentTypeId_);
-		final List<EnvironmentInfo> environmentsInfo = objectBuilderFactory.toInfo(EnvironmentInfo.class, environments, ui_.getBaseUriBuilder().path("/environments/{id}"));
+		final List<EnvironmentInfo> environmentsInfo = objectBuilderFactory.toInfo(EnvironmentInfo.class, environments, ui_.getBaseUriBuilder());
 		return environmentsInfo;
 	}
-
-	// /////////////
 
 	@PUT
 	@Path("/environments/{id}/")
@@ -178,7 +175,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	{
 		final Environment environment = environmentService.addEnvironment(tagInfo_.getCompanyId(), tagInfo_.getEnvironmentTypeId(), tagInfo_.getName(), tagInfo_.getLocaleCode());
 
-		return objectBuilderFactory.toInfo(EnvironmentInfo.class, environment, ui_.getAbsolutePathBuilder().path("/{id}/"));
+		return objectBuilderFactory.toInfo(EnvironmentInfo.class, environment, ui_.getBaseUriBuilder());
 	}
 
 	@DELETE
@@ -204,7 +201,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	{
 		final Environment environment = environmentService.getEnvironment(environmentId_);
 
-		return objectBuilderFactory.toInfo(EnvironmentInfo.class, environment, ui_.getAbsolutePathBuilder().path(""));
+		return objectBuilderFactory.toInfo(EnvironmentInfo.class, environment, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -218,11 +215,8 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 		final UtestSearch search = objectBuilderFactory.createSearch(EnvironmentInfo.class, request_, ui_);
 		final UtestSearchResult result = environmentService.findEnvironments(search);
 
-		return (EnvironmentResultInfo) objectBuilderFactory.createResult(EnvironmentInfo.class, Environment.class, request_, result, ui_.getBaseUriBuilder().path(
-				"/environments/{id}"));
+		return (EnvironmentResultInfo) objectBuilderFactory.createResult(EnvironmentInfo.class, Environment.class, request_, result, ui_.getBaseUriBuilder());
 	}
-
-	// /////////////
 
 	@POST
 	@Path("/tags/")
@@ -234,7 +228,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	{
 		final Tag tag = environmentService.addTag(tagInfo_.getCompanyId(), tagInfo_.getTag());
 
-		return objectBuilderFactory.toInfo(TagInfo.class, tag, ui_.getAbsolutePathBuilder().path("/{id}/"));
+		return objectBuilderFactory.toInfo(TagInfo.class, tag, ui_.getBaseUriBuilder());
 	}
 
 	@DELETE
@@ -260,7 +254,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	{
 		final Tag tag = environmentService.getTag(tagId_);
 
-		return objectBuilderFactory.toInfo(TagInfo.class, tag, ui_.getAbsolutePathBuilder().path(""));
+		return objectBuilderFactory.toInfo(TagInfo.class, tag, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -272,34 +266,32 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	public TagResultInfo findTags(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TagInfo.class, request_, ui_);
-		final UtestSearchResult result = environmentService.findEnvironments(search);
+		final UtestSearchResult result = environmentService.findTags(search);
 
-		return (TagResultInfo) objectBuilderFactory.createResult(TagInfo.class, Tag.class, request_, result, ui_.getBaseUriBuilder().path("/tags/{id}"));
+		return (TagResultInfo) objectBuilderFactory.createResult(TagInfo.class, Tag.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
-	// /////////////
-
 	@GET
-	@Path("/companies/{id}/parentchildenvironments/{parentId}/")
+	@Path("/parentchildenvironments/{companyId}/{parentId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
-	public List<EnvironmentInfo> getParentDependableEnvironments(@Context UriInfo ui_, @PathParam("id") final Integer companyId_,
+	public List<EnvironmentInfo> getParentDependableEnvironments(@Context UriInfo ui_, @PathParam("companyId") final Integer companyId_,
 			@PathParam("parentId") final Integer parentEnvironmentId_, @QueryParam("") UtestSearchRequest request) throws Exception
 	{
 		final List<Environment> environments = environmentService.getParentDependableEnvironments(companyId_, parentEnvironmentId_);
-		final List<EnvironmentInfo> environmentsInfo = objectBuilderFactory.toInfo(EnvironmentInfo.class, environments, ui_.getBaseUriBuilder().path("/environments/{id}"));
+		final List<EnvironmentInfo> environmentsInfo = objectBuilderFactory.toInfo(EnvironmentInfo.class, environments, ui_.getBaseUriBuilder());
 		return environmentsInfo;
 	}
 
 	@PUT
-	@Path("/companies/{id}/parentchildenvironments/{parentId}/")
+	@Path("/parentchildenvironments/{companyId}/{parentId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.ENVIRONMENT_EDIT })
-	public Boolean updateParentDependableEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer companyId_,
+	public Boolean updateParentDependableEnvironments(@Context final UriInfo ui_, @PathParam("companyId") final Integer companyId_,
 			@PathParam("parentId") final Integer parentEnvironmentId_, @FormParam("environmentIds") final ArrayList<Integer> environmentIds_) throws Exception
 	{
 		environmentService.saveParentDependableEnvironments(companyId_, parentEnvironmentId_, environmentIds_);
@@ -308,32 +300,30 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	}
 
 	@PUT
-	@Path("/companies/{id}/environmentgroups/autogenerate/")
+	@Path("/environmentgroups/autogenerate/{companyId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.ENVIRONMENT_EDIT })
-	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer companyId_,
+	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("companyId") final Integer companyId_,
 			@FormParam("environmentIds") final ArrayList<Integer> environmentIds_) throws Exception
 	{
 		List<EnvironmentGroup> environmentGroups = environmentService.addGeneratedEnvironmentGroups(companyId_, environmentIds_);
-		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder().path(
-				"/environmentgroups/{id}"));
+		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder());
 		return environmentGroupsInfo;
 	}
 
 	@PUT
-	@Path("/companies/{id}/environmentgroups/environmenttypes/{typeId}/autogenerate/")
+	@Path("/environmentgroups/autogenerate/{companyId}/{typeId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.ENVIRONMENT_EDIT })
-	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer companyId_,
+	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("companyId") final Integer companyId_,
 			@PathParam("typeId") final Integer environmentTypeId_, @FormParam("environmentIds") final ArrayList<Integer> environmentIds_) throws Exception
 	{
 		List<EnvironmentGroup> environmentGroups = environmentService.addGeneratedEnvironmentGroups(companyId_, environmentTypeId_, environmentIds_);
-		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder().path(
-				"/environmentgroups/{id}"));
+		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder());
 		return environmentGroupsInfo;
 	}
 
@@ -361,7 +351,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 			@QueryParam("") UtestSearchRequest request) throws Exception
 	{
 		final List<Environment> environments = environmentService.getEnvironmentsForGroup(environmentGroupId_);
-		final List<EnvironmentInfo> environmentsInfo = objectBuilderFactory.toInfo(EnvironmentInfo.class, environments, ui_.getBaseUriBuilder().path("/environments/{id}"));
+		final List<EnvironmentInfo> environmentsInfo = objectBuilderFactory.toInfo(EnvironmentInfo.class, environments, ui_.getBaseUriBuilder());
 		return environmentsInfo;
 	}
 
@@ -376,11 +366,8 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 		final UtestSearch search = objectBuilderFactory.createSearch(EnvironmentGroupInfo.class, request_, ui_);
 		final UtestSearchResult result = environmentService.findEnvironmentGroups(search);
 
-		return (EnvironmentGroupResultInfo) objectBuilderFactory.createResult(EnvironmentGroupInfo.class, EnvironmentGroup.class, request_, result, ui_.getBaseUriBuilder().path(
-				"/environmentgroups/{id}"));
+		return (EnvironmentGroupResultInfo) objectBuilderFactory.createResult(EnvironmentGroupInfo.class, EnvironmentGroup.class, request_, result, ui_.getBaseUriBuilder());
 	}
-
-	// /////////////
 
 	@PUT
 	@Path("/environmentgroups/{id}/")
@@ -392,7 +379,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 			@FormParam("") final EnvironmentGroupInfo environmentGroupInfo_) throws Exception
 	{
 		environmentService.saveEnvironmentGroup(environmentGroupId_, environmentGroupInfo_.getName(), environmentGroupInfo_.getDescription(), environmentGroupInfo_
-				.getExternalIdentifier(), environmentGroupInfo_.getResourceIdentity().getVersion());
+				.getResourceIdentity().getVersion());
 
 		return Boolean.TRUE;
 	}
@@ -408,7 +395,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 		final EnvironmentGroup environmentGroup = environmentService.addEnvironmentGroup(environmentGroupInfo_.getCompanyId(), environmentGroupInfo_.getEnvironmentTypeId(),
 				environmentGroupInfo_.getName(), environmentGroupInfo_.getDescription(), new ArrayList<Integer>());
 
-		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroup, ui_.getAbsolutePathBuilder().path("/environmentgroups/{id}/"));
+		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroup, ui_.getBaseUriBuilder());
 	}
 
 	@DELETE
@@ -434,7 +421,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	{
 		final EnvironmentGroup environmentGroup = environmentService.getEnvironmentGroup(environmentGroupId_);
 
-		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroup, ui_.getAbsolutePathBuilder().path("/environmentgroups/{id}/"));
+		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroup, ui_.getBaseUriBuilder());
 	}
 
 }
