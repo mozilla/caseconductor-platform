@@ -43,6 +43,7 @@ import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseContainerDependable;
 import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseVersion;
+import com.utest.domain.TestCycle;
 import com.utest.domain.TestPlan;
 import com.utest.domain.TestSuite;
 import com.utest.domain.User;
@@ -77,6 +78,8 @@ import com.utest.webservice.model.v2.TestCaseStepInfo;
 import com.utest.webservice.model.v2.TestCaseStepResultInfo;
 import com.utest.webservice.model.v2.TestCaseVersionInfo;
 import com.utest.webservice.model.v2.TestCaseVersionResultInfo;
+import com.utest.webservice.model.v2.TestCycleInfo;
+import com.utest.webservice.model.v2.TestCycleResultInfo;
 import com.utest.webservice.model.v2.TestPlanInfo;
 import com.utest.webservice.model.v2.TestPlanResultInfo;
 import com.utest.webservice.model.v2.TestSuiteInfo;
@@ -121,6 +124,7 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 				.put(IncludedTestCaseInfo.class, new Builder<IncludedTestCaseInfo, TestCaseContainerDependable>(this, IncludedTestCaseInfo.class, IncludedTestCaseResultInfo.class));
 		builders.put(TestSuiteInfo.class, new Builder<TestSuiteInfo, TestSuite>(this, TestSuiteInfo.class, TestSuiteResultInfo.class));
 		builders.put(TestPlanInfo.class, new Builder<TestPlanInfo, TestPlan>(this, TestPlanInfo.class, TestPlanResultInfo.class));
+		builders.put(TestCycleInfo.class, new Builder<TestCycleInfo, TestCycle>(this, TestCycleInfo.class, TestCycleResultInfo.class));
 
 	}
 

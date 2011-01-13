@@ -21,26 +21,23 @@ package com.utest.webservice.model.v2;
 
 import java.util.Date;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlAttribute;
 
-@XmlRootElement()
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "timeline")
+//@XmlRootElement()
+//@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlType(name = "timeline")
 public class Timeline
 {
-	@XmlElement(required = false)
+	// @XmlElement(required = false)
 	private Integer	createdBy;
-	@XmlElement(required = false)
+	// @XmlElement(required = false)
 	private Date	createDate;
-	@XmlElement(required = false)
+	// @XmlElement(required = false)
 	private Integer	lastChangedBy;
-	@XmlElement(required = false)
+	// @XmlElement(required = false)
 	private Date	lastChangeDate;
 
+	@XmlAttribute(name = "createdBy")
 	public Integer getCreatedBy()
 	{
 		return createdBy;
@@ -51,6 +48,7 @@ public class Timeline
 		this.createdBy = createdBy;
 	}
 
+	@XmlAttribute(name = "createDate")
 	public Date getCreateDate()
 	{
 		return createDate;
@@ -61,6 +59,7 @@ public class Timeline
 		this.createDate = createDate;
 	}
 
+	@XmlAttribute(name = "lastChangedBy")
 	public Integer getLastChangedBy()
 	{
 		return lastChangedBy;
@@ -71,6 +70,7 @@ public class Timeline
 		this.lastChangedBy = lastChangedBy;
 	}
 
+	@XmlAttribute(name = "lastChangeDate")
 	public Date getLastChangeDate()
 	{
 		return lastChangeDate;

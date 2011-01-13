@@ -38,9 +38,9 @@ public interface TestCycleService
 	TestCycle addTestCycle(Integer productId, String name, String description, Date startDate, Date endDate, boolean communityAuthoringAllowed, boolean communityAccessAllowed)
 			throws Exception;
 
-	List<EnvironmentGroup> findEnvironmentGroupsForTestCycle(Integer testCycleId_) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestCycle(Integer testCycleId_) throws Exception;
 
-	List<TestRun> findTestRunsForTestCycle(Integer testCycleId) throws Exception;
+	List<TestRun> getTestRunsForTestCycle(Integer testCycleId) throws Exception;
 
 	void deleteTestCycle(Integer testCycleId) throws Exception;
 

@@ -19,27 +19,22 @@
  */
 package com.utest.webservice.model.v2;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement()
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "BaseInfo")
+//@XmlRootElement()
+//@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlType(name = "BaseInfo")
 public class BaseInfo
 {
-	@XmlElement(required = false)
+	@XmlElement(type = ResourceIdentity.class, name = "resourceIdentity", required = false)
 	private ResourceIdentity	resourceIdentity;
-	@XmlElement(required = false)
+	@XmlElement(type = Timeline.class, name = "timeline", required = false)
 	private Timeline			timeline;
 
 	public BaseInfo()
 	{
 	}
 
-	@org.apache.cxf.aegis.type.java5.XmlElement(minOccurs = "0", nillable = true)
 	public ResourceIdentity getResourceIdentity()
 	{
 		return resourceIdentity;
@@ -50,7 +45,6 @@ public class BaseInfo
 		this.resourceIdentity = resourceIdentity;
 	}
 
-	@org.apache.cxf.aegis.type.java5.XmlElement(minOccurs = "0", nillable = true)
 	public Timeline getTimeline()
 	{
 		return timeline;

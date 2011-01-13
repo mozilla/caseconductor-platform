@@ -87,7 +87,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	}
 
 	@Override
-	public List<EnvironmentGroup> findEnvironmentGroupsForTestCycle(final Integer testCycleId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForTestCycle(final Integer testCycleId_) throws Exception
 	{
 		final TestCycle testCycle = dao.getById(TestCycle.class, testCycleId_);
 		if (testCycle == null)
@@ -145,7 +145,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 			throw new DeletingActivatedEntityException(TestCycle.class.getSimpleName());
 		}
 		// delete all included test runs
-		final List<TestRun> includedTestRuns = findTestRunsForTestCycle(testCycleId_);
+		final List<TestRun> includedTestRuns = getTestRunsForTestCycle(testCycleId_);
 		for (final TestRun testRun : includedTestRuns)
 		{
 			testRunService.deleteTestRun(testRun.getId());
@@ -173,7 +173,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	}
 
 	@Override
-	public List<TestRun> findTestRunsForTestCycle(final Integer testCycleId_) throws Exception
+	public List<TestRun> getTestRunsForTestCycle(final Integer testCycleId_) throws Exception
 	{
 		final Search search = new Search(TestRun.class);
 		search.addFilterEqual("testCycleId", testCycleId_);
@@ -230,7 +230,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 		}
 
 		// lock all included test runs
-		final List<TestRun> includedTestRuns = findTestRunsForTestCycle(testCycleId_);
+		final List<TestRun> includedTestRuns = getTestRunsForTestCycle(testCycleId_);
 		for (final TestRun testRun : includedTestRuns)
 		{
 			testRunService.lockTestRun(testRun.getId(), testRun.getVersion());

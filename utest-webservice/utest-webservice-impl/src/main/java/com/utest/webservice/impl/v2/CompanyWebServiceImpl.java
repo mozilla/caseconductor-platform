@@ -50,6 +50,7 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 @Path("/companies/")
 public class CompanyWebServiceImpl extends BaseWebServiceImpl implements CompanyWebService
 {
+	@SuppressWarnings("unused")
 	private final UserService		userService;
 	private final CompanyService	companyService;
 

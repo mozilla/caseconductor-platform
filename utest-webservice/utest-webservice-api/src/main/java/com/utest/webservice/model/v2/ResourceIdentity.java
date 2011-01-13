@@ -19,15 +19,11 @@
  */
 package com.utest.webservice.model.v2;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlAttribute;
 
-@XmlRootElement()
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "resourceIdentity")
+//@XmlRootElement()
+//@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlType(name = "resourceIdentity")
 public class ResourceIdentity
 {
 	public ResourceIdentity()
@@ -35,19 +31,14 @@ public class ResourceIdentity
 		super();
 	}
 
-	// public ResourceIdentity(String url)
-	// {
-	// super();
-	// this.url = url;
-	// }
-
-	@XmlElement(required = true)
-	Integer	id;
 	// @XmlElement(required = true)
-	// String url;
-	@XmlElement(required = false)
-	Integer	version;
+	private Integer	id;
+	// @XmlElement(required = false)
+	private String	url;
+	// @XmlElement(required = false)
+	private Integer	version;
 
+	@XmlAttribute(name = "id")
 	public Integer getId()
 	{
 		return id;
@@ -58,16 +49,7 @@ public class ResourceIdentity
 		this.id = id;
 	}
 
-	// public String getUrl()
-	// {
-	// return url;
-	// }
-	//
-	// public void setUrl(final String url)
-	// {
-	// this.url = url;
-	// }
-
+	@XmlAttribute(name = "version")
 	public Integer getVersion()
 	{
 		return version;
@@ -76,5 +58,16 @@ public class ResourceIdentity
 	public void setVersion(final Integer version)
 	{
 		this.version = version;
+	}
+
+	public void setUrl(String url)
+	{
+		this.url = url;
+	}
+
+	@XmlAttribute(name = "url")
+	public String getUrl()
+	{
+		return url;
 	}
 }

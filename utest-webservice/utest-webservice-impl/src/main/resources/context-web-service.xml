@@ -40,16 +40,19 @@
     <bean id="resourceManager" class="com.utest.webservice.builders.ResourceManager">
         <property name="resourceUrls">
             <map>
-                <entry key="environmentType" value="/environmenttypes/{id}"/>
+               	<entry key="environment" value="/environments/{id}"/>
+               	<entry key="environmentgroup" value="/environmentgroups/{id}"/>
+                <entry key="environmenttype" value="/environmenttypes/{id}"/>
                 <entry key="company" value="/companies/{id}"/>
                 <entry key="user" value="/users/{id}"/>
                 <entry key="product" value="/products/{id}"/>
-                <entry key="testCase" value="/testcases/{id}"/>
-                <entry key="testCaseVersion" value="/testcases/versions/{id}"/>
-                <entry key="testSuite" value="/testsuites/{id}"/>
-                <entry key="testPlan" value="/testplans/{id}"/>
-                <entry key="testCycle" value="/testcycles/{id}"/>
-                <entry key="testRun" value="/testruns/{id}"/>
+                <entry key="productcomponent" value="/products/components/{id}"/>
+                <entry key="testcase" value="/testcases/{id}"/>
+                <entry key="testcaseversion" value="/testcases/versions/{id}"/>
+                <entry key="testsuite" value="/testsuites/{id}"/>
+                <entry key="testplan" value="/testplans/{id}"/>
+                <entry key="testcycle" value="/testcycles/{id}"/>
+                <entry key="testrun" value="/testruns/{id}"/>
             </map>
         </property>
     </bean>
@@ -88,6 +91,11 @@
 	<bean id="testPlanWebService" class="com.utest.webservice.impl.v2.TestPlanWebServiceImpl">
 		<constructor-arg ref="objectBuilderFactory" />
 		<constructor-arg ref="testPlanService" />
+	</bean>
+
+	<bean id="testCycleWebService" class="com.utest.webservice.impl.v2.TestCycleWebServiceImpl">
+		<constructor-arg ref="objectBuilderFactory" />
+		<constructor-arg ref="testCycleService" />
 	</bean>
 
 	<bean id="staticDataWebService" class="com.utest.webservice.impl.v2.StaticDataWebServiceImpl">
@@ -133,12 +141,13 @@
 	<jaxrs:server id="rest2" address="/v2/rest">
 		<jaxrs:serviceBeans>
 			<ref bean="companyWebService" />
+			<ref bean="productWebService" />
 			<ref bean="userWebService" />
 			<ref bean="environmentWebService" />
 			<ref bean="testCaseWebService" />
 			<ref bean="testSuiteWebService" />
 			<ref bean="testPlanWebService" />
-			<ref bean="productWebService" />
+			<ref bean="testCycleWebService" />
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>
 			<ref bean="jsonProvider" />

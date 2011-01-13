@@ -133,27 +133,30 @@ public class Builder<Ti, To>
 		{
 			if (((String) property).endsWith("Locator"))
 			{
+				String resourcePath = null;
+				Integer resourceId = null;
 				String resourceName = ((String) property).substring(0, ((String) property).indexOf("Locator"));
 				if (resultProperties.containsKey(resourceName + "Id"))
 				{
-					Integer resourceId = (Integer) PropertyUtils.getProperty(result, resourceName + "Id");
+					resourceId = (Integer) PropertyUtils.getProperty(result, resourceName + "Id");
 					if (resourceId != null)
 					{
-						String resourcePath = getResourcePath(resourceName);
-						ResourceLocator resourceLocator = new ResourceLocator(resourceId, ub.path(resourcePath).build(resourceId).toString());
-						PropertyUtils.setProperty(result, (String) property, resourceLocator);
+						resourcePath = getResourcePath(resourceName.toLowerCase());
 					}
 				}
 				// represents a user who performed an operation
 				else if (resourceName.endsWith("By"))
 				{
-					Integer resourceId = (Integer) PropertyUtils.getProperty(result, resourceName);
+					resourceId = (Integer) PropertyUtils.getProperty(result, resourceName);
 					if (resourceId != null)
 					{
-						String resourcePath = getResourcePath("user");
-						ResourceLocator resourceLocator = new ResourceLocator(resourceId, ub.path(resourcePath).build(resourceId).toString());
-						PropertyUtils.setProperty(result, (String) property, resourceLocator);
+						resourcePath = getResourcePath("user");
 					}
+				}
+				if (resourcePath != null)
+				{
+					ResourceLocator resourceLocator = new ResourceLocator(resourceId, ub.clone().path(resourcePath).build(resourceId).toString());
+					PropertyUtils.setProperty(result, (String) property, resourceLocator);
 				}
 			}
 		}
@@ -165,6 +168,14 @@ public class Builder<Ti, To>
 		ResourceIdentity resourceIdentity = new ResourceIdentity();
 		PropertyUtils.copyProperties(resourceIdentity, object);
 		result.setResourceIdentity(resourceIdentity);
+		// populate resource url if it's defined
+		String resourcePath = null;
+		String resourceName = object.getClass().getSimpleName().toLowerCase();
+		resourcePath = getResourcePath(resourceName);
+		if (resourcePath != null)
+		{
+			resourceIdentity.setUrl(ub.clone().path(resourcePath).build(resourceIdentity.getId()).toString());
+		}
 
 		if (object instanceof TimelineVersionable)
 		{

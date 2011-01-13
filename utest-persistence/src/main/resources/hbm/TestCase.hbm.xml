@@ -25,5 +25,17 @@
                 <comment>Indicates if during specific Test Cycle.</comment>
             </column>
         </property>
+        <property name="createdBy" type="java.lang.Integer">
+            <column name="createdBy" not-null="true" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="createDate" length="19" not-null="true" />
+        </property>
+        <property name="lastChangedBy" type="java.lang.Integer">
+            <column name="lastChangedBy" not-null="true" />
+        </property>
+        <property name="lastChangeDate" type="timestamp">
+            <column name="lastChangeDate" length="19" not-null="true" />
+        </property>
     </class>
 </hibernate-mapping>
