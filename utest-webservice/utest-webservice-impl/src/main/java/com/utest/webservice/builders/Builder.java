@@ -60,7 +60,7 @@ public class Builder<Ti, To>
 		this.resultClass = resultClass;
 	}
 
-	List<Ti> toInfo(final List<To> objects, final UriBuilder ub, final Object... uriBuilderArgs) throws Exception
+	public List<Ti> toInfo(final List<To> objects, final UriBuilder ub, final Object... uriBuilderArgs) throws Exception
 	{
 		final List<Ti> ret = new ArrayList<Ti>();
 		if ((objects == null) || objects.isEmpty())

@@ -33,7 +33,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 import com.utest.domain.CodeValueEntity;
 import com.utest.domain.Locale;
@@ -67,17 +69,27 @@ public class StaticDataWebServiceImpl extends BaseWebServiceImpl implements Stat
 
 	@Override
 	@GET
+	@Path("/locales/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public List<CodeValue> getLocales(@Context final UriInfo ui_) throws Exception
+	{
+		return objectBuilderFactory.toInfo(CodeValue.class, staticDataService.getSupportedLocales(), ui_.getBaseUriBuilder());
+	}
+
+	@Override
+	@GET
 	@Path("/values/{key}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public List<CodeValue> getCodeValues(@PathParam("key") final String id) throws Exception
+	public List<CodeValue> getCodeValues(@Context final UriInfo ui_, @PathParam("key") final String id) throws Exception
 	{
 		if (id == null)
 		{
 			throw new IllegalArgumentException("Data type is null.");
 		}
 		String name = id.toUpperCase();
-		return objectBuilderFactory.toInfo(CodeValue.class, staticDataService.getCodeDescriptions(name), null);
+		return objectBuilderFactory.toInfo(CodeValue.class, staticDataService.getCodeDescriptions(name), ui_.getBaseUriBuilder());
 	}
 
 	@Override
@@ -85,14 +97,14 @@ public class StaticDataWebServiceImpl extends BaseWebServiceImpl implements Stat
 	@Path("/values/{key}/locale/{locale}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public List<CodeValue> getCodeValues(@PathParam("key") final String id, @PathParam("locale") final String locale) throws Exception
+	public List<CodeValue> getCodeValues(@Context final UriInfo ui_, @PathParam("key") final String id, @PathParam("locale") final String locale) throws Exception
 	{
 		if (id == null)
 		{
 			throw new IllegalArgumentException("Data type is null.");
 		}
 		String name = id.toUpperCase();
-		return objectBuilderFactory.toInfo(CodeValue.class, staticDataService.getCodeDescriptions(name, locale), null);
+		return objectBuilderFactory.toInfo(CodeValue.class, staticDataService.getCodeDescriptions(name, locale), ui_.getBaseUriBuilder());
 	}
 
 	// @Override
@@ -100,7 +112,7 @@ public class StaticDataWebServiceImpl extends BaseWebServiceImpl implements Stat
 	// @Path("/values/{id}/parent/{parentId}")
 	// @Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	// @Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public List<CodeValue> getParentCodeValues(@PathParam("id") final String id, @PathParam("parentId") final Integer parentId) throws Exception
+	public List<CodeValue> getParentCodeValues(@Context final UriInfo ui_, @PathParam("id") final String id, @PathParam("parentId") final Integer parentId) throws Exception
 	{
 		if (id == null)
 		{
@@ -126,7 +138,7 @@ public class StaticDataWebServiceImpl extends BaseWebServiceImpl implements Stat
 		{
 			list = new Vector<CodeValueEntity>();
 		}
-		return objectBuilderFactory.toInfo(CodeValue.class, list, null);
+		return objectBuilderFactory.toInfo(CodeValue.class, list, ui_.getBaseUriBuilder());
 	}
 
 	// @Override
@@ -134,7 +146,7 @@ public class StaticDataWebServiceImpl extends BaseWebServiceImpl implements Stat
 	// @Path("/values/{id}/parent/")
 	// @Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	// @Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Map<String, List<CodeValue>> getParentMap(@PathParam("id") final String id) throws Exception
+	public Map<String, List<CodeValue>> getParentMap(@Context final UriInfo ui_, @PathParam("id") final String id) throws Exception
 	{
 		if (id == null)
 		{
@@ -158,7 +170,7 @@ public class StaticDataWebServiceImpl extends BaseWebServiceImpl implements Stat
 
 		for (final Entry<String, Vector<CodeValueEntity>> entry : parentDepend.get(name).entrySet())
 		{
-			result.put(entry.getKey(), objectBuilderFactory.toInfo(CodeValue.class, entry.getValue(), null));
+			result.put(entry.getKey(), objectBuilderFactory.toInfo(CodeValue.class, entry.getValue(), ui_.getBaseUriBuilder()));
 		}
 		return result;
 	}

@@ -33,8 +33,6 @@ public interface ObjectBuilderFactory
 {
 	<Ti, To> Ti toInfo(Class<Ti> clazz, To object, UriBuilder ub, final Object... uriBuilderArgs) throws Exception;
 
-	<Ti, To> Ti toInfo(Class<Ti> clazz, To object, UriBuilder baseBuilder, UriBuilder resourceBuilder, Object... resourceBuilderArgs) throws Exception;
-
 	<Ti, To> List<Ti> toInfo(final Class<Ti> clazz, List<To> objects, UriBuilder ub, Object... uriBuilderArgs) throws Exception;
 
 	<Ti, To> To toObject(Class<To> clazz, Ti object) throws Exception;

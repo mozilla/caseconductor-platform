@@ -23,17 +23,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+
 import com.utest.webservice.model.v2.CodeValue;
 
 public interface StaticDataWebService
 {
-	List<CodeValue> getCodeValues(String dataType) throws Exception;
+	List<CodeValue> getCodeValues(@Context final UriInfo ui_, String dataType) throws Exception;
 
-	List<CodeValue> getParentCodeValues(String dataType, Integer parentId) throws Exception;
+	List<CodeValue> getParentCodeValues(@Context final UriInfo ui_, String dataType, Integer parentId) throws Exception;
 
-	Map<String, List<CodeValue>> getParentMap(String dataType) throws Exception;
+	Map<String, List<CodeValue>> getParentMap(@Context final UriInfo ui_, String dataType) throws Exception;
 
 	Set<String> getCodeKeys() throws Exception;
 
-	List<CodeValue> getCodeValues(String id, String locale) throws Exception;
+	List<CodeValue> getCodeValues(@Context final UriInfo ui_, String id, String locale) throws Exception;
+
+	List<CodeValue> getLocales(UriInfo ui) throws Exception;
 }

@@ -76,29 +76,28 @@ public class StaticDataServiceImpl implements StaticDataService
 	private static ConcurrentMap<String, ConcurrentMap<String, ConcurrentMap<String, Vector<CodeValueEntity>>>>	_localizedParentDependable	= null;
 	// className -> parentID -> List of children
 	private static ConcurrentMap<String, ConcurrentMap<String, Vector<CodeValueEntity>>>						_parentDependable			= null;
-	// parmName -> parmValue
-	private static ConcurrentMap<String, String>																_defaultReportStyles		= null;
 
 	public final static Integer																					DEFAULT_STYLE_ID			= -1;
 
+	private static List<CodeValueEntity>																		_locales					= new ArrayList<CodeValueEntity>();
 	@SuppressWarnings("unchecked")
-	private static List<Class>																					localizedData				= new ArrayList<Class>();
+	private static List<Class>																					_localizedData				= new ArrayList<Class>();
 	@SuppressWarnings("unchecked")
-	private static List<Class>																					nonTranslatableData			= new ArrayList<Class>();
+	private static List<Class>																					_nonTranslatableData		= new ArrayList<Class>();
 
 	static
 	{
-		localizedData.add(Country.class);
-		localizedData.add(TestCaseStatus.class);
-		localizedData.add(TestSuiteStatus.class);
-		localizedData.add(TestPlanStatus.class);
-		localizedData.add(TestRunStatus.class);
-		localizedData.add(TestRunResultStatus.class);
-		localizedData.add(TestCycleStatus.class);
-		localizedData.add(UserStatus.class);
-		localizedData.add(ApprovalStatus.class);
+		_localizedData.add(Country.class);
+		_localizedData.add(TestCaseStatus.class);
+		_localizedData.add(TestSuiteStatus.class);
+		_localizedData.add(TestPlanStatus.class);
+		_localizedData.add(TestRunStatus.class);
+		_localizedData.add(TestRunResultStatus.class);
+		_localizedData.add(TestCycleStatus.class);
+		_localizedData.add(UserStatus.class);
+		_localizedData.add(ApprovalStatus.class);
 
-		nonTranslatableData.add(Locale.class);
+		_nonTranslatableData.add(Locale.class);
 	}
 
 	public StaticDataServiceImpl(final TypelessDAO dao)
@@ -121,7 +120,7 @@ public class StaticDataServiceImpl implements StaticDataService
 			throw new IllegalArgumentException("Object of class " + childClazz_.getName() + " with id " + childId + " not found!");
 		}
 		dao.addOrUpdate(createRelationClasses(parentDependableClazz_, parentId, child).toArray());
-		loadNonTranslatableData(nonTranslatableData);
+		loadNonTranslatableData(_nonTranslatableData);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -238,7 +237,7 @@ public class StaticDataServiceImpl implements StaticDataService
 			dao.addOrUpdate(createRelationClasses(clazz_, parentId, created).toArray());
 		}
 
-		loadNonTranslatableData(nonTranslatableData);
+		loadNonTranslatableData(_nonTranslatableData);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -248,7 +247,7 @@ public class StaticDataServiceImpl implements StaticDataService
 		final Method set = clazz_.getMethod("setDescription", String.class);
 		set.invoke(toUpdate, description);
 		dao.addOrUpdate(toUpdate);
-		loadNonTranslatableData(nonTranslatableData);
+		loadNonTranslatableData(_nonTranslatableData);
 	}
 
 	/**
@@ -258,10 +257,27 @@ public class StaticDataServiceImpl implements StaticDataService
 	private void loadStaticData()
 	{
 		logger.info("Started loading static data");
-
-		loadLocalizedData(localizedData);
-		loadNonTranslatableData(nonTranslatableData);
+		loadLocales();
+		loadLocalizedData(_localizedData);
+		loadNonTranslatableData(_nonTranslatableData);
 		logger.info("Finished loading static data");
+	}
+
+	private void loadLocales()
+	{
+		List<Locale> locales = dao.getAll(Locale.class);
+		if (locales != null && !locales.isEmpty())
+		{
+			_locales = new ArrayList<CodeValueEntity>();
+			for (Locale locale : locales)
+			{
+				CodeValueEntity cve = new CodeValueEntity();
+				cve.setId(locale.getCode());
+				cve.setDescription(locale.getDescription());
+				cve.setSortOrder(locale.getSortOrder());
+				_locales.add(cve);
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -403,16 +419,25 @@ public class StaticDataServiceImpl implements StaticDataService
 	}
 
 	@Override
+	public List<CodeValueEntity> getSupportedLocales()
+	{
+		return _locales;
+	}
+
+	@Override
 	public List<CodeValueEntity> getCodeDescriptions(final String className, final String localeCode_)
 	{
-		List<CodeValueEntity> list;
+		List<CodeValueEntity> list = null;
 		if (_codeMap.containsKey(className.toUpperCase()))
 		{
 			list = _codeMap.get(className.toUpperCase());
 		}
 		else
 		{
-			list = _localizedCodeMap.get(localeCode_).get(className.toUpperCase());
+			if (_localizedCodeMap.containsKey(localeCode_))
+			{
+				list = _localizedCodeMap.get(localeCode_).get(className.toUpperCase());
+			}
 		}
 		if (list != null)
 		{

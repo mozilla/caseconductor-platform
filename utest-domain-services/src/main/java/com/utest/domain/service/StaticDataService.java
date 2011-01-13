@@ -77,4 +77,6 @@ public interface StaticDataService extends Initializable
 
 	Set<String> getCodeKeys();
 
+	List<CodeValueEntity> getSupportedLocales();
+
 }

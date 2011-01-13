@@ -148,15 +148,6 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <Ti, To> Ti toInfo(final Class<Ti> clazz, final To object, final UriBuilder baseBuilder, final UriBuilder resourceBuilder, final Object... resourceBuilderArgs)
-			throws Exception
-	{
-		final Builder<Ti, To> builder = getBuilder(clazz, object.getClass());
-		return builder.toInfo(object, baseBuilder, resourceBuilder, resourceBuilderArgs);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
 	public <Ti, To> List<Ti> toInfo(final Class<Ti> clazz, final List<To> objects, final UriBuilder ub, final Object... uriBuilderArgs) throws Exception
 	{
 		if ((objects == null) || objects.isEmpty())
