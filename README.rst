@@ -1,24 +1,28 @@
 uTest TCM Platform
 ==================
 
-Documentation of setup on an Ubuntu 10.10 (Maverick) desktop system.
+Documentation of setup (Tested on Ubuntu 10.10 desktop, 10.04 server, and Mac
+OS X).
+
   * Build: Get Java and Maven installed and build the tcmplatform source
   * Run: Setup JBoss, and copy the tcmplatform .war file to the right place
-  * Cheats: .bashrc settings to make re-building and running easier once 
+  * Cheats: .bashrc settings to make re-building and running easier once
              you're already setup
 
 Assumes that $TCMPLATFORM is the root directory of the checked-out tcmplatform
-repo. (see Cheats section)
+repo (see Cheats section).
 
 Build
 -----
 
-First make sure we've got a JDK and Maven both available::
+First make sure we've got a JDK and Maven both available. On Ubuntu::
 
     $ sudo aptitude install maven2 openjdk-6-jdk
-	Mac: Follow: http://maven.apache.org/download.html.  
-		May need to add this to your .bashrc: 
-		export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home"
+
+On OS X, follow http://maven.apache.org/download.html. You may need to add
+something like this to your .bashrc::
+
+    export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home"
 
 Now build the project::
 
@@ -69,23 +73,23 @@ companies.
 Cheats
 ------
 
-You can add these lines to your .bashrc to make updating and running a tad easier.
-Please modify the environment variables to match your system config:
+You can add these lines to your .bashrc to make updating and running a tad
+easier.  Please modify the environment variables to match your system config::
 
-export TCMPLATFORM=$HOME/gitspace/tcmplatform
-export M2_HOME=/usr/local/apache-maven/apache-maven-2.2.1
-export M2=$M2_HOME/bin
-export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home
-export JBOSS_HOME=$HOME/CodeLibraries/jboss-5.1.0.GA
-export PATH=$M2:$PATH
+    export TCMPLATFORM=$HOME/gitspace/tcmplatform
+    export M2_HOME=/usr/local/apache-maven/apache-maven-2.2.1
+    export M2=$M2_HOME/bin
+    export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home
+    export JBOSS_HOME=$HOME/CodeLibraries/jboss-5.1.0.GA
+    export PATH=$M2:$PATH
 
-# TCM
-function tcmupdate() {
-	cd $TCMPLATFORM
-	mvn clean install
-	cp $TCMPLATFORM/utest-portal-webapp/target/tcm.war $JBOSS_HOME/server/default/deploy/
-	echo "DONE: tcm.war copied to JBoss"; echo
-}
-function tcmrun() {
-	$JBOSS_HOME/bin/run.sh
-}
+    # TCM
+    function tcmupdate() {
+        cd $TCMPLATFORM
+        mvn clean install
+        cp $TCMPLATFORM/utest-portal-webapp/target/tcm.war $JBOSS_HOME/server/default/deploy/
+        echo "DONE: tcm.war copied to JBoss"; echo
+    }
+    function tcmrun() {
+        $JBOSS_HOME/bin/run.sh
+    }
