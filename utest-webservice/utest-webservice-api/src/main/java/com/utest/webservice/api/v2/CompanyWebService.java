@@ -27,13 +27,14 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface CompanyWebService
 {
-	void deleteCompany(UriInfo ui, Integer companyId) throws Exception;
-
 	CompanyInfo updateCompany(UriInfo ui, Integer companyId, CompanyInfo companyInfo) throws Exception;
-
-	CompanyInfo getCompany(UriInfo ui, Integer companyId) throws Exception;
 
 	CompanyResultInfo findCompanies(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	CompanyInfo createCompany(UriInfo ui, CompanyInfo companyInfo) throws Exception;
+
+	CompanyInfo getCompany(UriInfo ui, Integer companyId) throws Exception;
+
+	void deleteCompany(UriInfo ui, Integer companyId, Integer resourceVersionId) throws Exception;
+
 }

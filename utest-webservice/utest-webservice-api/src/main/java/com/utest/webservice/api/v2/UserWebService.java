@@ -56,14 +56,6 @@ public interface UserWebService
 
 	UserInfo createUser(UriInfo ui, UserInfo userInfo) throws Exception;
 
-	UserInfo activateUser(UriInfo ui, Integer userId) throws Exception;
-
-	UserInfo deactivateUser(UriInfo ui, Integer userId) throws Exception;
-
-	UserInfo changeUserPassword(UriInfo ui, Integer userId, String newPassword) throws Exception;
-
-	UserInfo changeUserEmail(UriInfo ui, Integer userId, String newEmail) throws Exception;
-
 	RoleInfo createRole(UriInfo ui, RoleInfo roleInfo) throws Exception;
 
 	Boolean updateRolePermissions(UriInfo ui, Integer roleId, ArrayList<Integer> permissionIds) throws Exception;
@@ -71,8 +63,6 @@ public interface UserWebService
 	Boolean addRolePermission(UriInfo ui, Integer roleId, Integer permissionId) throws Exception;
 
 	Boolean deleteRolePermission(UriInfo ui, Integer roleId, Integer permissionId) throws Exception;
-
-	Boolean deleteRole(UriInfo ui, Integer roleId) throws Exception;
 
 	Boolean addUserRole(UriInfo ui, Integer userId, Integer roleId) throws Exception;
 
@@ -85,5 +75,15 @@ public interface UserWebService
 	Boolean logout(MessageContext context) throws Exception;
 
 	UserInfo getCurrentUser(UriInfo ui) throws Exception;
+
+	UserInfo activateUser(UriInfo ui, Integer userId, Integer resourceVersionId) throws Exception;
+
+	UserInfo deactivateUser(UriInfo ui, Integer userId, Integer resourceVersionId) throws Exception;
+
+	UserInfo changeUserEmail(UriInfo ui, Integer userId, String newEmail, Integer resourceVersionId) throws Exception;
+
+	UserInfo changeUserPassword(UriInfo ui, Integer userId, String newPassword, Integer resourceVersionId) throws Exception;
+
+	Boolean deleteRole(UriInfo ui, Integer roleId, Integer resourceVersionId) throws Exception;
 
 }

@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import com.utest.domain.AccessRole;
 import com.utest.domain.User;
@@ -34,7 +33,7 @@ public class UserServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 	@Autowired
 	private UserService	userService;
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddUser() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -44,7 +43,7 @@ public class UserServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 	}
 
 	//
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddRole() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -59,41 +58,44 @@ public class UserServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 	}
 
 	//
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testSaveRolePermissions() throws Exception
 	{
 		final User user = userService.getUser(1);
 		loginUser(user);
-		final Integer roleId = 19;
+		final Integer roleId = 5;
+		AccessRole role = userService.getRole(roleId);
 		final List<Integer> permissions = new ArrayList<Integer>();
-		permissions.add(8);
-		permissions.add(9);
-		permissions.add(10);
-		userService.saveRolePermissions(roleId, permissions);
+		permissions.add(21);
+		permissions.add(22);
+		permissions.add(23);
+		userService.saveRolePermissions(roleId, permissions, role.getVersion());
 		Assert.assertTrue(permissions != null);
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testSaveUserRoles() throws Exception
 	{
-		final User user = userService.getUser(1);
+		User user = userService.getUser(1);
 		loginUser(user);
-		final Integer userId = 1;
+		final Integer userId = 4;
+		user = userService.getUser(userId);
 		final List<Integer> permissions = new ArrayList<Integer>();
-		permissions.add(3);
 		permissions.add(4);
 		permissions.add(5);
-		userService.saveUserRoles(userId, permissions);
+		userService.saveUserRoles(userId, permissions, user.getVersion());
 		Assert.assertTrue(true);
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testDeleteUserRole() throws Exception
 	{
-		final User user = userService.getUser(1);
+		User user = userService.getUser(1);
 		loginUser(user);
+		final Integer userId = 4;
+		user = userService.getUser(userId);
 		final Integer roleId = 5;
-		userService.deleteUserRole(roleId, 1);
+		userService.deleteUserRole(roleId, user.getId(), user.getVersion());
 		Assert.assertTrue(true);
 	}
 }

@@ -37,7 +37,6 @@ import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.UserService;
 import com.utest.domain.service.cache.LoginUserContextHolder;
-import com.utest.domain.util.DomainUtil;
 import com.utest.exception.DuplicateNameException;
 import com.utest.exception.EmailInUseException;
 import com.utest.exception.InvalidUserException;
@@ -86,6 +85,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		user.setFirstName(firstName_);
 		user.setLastName(lastName_);
 		user.setEmail(email_);
+		user.setScreenName(screenName_);
 		user.setCode(EncodeUtil.encode(email_));
 		user.setPassword(EncodeUtil.encode(password_));
 		user.setUserStatusId(UserStatus.INACTIVE);
@@ -106,7 +106,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		final User user = (User) dao.searchUnique(User.class, search);
 		if (user == null)
 		{
-			throw new NotFoundException("UserCode#" + code_);
+			throw new NotFoundException("User with this code not found: " + code_);
 		}
 		setUserContext(user);
 		return user;
@@ -141,7 +141,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	}
 
 	@Override
-	public User closeUserAccount(final Integer userId_) throws Exception
+	public User closeUserAccount(final Integer userId_, final Integer originalVersionId_) throws Exception
 	{
 		final User user = getUser(userId_);
 		if (user == null)
@@ -149,6 +149,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 			throw new InvalidUserException();
 		}
 		user.setUserStatusId(UserStatus.DISABLED);
+		user.setVersion(originalVersionId_);
 		return dao.merge(user);
 	}
 
@@ -160,7 +161,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		{
 			throw new InvalidUserException();
 		}
-		DomainUtil.loadUpdatedTimeline(user, user, user.getVersion());
 		user.setUserStatusId(UserStatus.ACTIVE);
 		user.setConfirmedEmail(true);
 		return dao.merge(user);
@@ -203,12 +203,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	}
 
 	@Override
-	public User changeUserEmail(final Integer userId_, final String newEmail_) throws Exception
+	public User changeUserEmail(final Integer userId_, final String newEmail_, final Integer originalVersionId_) throws Exception
 	{
 		final User user = getUser(userId_);
 		if (user == null)
 		{
-			throw new NotFoundException("UserId#" + userId_);
+			throw new NotFoundException("User not found: " + userId_);
 		}
 		// check for duplicate email
 		if (getUserByEmail(newEmail_) != null)
@@ -218,14 +218,16 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		user.setEmail(newEmail_);
 		user.setConfirmedEmail(false);
 		user.setUserStatusId(UserStatus.INACTIVE);
+		user.setVersion(originalVersionId_);
 		return dao.merge(user);
 	}
 
 	@Override
-	public User changeUserPassword(final Integer userId_, final String newPassword_) throws Exception
+	public User changeUserPassword(final Integer userId_, final String newPassword_, final Integer originalVersionId_) throws Exception
 	{
 		final User user = getUser(userId_);
 		user.setPassword(EncodeUtil.encode(newPassword_));
+		user.setVersion(originalVersionId_);
 		return dao.merge(user);
 	}
 
@@ -244,24 +246,25 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		final User user = getUser(userId_);
 		if (user == null)
 		{
-			throw new NotFoundException("UserId#" + userId_);
+			throw new NotFoundException("User not found. Id: " + userId_);
 		}
-		user.setVersion(originalVersionId_);
 		user.setCompanyId(companyId_);
 		user.setFirstName(firstName_);
 		user.setLastName(lastName_);
+		user.setVersion(originalVersionId_);
 		return dao.merge(user);
 	}
 
 	@Override
-	public User activateUserAccount(final Integer userId_) throws Exception
+	public User activateUserAccount(final Integer userId_, final Integer originalVersionId_) throws Exception
 	{
 		final User user = getUser(userId_);
 		if (user == null)
 		{
-			throw new NotFoundException("UserId#" + userId_);
+			throw new NotFoundException("User not found: " + userId_);
 		}
 		user.setUserStatusId(UserStatus.ACTIVE);
+		user.setVersion(originalVersionId_);
 		return dao.merge(user);
 	}
 
@@ -286,20 +289,21 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		{
 			throw new DuplicateNameException();
 		}
-		final AccessRole role = new AccessRole();
+		AccessRole role = new AccessRole();
 		role.setCompanyId(companyId_);
 		role.setName(name_);
 		role.setSortOrder(0);
 		final Integer roleId = dao.addAndReturnId(role);
+		role = dao.getById(AccessRole.class, roleId);
 		for (final Integer permissionId : permissionIds_)
 		{
-			addRolePermission(roleId, permissionId);
+			addRolePermission(roleId, permissionId, role.getVersion());
 		}
 		return dao.getById(AccessRole.class, roleId);
 	}
 
 	@Override
-	public void saveRolePermissions(final Integer roleId_, final List<Integer> permissionIds_)
+	public void saveRolePermissions(final Integer roleId_, final List<Integer> permissionIds_, final Integer originalVersionId_)
 	{
 		if (isSystemRole(roleId_))
 		{
@@ -312,7 +316,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		dao.delete(rolePermissions);
 		for (final Integer permissionId : permissionIds_)
 		{
-			addRolePermission(roleId_, permissionId);
+			addRolePermission(roleId_, permissionId, originalVersionId_);
 		}
 	}
 
@@ -330,7 +334,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	}
 
 	@Override
-	public void addRolePermission(final Integer roleId_, final Integer permissionId_)
+	public void addRolePermission(final Integer roleId_, final Integer permissionId_, final Integer originalVersionId_)
 	{
 		if (isSystemRole(roleId_))
 		{
@@ -351,30 +355,24 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 			rolePermission.setPermissionId(permissionId_);
 			dao.addAndReturnId(rolePermission);
 
-			// final AccessRole role = dao.getById(AccessRole.class, roleId_);
-			// DomainUtil.loadUpdatedTimeline(role);
-			// dao.addOrUpdate(role);
+			final AccessRole role = dao.getById(AccessRole.class, roleId_);
+			role.setVersion(originalVersionId_);
+			dao.merge(role);
 		}
 	}
 
 	private boolean isPermissionAssignable(final Integer permissionId_)
 	{
-		if (permissionId_ == null)
-		{
-			throw new IllegalArgumentException("Permission is null.");
-		}
-		final Search search = new Search(Permission.class);
-		search.addFilterEqual("id", permissionId_);
-		final Permission permission = (Permission) dao.searchUnique(Permission.class, search);
+		final Permission permission = dao.getById(Permission.class, permissionId_);
 		if (permission == null)
 		{
-			throw new IllegalArgumentException("Permission not found: " + permissionId_);
+			throw new NotFoundException("Permission not found: " + permissionId_);
 		}
 		return permission.isAssignable();
 	}
 
 	@Override
-	public void saveUserRoles(final Integer userId_, final List<Integer> roleIds_)
+	public void saveUserRoles(final Integer userId_, final List<Integer> roleIds_, final Integer originalVersionId_)
 	{
 		// delete old roles
 		final Search search = new Search(UserRole.class);
@@ -383,17 +381,17 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		dao.delete(userRoles);
 		for (final Integer roleId : roleIds_)
 		{
-			addUserRole(roleId, userId_);
+			addUserRole(roleId, userId_, originalVersionId_);
 		}
 	}
 
 	@Override
-	public void addUserRole(final Integer roleId_, final Integer userId_)
+	public void addUserRole(final Integer roleId_, final Integer userId_, final Integer originalVersionId_)
 	{
 		final User user = dao.getById(User.class, userId_);
 		if (user == null)
 		{
-			throw new NotFoundException("UserId#" + userId_);
+			throw new NotFoundException("User not found: " + userId_);
 		}
 		final AccessRole role = dao.getById(AccessRole.class, roleId_);
 		if (role == null)
@@ -414,16 +412,19 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 			userRole.setAccessRoleId(roleId_);
 			userRole.setUserId(userId_);
 			dao.addAndReturnId(userRole);
+
+			user.setVersion(originalVersionId_);
+			dao.merge(user);
 		}
 	}
 
 	@Override
-	public void deleteRole(final Integer roleId_) throws Exception
+	public void deleteRole(final Integer roleId_, final Integer originalVersionId_) throws Exception
 	{
 		final AccessRole role = dao.getById(AccessRole.class, roleId_);
 		if (role == null)
 		{
-			throw new NotFoundException("Role not found. Id: " + roleId_);
+			throw new NotFoundException("Role not found: " + roleId_);
 		}
 		// TODO - check same company before deleting
 		if (isSystemRole(roleId_))
@@ -434,12 +435,19 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		search.addFilterEqual("accessRoleId", roleId_);
 		final List<RolePermission> rolePermissions = dao.search(RolePermission.class, search);
 		dao.delete(rolePermissions);
+
+		role.setVersion(originalVersionId_);
 		dao.delete(role);
 	}
 
 	@Override
-	public void deleteRolePermission(final Integer roleId_, final Integer permissionId_)
+	public void deleteRolePermission(final Integer roleId_, final Integer permissionId_, final Integer originalVersionId_)
 	{
+		final AccessRole role = dao.getById(AccessRole.class, roleId_);
+		if (role == null)
+		{
+			throw new NotFoundException("Role not found: " + roleId_);
+		}
 		final Search search = new Search(RolePermission.class);
 		search.addFilterEqual("accessRoleId", roleId_);
 		search.addFilterEqual("permissionId", permissionId_);
@@ -453,11 +461,19 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 			throw new UnsupportedOperationException("Cannot modify system role.");
 		}
 		dao.delete(rolePermission);
+
+		role.setVersion(originalVersionId_);
+		dao.merge(role);
 	}
 
 	@Override
-	public void deleteUserRole(final Integer roleId_, final Integer userId_)
+	public void deleteUserRole(final Integer roleId_, final Integer userId_, final Integer originalVersionId_)
 	{
+		final User user = dao.getById(User.class, userId_);
+		if (user == null)
+		{
+			throw new NotFoundException("User not found: " + userId_);
+		}
 		final Search search = new Search(UserRole.class);
 		search.addFilterEqual("accessRoleId", roleId_);
 		search.addFilterEqual("userId", userId_);
@@ -467,6 +483,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 			throw new NotFoundException("Role not found. Id: " + roleId_ + " For User: " + userId_);
 		}
 		dao.delete(userRole);
+
+		user.setVersion(originalVersionId_);
+		dao.merge(user);
 	}
 
 	@Override
@@ -526,7 +545,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	{
 		if ((authInfo_ == null) || (sessionId_ == null))
 		{
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Session ID is null.");
 		}
 		final SignInFact imp = new SignInFact();
 		imp.setUserId(authInfo_.getUserId());
@@ -543,7 +562,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	{
 		if ((authInfo_ == null) || (sessionId_ == null))
 		{
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Session ID is null.");
 		}
 		final Search s = new Search(SignInFact.class);
 		s.addFilterEqual("sessionId", sessionId_);

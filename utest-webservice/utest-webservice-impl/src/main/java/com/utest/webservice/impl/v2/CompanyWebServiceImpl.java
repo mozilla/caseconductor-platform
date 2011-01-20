@@ -81,9 +81,10 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.COMPANY_INFO_EDIT })
-	public void deleteCompany(@Context final UriInfo ui_, @PathParam("id") final Integer companyId_) throws Exception
+	public void deleteCompany(@Context final UriInfo ui_, @PathParam("id") final Integer companyId_, @FormParam("resourceVersionId") final Integer resourceVersionId_)
+			throws Exception
 	{
-		companyService.deleteCompany(companyId_);
+		companyService.deleteCompany(companyId_, resourceVersionId_);
 	}
 
 	@PUT
@@ -101,6 +102,19 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 	}
 
 	@GET
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.COMPANY_INFO_VIEW)
+	public CompanyResultInfo findCompanies(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
+	{
+		final UtestSearch search = objectBuilderFactory.createSearch(CompanyInfo.class, request, ui_);
+		final UtestSearchResult result = companyService.findCompanies(search);
+
+		return (CompanyResultInfo) objectBuilderFactory.createResult(CompanyInfo.class, Company.class, request, result, ui_.getBaseUriBuilder());
+	}
+
+	@GET
 	@Path("/{id}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -113,16 +127,4 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 		return objectBuilderFactory.toInfo(CompanyInfo.class, company, ui_.getBaseUriBuilder());
 	}
 
-	@GET
-	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Override
-	@Secured(Permission.COMPANY_INFO_VIEW)
-	public CompanyResultInfo findCompanies(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
-	{
-		final UtestSearch search = objectBuilderFactory.createSearch(CompanyInfo.class, request, ui_);
-		final UtestSearchResult result = companyService.findCompanies(search);
-
-		return (CompanyResultInfo) objectBuilderFactory.createResult(CompanyInfo.class, Company.class, request, result, ui_.getBaseUriBuilder());
-	}
 }

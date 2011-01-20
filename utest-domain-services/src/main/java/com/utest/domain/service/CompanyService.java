@@ -33,13 +33,13 @@ public interface CompanyService
 	// Company related methods
 	Company getCompany(Integer companyId_) throws Exception;
 
-	void deleteCompany(Integer companyId_) throws Exception;
-
 	UtestSearchResult findCompanies(UtestSearch search_) throws Exception;
 
 	Company addCompany(Integer countryId, String name, String address, String city, String zip, String url, String phone) throws Exception;
 
 	Company saveCompany(Integer companyId, Integer countryId, String name, String address, String city, String zip, String url, String phone, Integer originalVersionId)
 			throws Exception;
+
+	void deleteCompany(Integer companyId, Integer originalVersionId) throws Exception;
 
 }

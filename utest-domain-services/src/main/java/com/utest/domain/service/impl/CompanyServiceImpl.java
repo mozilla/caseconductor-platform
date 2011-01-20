@@ -25,6 +25,7 @@ import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.Company;
 import com.utest.domain.Country;
+import com.utest.domain.Product;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
@@ -70,7 +71,7 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 	}
 
 	@Override
-	public void deleteCompany(final Integer companyId_) throws Exception
+	public void deleteCompany(final Integer companyId_, final Integer originalVersionId_) throws Exception
 	{
 		Company company = dao.getById(Company.class, companyId_);
 		if (company == null)
@@ -78,12 +79,12 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 			throw new NotFoundException("Company not found. Id: " + companyId_);
 		}
 		// check for companys
-		Search search = new Search(Company.class);
+		Search search = new Search(Product.class);
 		search.addFilterEqual("companyId", companyId_);
-		List<?> foundEntities = dao.search(Company.class, search);
+		List<?> foundEntities = dao.search(Product.class, search);
 		if ((foundEntities != null) && !foundEntities.isEmpty())
 		{
-			throw new DeletingUsedEntityException("Companys reference this company : " + companyId_);
+			throw new DeletingUsedEntityException("Products reference this company : " + companyId_);
 		}
 		// check for internal users
 		search = new Search(User.class);
@@ -94,6 +95,7 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 			throw new DeletingUsedEntityException("Users reference this company : " + companyId_);
 		}
 		// delete company
+		company.setVersion(originalVersionId_);
 		dao.delete(company);
 	}
 

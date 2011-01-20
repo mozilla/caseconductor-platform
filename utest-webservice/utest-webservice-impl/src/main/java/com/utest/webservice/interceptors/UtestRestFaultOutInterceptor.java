@@ -98,7 +98,7 @@ public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingIntercep
 		final Fault fault = (Fault) message.getContent(Exception.class);
 		final String accept = (String) message.getExchange().getInMessage().get(Message.ACCEPT_CONTENT_TYPE);
 		int type = TYPE_TEXT;
-		int responseCode = 400;
+		int responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
 		if (accept.contains(MediaType.APPLICATION_XML))
 		{
 			type = TYPE_XML;

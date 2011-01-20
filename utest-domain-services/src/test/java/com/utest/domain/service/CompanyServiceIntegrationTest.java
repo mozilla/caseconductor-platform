@@ -25,7 +25,6 @@ import org.testng.annotations.Test;
 
 import com.utest.domain.Company;
 import com.utest.domain.User;
-import com.utest.exception.DuplicateNameException;
 
 public class CompanyServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 {
@@ -34,7 +33,7 @@ public class CompanyServiceIntegrationTest extends BaseDomainServiceIntegrationT
 	@Autowired
 	private UserService		userService;
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddCompany() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -46,7 +45,17 @@ public class CompanyServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		Assert.assertTrue(company1 != null);
 	}
 
-	//@Test(groups = { "integration" })
+	@Test(groups = { "integration" })
+	public void testDeleteCompany() throws Exception
+	{
+		final User user = userService.getUser(1);
+		loginUser(user);
+		final Integer originalVersionId = 10;
+		final Integer companyId = 18;
+		companyService.deleteCompany(companyId, originalVersionId);
+	}
+
+	// @Test(groups = { "integration" })
 	public void testSaveCompany() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -57,7 +66,8 @@ public class CompanyServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		Assert.assertTrue(company1 != null);
 	}
 
-	//@Test(groups = { "integration" }, expectedExceptions = { DuplicateNameException.class })
+	// @Test(groups = { "integration" }, expectedExceptions = {
+	// DuplicateNameException.class })
 	public void testAddCompanyDuplicateNameException() throws Exception
 	{
 		final User user = userService.getUser(1);

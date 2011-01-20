@@ -45,11 +45,11 @@ public interface UserService
 
 	List<Permission> getRolePermissions(Integer roleId_);
 
-	void addRolePermission(Integer roleId_, Integer permissionId_);
+	void addRolePermission(Integer roleId_, Integer permissionId_, Integer originalVersionId);
 
-	void deleteRolePermission(Integer roleId_, Integer permissionId_);
+	void deleteRolePermission(Integer roleId_, Integer permissionId_, Integer originalVersionId);
 
-	void deleteRole(Integer roleId_) throws Exception;
+	void deleteRole(Integer roleId_, Integer originalVersionId) throws Exception;
 
 	UtestSearchResult findUsers(UtestSearch search_) throws Exception;
 
@@ -63,7 +63,7 @@ public interface UserService
 
 	User confirmUserEmail(String code) throws Exception;
 
-	void saveRolePermissions(Integer roleId, List<Integer> permissionIds);
+	void saveRolePermissions(Integer roleId, List<Integer> permissionIds, Integer originalVersionId);
 
 	void login(AuthenticatedUserInfo authInfo, String sessionId) throws Exception;
 
@@ -71,19 +71,17 @@ public interface UserService
 
 	AccessRole addRole(Integer companyId, String name, List<Integer> permissionIds) throws Exception;
 
-	void addUserRole(Integer roleId, Integer userId);
+	void addUserRole(Integer roleId, Integer userId, Integer originalVersionId);
 
-	void saveUserRoles(Integer userId, List<Integer> roleIds);
+	void saveUserRoles(Integer userId, List<Integer> roleIds, Integer originalVersionId);
 
-	void deleteUserRole(Integer roleId_, Integer userId_);
+	void deleteUserRole(Integer roleId_, Integer userId_, Integer originalVersionId);
 
-	User activateUserAccount(Integer userId) throws Exception;
+	User activateUserAccount(Integer userId, Integer originalVersionId) throws Exception;
 
-	User changeUserEmail(Integer userId, String newEmail) throws Exception;
+	User changeUserEmail(Integer userId, String newEmail, Integer originalVersionId) throws Exception;
 
-	User changeUserPassword(Integer userId, String newPassword) throws Exception;
-
-	User closeUserAccount(Integer userId) throws Exception;
+	User changeUserPassword(Integer userId, String newPassword, Integer originalVersionId) throws Exception;
 
 	User saveUser(Integer userId, Integer companyId, String firstName, String lastName, Integer originalVersionId) throws Exception;
 
@@ -94,4 +92,6 @@ public interface UserService
 	User getCurrentUser() throws Exception;
 
 	User getUserByScreenName(String screenName);
+
+	User closeUserAccount(Integer userId, Integer originalVersionId) throws Exception;
 }
