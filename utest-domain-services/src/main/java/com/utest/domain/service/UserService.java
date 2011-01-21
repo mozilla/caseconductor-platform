@@ -94,4 +94,6 @@ public interface UserService
 	User getUserByScreenName(String screenName);
 
 	User closeUserAccount(Integer userId, Integer originalVersionId) throws Exception;
+
+	User confirmUserEmail(Integer userId, Integer originalVersionId) throws Exception;
 }

@@ -45,6 +45,7 @@
                 <entry key="environmenttype" value="/environmenttypes/{id}"/>
                 <entry key="company" value="/companies/{id}"/>
                 <entry key="user" value="/users/{id}"/>
+                <entry key="tester" value="/users/{id}"/>
                 <entry key="product" value="/products/{id}"/>
                 <entry key="productcomponent" value="/products/components/{id}"/>
                 <entry key="testcase" value="/testcases/{id}"/>
@@ -98,6 +99,11 @@
 		<constructor-arg ref="testCycleService" />
 	</bean>
 
+	<bean id="testRunWebService" class="com.utest.webservice.impl.v2.TestRunWebServiceImpl">
+		<constructor-arg ref="objectBuilderFactory" />
+		<constructor-arg ref="testRunService" />
+	</bean>
+
 	<bean id="staticDataWebService" class="com.utest.webservice.impl.v2.StaticDataWebServiceImpl">
 		<constructor-arg ref="objectBuilderFactory" />
 		<constructor-arg ref="staticDataService" />
@@ -148,6 +154,7 @@
 			<ref bean="testSuiteWebService" />
 			<ref bean="testPlanWebService" />
 			<ref bean="testCycleWebService" />
+			<ref bean="testRunWebService" />
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>
 			<ref bean="jsonProvider" />

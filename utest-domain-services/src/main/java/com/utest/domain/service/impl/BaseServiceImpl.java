@@ -19,15 +19,20 @@
  */
 package com.utest.domain.service.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
+import com.utest.domain.Company;
+import com.utest.domain.CompanyDependable;
 import com.utest.domain.Named;
 import com.utest.domain.Versioned;
 import com.utest.domain.service.util.UserUtil;
 import com.utest.exception.DuplicateNameException;
+import com.utest.exception.InvalidParentChildEnvironmentException;
+import com.utest.exception.NotFoundException;
 
 public abstract class BaseServiceImpl
 {
@@ -44,8 +49,8 @@ public abstract class BaseServiceImpl
 		return UserUtil.getCurrentUserId();
 	}
 
-	public <T extends Named> void checkForDuplicateNameWithinParent(final Class<T> type_, final String name_, final Integer parentId_, final String parentColumn_, Integer entityId_)
-			throws DuplicateNameException
+	protected <T extends Named> void checkForDuplicateNameWithinParent(final Class<T> type_, final String name_, final Integer parentId_, final String parentColumn_,
+			Integer entityId_) throws DuplicateNameException
 	{
 		// check for duplicate name within a product
 		final Search search = new Search(type_);
@@ -83,7 +88,7 @@ public abstract class BaseServiceImpl
 		}
 	}
 
-	public <T extends Named> void checkForDuplicateName(final Class<T> type_, final String name_, Integer entityId_) throws DuplicateNameException
+	protected <T extends Named> void checkForDuplicateName(final Class<T> type_, final String name_, Integer entityId_) throws DuplicateNameException
 	{
 		// check for duplicate name within a product
 		final Search search = new Search(type_);
@@ -98,4 +103,58 @@ public abstract class BaseServiceImpl
 			throw new DuplicateNameException();
 		}
 	}
+
+	protected <T extends CompanyDependable> void checkValidSelectionForCompany(final Integer companyId_, final List<Integer> companyDependableEntitiesIds_, final Class<T> type_)
+			throws Exception
+	{
+		if (!isValidSelectionForCompany(companyId_, companyDependableEntitiesIds_, type_))
+		{
+			throw new InvalidParentChildEnvironmentException("Invalid selection for company: " + companyId_);
+		}
+	}
+
+	protected <T extends CompanyDependable> void checkValidSelectionForCompany(final Integer companyId_, final List<T> companyDependableEntities_) throws Exception
+	{
+		if (companyDependableEntities_ == null || companyDependableEntities_.isEmpty())
+		{
+			return;
+		}
+		if (!isValidSelectionForCompany(companyId_, companyDependableEntities_))
+		{
+			throw new InvalidParentChildEnvironmentException("Invalid selection for company: " + companyId_);
+		}
+	}
+
+	protected <T extends CompanyDependable> boolean isValidSelectionForCompany(final Integer companyId_, final List<Integer> companyDependableEntitiesIds_, final Class<T> type_)
+			throws Exception
+	{
+		final Search search = new Search(type_);
+		search.addFilterIn("id", companyDependableEntitiesIds_);
+		final List<T> foundTypes = dao.search(type_, search);
+		return isValidSelectionForCompany(companyId_, foundTypes);
+	}
+
+	protected <T extends CompanyDependable> boolean isValidSelectionForCompany(final Integer companyId_, final List<T> companyDependableEntities_) throws Exception
+	{
+		for (final T foundType : companyDependableEntities_)
+		{
+			final Integer companyId = foundType.getCompanyId();
+			if (!Company.SYSTEM_WIDE_COMPANY_ID.equals(companyId) && !companyId.equals(companyId_))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	protected <T> T findEntityById(final Class<T> type_, final Serializable id_)
+	{
+		final T result = dao.getById(type_, id_);
+		if (result == null)
+		{
+			throw new NotFoundException(type_.getSimpleName() + " not found: " + id_);
+		}
+		return result;
+	}
+
 }

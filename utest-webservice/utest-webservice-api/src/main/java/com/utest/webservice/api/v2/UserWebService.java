@@ -27,11 +27,11 @@ import javax.ws.rs.core.UriInfo;
 import org.apache.cxf.jaxrs.ext.MessageContext;
 
 import com.utest.webservice.model.v2.PermissionInfo;
-import com.utest.webservice.model.v2.PermissionResultInfo;
+import com.utest.webservice.model.v2.PermissionSearchResultInfo;
 import com.utest.webservice.model.v2.RoleInfo;
-import com.utest.webservice.model.v2.RoleResultInfo;
+import com.utest.webservice.model.v2.RoleSearchResultInfo;
 import com.utest.webservice.model.v2.UserInfo;
-import com.utest.webservice.model.v2.UserResultInfo;
+import com.utest.webservice.model.v2.UserSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface UserWebService
@@ -40,17 +40,17 @@ public interface UserWebService
 
 	UserInfo getUser(UriInfo ui, Integer userId) throws Exception;
 
-	UserResultInfo findUsers(UriInfo ui, UtestSearchRequest request) throws Exception;
+	UserSearchResultInfo findUsers(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	List<RoleInfo> getUserRoles(UriInfo ui, Integer testCycleId, UtestSearchRequest request) throws Exception;
 
 	List<PermissionInfo> getUserPermissions(UriInfo ui, Integer userId, UtestSearchRequest request) throws Exception;
 
-	PermissionResultInfo findPermissions(UriInfo ui, UtestSearchRequest request) throws Exception;
+	PermissionSearchResultInfo findPermissions(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	PermissionInfo getPermission(UriInfo ui, Integer permissionId) throws Exception;
 
-	RoleResultInfo findRoles(UriInfo ui, UtestSearchRequest request) throws Exception;
+	RoleSearchResultInfo findRoles(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	RoleInfo getRole(UriInfo ui, Integer roleId) throws Exception;
 
@@ -85,5 +85,7 @@ public interface UserWebService
 	UserInfo changeUserPassword(UriInfo ui, Integer userId, String newPassword, Integer resourceVersionId) throws Exception;
 
 	Boolean deleteRole(UriInfo ui, Integer roleId, Integer resourceVersionId) throws Exception;
+
+	UserInfo confirmUserEmail(UriInfo ui, Integer userId, Integer resourceVersionId) throws Exception;
 
 }

@@ -25,13 +25,13 @@ import java.util.List;
 import javax.ws.rs.core.UriInfo;
 
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
-import com.utest.webservice.model.v2.EnvironmentGroupResultInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
-import com.utest.webservice.model.v2.EnvironmentResultInfo;
+import com.utest.webservice.model.v2.EnvironmentSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeInfo;
-import com.utest.webservice.model.v2.EnvironmentTypeResultInfo;
+import com.utest.webservice.model.v2.EnvironmentTypeSearchResultInfo;
 import com.utest.webservice.model.v2.TagInfo;
-import com.utest.webservice.model.v2.TagResultInfo;
+import com.utest.webservice.model.v2.TagSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface EnvironmentWebService
@@ -43,7 +43,7 @@ public interface EnvironmentWebService
 
 	EnvironmentTypeInfo getEnvironmentType(UriInfo ui, Integer environmentTypeId) throws Exception;
 
-	EnvironmentTypeResultInfo findEnvironmentTypes(UriInfo ui, UtestSearchRequest request) throws Exception;
+	EnvironmentTypeSearchResultInfo findEnvironmentTypes(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	Boolean updateEnvironment(UriInfo ui, Integer environmentId, EnvironmentInfo environmentInfo) throws Exception;
 
@@ -51,7 +51,7 @@ public interface EnvironmentWebService
 
 	EnvironmentInfo getEnvironment(UriInfo ui, Integer environmentId) throws Exception;
 
-	EnvironmentResultInfo findEnvironments(UriInfo ui, UtestSearchRequest request) throws Exception;
+	EnvironmentSearchResultInfo findEnvironments(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	Boolean updateEnvironmentGroup(UriInfo ui, Integer environmentGroupId, EnvironmentGroupInfo environmentGroupInfo) throws Exception;
 
@@ -59,7 +59,7 @@ public interface EnvironmentWebService
 
 	EnvironmentGroupInfo getEnvironmentGroup(UriInfo ui, Integer environmentGroupId) throws Exception;
 
-	EnvironmentGroupResultInfo findEnvironmentGroups(UriInfo ui, UtestSearchRequest request) throws Exception;
+	EnvironmentGroupSearchResultInfo findEnvironmentGroups(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	Boolean updateEnvironmentGroupEnvironments(UriInfo ui, Integer environmentGroupId, ArrayList<Integer> environmentIds) throws Exception;
 
@@ -88,5 +88,5 @@ public interface EnvironmentWebService
 
 	TagInfo getTag(UriInfo ui, Integer tagId) throws Exception;
 
-	TagResultInfo findTags(UriInfo ui, UtestSearchRequest request) throws Exception;
+	TagSearchResultInfo findTags(UriInfo ui, UtestSearchRequest request) throws Exception;
 }

@@ -50,7 +50,7 @@ import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.IncludedTestSuiteInfo;
 import com.utest.webservice.model.v2.TestPlanInfo;
-import com.utest.webservice.model.v2.TestPlanResultInfo;
+import com.utest.webservice.model.v2.TestPlanSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 @Path("/testplans/")
@@ -84,10 +84,11 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_PLAN_EDIT })
-	public TestPlanInfo activateTestPlan(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_, @FormParam("") final TestPlanInfo testPlanInfo_) throws Exception
+	public TestPlanInfo activateTestPlan(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_, @FormParam("originalVersionId") final Integer originalVesionId_)
+			throws Exception
 	{
 
-		final TestPlan testPlan = testPlanService.activateTestPlan(testPlanId_, testPlanInfo_.getResourceIdentity().getVersion());
+		final TestPlan testPlan = testPlanService.activateTestPlan(testPlanId_, originalVesionId_);
 		return objectBuilderFactory.toInfo(TestPlanInfo.class, testPlan, ui_.getBaseUriBuilder());
 	}
 
@@ -97,11 +98,11 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_PLAN_EDIT })
-	public TestPlanInfo deactivateTestPlan(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_, @FormParam("") final TestPlanInfo testPlanInfo_)
+	public TestPlanInfo deactivateTestPlan(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_, @FormParam("originalVersionId") final Integer originalVesionId_)
 			throws Exception
 	{
 
-		final TestPlan testPlan = testPlanService.lockTestPlan(testPlanId_, testPlanInfo_.getResourceIdentity().getVersion());
+		final TestPlan testPlan = testPlanService.lockTestPlan(testPlanId_, originalVesionId_);
 		return objectBuilderFactory.toInfo(TestPlanInfo.class, testPlan, ui_.getBaseUriBuilder());
 	}
 
@@ -163,9 +164,9 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
 	public Boolean deleteTestPlanTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_,
-			@PathParam("includedTestSuiteId") final Integer includedTestSuiteId_) throws Exception
+			@PathParam("includedTestSuiteId") final Integer includedTestSuiteId_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
-		testPlanService.deleteTestPlanTestSuite(includedTestSuiteId_);
+		testPlanService.deleteTestPlanTestSuite(includedTestSuiteId_, originalVesionId_);
 
 		return Boolean.TRUE;
 	}
@@ -203,9 +204,10 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_PLAN_EDIT)
-	public Boolean deleteTestPlan(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_) throws Exception
+	public Boolean deleteTestPlan(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_, @FormParam("originalVersionId") final Integer originalVesionId_)
+			throws Exception
 	{
-		testPlanService.deleteTestPlan(testPlanId_);
+		testPlanService.deleteTestPlan(testPlanId_, originalVesionId_);
 
 		return Boolean.TRUE;
 	}
@@ -233,12 +235,12 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	/**
 	 * Returns latest versions of test cases by default
 	 */
-	public TestPlanResultInfo findTestPlans(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestPlanSearchResultInfo findTestPlans(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestPlanInfo.class, request_, ui_);
 		final UtestSearchResult result = testPlanService.findTestPlans(search);
 
-		return (TestPlanResultInfo) objectBuilderFactory.createResult(TestPlanInfo.class, TestPlan.class, request_, result, ui_.getBaseUriBuilder());
+		return (TestPlanSearchResultInfo) objectBuilderFactory.createResult(TestPlanInfo.class, TestPlan.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 }

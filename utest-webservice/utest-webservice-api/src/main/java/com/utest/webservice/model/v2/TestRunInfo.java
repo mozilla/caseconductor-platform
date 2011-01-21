@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "testsuite")
+@XmlType(name = "testrun")
 public class TestRunInfo extends BaseInfo
 {
 

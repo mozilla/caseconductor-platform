@@ -37,13 +37,13 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 public interface TestRunService
 {
 
-	List<EnvironmentGroup> findEnvironmentGroupsForTestRun(Integer testRunId) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestRun(Integer testRunId) throws Exception;
 
 	TestRunTestCase addTestRunTestCase(Integer testRunId, Integer testCaseVersionId) throws Exception;
 
-	void deleteTestRun(Integer testRunId) throws Exception;
+	void deleteTestRun(Integer testRunId, final Integer originalVersionId_) throws Exception;
 
-	void deleteTestRunTestCase(Integer testRunTestCaseId) throws Exception;
+	void deleteTestRunTestCase(Integer testRunTestCaseId, final Integer originalVersionId_) throws Exception;
 
 	UtestSearchResult findTestRuns(UtestSearch search) throws Exception;
 
@@ -51,19 +51,17 @@ public interface TestRunService
 
 	TestRunTestCase getTestRunTestCase(Integer testRunTestCaseId) throws Exception;
 
-	List<TestRunTestCase> findTestRunTestCases(Integer testRunId) throws Exception;
+	List<TestRunTestCase> getTestRunTestCases(Integer testRunId) throws Exception;
 
 	TestRunTestCaseAssignment addAssignment(Integer testRunTestCaseId, Integer testerId) throws Exception;
 
 	TestRunTestCaseAssignment addAssignment(Integer testRunTestCaseId, Integer testerId, List<Integer> environmentGroupIds) throws Exception;
 
-	List<TestRunResult> findTestRunResults(Integer testRunId) throws Exception;
+	List<TestRunResult> getTestRunResults(Integer testRunId) throws Exception;
 
-	List<TestRunTestCaseAssignment> findTestRunAssignments(Integer testRunId) throws Exception;
+	List<TestRunTestCaseAssignment> getTestRunAssignments(Integer testRunId) throws Exception;
 
-	List<TestRunResult> findTestRunResults(Integer testRunId, Integer testerId, Integer environmentGrpoupId) throws Exception;
-
-	void deleteAssignment(Integer assignmentId) throws Exception;
+	List<TestRunResult> getTestRunResults(Integer testRunId, Integer testerId, Integer environmentGroupId) throws Exception;
 
 	UtestSearchResult findTestRunAssignments(UtestSearch search) throws Exception;
 
@@ -85,8 +83,6 @@ public interface TestRunService
 	TestRunResult finishExecutingAssignedTestCaseWithFailure(Integer testRunResultId, Integer failedStepNumber, String actualResult, String comment, Integer originalVersionId)
 			throws Exception;
 
-	TestRun saveTestRun(Integer testRunId, String name, String description, Date startDate, Date endDate, boolean selfAssignAllowed, Integer originalVersionId) throws Exception;
-
 	TestRun activateTestRun(Integer testRunId, Integer originalVersionId) throws Exception;
 
 	TestRun lockTestRun(Integer testRunId, Integer originalVersionId) throws Exception;
@@ -97,16 +93,23 @@ public interface TestRunService
 	TestRun addTestRun(Integer testCycleId, boolean useLatestVersiuons, String name, String description, Date startDate, Date endDate, boolean selfAssignAllowed,
 			boolean selfAssignPerEnvironment, Integer selfAssignLimit) throws Exception;
 
-	TestRun addTestRunFromTestSuite(Integer testCycleId, Integer testSuiteId, boolean useLatestVersiuons, String name, String description, Date startDate, Date endDate,
-			boolean selfAssignAllowed, boolean selfAssignPerEnvironment, Integer selfAssignLimit) throws Exception;
-
-	TestRun addTestRunFromTestPlan(Integer testCycleId, Integer testPlanId, boolean useLatestVersiuons, String name, String description, Date startDate, Date endDate,
-			boolean selfAssignAllowed, boolean selfAssignPerEnvironment, Integer selfAssignLimit) throws Exception;
-
 	TestRunTestCase addTestRunTestCase(Integer testRunId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, boolean isBlocking, Integer testSuiteId)
 			throws Exception;
 
-	List<TestRunResult> findTestRunResults(Integer testRunId, List<Integer> resultStatusIds) throws Exception;
+	List<TestRunResult> getTestRunResults(Integer testRunId, List<Integer> resultStatusIds) throws Exception;
 
 	List<TestRunResult> retestTestRun(Integer testRunId, boolean retestFailedOnly) throws Exception;
+
+	void deleteAssignment(Integer assignmentId, Integer originalVersionId) throws Exception;
+
+	TestRunTestCase addTestRunTestCase(Integer testRunId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, boolean isBlocking) throws Exception;
+
+	TestRun saveTestRun(Integer testRunId, String name, String description, Date startDate, Date endDate, boolean selfAssignAllowed, boolean selfAssignPerEnvironment,
+			Integer selfAssignLimit, Integer originalVersionId) throws Exception;
+
+	List<TestRunTestCase> addTestCasesFromTestPlan(Integer testRunId, Integer testPlanId) throws Exception;
+
+	List<TestRunTestCase> addTestCasesFromTestSuite(Integer testRunId, Integer testSuiteId) throws Exception;
+
+	TestRunTestCase saveTestRunTestCase(Integer includedTestCaseId, Integer priorityId, Integer runOrder, boolean blocking, Integer originalVersionId);
 }

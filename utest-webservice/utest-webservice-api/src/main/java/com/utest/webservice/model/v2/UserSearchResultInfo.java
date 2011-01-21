@@ -19,6 +19,9 @@
  */
 package com.utest.webservice.model.v2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -27,56 +30,42 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "product")
-public class ProductInfo extends BaseInfo
+@XmlType(name = "searchResult")
+public class UserSearchResultInfo implements SearchResultInfo<UserInfo>
 {
+	List<UserInfo>	rows	= new ArrayList<UserInfo>();
 	@XmlElement(required = true)
-	private String			name;
-	@XmlElement(required = true)
-	private String			description;
-	@XmlElement(required = true)
-	private Integer			companyId;
-	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
-	private ResourceLocator	companyLocator;
+	Integer			totalResults;
 
-	public String getName()
+	@Override
+	public void addRow(final UserInfo row)
 	{
-		return name;
+		rows.add(row);
 	}
 
-	public void setName(final String name)
+	@Override
+	@XmlElement(name = "users")
+	public List<UserInfo> getRows()
 	{
-		this.name = name;
+		return rows;
 	}
 
-	public Integer getCompanyId()
+	@Override
+	public Integer getTotalResults()
 	{
-		return companyId;
+		return totalResults;
 	}
 
-	public void setCompanyId(final Integer companyId)
+	@Override
+	public void setRows(final List<UserInfo> rows)
 	{
-		this.companyId = companyId;
+		this.rows = rows;
 	}
 
-	public String getDescription()
+	@Override
+	public void setTotalResults(final Integer totalResults)
 	{
-		return description;
-	}
-
-	public void setDescription(final String description)
-	{
-		this.description = description;
-	}
-
-	public void setCompanyLocator(ResourceLocator companyLocator)
-	{
-		this.companyLocator = companyLocator;
-	}
-
-	public ResourceLocator getCompanyLocator()
-	{
-		return companyLocator;
+		this.totalResults = totalResults;
 	}
 
 }

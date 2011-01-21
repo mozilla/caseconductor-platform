@@ -28,7 +28,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.transaction.annotation.Transactional;
 
 @ContextConfiguration(locations = { "/context-application-test.xml" })
-@TransactionConfiguration(transactionManager = "transactionManagerTest", defaultRollback = true)
+@TransactionConfiguration(transactionManager = "transactionManagerTest", defaultRollback = false)
 @Transactional
 @TestExecutionListeners( { DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class })
 public abstract class AbstractDatabaseTestCase extends AbstractTestNGSpringContextTests

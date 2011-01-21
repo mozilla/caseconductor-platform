@@ -23,12 +23,12 @@ import javax.ws.rs.core.UriBuilder;
 
 import com.utest.domain.TestCaseVersion;
 import com.utest.webservice.model.v2.TestCaseVersionInfo;
-import com.utest.webservice.model.v2.UtestResult;
+import com.utest.webservice.model.v2.SearchResultInfo;
 
 public class TestCaseVersionBuilder<Ti, To> extends Builder<Ti, To>
 {
 
-	TestCaseVersionBuilder(final ObjectBuilderFactory factory, final Class<Ti> clazz, final Class<? extends UtestResult<Ti>> resultClass)
+	TestCaseVersionBuilder(final ObjectBuilderFactory factory, final Class<Ti> clazz, final Class<? extends SearchResultInfo<Ti>> resultClass)
 	{
 		super(factory, clazz, resultClass);
 	}

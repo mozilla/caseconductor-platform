@@ -26,7 +26,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.TestCycleInfo;
-import com.utest.webservice.model.v2.TestCycleResultInfo;
+import com.utest.webservice.model.v2.TestCycleSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
@@ -45,11 +45,11 @@ public interface TestCycleWebService
 
 	TestCycleInfo createTestCycle(UriInfo ui, TestCycleInfo testCycleInfo) throws Exception;
 
-	Boolean deleteTestCycle(UriInfo ui, Integer testCycleId) throws Exception;
-
 	TestCycleInfo getTestCycle(UriInfo ui, Integer testCycleId) throws Exception;
 
-	TestCycleResultInfo findTestCycles(UriInfo ui, UtestSearchRequest request) throws Exception;
+	TestCycleSearchResultInfo findTestCycles(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	List<TestRunInfo> getTestCycleTestRuns(UriInfo ui, Integer testCycleId) throws Exception;
+
+	Boolean deleteTestCycle(UriInfo ui, Integer testCycleId, Integer originalVesionId) throws Exception;
 }

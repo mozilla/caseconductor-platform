@@ -27,10 +27,11 @@ import com.utest.dao.TypelessDAO;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
-import com.utest.domain.TcmEntityStatus;
 import com.utest.domain.TestPlan;
+import com.utest.domain.TestPlanStatus;
 import com.utest.domain.TestPlanTestSuite;
 import com.utest.domain.TestSuite;
+import com.utest.domain.TestSuiteStatus;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
@@ -40,7 +41,6 @@ import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingActivatedEntityException;
 import com.utest.exception.IncludingMultileVersionsOfSameEntityException;
 import com.utest.exception.IncludingNotActivatedEntityException;
-import com.utest.exception.NotFoundException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanService
@@ -61,15 +61,11 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public TestPlan addTestPlan(final Integer productId_, final String name_, final String description_) throws Exception
 	{
-		final Product product = dao.getById(Product.class, productId_);
-		if (product == null)
-		{
-			throw new NotFoundException("Product not found: " + productId_);
-		}
+		final Product product = findEntityById(Product.class, productId_);
 		checkForDuplicateNameWithinParent(TestPlan.class, name_, productId_, "productId", null);
 
 		final TestPlan testPlan = new TestPlan();
-		testPlan.setTestPlanStatusId(TcmEntityStatus.DRAFT);
+		testPlan.setTestPlanStatusId(TestPlanStatus.PENDING);
 		testPlan.setProductId(productId_);
 		testPlan.setName(name_);
 		testPlan.setDescription(description_);
@@ -88,23 +84,15 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public TestPlanTestSuite addTestPlanTestSuite(final Integer testPlanId_, final Integer testSuiteId_, final Integer runOrder_) throws Exception
 	{
-		final TestPlan testPlan = dao.getById(TestPlan.class, testPlanId_);
-		if (testPlan == null)
-		{
-			throw new NotFoundException("TestPlan not found: " + testPlanId_);
-		}
-		final TestSuite testSuite = dao.getById(TestSuite.class, testSuiteId_);
-		if (testSuite == null)
-		{
-			throw new NotFoundException("TestSuite not found: " + testSuiteId_);
-		}
+		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
+		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
 		// prevent if test suite not activated
-		if (!TcmEntityStatus.ACTIVATED.equals(testSuite.getTestSuiteStatusId()))
+		if (!TestSuiteStatus.ACTIVE.equals(testSuite.getTestSuiteStatusId()))
 		{
 			throw new IncludingNotActivatedEntityException(TestSuite.class.getSimpleName() + " : " + testSuiteId_);
 		}
 		// prevent if test plan already activated
-		if (!TcmEntityStatus.DRAFT.equals(testPlan.getTestPlanStatusId()))
+		if (!TestPlanStatus.PENDING.equals(testPlan.getTestPlanStatusId()))
 		{
 			throw new ChangingActivatedEntityException(TestPlan.class.getSimpleName() + " : " + testPlan.getId());
 		}
@@ -126,14 +114,10 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	}
 
 	@Override
-	public void deleteTestPlan(final Integer testPlanId_) throws Exception
+	public void deleteTestPlan(final Integer testPlanId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestPlan testPlan = dao.getById(TestPlan.class, testPlanId_);
-		if (testPlan == null)
-		{
-			throw new NotFoundException("TestPlan not found. Id: " + testPlanId_);
-		}
-		if (!TcmEntityStatus.DRAFT.equals(testPlan.getTestPlanStatusId()))
+		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
+		if (!TestPlanStatus.PENDING.equals(testPlan.getTestPlanStatusId()))
 		{
 			throw new DeletingActivatedEntityException(TestPlan.class.getSimpleName());
 		}
@@ -141,23 +125,21 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 		final List<TestPlanTestSuite> includedTestSuites = getTestPlanTestSuites(testPlanId_);
 		dao.delete(includedTestSuites);
 		// delete test suite
+		testPlan.setVersion(originalVersionId_);
 		dao.delete(testPlan);
 	}
 
 	@Override
-	public void deleteTestPlanTestSuite(final Integer testPlanTestSuiteId_) throws Exception
+	public void deleteTestPlanTestSuite(final Integer testPlanTestSuiteId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestPlanTestSuite includedTestSuite = dao.getById(TestPlanTestSuite.class, testPlanTestSuiteId_);
-		if (includedTestSuite == null)
-		{
-			throw new NotFoundException("Included TestSuite not found. Id: " + testPlanTestSuiteId_);
-		}
+		final TestPlanTestSuite includedTestSuite = findEntityById(TestPlanTestSuite.class, testPlanTestSuiteId_);
 		// prevent if already activated
-		final TestPlan testPlan = dao.getById(TestPlan.class, includedTestSuite.getTestPlanId());
-		if (!TcmEntityStatus.DRAFT.equals(testPlan.getTestPlanStatusId()))
+		final TestPlan testPlan = findEntityById(TestPlan.class, includedTestSuite.getTestPlanId());
+		if (!TestPlanStatus.PENDING.equals(testPlan.getTestPlanStatusId()))
 		{
 			throw new ChangingActivatedEntityException(TestPlanTestSuite.class.getSimpleName());
 		}
+		includedTestSuite.setVersion(originalVersionId_);
 		dao.delete(includedTestSuite);
 	}
 
@@ -170,11 +152,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public TestPlan getTestPlan(final Integer testPlanId_) throws Exception
 	{
-		final TestPlan testPlan = dao.getById(TestPlan.class, testPlanId_);
-		if (testPlan == null)
-		{
-			throw new NotFoundException("TestPlan#" + testPlanId_);
-		}
+		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
 		return testPlan;
 	}
 
@@ -194,11 +172,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public TestPlan saveTestPlan(final Integer testPlanId_, final String name_, final String description_, final Integer originalVersionId_) throws Exception
 	{
-		final TestPlan testPlan = dao.getById(TestPlan.class, testPlanId_);
-		if (testPlan == null)
-		{
-			throw new NotFoundException("TestPlan#" + testPlanId_);
-		}
+		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
 		checkForDuplicateNameWithinParent(TestPlan.class, name_, testPlan.getProductId(), "productId", testPlanId_);
 
 		testPlan.setName(name_);
@@ -210,14 +184,10 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public TestPlanTestSuite saveTestPlanTestSuite(final Integer includedTestSuiteId_, final Integer runOrder_, final Integer originalVersionId_)
 	{
-		final TestPlanTestSuite includedTestSuite = dao.getById(TestPlanTestSuite.class, includedTestSuiteId_);
-		if (includedTestSuite == null)
-		{
-			throw new NotFoundException("Included TestSuite not found: " + includedTestSuiteId_);
-		}
+		final TestPlanTestSuite includedTestSuite = findEntityById(TestPlanTestSuite.class, includedTestSuiteId_);
 		// prevent if test plan already activated
-		final TestPlan testPlan = dao.getById(TestPlan.class, includedTestSuite.getTestPlanId());
-		if (!TcmEntityStatus.DRAFT.equals(testPlan.getTestPlanStatusId()))
+		final TestPlan testPlan = findEntityById(TestPlan.class, includedTestSuite.getTestPlanId());
+		if (!TestPlanStatus.PENDING.equals(testPlan.getTestPlanStatusId()))
 		{
 			throw new ChangingActivatedEntityException(TestPlan.class.getSimpleName() + " : " + testPlan.getId());
 		}
@@ -229,31 +199,27 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public TestPlan activateTestPlan(final Integer testPlanId_, final Integer originalVersionId_) throws Exception
 	{
-		return updateActivationStatus(testPlanId_, TcmEntityStatus.ACTIVATED, originalVersionId_);
+		return updateActivationStatus(testPlanId_, TestPlanStatus.ACTIVE, originalVersionId_);
 	}
 
 	@Override
 	public TestPlan lockTestPlan(final Integer testPlanId_, final Integer originalVersionId_) throws Exception
 	{
 		// TODO - need to define rules for deactivating
-		return updateActivationStatus(testPlanId_, TcmEntityStatus.LOCKED, originalVersionId_);
+		return updateActivationStatus(testPlanId_, TestPlanStatus.LOCKED, originalVersionId_);
 	}
 
 	private TestPlan updateActivationStatus(final Integer testPlanId_, final Integer activationStatusId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestPlan testPlan = dao.getById(TestPlan.class, testPlanId_);
-		if (testPlan == null)
-		{
-			throw new NotFoundException("TestPlan not found: " + testPlanId_);
-		}
-		if (TcmEntityStatus.ACTIVATED != testPlan.getTestPlanStatusId())
+		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
+		if (TestPlanStatus.ACTIVE != testPlan.getTestPlanStatusId())
 		{
 			final List<TestPlanTestSuite> includedTestSuites = getTestPlanTestSuites(testPlanId_);
 			if ((includedTestSuites == null) || includedTestSuites.isEmpty())
 			{
 				throw new ActivatingIncompleteEntityException(TestPlan.class.getSimpleName() + " : " + testPlanId_);
 			}
-			testPlan.setTestPlanStatusId(TcmEntityStatus.ACTIVATED);
+			testPlan.setTestPlanStatusId(TestPlanStatus.ACTIVE);
 			testPlan.setVersion(originalVersionId_);
 			return dao.merge(testPlan);
 		}
@@ -267,13 +233,9 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	public void saveEnvironmentGroupsForTestPlan(final Integer testPlanId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
 			throws UnsupportedEnvironmentSelectionException, Exception
 	{
-		final TestPlan testPlan = dao.getById(TestPlan.class, testPlanId_);
-		if (testPlan == null)
-		{
-			throw new NotFoundException("TestPlan not found: " + testPlanId_);
-		}
+		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
 		// cannot change after activation
-		if (!TcmEntityStatus.DRAFT.equals(testPlan.getTestPlanStatusId()))
+		if (!TestPlanStatus.PENDING.equals(testPlan.getTestPlanStatusId()))
 		{
 			throw new DeletingActivatedEntityException(TestPlan.class.getSimpleName());
 		}
@@ -286,7 +248,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 			throw new UnsupportedEnvironmentSelectionException(TestPlanTestSuite.class.getSimpleName() + " : " + testPlanId_);
 		}
 		// check that groups are included in the parent profile.
-		final Product product = dao.getById(Product.class, testPlan.getProductId());
+		final Product product = findEntityById(Product.class, testPlan.getProductId());
 		if (!environmentService.isValidEnvironmentGroupSelectionForProfile(product.getEnvironmentProfileId(), environmentGroupIds_))
 		{
 			throw new UnsupportedEnvironmentSelectionException(TestPlan.class.getSimpleName() + " : " + testPlanId_);
@@ -302,11 +264,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForTestPlan(final Integer testPlanId_) throws Exception
 	{
-		final TestPlan testPlan = dao.getById(TestPlan.class, testPlanId_);
-		if (testPlan == null)
-		{
-			throw new NotFoundException("TestPlan not found: " + testPlanId_);
-		}
+		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
 		if (testPlan.getEnvironmentProfileId() != null)
 		{
 			return environmentService.getEnvironmentGroupsForProfile(testPlan.getEnvironmentProfileId());

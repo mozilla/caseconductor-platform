@@ -28,8 +28,8 @@ import com.utest.dao.TypelessDAO;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
-import com.utest.domain.TcmEntityStatus;
 import com.utest.domain.TestCycle;
+import com.utest.domain.TestCycleStatus;
 import com.utest.domain.TestRun;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
@@ -38,7 +38,6 @@ import com.utest.domain.service.TestCycleService;
 import com.utest.domain.service.TestRunService;
 import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingActivatedEntityException;
-import com.utest.exception.NotFoundException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleService
@@ -62,15 +61,11 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	public TestCycle addTestCycle(final Integer productId_, final String name_, final String description_, final Date startDate_, final Date endDate_,
 			final boolean communityAuthoringAllowed_, final boolean communityAccessAllowed_) throws Exception
 	{
-		final Product product = dao.getById(Product.class, productId_);
-		if (product == null)
-		{
-			throw new NotFoundException("Product not found.");
-		}
+		final Product product = findEntityById(Product.class, productId_);
 		checkForDuplicateNameWithinParent(TestCycle.class, name_, productId_, "productId", null);
 
 		final TestCycle testCycle = new TestCycle();
-		testCycle.setTestCycleStatusId(TcmEntityStatus.DRAFT);
+		testCycle.setTestCycleStatusId(TestCycleStatus.PENDING);
 		testCycle.setProductId(productId_);
 		testCycle.setName(name_);
 		testCycle.setDescription(description_);
@@ -89,11 +84,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForTestCycle(final Integer testCycleId_) throws Exception
 	{
-		final TestCycle testCycle = dao.getById(TestCycle.class, testCycleId_);
-		if (testCycle == null)
-		{
-			throw new NotFoundException("TestCycle not found: " + testCycleId_);
-		}
+		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
 		if (testCycle.getEnvironmentProfileId() != null)
 		{
 			return environmentService.getEnvironmentGroupsForProfile(testCycle.getEnvironmentProfileId());
@@ -109,17 +100,13 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 			throws UnsupportedEnvironmentSelectionException, Exception
 	{
 		// cannot change after activation
-		final TestCycle testCycle = dao.getById(TestCycle.class, testCycleId_);
-		if (testCycle == null)
-		{
-			throw new NotFoundException("TestCycle not found: " + testCycleId_);
-		}
-		if (!TcmEntityStatus.DRAFT.equals(testCycle.getTestCycleStatusId()))
+		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
+		if (!TestCycleStatus.PENDING.equals(testCycle.getTestCycleStatusId()))
 		{
 			throw new DeletingActivatedEntityException(TestCycle.class.getSimpleName());
 		}
 		// check that groups are included in the parent profile
-		final Product product = dao.getById(Product.class, testCycle.getProductId());
+		final Product product = findEntityById(Product.class, testCycle.getProductId());
 		if (!environmentService.isValidEnvironmentGroupSelectionForProfile(product.getEnvironmentProfileId(), environmentGroupIds_))
 		{
 			throw new UnsupportedEnvironmentSelectionException();
@@ -133,14 +120,10 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	}
 
 	@Override
-	public void deleteTestCycle(final Integer testCycleId_) throws Exception
+	public void deleteTestCycle(final Integer testCycleId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestCycle testCycle = dao.getById(TestCycle.class, testCycleId_);
-		if (testCycle == null)
-		{
-			throw new NotFoundException("TestCycle not found. Id: " + testCycleId_);
-		}
-		if (!TcmEntityStatus.DRAFT.equals(testCycle.getTestCycleStatusId()))
+		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
+		if (!TestCycleStatus.PENDING.equals(testCycle.getTestCycleStatusId()))
 		{
 			throw new DeletingActivatedEntityException(TestCycle.class.getSimpleName());
 		}
@@ -148,9 +131,10 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 		final List<TestRun> includedTestRuns = getTestRunsForTestCycle(testCycleId_);
 		for (final TestRun testRun : includedTestRuns)
 		{
-			testRunService.deleteTestRun(testRun.getId());
+			testRunService.deleteTestRun(testRun.getId(), testRun.getVersion());
 		}
 		// delete test cycle
+		testCycle.setVersion(originalVersionId_);
 		dao.delete(testCycle);
 	}
 
@@ -163,11 +147,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	@Override
 	public TestCycle getTestCycle(final Integer testCycleId_) throws Exception
 	{
-		final TestCycle testCycle = dao.getById(TestCycle.class, testCycleId_);
-		if (testCycle == null)
-		{
-			throw new NotFoundException("TestCycle not found: " + testCycleId_);
-		}
+		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
 		return testCycle;
 
 	}
@@ -184,12 +164,8 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	public TestCycle saveTestCycle(final Integer testCycleId_, final String name_, final String description_, final Date startDate_, final Date endDate_,
 			final boolean communityAuthoringAllowed_, final boolean communityAccessAllowed_, final Integer originalVersionId_) throws Exception
 	{
-		final TestCycle testCycle = dao.getById(TestCycle.class, testCycleId_);
-		if (testCycle == null)
-		{
-			throw new NotFoundException("TestCycle not found: " + testCycleId_);
-		}
-		if (!TcmEntityStatus.DRAFT.equals(testCycle.getTestCycleStatusId()))
+		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
+		if (!TestCycleStatus.PENDING.equals(testCycle.getTestCycleStatusId()))
 		{
 			throw new ChangingActivatedEntityException(TestCycle.class.getSimpleName() + " : " + testCycleId_);
 		}
@@ -209,12 +185,8 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	public TestCycle activateTestCycle(final Integer testCycleId_, final Integer originalVersionId_) throws Exception
 	{
 		// change status for the test run
-		final TestCycle testCycle = dao.getById(TestCycle.class, testCycleId_);
-		if (testCycle == null)
-		{
-			throw new NotFoundException("TestCycle not found: " + testCycleId_);
-		}
-		testCycle.setTestCycleStatusId(TcmEntityStatus.ACTIVATED);
+		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
+		testCycle.setTestCycleStatusId(TestCycleStatus.ACTIVE);
 		testCycle.setVersion(originalVersionId_);
 		return dao.merge(testCycle);
 	}
@@ -223,11 +195,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	public TestCycle lockTestCycle(final Integer testCycleId_, final Integer originalVersionId_) throws Exception
 	{
 		// change status for the test run
-		final TestCycle testCycle = dao.getById(TestCycle.class, testCycleId_);
-		if (testCycle == null)
-		{
-			throw new NotFoundException("TestCycle not found: " + testCycleId_);
-		}
+		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
 
 		// lock all included test runs
 		final List<TestRun> includedTestRuns = getTestRunsForTestCycle(testCycleId_);
@@ -236,7 +204,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 			testRunService.lockTestRun(testRun.getId(), testRun.getVersion());
 		}
 		// lock test cycle
-		testCycle.setTestCycleStatusId(TcmEntityStatus.LOCKED);
+		testCycle.setTestCycleStatusId(TestCycleStatus.LOCKED);
 		testCycle.setVersion(originalVersionId_);
 		return dao.merge(testCycle);
 	}

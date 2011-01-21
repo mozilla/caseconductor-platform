@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
@@ -34,7 +33,6 @@ import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.User;
 import com.utest.domain.util.DomainUtil;
-import com.utest.exception.DuplicateNameException;
 
 public class ProductServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 {
@@ -45,7 +43,7 @@ public class ProductServiceIntegrationTest extends BaseDomainServiceIntegrationT
 	@Autowired
 	private EnvironmentService	environmentService;
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddProduct() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -55,13 +53,13 @@ public class ProductServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		Assert.assertTrue(product0 != null);
 		final Product product1 = productService.addProduct(companyId, "VMK Web product - windows", "windows test");
 		Assert.assertTrue(product1 != null);
-		productService.deleteProduct(product1.getId());
+		productService.deleteProduct(product1.getId(), product1.getVersion());
 		final Product product2 = productService.addProduct(companyId, "VMK Web product - Linux", "linux test");
 		Assert.assertTrue(product2 != null);
-		productService.deleteProduct(product2.getId());
+		productService.deleteProduct(product2.getId(), product2.getVersion());
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testSaveProductEnvironmentGroups() throws Exception
 	{
 
@@ -77,17 +75,18 @@ public class ProductServiceIntegrationTest extends BaseDomainServiceIntegrationT
 
 	}
 
-	//@Test(groups = { "integration" }, expectedExceptions = { IllegalArgumentException.class })
+	// @Test(groups = { "integration" }, expectedExceptions = {
+	// IllegalArgumentException.class })
 	public void testAddProductCompanyNotFoundNameException() throws Exception
 	{
 		final User user = userService.getUser(1);
 		loginUser(user);
 		final Integer companyId = -123;
 		final Product product1 = productService.addProduct(companyId, "VMK Web product - unonown company", "windows test");
-		productService.deleteProduct(product1.getId());
+		productService.deleteProduct(product1.getId(), product1.getVersion());
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddProductComponent() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -102,13 +101,14 @@ public class ProductServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		Assert.assertTrue(component3 != null);
 		final ProductComponent component4 = productService.addProductComponent(product1.getId(), "Component4", "Component for product.");
 		Assert.assertTrue(component4 != null);
-		productService.deleteProductComponent(component1.getId());
-		productService.deleteProductComponent(component2.getId());
-		productService.deleteProductComponent(component3.getId());
-		productService.deleteProductComponent(component4.getId());
+		productService.deleteProductComponent(component1.getId(), component1.getVersion());
+		productService.deleteProductComponent(component2.getId(), component2.getVersion());
+		productService.deleteProductComponent(component3.getId(), component3.getVersion());
+		productService.deleteProductComponent(component4.getId(), component4.getVersion());
 	}
 
-	//@Test(groups = { "integration" }, expectedExceptions = { DuplicateNameException.class })
+	// @Test(groups = { "integration" }, expectedExceptions = {
+	// DuplicateNameException.class })
 	public void testAddProductDuplicateNameException() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -119,7 +119,8 @@ public class ProductServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		productService.addProduct(companyId, "VMK Web product - windows", "windows test");
 	}
 
-	//@Test(groups = { "integration" }, expectedExceptions = { DuplicateNameException.class })
+	// @Test(groups = { "integration" }, expectedExceptions = {
+	// DuplicateNameException.class })
 	public void testAddProductComponentsDuplicateNameException() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -130,7 +131,7 @@ public class ProductServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		productService.addProductComponent(productId, "VMK Web product - windows", "windows test");
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddGeneratedGroups() throws Exception
 	{
 		final User user = userService.getUser(1);

@@ -28,10 +28,10 @@ import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.TagInfo;
 import com.utest.webservice.model.v2.TestCaseInfo;
-import com.utest.webservice.model.v2.TestCaseResultInfo;
+import com.utest.webservice.model.v2.TestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.TestCaseStepInfo;
 import com.utest.webservice.model.v2.TestCaseVersionInfo;
-import com.utest.webservice.model.v2.TestCaseVersionResultInfo;
+import com.utest.webservice.model.v2.TestCaseVersionSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface TestCaseWebService
@@ -45,9 +45,7 @@ public interface TestCaseWebService
 
 	TestCaseVersionInfo createTestCase(UriInfo ui, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
 
-	Boolean deleteTestCase(UriInfo ui, Integer testCaseId) throws Exception;
-
-	TestCaseVersionResultInfo findLatestTestCaseVersions(UriInfo ui, UtestSearchRequest request) throws Exception;
+	TestCaseVersionSearchResultInfo findLatestTestCaseVersions(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	TestCaseVersionInfo getLatestTestCaseVersion(UriInfo ui, Integer testCaseId) throws Exception;
 
@@ -63,21 +61,17 @@ public interface TestCaseWebService
 
 	TestCaseInfo getTestCase(UriInfo ui, Integer testCaseId) throws Exception;
 
-	TestCaseResultInfo findTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
+	TestCaseSearchResultInfo findTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	TestCaseInfo updateTestCase(UriInfo ui, Integer testCaseId, TestCaseInfo testCaseInfo) throws Exception;
 
 	Boolean updateTestCaseTags(UriInfo ui, Integer testCaseId, ArrayList<Integer> tagIds) throws Exception;
 
-	TestCaseVersionResultInfo findTestCaseVersions(UriInfo ui, UtestSearchRequest request) throws Exception;
+	TestCaseVersionSearchResultInfo findTestCaseVersions(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	TestCaseStepInfo createTestCaseStep(UriInfo ui, Integer testCaseVersionId, TestCaseStepInfo testCaseStepInfo) throws Exception;
 
 	TestCaseVersionInfo deactivateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
-
-	Boolean deleteTestCaseStep(UriInfo ui, Integer testCaseVersionId, Integer testCaseStepId) throws Exception;
-
-	Boolean deleteTestCaseVersion(UriInfo ui, Integer testCaseVersionId) throws Exception;
 
 	TestCaseVersionInfo getTestCaseVersion(UriInfo ui, Integer testCaseVersionId) throws Exception;
 
@@ -94,5 +88,11 @@ public interface TestCaseWebService
 	TestCaseStepInfo getTestCaseVersionStep(UriInfo ui, Integer testCaseVersionId, Integer testCaseStepId) throws Exception;
 
 	Boolean updateTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseVersionId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
+
+	Boolean deleteTestCaseVersion(UriInfo ui, Integer testCaseVersionId, Integer originalVesionId) throws Exception;
+
+	Boolean deleteTestCaseStep(UriInfo ui, Integer testCaseVersionId, Integer testCaseStepId, Integer originalVesionId) throws Exception;
+
+	Boolean deleteTestCase(UriInfo ui, Integer testCaseId, Integer originalVesionId) throws Exception;
 
 }

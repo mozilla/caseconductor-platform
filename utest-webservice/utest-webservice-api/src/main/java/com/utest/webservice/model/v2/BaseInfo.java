@@ -21,9 +21,6 @@ package com.utest.webservice.model.v2;
 
 import javax.xml.bind.annotation.XmlElement;
 
-//@XmlRootElement()
-//@XmlAccessorType(XmlAccessType.FIELD)
-//@XmlType(name = "BaseInfo")
 public class BaseInfo
 {
 	@XmlElement(type = ResourceIdentity.class, name = "resourceIdentity", required = false)

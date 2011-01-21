@@ -30,37 +30,42 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SearchResult")
-public class UtestResultInfo<T> implements UtestResult<T>
+@XmlType(name = "searchResult")
+public class EnvironmentSearchResultInfo implements SearchResultInfo<EnvironmentInfo>
 {
-	@XmlElement(required = true, name = "ArrayOf")
-	List<T>	rows	= new ArrayList<T>();
+	List<EnvironmentInfo>	rows	= new ArrayList<EnvironmentInfo>();
 	@XmlElement(required = true)
-	Integer	totalResults;
+	Integer					totalResults;
 
 	@Override
-	public List<T> getRows()
+	public void addRow(final EnvironmentInfo row)
+	{
+		rows.add(row);
+	}
+
+	@Override
+	@XmlElement(name = "environments")
+	public List<EnvironmentInfo> getRows()
 	{
 		return rows;
 	}
 
-	public void setRows(final List<T> rows)
-	{
-		this.rows = rows;
-	}
-
-	public void addRow(final T row)
-	{
-		this.rows.add(row);
-	}
-
+	@Override
 	public Integer getTotalResults()
 	{
 		return totalResults;
 	}
 
+	@Override
+	public void setRows(final List<EnvironmentInfo> rows)
+	{
+		this.rows = rows;
+	}
+
+	@Override
 	public void setTotalResults(final Integer totalResults)
 	{
 		this.totalResults = totalResults;
 	}
+
 }

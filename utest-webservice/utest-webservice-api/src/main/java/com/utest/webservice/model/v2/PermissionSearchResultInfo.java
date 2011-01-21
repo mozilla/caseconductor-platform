@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "searchResult")
-public class PermissionResultInfo implements UtestResult<PermissionInfo>
+public class PermissionSearchResultInfo implements SearchResultInfo<PermissionInfo>
 {
 	List<PermissionInfo>	rows	= new ArrayList<PermissionInfo>();
 	@XmlElement(required = true)

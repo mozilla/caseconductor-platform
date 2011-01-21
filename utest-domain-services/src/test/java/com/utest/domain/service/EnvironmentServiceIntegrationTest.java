@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
@@ -32,7 +31,6 @@ import com.utest.domain.EnvironmentType;
 import com.utest.domain.Locale;
 import com.utest.domain.User;
 import com.utest.domain.util.DomainUtil;
-import com.utest.exception.DuplicateNameException;
 
 public class EnvironmentServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 {
@@ -41,7 +39,7 @@ public class EnvironmentServiceIntegrationTest extends BaseDomainServiceIntegrat
 	@Autowired
 	private UserService			userService;
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddEnvironmentType() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -56,11 +54,12 @@ public class EnvironmentServiceIntegrationTest extends BaseDomainServiceIntegrat
 		environmentService.saveEnvironmentTypeLocale(environmentType1.getId(), "???????? ??????? ????", "ru_RU", 0);
 		environmentService.saveEnvironmentTypeLocale(environmentType2.getId(), "???????? ??????? ???? - 2", "ru_RU", 0);
 
-		environmentService.deleteEnvironmentType(environmentType2.getId());
-		environmentService.deleteEnvironmentType(environmentType1.getId());
+		environmentService.deleteEnvironmentType(environmentType2.getId(), environmentType2.getVersion());
+		environmentService.deleteEnvironmentType(environmentType1.getId(), environmentType1.getVersion());
 	}
 
-	//@Test(groups = { "integration" }, expectedExceptions = { DuplicateNameException.class })
+	// @Test(groups = { "integration" }, expectedExceptions = {
+	// DuplicateNameException.class })
 	public void testAddEnvironmentTypeDuplicateNameException() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -70,7 +69,7 @@ public class EnvironmentServiceIntegrationTest extends BaseDomainServiceIntegrat
 		environmentService.addEnvironmentType(companyId, null, "VMK type - no parent", false, Locale.DEFAULT_LOCALE);
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddEnvironment() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -85,11 +84,12 @@ public class EnvironmentServiceIntegrationTest extends BaseDomainServiceIntegrat
 		environmentService.saveEnvironmentLocale(environment2.getId(), "???????? ??????? ???? - 2", "ru_RU", 0);
 
 		// delete
-		environmentService.deleteEnvironment(environment1.getId());
-		environmentService.deleteEnvironment(environment2.getId());
+		environmentService.deleteEnvironment(environment1.getId(), environment1.getVersion());
+		environmentService.deleteEnvironment(environment2.getId(), environment2.getVersion());
 	}
 
-	//@Test(groups = { "integration" }, expectedExceptions = { DuplicateNameException.class })
+	// @Test(groups = { "integration" }, expectedExceptions = {
+	// DuplicateNameException.class })
 	public void testAddEnvironmentDuplicateNameException() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -98,7 +98,7 @@ public class EnvironmentServiceIntegrationTest extends BaseDomainServiceIntegrat
 		environmentService.addEnvironment(1, "VMK  - env 1");
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddGeneratedGroups() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -121,7 +121,7 @@ public class EnvironmentServiceIntegrationTest extends BaseDomainServiceIntegrat
 
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testSaveEnvironmentGroup() throws Exception
 	{
 		final Integer companyId = 9;
@@ -136,6 +136,6 @@ public class EnvironmentServiceIntegrationTest extends BaseDomainServiceIntegrat
 		environmentIds.add(1);
 		environmentIds.add(4);
 		group = environmentService.saveEnvironmentsForGroup(group.getId(), environmentIds);
-		environmentService.deleteEnvironmentGroup(group.getId());
+		environmentService.deleteEnvironmentGroup(group.getId(), group.getVersion());
 	}
 }

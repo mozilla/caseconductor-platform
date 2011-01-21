@@ -30,42 +30,37 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "searchResult")
-public class ProductComponentResultInfo implements UtestResult<ProductComponentInfo>
+@XmlType(name = "SearchResult")
+public class UtestSearchResultInfo<T> implements SearchResultInfo<T>
 {
-	List<ProductComponentInfo>	rows	= new ArrayList<ProductComponentInfo>();
+	@XmlElement(required = true, name = "ArrayOf")
+	List<T>	rows	= new ArrayList<T>();
 	@XmlElement(required = true)
-	Integer						totalResults;
+	Integer	totalResults;
 
 	@Override
-	public void addRow(final ProductComponentInfo row)
-	{
-		rows.add(row);
-	}
-
-	@Override
-	@XmlElement(name = "productComponents")
-	public List<ProductComponentInfo> getRows()
+	public List<T> getRows()
 	{
 		return rows;
 	}
 
-	@Override
+	public void setRows(final List<T> rows)
+	{
+		this.rows = rows;
+	}
+
+	public void addRow(final T row)
+	{
+		this.rows.add(row);
+	}
+
 	public Integer getTotalResults()
 	{
 		return totalResults;
 	}
 
-	@Override
-	public void setRows(final List<ProductComponentInfo> rows)
-	{
-		this.rows = rows;
-	}
-
-	@Override
 	public void setTotalResults(final Integer totalResults)
 	{
 		this.totalResults = totalResults;
 	}
-
 }

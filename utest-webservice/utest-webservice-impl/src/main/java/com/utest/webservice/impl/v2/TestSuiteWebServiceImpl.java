@@ -50,7 +50,7 @@ import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.IncludedTestCaseInfo;
 import com.utest.webservice.model.v2.TestSuiteInfo;
-import com.utest.webservice.model.v2.TestSuiteResultInfo;
+import com.utest.webservice.model.v2.TestSuiteSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 @Path("/testsuites/")
@@ -85,11 +85,11 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_SUITE_EDIT })
-	public TestSuiteInfo activateTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_, @FormParam("") final TestSuiteInfo testSuiteInfo_)
+	public TestSuiteInfo activateTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_, @FormParam("originalVersionId") final Integer originalVesionId_)
 			throws Exception
 	{
 
-		final TestSuite testSuite = testSuiteService.activateTestSuite(testSuiteId_, testSuiteInfo_.getResourceIdentity().getVersion());
+		final TestSuite testSuite = testSuiteService.activateTestSuite(testSuiteId_, originalVesionId_);
 		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getBaseUriBuilder());
 	}
 
@@ -99,11 +99,11 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_SUITE_EDIT })
-	public TestSuiteInfo deactivateTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_, @FormParam("") final TestSuiteInfo testSuiteInfo_)
-			throws Exception
+	public TestSuiteInfo deactivateTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_,
+			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
 
-		final TestSuite testSuite = testSuiteService.lockTestSuite(testSuiteId_, testSuiteInfo_.getResourceIdentity().getVersion());
+		final TestSuite testSuite = testSuiteService.lockTestSuite(testSuiteId_, originalVesionId_);
 		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getBaseUriBuilder());
 	}
 
@@ -166,9 +166,9 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
 	public Boolean deleteTestSuiteTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_) throws Exception
+			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
-		testSuiteService.deleteTestSuiteTestCase(includedTestCaseId_);
+		testSuiteService.deleteTestSuiteTestCase(includedTestCaseId_, originalVesionId_);
 
 		return Boolean.TRUE;
 	}
@@ -207,9 +207,10 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_SUITE_EDIT)
-	public Boolean deleteTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_) throws Exception
+	public Boolean deleteTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_, @FormParam("originalVersionId") final Integer originalVesionId_)
+			throws Exception
 	{
-		testSuiteService.deleteTestSuite(testSuiteId_);
+		testSuiteService.deleteTestSuite(testSuiteId_, originalVesionId_);
 
 		return Boolean.TRUE;
 	}
@@ -237,12 +238,12 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	/**
 	 * Returns latest versions of test cases by default
 	 */
-	public TestSuiteResultInfo findTestSuites(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestSuiteSearchResultInfo findTestSuites(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestSuiteInfo.class, request_, ui_);
 		final UtestSearchResult result = testSuiteService.findTestSuites(search);
 
-		return (TestSuiteResultInfo) objectBuilderFactory.createResult(TestSuiteInfo.class, TestSuite.class, request_, result, ui_.getBaseUriBuilder());
+		return (TestSuiteSearchResultInfo) objectBuilderFactory.createResult(TestSuiteInfo.class, TestSuite.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 }

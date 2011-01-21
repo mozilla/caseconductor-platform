@@ -49,7 +49,7 @@ import com.utest.webservice.api.v2.TestCycleWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.TestCycleInfo;
-import com.utest.webservice.model.v2.TestCycleResultInfo;
+import com.utest.webservice.model.v2.TestCycleSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
@@ -164,9 +164,10 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_SUITE_EDIT)
-	public Boolean deleteTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_) throws Exception
+	public Boolean deleteTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("originalVersionId") final Integer originalVesionId_)
+			throws Exception
 	{
-		testCycleService.deleteTestCycle(testCycleId_);
+		testCycleService.deleteTestCycle(testCycleId_, originalVesionId_);
 
 		return Boolean.TRUE;
 	}
@@ -188,12 +189,12 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_SUITE_VIEW)
-	public TestCycleResultInfo findTestCycles(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestCycleSearchResultInfo findTestCycles(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestCycleInfo.class, request_, ui_);
 		final UtestSearchResult result = testCycleService.findTestCycles(search);
 
-		return (TestCycleResultInfo) objectBuilderFactory.createResult(TestCycleInfo.class, TestCycle.class, request_, result, ui_.getBaseUriBuilder());
+		return (TestCycleSearchResultInfo) objectBuilderFactory.createResult(TestCycleInfo.class, TestCycle.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 }

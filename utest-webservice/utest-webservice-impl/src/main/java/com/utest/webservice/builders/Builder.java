@@ -42,8 +42,8 @@ import com.utest.webservice.model.v2.BaseInfo;
 import com.utest.webservice.model.v2.ResourceIdentity;
 import com.utest.webservice.model.v2.ResourceLocator;
 import com.utest.webservice.model.v2.Timeline;
-import com.utest.webservice.model.v2.UtestResult;
-import com.utest.webservice.model.v2.UtestResultInfo;
+import com.utest.webservice.model.v2.SearchResultInfo;
+import com.utest.webservice.model.v2.UtestSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public class Builder<Ti, To>
@@ -51,9 +51,9 @@ public class Builder<Ti, To>
 
 	protected final ObjectBuilderFactory		factory;
 	protected Class<Ti>							infoClass;
-	protected Class<? extends UtestResult<Ti>>	resultClass;
+	protected Class<? extends SearchResultInfo<Ti>>	resultClass;
 
-	Builder(final ObjectBuilderFactory factory, final Class<Ti> clazz, final Class<? extends UtestResult<Ti>> resultClass)
+	Builder(final ObjectBuilderFactory factory, final Class<Ti> clazz, final Class<? extends SearchResultInfo<Ti>> resultClass)
 	{
 		this.factory = factory;
 		infoClass = clazz;
@@ -186,16 +186,16 @@ public class Builder<Ti, To>
 	}
 
 	@SuppressWarnings("unchecked")
-	public UtestResult<Ti> createResult(final UtestSearchRequest request, final UtestSearchResult result, final UriBuilder ub) throws Exception
+	public SearchResultInfo<Ti> createResult(final UtestSearchRequest request, final UtestSearchResult result, final UriBuilder ub) throws Exception
 	{
-		UtestResult<Ti> info;
+		SearchResultInfo<Ti> info;
 		if (resultClass != null)
 		{
 			info = resultClass.newInstance();
 		}
 		else
 		{
-			info = new UtestResultInfo<Ti>();
+			info = new UtestSearchResultInfo<Ti>();
 		}
 		final List<To> list = (List<To>) result.getResults();
 		if (list.isEmpty())

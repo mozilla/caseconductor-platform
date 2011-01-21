@@ -27,9 +27,10 @@ import com.utest.dao.TypelessDAO;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
-import com.utest.domain.TcmEntityStatus;
+import com.utest.domain.TestCaseStatus;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.TestSuite;
+import com.utest.domain.TestSuiteStatus;
 import com.utest.domain.TestSuiteTestCase;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
@@ -40,7 +41,6 @@ import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingActivatedEntityException;
 import com.utest.exception.IncludingMultileVersionsOfSameEntityException;
 import com.utest.exception.IncludingNotActivatedEntityException;
-import com.utest.exception.NotFoundException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteService
@@ -61,16 +61,12 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	@Override
 	public TestSuite addTestSuite(final Integer productId_, final boolean useLatestVersions_, final String name_, final String description_) throws Exception
 	{
-		final Product product = dao.getById(Product.class, productId_);
-		if (product == null)
-		{
-			throw new IllegalArgumentException("Product not found: " + productId_);
-		}
+		final Product product = findEntityById(Product.class, productId_);
 
 		checkForDuplicateNameWithinParent(TestSuite.class, name_, productId_, "productId", null);
 
 		final TestSuite testSuite = new TestSuite();
-		testSuite.setTestSuiteStatusId(TcmEntityStatus.DRAFT);
+		testSuite.setTestSuiteStatusId(TestSuiteStatus.PENDING);
 		testSuite.setUseLatestVersions(useLatestVersions_);
 		testSuite.setProductId(productId_);
 		testSuite.setName(name_);
@@ -78,17 +74,14 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 		// set environment profile from the product by default
 		testSuite.setEnvironmentProfileId(product.getEnvironmentProfileId());
 
-		// final Integer testSuiteId = dao.addAndReturnId(testSuite);
-		// dao.flush();
-		// return getTestSuite(testSuiteId);
 		return dao.merge(testSuite);
 	}
 
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForTestSuite(final Integer testSuiteId_) throws Exception
 	{
-		final TestSuite testSuite = dao.getById(TestSuite.class, testSuiteId_);
-		if ((testSuite != null) && (testSuite.getEnvironmentProfileId() != null))
+		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
+		if (testSuite.getEnvironmentProfileId() != null)
 		{
 			return environmentService.getEnvironmentGroupsForProfile(testSuite.getEnvironmentProfileId());
 		}
@@ -102,15 +95,11 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	public void saveEnvironmentGroupsForTestSuite(final Integer testSuiteId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
 			throws UnsupportedEnvironmentSelectionException, Exception
 	{
-		final TestSuite testSuite = dao.getById(TestSuite.class, testSuiteId_);
-		if (testSuite == null)
-		{
-			throw new IllegalArgumentException("TestSuite not found: " + testSuiteId_);
-		}
+		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
 		// cannot change after activation
-		if (!TcmEntityStatus.DRAFT.equals(testSuite.getTestSuiteStatusId()))
+		if (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
 		{
-			throw new DeletingActivatedEntityException(TestSuite.class.getSimpleName());
+			throw new ChangingActivatedEntityException(TestSuite.class.getSimpleName());
 		}
 		// prevent from changing if there are any test cases included already?
 		final Search search = new Search(TestSuiteTestCase.class);
@@ -121,7 +110,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 			throw new UnsupportedEnvironmentSelectionException(TestSuite.class.getSimpleName() + " : " + testSuiteId_);
 		}
 		// check that groups are included in the parent profile.
-		final Product product = dao.getById(Product.class, testSuite.getProductId());
+		final Product product = findEntityById(Product.class, testSuite.getProductId());
 		if (!environmentService.isValidEnvironmentGroupSelectionForProfile(product.getEnvironmentProfileId(), environmentGroupIds_))
 		{
 			throw new UnsupportedEnvironmentSelectionException(TestSuite.class.getSimpleName() + " : " + testSuiteId_);
@@ -147,23 +136,15 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	public TestSuiteTestCase addTestSuiteTestCase(final Integer testSuiteId_, final Integer testCaseVersionId_, final Integer priorityId_, final Integer runOrder_,
 			final boolean blocking_) throws Exception
 	{
-		final TestSuite testSuite = dao.getById(TestSuite.class, testSuiteId_);
-		if (testSuite == null)
-		{
-			throw new IllegalArgumentException("TestSuite not found: " + testSuiteId_);
-		}
-		final TestCaseVersion testCaseVersion = dao.getById(TestCaseVersion.class, testCaseVersionId_);
-		if (testCaseVersion == null)
-		{
-			throw new IllegalArgumentException("TestCaseVersion not found: " + testCaseVersionId_);
-		}
+		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
+		final TestCaseVersion testCaseVersion = findEntityById(TestCaseVersion.class, testCaseVersionId_);
 		// prevent adding to activated test suite
-		if (!TcmEntityStatus.DRAFT.equals(testSuite.getTestSuiteStatusId()))
+		if (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
 		{
 			throw new ChangingActivatedEntityException(TestSuite.class.getSimpleName() + " : " + testSuiteId_);
 		}
 		// prevent if test case not activated
-		if (!TcmEntityStatus.ACTIVATED.equals(testCaseVersion.getTestCaseStatusId()))
+		if (!TestCaseStatus.ACTIVE.equals(testCaseVersion.getTestCaseStatusId()))
 		{
 			throw new IncludingNotActivatedEntityException(TestCaseVersion.class.getSimpleName() + " : " + testCaseVersionId_);
 		}
@@ -194,18 +175,14 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 			includedTestCase.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
 		}
 		final Integer id = dao.addAndReturnId(includedTestCase);
-		return dao.getById(TestSuiteTestCase.class, id);
+		return findEntityById(TestSuiteTestCase.class, id);
 	}
 
 	@Override
-	public void deleteTestSuite(final Integer testSuiteId_) throws Exception
+	public void deleteTestSuite(final Integer testSuiteId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestSuite testSuite = dao.getById(TestSuite.class, testSuiteId_);
-		if (testSuite == null)
-		{
-			throw new NotFoundException("TestSuite not found. Id: " + testSuiteId_);
-		}
-		if (!TcmEntityStatus.DRAFT.equals(testSuite.getTestSuiteStatusId()))
+		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
+		if (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
 		{
 			throw new DeletingActivatedEntityException(TestSuite.class.getSimpleName());
 		}
@@ -213,25 +190,21 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 		final List<TestSuiteTestCase> includedTestCases = getTestSuiteTestCases(testSuiteId_);
 		dao.delete(includedTestCases);
 		// delete test suite
+		testSuite.setVersion(originalVersionId_);
 		dao.delete(testSuite);
 	}
 
 	@Override
-	public void deleteTestSuiteTestCase(final Integer testSuiteTestCaseId_) throws Exception
+	public void deleteTestSuiteTestCase(final Integer testSuiteTestCaseId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestSuiteTestCase includedTestCase = dao.getById(TestSuiteTestCase.class, testSuiteTestCaseId_);
-		if (includedTestCase == null)
-		{
-			throw new NotFoundException("TestSuiteTestCase not found. Id: " + testSuiteTestCaseId_);
-		}
-		final TestSuite testSuite = dao.getById(TestSuite.class, includedTestCase.getTestSuiteId());
+		final TestSuiteTestCase includedTestCase = findEntityById(TestSuiteTestCase.class, testSuiteTestCaseId_);
+		final TestSuite testSuite = findEntityById(TestSuite.class, includedTestCase.getTestSuiteId());
 		// prevent if already activated
-		if (!TcmEntityStatus.DRAFT.equals(testSuite.getTestSuiteStatusId()))
+		if (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
 		{
 			throw new ChangingActivatedEntityException(TestSuiteTestCase.class.getSimpleName());
 		}
-		// DomainUtil.loadUpdatedTimeline(testSuite);
-		// dao.merge(testSuite);
+		includedTestCase.setVersion(originalVersionId_);
 		dao.delete(includedTestCase);
 	}
 
@@ -244,11 +217,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	@Override
 	public TestSuite getTestSuite(final Integer testSuiteId_) throws Exception
 	{
-		final TestSuite testSuite = dao.getById(TestSuite.class, testSuiteId_);
-		if (testSuite == null)
-		{
-			throw new NotFoundException("TestSuite not found: " + testSuiteId_);
-		}
+		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
 		return testSuite;
 
 	}
@@ -256,11 +225,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	@Override
 	public TestSuiteTestCase getTestSuiteTestCase(final Integer testSuiteTestCaseId_) throws Exception
 	{
-		final TestSuiteTestCase testSuiteTestCase = dao.getById(TestSuiteTestCase.class, testSuiteTestCaseId_);
-		if (testSuiteTestCase == null)
-		{
-			throw new NotFoundException("TestSuiteTestCase not found: " + testSuiteTestCaseId_);
-		}
+		final TestSuiteTestCase testSuiteTestCase = findEntityById(TestSuiteTestCase.class, testSuiteTestCaseId_);
 		return testSuiteTestCase;
 
 	}
@@ -277,11 +242,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	@Override
 	public TestSuite saveTestSuite(final Integer testSuiteId_, final String name_, final String description_, final Integer originalVersionId_) throws Exception
 	{
-		final TestSuite testSuite = dao.getById(TestSuite.class, testSuiteId_);
-		if (testSuite == null)
-		{
-			throw new NotFoundException("TestSuite not found: " + testSuiteId_);
-		}
+		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
 		//
 		checkForDuplicateNameWithinParent(TestSuite.class, name_, testSuite.getProductId(), "productId", testSuiteId_);
 
@@ -295,18 +256,10 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	public TestSuiteTestCase saveTestSuiteTestCase(final Integer includedTestCaseId_, final Integer priorityId_, final Integer runOrder_, final boolean blocking_,
 			final Integer originalVersionId_)
 	{
-		final TestSuiteTestCase includedTestCase = dao.getById(TestSuiteTestCase.class, includedTestCaseId_);
-		if (includedTestCase == null)
-		{
-			throw new NotFoundException("TestSuiteTestCase not found: " + includedTestCaseId_);
-		}
-		final TestSuite testSuite = dao.getById(TestSuite.class, includedTestCase.getTestSuiteId());
-		if (testSuite == null)
-		{
-			throw new NotFoundException("TestSuite not found: " + includedTestCase.getTestSuiteId());
-		}
+		final TestSuiteTestCase includedTestCase = findEntityById(TestSuiteTestCase.class, includedTestCaseId_);
+		final TestSuite testSuite = findEntityById(TestSuite.class, includedTestCase.getTestSuiteId());
 		// prevent if already activated
-		if (!TcmEntityStatus.DRAFT.equals(testSuite.getTestSuiteStatusId()))
+		if (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
 		{
 			throw new ChangingActivatedEntityException(TestSuiteTestCase.class.getSimpleName());
 		}
@@ -320,23 +273,19 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	@Override
 	public TestSuite activateTestSuite(final Integer testSuiteId_, final Integer originalVersionId_) throws Exception
 	{
-		return updateActivationStatus(testSuiteId_, TcmEntityStatus.ACTIVATED, originalVersionId_);
+		return updateActivationStatus(testSuiteId_, TestSuiteStatus.ACTIVE, originalVersionId_);
 	}
 
 	@Override
 	public TestSuite lockTestSuite(final Integer testSuiteId_, final Integer originalVersionId_) throws Exception
 	{
 		// TODO - need to define rules for deactivating
-		return updateActivationStatus(testSuiteId_, TcmEntityStatus.LOCKED, originalVersionId_);
+		return updateActivationStatus(testSuiteId_, TestSuiteStatus.LOCKED, originalVersionId_);
 	}
 
 	private TestSuite updateActivationStatus(final Integer testSuiteId_, final Integer activationStatusId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestSuite testSuite = dao.getById(TestSuite.class, testSuiteId_);
-		if (testSuite == null)
-		{
-			throw new NotFoundException("TestSuite not found: " + testSuiteId_);
-		}
+		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
 		if (activationStatusId_ != testSuite.getTestSuiteStatusId())
 		{
 			final List<TestSuiteTestCase> includedTestCases = getTestSuiteTestCases(testSuiteId_);

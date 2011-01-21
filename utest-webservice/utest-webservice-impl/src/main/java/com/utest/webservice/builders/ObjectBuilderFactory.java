@@ -26,7 +26,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
-import com.utest.webservice.model.v2.UtestResult;
+import com.utest.webservice.model.v2.SearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface ObjectBuilderFactory
@@ -37,7 +37,7 @@ public interface ObjectBuilderFactory
 
 	<Ti, To> To toObject(Class<To> clazz, Ti object) throws Exception;
 
-	<Ti, To> UtestResult<Ti> createResult(Class<Ti> clazz, Class<To> clazz1, UtestSearchRequest request, UtestSearchResult result, UriBuilder ub) throws Exception;
+	<Ti, To> SearchResultInfo<Ti> createResult(Class<Ti> clazz, Class<To> clazz1, UtestSearchRequest request, UtestSearchResult result, UriBuilder ub) throws Exception;
 
 	<Ti, T extends UtestSearchRequest> UtestSearch createSearch(Class<Ti> objectClass, T request, UriInfo ui) throws Exception;
 

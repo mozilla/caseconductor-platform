@@ -31,21 +31,21 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "searchResult")
-public class EnvironmentTypeResultInfo implements UtestResult<EnvironmentTypeInfo>
+public class TestCaseStepSearchResultInfo implements SearchResultInfo<TestCaseStepInfo>
 {
-	List<EnvironmentTypeInfo>	rows	= new ArrayList<EnvironmentTypeInfo>();
+	List<TestCaseStepInfo>	rows	= new ArrayList<TestCaseStepInfo>();
 	@XmlElement(required = true)
-	Integer						totalResults;
+	Integer					totalResults;
 
 	@Override
-	public void addRow(final EnvironmentTypeInfo row)
+	public void addRow(final TestCaseStepInfo row)
 	{
 		rows.add(row);
 	}
 
 	@Override
-	@XmlElement(name = "environmenttypes")
-	public List<EnvironmentTypeInfo> getRows()
+	@XmlElement(name = "testcasesteps")
+	public List<TestCaseStepInfo> getRows()
 	{
 		return rows;
 	}
@@ -57,7 +57,7 @@ public class EnvironmentTypeResultInfo implements UtestResult<EnvironmentTypeInf
 	}
 
 	@Override
-	public void setRows(final List<EnvironmentTypeInfo> rows)
+	public void setRows(final List<TestCaseStepInfo> rows)
 	{
 		this.rows = rows;
 	}

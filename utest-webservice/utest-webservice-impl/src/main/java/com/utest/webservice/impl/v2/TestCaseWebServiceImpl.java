@@ -55,10 +55,10 @@ import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.TagInfo;
 import com.utest.webservice.model.v2.TestCaseInfo;
-import com.utest.webservice.model.v2.TestCaseResultInfo;
+import com.utest.webservice.model.v2.TestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.TestCaseStepInfo;
 import com.utest.webservice.model.v2.TestCaseVersionInfo;
-import com.utest.webservice.model.v2.TestCaseVersionResultInfo;
+import com.utest.webservice.model.v2.TestCaseVersionSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 @Path("/testcases/")
@@ -167,7 +167,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	public TestCaseInfo updateTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_, @FormParam("") final TestCaseInfo testCaseInfo_) throws Exception
 	{
 		final TestCase testCase = testCaseService.saveTestCase(testCaseId_, testCaseInfo_.getName(), testCaseInfo_.getMaxAttachmentSizeInMbytes(), testCaseInfo_
-				.getMaxNumberOfAttachments());
+				.getMaxNumberOfAttachments(), testCaseInfo_.getResourceIdentity().getVersion());
 		return objectBuilderFactory.toInfo(TestCaseInfo.class, testCase, ui_.getBaseUriBuilder());
 	}
 
@@ -193,7 +193,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	public Boolean updateTestCaseComponents(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_,
 			@FormParam("productComponentIds") final ArrayList<Integer> productComponentIds_) throws Exception
 	{
-		testCaseService.saveProductComponentsForTestCase(testCaseId_, productComponentIds_);
+		testCaseService.saveProductComponentsForTestCase(testCaseId_, productComponentIds_, 0);
 		return Boolean.TRUE;
 	}
 
@@ -236,7 +236,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	public Boolean updateTestCaseTags(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_, @FormParam("tagIds") final ArrayList<Integer> tagIds_)
 			throws Exception
 	{
-		testCaseService.saveTagsForTestCase(testCaseId_, tagIds_);
+		testCaseService.saveTagsForTestCase(testCaseId_, tagIds_, 0);
 		return Boolean.TRUE;
 	}
 
@@ -285,9 +285,10 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
-	public Boolean deleteTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_) throws Exception
+	public Boolean deleteTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
+			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
-		testCaseService.deleteTestCaseVersion(testCaseVersionId_);
+		testCaseService.deleteTestCaseVersion(testCaseVersionId_, originalVesionId_);
 
 		return Boolean.TRUE;
 	}
@@ -313,10 +314,10 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
-	public Boolean deleteTestCaseStep(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_, @PathParam("stepId") final Integer testCaseStepId_)
-			throws Exception
+	public Boolean deleteTestCaseStep(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_, @PathParam("stepId") final Integer testCaseStepId_,
+			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
-		testCaseService.deleteTestCaseStep(testCaseStepId_);
+		testCaseService.deleteTestCaseStep(testCaseStepId_, originalVesionId_);
 
 		return Boolean.TRUE;
 	}
@@ -342,9 +343,10 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
-	public Boolean deleteTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
+	public Boolean deleteTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_, @FormParam("originalVersionId") final Integer originalVesionId_)
+			throws Exception
 	{
-		testCaseService.deleteTestCase(testCaseId_);
+		testCaseService.deleteTestCase(testCaseId_, originalVesionId_);
 
 		return Boolean.TRUE;
 	}
@@ -435,12 +437,12 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	/**
 	 * Returns versions of test cases based on search parameters
 	 */
-	public TestCaseVersionResultInfo findTestCaseVersions(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestCaseVersionSearchResultInfo findTestCaseVersions(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestCaseVersionInfo.class, request_, ui_);
 		final UtestSearchResult result = testCaseService.findTestCaseVersions(search);
 
-		return (TestCaseVersionResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersion.class, request_, result, ui_.getBaseUriBuilder());
+		return (TestCaseVersionSearchResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersion.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -452,12 +454,12 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	/**
 	 * Returns latest versions of test cases by default
 	 */
-	public TestCaseVersionResultInfo findLatestTestCaseVersions(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestCaseVersionSearchResultInfo findLatestTestCaseVersions(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestCaseVersionInfo.class, request_, ui_);
 		final UtestSearchResult result = testCaseService.findLatestTestCaseVersions(search);
 
-		return (TestCaseVersionResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersion.class, request_, result, ui_.getBaseUriBuilder());
+		return (TestCaseVersionSearchResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersion.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -468,12 +470,12 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	/**
 	 * Returns latest versions of test cases by default
 	 */
-	public TestCaseResultInfo findTestCases(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestCaseSearchResultInfo findTestCases(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestCaseInfo.class, request_, ui_);
 		final UtestSearchResult result = testCaseService.findTestCases(search);
 
-		return (TestCaseResultInfo) objectBuilderFactory.createResult(TestCaseInfo.class, TestCase.class, request_, result, ui_.getBaseUriBuilder());
+		return (TestCaseSearchResultInfo) objectBuilderFactory.createResult(TestCaseInfo.class, TestCase.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET

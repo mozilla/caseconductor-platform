@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.TestCycle;
@@ -33,26 +32,25 @@ import com.utest.domain.TestRunResult;
 import com.utest.domain.TestRunTestCase;
 import com.utest.domain.TestSuite;
 import com.utest.domain.User;
-import com.utest.exception.TestCaseExecutionBlockedException;
 import com.utest.util.DateUtil;
 
 public class TestRunServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 {
 	@Autowired
-	private TestCycleService		testCycleService;
+	private TestCycleService	testCycleService;
 	@Autowired
 	private TestRunService		testRunService;
 	@Autowired
-	private TestSuiteService		testSuiteService;
+	private TestSuiteService	testSuiteService;
 	@Autowired
 	private UserService			userService;
 	@Autowired
 	private EnvironmentService	environmentService;
 
 	@Autowired
-	private TypelessDAO				dao;
+	private TypelessDAO			dao;
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddTestRun() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -67,7 +65,7 @@ public class TestRunServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		Assert.assertTrue(testRun != null);
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddTestRunFromTestSuite() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -90,11 +88,10 @@ public class TestRunServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		final Integer testCycleId = 1;
 		Assert.assertTrue(testCycle11 != null);
 
-		final TestRun testRun = testRunService.addTestRunFromTestSuite(testCycleId, testSuiteId, true, "Test run from test suite: " + testSuiteId, "VMK test run from test suite.",
-				new Date(), DateUtil.addMonths(new Date(), 12), true, false, 3);
-
+		final TestRun testRun = testRunService.addTestRun(testCycleId, true, "Test run from test suite: " + testSuiteId, "VMK test run from test suite.", new Date(), DateUtil
+				.addMonths(new Date(), 12), true, false, 3);
 		Assert.assertTrue(testRun != null);
-		final List<TestRunTestCase> includedCases = testRunService.findTestRunTestCases(testRun.getId());
+		final List<TestRunTestCase> includedCases = testRunService.addTestCasesFromTestSuite(testRun.getId(), testSuiteId);
 		final Integer testerId = 1;
 		for (final TestRunTestCase includedCase : includedCases)
 		{
@@ -102,26 +99,27 @@ public class TestRunServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		}
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testStartExecutingTestCase() throws Exception
 	{
 		final User user = userService.getUser(1);
 		loginUser(user);
 
-		final List<TestRunResult> testRunResults = testRunService.findTestRunResults(16, 1, 51);
+		final List<TestRunResult> testRunResults = testRunService.getTestRunResults(16, 1, 51);
 		TestRunResult testRunResult = testRunResults.get(0);
 		testRunResult = testRunService.startExecutingAssignedTestCase(testRunResult.getId(), testRunResult.getVersion());
 
 		Assert.assertTrue(testRunResult != null);
 	}
 
-	//@Test(groups = { "integration" }, expectedExceptions = { TestCaseExecutionBlockedException.class })
+	// @Test(groups = { "integration" }, expectedExceptions = {
+	// TestCaseExecutionBlockedException.class })
 	public void testFinishExecutingBlockingTestCaseWithFailure() throws Exception
 	{
 		final User user = userService.getUser(1);
 		loginUser(user);
 
-		final List<TestRunResult> testRunResults = testRunService.findTestRunResults(16, 1, 51);
+		final List<TestRunResult> testRunResults = testRunService.getTestRunResults(16, 1, 51);
 		TestRunResult testRunResult = testRunResults.get(0);
 		testRunResult = testRunService.finishExecutingAssignedTestCaseWithFailure(testRunResult.getId(), 1, "Got null pointer exception.", "VMK Testing comment", testRunResult
 				.getVersion());
@@ -133,13 +131,13 @@ public class TestRunServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		Assert.assertTrue(testRunResult != null);
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testFinishExecutingBlockingTestCaseWithSuccess() throws Exception
 	{
 		final User user = userService.getUser(1);
 		loginUser(user);
 
-		final List<TestRunResult> testRunResults = testRunService.findTestRunResults(16, 1, 51);
+		final List<TestRunResult> testRunResults = testRunService.getTestRunResults(16, 1, 51);
 		TestRunResult testRunResult = testRunResults.get(0);
 		testRunResult = testRunService.finishExecutingAssignedTestCaseWithSuccess(testRunResult.getId(), testRunResult.getVersion());
 
@@ -150,33 +148,33 @@ public class TestRunServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		Assert.assertTrue(testRunResult != null);
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testApproveResult() throws Exception
 	{
 
 		final User user = userService.getUser(16316);
 		loginUser(user);
-		final List<TestRunResult> testRunResults = testRunService.findTestRunResults(16, 1, 51);
+		final List<TestRunResult> testRunResults = testRunService.getTestRunResults(16, 1, 51);
 		TestRunResult testRunResult = testRunResults.get(0);
 		testRunResult = testRunService.approveTestRunResult(testRunResult.getId(), testRunResult.getVersion());// testRunResult.getVersion()
 		Assert.assertTrue(testRunResult != null);
 
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testRetestResult() throws Exception
 	{
 
 		final User user = userService.getUser(16316);
 		loginUser(user);
-		final List<TestRunResult> testRunResults = testRunService.findTestRunResults(16, 1, 51);
+		final List<TestRunResult> testRunResults = testRunService.getTestRunResults(16, 1, 51);
 		TestRunResult testRunResult = testRunResults.get(0);
 		testRunResult = testRunService.retestTestRunResult(testRunResult.getId(), 16316);// testRunResult.getVersion()
 		Assert.assertTrue(testRunResult != null);
 
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testRetestTestRun() throws Exception
 	{
 

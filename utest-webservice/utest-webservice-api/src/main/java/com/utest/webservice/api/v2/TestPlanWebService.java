@@ -27,17 +27,13 @@ import javax.ws.rs.core.UriInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.IncludedTestSuiteInfo;
 import com.utest.webservice.model.v2.TestPlanInfo;
-import com.utest.webservice.model.v2.TestPlanResultInfo;
+import com.utest.webservice.model.v2.TestPlanSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface TestPlanWebService
 {
 
 	TestPlanInfo updateTestPlan(UriInfo ui, Integer testPlanId, TestPlanInfo testPlanInfo) throws Exception;
-
-	TestPlanInfo activateTestPlan(UriInfo ui, Integer testPlanId, TestPlanInfo testPlanInfo) throws Exception;
-
-	TestPlanInfo deactivateTestPlan(UriInfo ui, Integer testPlanId, TestPlanInfo testPlanInfo) throws Exception;
 
 	Boolean updateTestPlanEnvironmentGroups(UriInfo ui, Integer testPlanId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
 
@@ -47,16 +43,20 @@ public interface TestPlanWebService
 
 	IncludedTestSuiteInfo createTestPlanTestSuite(UriInfo ui, Integer testPlanId, IncludedTestSuiteInfo testSuiteInfo) throws Exception;
 
-	Boolean deleteTestPlanTestSuite(UriInfo ui, Integer testPlanId, Integer includedTestSuiteId) throws Exception;
-
 	IncludedTestSuiteInfo updateTestPlanTestSuite(UriInfo ui, Integer testPlanId, Integer includedTestSuiteId, IncludedTestSuiteInfo includedTestSuiteInfo) throws Exception;
 
 	TestPlanInfo createTestPlan(UriInfo ui, TestPlanInfo testPlanInfo) throws Exception;
 
-	Boolean deleteTestPlan(UriInfo ui, Integer testPlanId) throws Exception;
-
 	TestPlanInfo getTestPlan(UriInfo ui, Integer testPlanId) throws Exception;
 
-	TestPlanResultInfo findTestPlans(UriInfo ui, UtestSearchRequest request) throws Exception;
+	TestPlanSearchResultInfo findTestPlans(UriInfo ui, UtestSearchRequest request) throws Exception;
+
+	TestPlanInfo activateTestPlan(UriInfo ui, Integer testPlanId, Integer originalVesionId) throws Exception;
+
+	TestPlanInfo deactivateTestPlan(UriInfo ui, Integer testPlanId, Integer originalVesionId) throws Exception;
+
+	Boolean deleteTestPlanTestSuite(UriInfo ui, Integer testPlanId, Integer includedTestSuiteId, Integer originalVesionId) throws Exception;
+
+	Boolean deleteTestPlan(UriInfo ui, Integer testPlanId, Integer originalVesionId) throws Exception;
 
 }

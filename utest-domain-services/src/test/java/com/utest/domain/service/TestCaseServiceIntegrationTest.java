@@ -26,7 +26,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 
-import com.utest.dao.TypelessDAO;
 import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseVersion;
@@ -36,13 +35,9 @@ import com.utest.domain.VersionIncrement;
 public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 {
 	@Autowired
-	private TypelessDAO			dao;
+	private TestCaseService	testCaseService;
 	@Autowired
-	private TestCaseService		testCaseService;
-	@Autowired
-	private UserService			userService;
-	@Autowired
-	private EnvironmentService	environmentService;
+	private UserService		userService;
 
 	// @Test(groups = { "integration" })
 	public void testAddTestCase() throws Exception
@@ -140,8 +135,9 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		ids.add(1);
 		ids.add(2);
 		ids.add(3);
-
-		testCaseService.saveProductComponentsForTestCase(45, ids);
+		Integer testCaseId = 45;
+		TestCase testCase = testCaseService.getTestCase(testCaseId);
+		testCaseService.saveProductComponentsForTestCase(testCase.getId(), ids, testCase.getVersion());
 		Assert.assertTrue(true);
 
 	}
@@ -158,7 +154,9 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		ids.add(5);
 		ids.add(6);
 
-		testCaseService.saveProductComponentsForTestCase(3, ids);
+		Integer testCaseId = 3;
+		TestCase testCase = testCaseService.getTestCase(testCaseId);
+		testCaseService.saveProductComponentsForTestCase(testCase.getId(), ids, testCase.getVersion());
 		Assert.assertTrue(true);
 	}
 
@@ -183,7 +181,8 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		loginUser(user);
 		final Integer testCaseId = 3;
 		final TestCaseVersion testCaseVersion = testCaseService.getTestCaseVersion(testCaseId);
-		final TestCaseVersion clonedTestCase = testCaseService.saveTestCaseVersion(3, testCaseVersion.getDescription(), 19, VersionIncrement.BOTH);
+		final TestCaseVersion clonedTestCase = testCaseService.saveTestCaseVersion(testCaseVersion.getId(), testCaseVersion.getDescription(), testCaseVersion.getVersion(),
+				VersionIncrement.BOTH);
 		Assert.assertTrue(clonedTestCase != null);
 	}
 

@@ -31,7 +31,6 @@ import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.CompanyService;
 import com.utest.exception.DeletingUsedEntityException;
-import com.utest.exception.NotFoundException;
 
 public class CompanyServiceImpl extends BaseServiceImpl implements CompanyService
 {
@@ -50,12 +49,7 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 	public Company addCompany(final Integer countryId_, final String name_, final String address_, final String city_, final String zip_, final String url_, final String phone_)
 			throws Exception
 	{
-		final Country country = dao.getById(Country.class, countryId_);
-		if (country == null)
-		{
-			throw new NotFoundException("Country not found: " + countryId_);
-		}
-		// check for duplicate name
+		final Country country = findEntityById(Country.class, countryId_);
 		checkForDuplicateName(Company.class, name_, null);
 
 		final Company company = new Company();
@@ -73,11 +67,7 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 	@Override
 	public void deleteCompany(final Integer companyId_, final Integer originalVersionId_) throws Exception
 	{
-		Company company = dao.getById(Company.class, companyId_);
-		if (company == null)
-		{
-			throw new NotFoundException("Company not found. Id: " + companyId_);
-		}
+		Company company = findEntityById(Company.class, companyId_);
 		// check for companys
 		Search search = new Search(Product.class);
 		search.addFilterEqual("companyId", companyId_);
@@ -108,11 +98,7 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 	@Override
 	public Company getCompany(final Integer companyId_) throws Exception
 	{
-		final Company company = dao.getById(Company.class, companyId_);
-		if (company == null)
-		{
-			throw new NotFoundException("Company not found: " + companyId_);
-		}
+		final Company company = findEntityById(Company.class, companyId_);
 		return company;
 
 	}
@@ -121,11 +107,7 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 	public Company saveCompany(final Integer companyId_, final Integer countryId_, final String name_, final String address_, final String city_, final String zip_,
 			final String url_, final String phone_, final Integer originalVersionId_) throws Exception
 	{
-		final Company company = dao.getById(Company.class, companyId_);
-		if (company == null)
-		{
-			throw new NotFoundException("Company not found:" + companyId_);
-		}
+		final Company company = findEntityById(Company.class, companyId_);
 		// check for duplicate name
 		checkForDuplicateName(Company.class, name_, companyId_);
 

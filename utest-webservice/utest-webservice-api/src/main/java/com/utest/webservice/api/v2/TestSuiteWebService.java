@@ -27,7 +27,7 @@ import javax.ws.rs.core.UriInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.IncludedTestCaseInfo;
 import com.utest.webservice.model.v2.TestSuiteInfo;
-import com.utest.webservice.model.v2.TestSuiteResultInfo;
+import com.utest.webservice.model.v2.TestSuiteSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface TestSuiteWebService
@@ -35,28 +35,28 @@ public interface TestSuiteWebService
 
 	TestSuiteInfo updateTestSuite(UriInfo ui, Integer testSuiteId, TestSuiteInfo testSuiteInfo) throws Exception;
 
-	TestSuiteInfo activateTestSuite(UriInfo ui, Integer testSuiteId, TestSuiteInfo testSuiteInfo) throws Exception;
-
-	TestSuiteInfo deactivateTestSuite(UriInfo ui, Integer testSuiteId, TestSuiteInfo testSuiteInfo) throws Exception;
-
 	Boolean updateTestSuiteEnvironmentGroups(UriInfo ui, Integer testSuiteId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
 
 	List<EnvironmentGroupInfo> getTestSuiteEnvironmentGroups(UriInfo ui, Integer testSuiteId) throws Exception;
 
 	TestSuiteInfo createTestSuite(UriInfo ui, TestSuiteInfo testSuiteInfo) throws Exception;
 
-	Boolean deleteTestSuite(UriInfo ui, Integer testSuiteId) throws Exception;
-
 	TestSuiteInfo getTestSuite(UriInfo ui, Integer testSuiteId) throws Exception;
 
-	TestSuiteResultInfo findTestSuites(UriInfo ui, UtestSearchRequest request) throws Exception;
+	TestSuiteSearchResultInfo findTestSuites(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	List<IncludedTestCaseInfo> getTestSuiteTestCases(UriInfo ui, Integer testSuiteId) throws Exception;
 
 	IncludedTestCaseInfo createTestSuiteTestCase(UriInfo ui, Integer testSuiteId, IncludedTestCaseInfo testCaseInfo) throws Exception;
 
-	Boolean deleteTestSuiteTestCase(UriInfo ui, Integer testSuiteId, Integer includedTestCaseId) throws Exception;
-
 	IncludedTestCaseInfo updateTestSuiteTestCase(UriInfo ui, Integer testSuiteId, Integer includedTestCaseId, IncludedTestCaseInfo includedTestCaseInfo) throws Exception;
+
+	TestSuiteInfo activateTestSuite(UriInfo ui, Integer testSuiteId, Integer originalVesionId) throws Exception;
+
+	TestSuiteInfo deactivateTestSuite(UriInfo ui, Integer testSuiteId, Integer originalVesionId) throws Exception;
+
+	Boolean deleteTestSuiteTestCase(UriInfo ui, Integer testSuiteId, Integer includedTestCaseId, Integer originalVesionId) throws Exception;
+
+	Boolean deleteTestSuite(UriInfo ui, Integer testSuiteId, Integer originalVesionId) throws Exception;
 
 }

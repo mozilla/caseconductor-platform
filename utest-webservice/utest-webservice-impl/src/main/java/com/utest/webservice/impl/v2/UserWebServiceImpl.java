@@ -53,11 +53,11 @@ import com.utest.domain.service.util.UserUtil;
 import com.utest.webservice.api.v2.UserWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.PermissionInfo;
-import com.utest.webservice.model.v2.PermissionResultInfo;
+import com.utest.webservice.model.v2.PermissionSearchResultInfo;
 import com.utest.webservice.model.v2.RoleInfo;
-import com.utest.webservice.model.v2.RoleResultInfo;
+import com.utest.webservice.model.v2.RoleSearchResultInfo;
 import com.utest.webservice.model.v2.UserInfo;
-import com.utest.webservice.model.v2.UserResultInfo;
+import com.utest.webservice.model.v2.UserSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 import com.utest.webservice.util.SessionUtil;
 
@@ -165,6 +165,19 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	}
 
 	@PUT
+	@Path("/{id}/emailconfirm/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.USER_ACCOUNT_EDIT })
+	public UserInfo confirmUserEmail(@Context final UriInfo ui_, @PathParam("id") final Integer userId, @FormParam("resourceVersionId") final Integer resourceVersionId_)
+			throws Exception
+	{
+		final User user = userService.confirmUserEmail(userId, resourceVersionId_);
+		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getBaseUriBuilder());
+	}
+
+	@PUT
 	@Path("/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -221,12 +234,12 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.USER_ACCOUNT_VIEW)
-	public UserResultInfo findUsers(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
+	public UserSearchResultInfo findUsers(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(UserInfo.class, request, ui_);
 		final UtestSearchResult result = userService.findUsers(search);
 
-		return (UserResultInfo) objectBuilderFactory.createResult(UserInfo.class, User.class, request, result, ui_.getBaseUriBuilder());
+		return (UserSearchResultInfo) objectBuilderFactory.createResult(UserInfo.class, User.class, request, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -235,12 +248,12 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.USER_ACCOUNT_VIEW)
-	public PermissionResultInfo findPermissions(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
+	public PermissionSearchResultInfo findPermissions(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(PermissionInfo.class, request, ui_);
 		final UtestSearchResult result = userService.findPermissions(search);
 
-		return (PermissionResultInfo) objectBuilderFactory.createResult(PermissionInfo.class, Permission.class, request, result, ui_.getBaseUriBuilder());
+		return (PermissionSearchResultInfo) objectBuilderFactory.createResult(PermissionInfo.class, Permission.class, request, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -393,12 +406,12 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.USER_ACCOUNT_VIEW)
-	public RoleResultInfo findRoles(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
+	public RoleSearchResultInfo findRoles(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(PermissionInfo.class, request, ui_);
 		final UtestSearchResult result = userService.findRoles(search);
 
-		return (RoleResultInfo) objectBuilderFactory.createResult(RoleInfo.class, AccessRole.class, request, result, ui_.getBaseUriBuilder());
+		return (RoleSearchResultInfo) objectBuilderFactory.createResult(RoleInfo.class, AccessRole.class, request, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET

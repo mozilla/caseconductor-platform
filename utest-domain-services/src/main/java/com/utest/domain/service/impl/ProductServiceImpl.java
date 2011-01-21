@@ -37,7 +37,6 @@ import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.ProductService;
 import com.utest.domain.util.DomainUtil;
 import com.utest.exception.DeletingUsedEntityException;
-import com.utest.exception.NotFoundException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 public class ProductServiceImpl extends BaseServiceImpl implements ProductService
@@ -58,11 +57,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public Product addProduct(final Integer companyId_, final String name_, final String description_) throws Exception
 	{
-		final Company company = dao.getById(Company.class, companyId_);
-		if (company == null)
-		{
-			throw new NotFoundException("Company not found:" + companyId_);
-		}
+		final Company company = findEntityById(Company.class, companyId_);
 		checkForDuplicateNameWithinParent(Product.class, name_, companyId_, "companyId", null);
 
 		final Product product = new Product();
@@ -77,11 +72,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public ProductComponent addProductComponent(final Integer productId_, final String name_, final String description_) throws Exception
 	{
-		final Product product = dao.getById(Product.class, productId_);
-		if (product == null)
-		{
-			throw new NotFoundException("Product not found:" + productId_);
-		}
+		final Product product = findEntityById(Product.class, productId_);
 		checkForDuplicateNameWithinParent(ProductComponent.class, name_, productId_, "productId", null);
 
 		final ProductComponent productComponent = new ProductComponent();
@@ -104,11 +95,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	public List<EnvironmentGroup> addGeneratedEnvironmentGroupsForProduct(final Integer productId_, final Integer environmentTypeId_, final List<Integer> environmentIds_,
 			final Integer originalVersionId_) throws Exception
 	{
-		final Product product = dao.getById(Product.class, productId_);
-		if (product == null)
-		{
-			throw new NotFoundException("Product not found:" + productId_);
-		}
+		final Product product = findEntityById(Product.class, productId_);
 		final List<EnvironmentGroup> groups = environmentService.addGeneratedEnvironmentGroups(product.getCompanyId(), environmentTypeId_, environmentIds_);
 		saveEnvironmentGroupsForProduct(productId_, DomainUtil.extractEntityIds(groups), originalVersionId_);
 		return groups;
@@ -117,11 +104,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForProduct(final Integer productId_) throws Exception
 	{
-		final Product product = dao.getById(Product.class, productId_);
-		if (product == null)
-		{
-			throw new NotFoundException("Product not found:" + productId_);
-		}
+		final Product product = findEntityById(Product.class, productId_);
 		if (product.getEnvironmentProfileId() != null)
 		{
 			return environmentService.getEnvironmentGroupsForProfile(product.getEnvironmentProfileId());
@@ -136,14 +119,10 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	public void saveEnvironmentGroupsForProduct(final Integer productId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
 			throws UnsupportedEnvironmentSelectionException, Exception
 	{
-		final Product product = dao.getById(Product.class, productId_);
-		if (product == null)
-		{
-			throw new NotFoundException("Product not found:" + productId_);
-		}
+		final Product product = findEntityById(Product.class, productId_);
 		// check that groups are selected from system wide groups or from the
 		// groups defined by this company
-		if (!environmentService.isValidEnvironmentSelectionForCompany(product.getCompanyId(), environmentGroupIds_, EnvironmentGroup.class))
+		if (!isValidSelectionForCompany(product.getCompanyId(), environmentGroupIds_, EnvironmentGroup.class))
 		{
 			throw new UnsupportedEnvironmentSelectionException();
 		}
@@ -164,13 +143,9 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	}
 
 	@Override
-	public void deleteProduct(final Integer productId_) throws Exception
+	public void deleteProduct(final Integer productId_, final Integer originalVersionId_) throws Exception
 	{
-		Product product = dao.getById(Product.class, productId_);
-		if (product == null)
-		{
-			throw new NotFoundException("Product not found. Id: " + productId_);
-		}
+		Product product = findEntityById(Product.class, productId_);
 		final Search search = new Search(TestCase.class);
 		search.addFilterEqual("productId", productId_);
 		final List<TestCase> foundTestCases = dao.search(TestCase.class, search);
@@ -182,17 +157,14 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 		final List<ProductComponent> components = getComponentsForProduct(productId_);
 		dao.delete(components);
 		// delete product
+		product.setVersion(originalVersionId_);
 		dao.delete(product);
 	}
 
 	@Override
-	public void deleteProductComponent(final Integer productComponentId_) throws Exception
+	public void deleteProductComponent(final Integer productComponentId_, final Integer originalVersionId_) throws Exception
 	{
-		ProductComponent productComponent = dao.getById(ProductComponent.class, productComponentId_);
-		if (productComponent == null)
-		{
-			throw new NotFoundException("ProductComponent not found. Id: " + productComponentId_);
-		}
+		ProductComponent productComponent = findEntityById(ProductComponent.class, productComponentId_);
 		final Search search = new Search(TestCaseProductComponent.class);
 		search.addFilterEqual("productComponentId", productComponentId_);
 		final List<TestCaseProductComponent> foundEntities = dao.search(TestCaseProductComponent.class, search);
@@ -200,7 +172,8 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 		{
 			throw new DeletingUsedEntityException(ProductComponent.class.getSimpleName() + " : " + productComponentId_);
 		}
-		// delete product
+		// delete product component
+		productComponent.setVersion(originalVersionId_);
 		dao.delete(productComponent);
 	}
 
@@ -219,11 +192,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public Product getProduct(final Integer productId_) throws Exception
 	{
-		final Product product = dao.getById(Product.class, productId_);
-		if (product == null)
-		{
-			throw new NotFoundException("Product#" + productId_);
-		}
+		final Product product = findEntityById(Product.class, productId_);
 		return product;
 
 	}
@@ -231,11 +200,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public ProductComponent getProductComponent(final Integer productComponentId_) throws Exception
 	{
-		final ProductComponent productComponent = dao.getById(ProductComponent.class, productComponentId_);
-		if (productComponent == null)
-		{
-			throw new NotFoundException("ProductComponent#" + productComponentId_);
-		}
+		final ProductComponent productComponent = findEntityById(ProductComponent.class, productComponentId_);
 		return productComponent;
 	}
 
@@ -250,11 +215,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public Product saveProduct(final Integer productId_, final String name_, final String description_, final Integer originalVersionId_) throws Exception
 	{
-		final Product product = dao.getById(Product.class, productId_);
-		if (product == null)
-		{
-			throw new NotFoundException("Product#" + productId_);
-		}
+		final Product product = findEntityById(Product.class, productId_);
 		checkForDuplicateNameWithinParent(Product.class, name_, product.getCompanyId(), "companyId", productId_);
 
 		product.setName(name_);
@@ -267,11 +228,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	public ProductComponent saveProductComponent(final Integer productComponentId_, final String name_, final String description_, final Integer originalVersionId_)
 			throws Exception
 	{
-		final ProductComponent productComponent = dao.getById(ProductComponent.class, productComponentId_);
-		if (productComponent == null)
-		{
-			throw new NotFoundException("ProductComponent not found:" + productComponentId_);
-		}
+		final ProductComponent productComponent = findEntityById(ProductComponent.class, productComponentId_);
 		checkForDuplicateNameWithinParent(ProductComponent.class, name_, productComponent.getProductId(), "productId", productComponentId_);
 
 		productComponent.setName(name_);

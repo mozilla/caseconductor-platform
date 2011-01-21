@@ -34,8 +34,6 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 public interface TestPlanService
 {
 
-	void deleteTestPlan(Integer testPlanId) throws Exception;
-
 	UtestSearchResult findTestPlans(UtestSearch search) throws Exception;
 
 	TestPlan getTestPlan(Integer testPlanId) throws Exception;
@@ -54,7 +52,7 @@ public interface TestPlanService
 
 	TestPlanTestSuite addTestPlanTestSuite(Integer testPlanId, Integer testSuiteId) throws Exception;
 
-	void deleteTestPlanTestSuite(Integer testPlanTestSuiteId) throws Exception;
+	void deleteTestPlanTestSuite(Integer testPlanTestSuiteId, Integer originalVersionId) throws Exception;
 
 	void saveEnvironmentGroupsForTestPlan(Integer testPlanId, List<Integer> environmentGroupIds, Integer originalVersionId) throws UnsupportedEnvironmentSelectionException,
 			Exception;
@@ -62,5 +60,7 @@ public interface TestPlanService
 	TestPlan saveTestPlan(Integer testPlanId, String name, String description, Integer originalVersionId) throws Exception;
 
 	TestPlanTestSuite saveTestPlanTestSuite(Integer includedTestSuiteId, Integer runOrder, Integer originalVersionId);
+
+	void deleteTestPlan(Integer testPlanId, Integer originalVersionId) throws Exception;
 
 }

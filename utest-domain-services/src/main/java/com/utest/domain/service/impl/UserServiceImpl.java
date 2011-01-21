@@ -64,11 +64,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		// internal users will have company id populated
 		if (companyId_ != null)
 		{
-			final Company company = dao.getById(Company.class, companyId_);
-			if (company == null)
-			{
-				throw new NotFoundException("Company not found: " + companyId_);
-			}
+			final Company company = findEntityById(Company.class, companyId_);
 		}
 		// check for duplicate email
 		if (getUserByEmail(email_) != null)
@@ -104,10 +100,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		final Search search = new Search(User.class);
 		search.addFilterEqual("code", code_);
 		final User user = (User) dao.searchUnique(User.class, search);
-		if (user == null)
-		{
-			throw new NotFoundException("User with this code not found: " + code_);
-		}
 		setUserContext(user);
 		return user;
 	}
@@ -161,9 +153,29 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		{
 			throw new InvalidUserException();
 		}
-		user.setUserStatusId(UserStatus.ACTIVE);
-		user.setConfirmedEmail(true);
-		return dao.merge(user);
+		return confirmUserEmail(user, null);
+	}
+
+	@Override
+	public User confirmUserEmail(final Integer userId_, final Integer originalVersionId_) throws Exception
+	{
+		final User user = getUser(userId_);
+		if (user == null)
+		{
+			throw new InvalidUserException();
+		}
+		return confirmUserEmail(user, originalVersionId_);
+	}
+
+	private User confirmUserEmail(User user_, final Integer originalVersionId_)
+	{
+		user_.setUserStatusId(UserStatus.ACTIVE);
+		user_.setConfirmedEmail(true);
+		if (originalVersionId_ != null)
+		{
+			user_.setVersion(originalVersionId_);
+		}
+		return dao.merge(user_);
 	}
 
 	@Override
@@ -187,11 +199,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public User getUser(final Integer userId_) throws Exception
 	{
-		final User user = dao.getById(User.class, userId_);
-		if (user == null)
-		{
-			throw new NotFoundException("UserId#" + userId_);
-		}
+		final User user = findEntityById(User.class, userId_);
 		setUserContext(user);
 		return user;
 	}
@@ -206,10 +214,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	public User changeUserEmail(final Integer userId_, final String newEmail_, final Integer originalVersionId_) throws Exception
 	{
 		final User user = getUser(userId_);
-		if (user == null)
-		{
-			throw new NotFoundException("User not found: " + userId_);
-		}
 		// check for duplicate email
 		if (getUserByEmail(newEmail_) != null)
 		{
@@ -237,17 +241,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		// internal users will have company id populated
 		if (companyId_ != null)
 		{
-			final Company company = dao.getById(Company.class, companyId_);
-			if (company == null)
-			{
-				throw new NotFoundException("Company not found: " + companyId_);
-			}
+			@SuppressWarnings("unused")
+			final Company company = findEntityById(Company.class, companyId_);
 		}
 		final User user = getUser(userId_);
-		if (user == null)
-		{
-			throw new NotFoundException("User not found. Id: " + userId_);
-		}
 		user.setCompanyId(companyId_);
 		user.setFirstName(firstName_);
 		user.setLastName(lastName_);
@@ -259,10 +256,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	public User activateUserAccount(final Integer userId_, final Integer originalVersionId_) throws Exception
 	{
 		final User user = getUser(userId_);
-		if (user == null)
-		{
-			throw new NotFoundException("User not found: " + userId_);
-		}
 		user.setUserStatusId(UserStatus.ACTIVE);
 		user.setVersion(originalVersionId_);
 		return dao.merge(user);
@@ -294,12 +287,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		role.setName(name_);
 		role.setSortOrder(0);
 		final Integer roleId = dao.addAndReturnId(role);
-		role = dao.getById(AccessRole.class, roleId);
+		role = findEntityById(AccessRole.class, roleId);
 		for (final Integer permissionId : permissionIds_)
 		{
 			addRolePermission(roleId, permissionId, role.getVersion());
 		}
-		return dao.getById(AccessRole.class, roleId);
+		return findEntityById(AccessRole.class, roleId);
 	}
 
 	@Override
@@ -355,7 +348,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 			rolePermission.setPermissionId(permissionId_);
 			dao.addAndReturnId(rolePermission);
 
-			final AccessRole role = dao.getById(AccessRole.class, roleId_);
+			final AccessRole role = findEntityById(AccessRole.class, roleId_);
 			role.setVersion(originalVersionId_);
 			dao.merge(role);
 		}
@@ -363,11 +356,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 
 	private boolean isPermissionAssignable(final Integer permissionId_)
 	{
-		final Permission permission = dao.getById(Permission.class, permissionId_);
-		if (permission == null)
-		{
-			throw new NotFoundException("Permission not found: " + permissionId_);
-		}
+		final Permission permission = findEntityById(Permission.class, permissionId_);
 		return permission.isAssignable();
 	}
 
@@ -388,16 +377,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public void addUserRole(final Integer roleId_, final Integer userId_, final Integer originalVersionId_)
 	{
-		final User user = dao.getById(User.class, userId_);
-		if (user == null)
-		{
-			throw new NotFoundException("User not found: " + userId_);
-		}
-		final AccessRole role = dao.getById(AccessRole.class, roleId_);
-		if (role == null)
-		{
-			throw new NotFoundException("AccessRole not found: " + roleId_);
-		}
+		final User user = findEntityById(User.class, userId_);
+		@SuppressWarnings("unused")
+		final AccessRole role = findEntityById(AccessRole.class, roleId_);
 		if (AccessRole.getProtectedSystemRoleIds().contains(roleId_))
 		{
 			throw new UnsupportedOperationException("Cannot assign this system role: " + roleId_);
@@ -421,11 +403,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public void deleteRole(final Integer roleId_, final Integer originalVersionId_) throws Exception
 	{
-		final AccessRole role = dao.getById(AccessRole.class, roleId_);
-		if (role == null)
-		{
-			throw new NotFoundException("Role not found: " + roleId_);
-		}
+		final AccessRole role = findEntityById(AccessRole.class, roleId_);
 		// TODO - check same company before deleting
 		if (isSystemRole(roleId_))
 		{
@@ -443,11 +421,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public void deleteRolePermission(final Integer roleId_, final Integer permissionId_, final Integer originalVersionId_)
 	{
-		final AccessRole role = dao.getById(AccessRole.class, roleId_);
-		if (role == null)
-		{
-			throw new NotFoundException("Role not found: " + roleId_);
-		}
+		final AccessRole role = findEntityById(AccessRole.class, roleId_);
 		final Search search = new Search(RolePermission.class);
 		search.addFilterEqual("accessRoleId", roleId_);
 		search.addFilterEqual("permissionId", permissionId_);
@@ -469,11 +443,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public void deleteUserRole(final Integer roleId_, final Integer userId_, final Integer originalVersionId_)
 	{
-		final User user = dao.getById(User.class, userId_);
-		if (user == null)
-		{
-			throw new NotFoundException("User not found: " + userId_);
-		}
+		final User user = findEntityById(User.class, userId_);
 		final Search search = new Search(UserRole.class);
 		search.addFilterEqual("accessRoleId", roleId_);
 		search.addFilterEqual("userId", userId_);
@@ -591,22 +561,14 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public Permission getPermission(Integer permissionId_)
 	{
-		final Permission permission = dao.getById(Permission.class, permissionId_);
-		if (permission == null)
-		{
-			throw new NotFoundException("PermissionId#" + permissionId_);
-		}
+		final Permission permission = findEntityById(Permission.class, permissionId_);
 		return permission;
 	}
 
 	@Override
 	public AccessRole getRole(Integer roleId_)
 	{
-		final AccessRole role = dao.getById(AccessRole.class, roleId_);
-		if (role == null)
-		{
-			throw new NotFoundException("RoleId#" + roleId_);
-		}
+		final AccessRole role = findEntityById(AccessRole.class, roleId_);
 		return role;
 	}
 

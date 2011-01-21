@@ -49,13 +49,13 @@ import com.utest.domain.service.EnvironmentService;
 import com.utest.webservice.api.v2.EnvironmentWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
-import com.utest.webservice.model.v2.EnvironmentGroupResultInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
-import com.utest.webservice.model.v2.EnvironmentResultInfo;
+import com.utest.webservice.model.v2.EnvironmentSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeInfo;
-import com.utest.webservice.model.v2.EnvironmentTypeResultInfo;
+import com.utest.webservice.model.v2.EnvironmentTypeSearchResultInfo;
 import com.utest.webservice.model.v2.TagInfo;
-import com.utest.webservice.model.v2.TagResultInfo;
+import com.utest.webservice.model.v2.TagSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 @Path("/")
@@ -105,7 +105,8 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Secured(Permission.ENVIRONMENT_EDIT)
 	public Boolean deleteEnvironmentType(@Context final UriInfo ui_, @PathParam("id") final Integer environmentTypeId_) throws Exception
 	{
-		environmentService.deleteEnvironmentType(environmentTypeId_);
+		// TODO - fix version
+		environmentService.deleteEnvironmentType(environmentTypeId_, 0);
 
 		return Boolean.TRUE;
 	}
@@ -129,12 +130,12 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
-	public EnvironmentTypeResultInfo findEnvironmentTypes(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public EnvironmentTypeSearchResultInfo findEnvironmentTypes(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(EnvironmentTypeInfo.class, request_, ui_);
 		final UtestSearchResult result = environmentService.findEnvironmentTypes(search);
 
-		return (EnvironmentTypeResultInfo) objectBuilderFactory.createResult(EnvironmentTypeInfo.class, EnvironmentType.class, request_, result, ui_.getBaseUriBuilder());
+		return (EnvironmentTypeSearchResultInfo) objectBuilderFactory.createResult(EnvironmentTypeInfo.class, EnvironmentType.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -186,7 +187,8 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Secured(Permission.ENVIRONMENT_EDIT)
 	public Boolean deleteEnvironment(@Context final UriInfo ui_, @PathParam("id") final Integer environmentId_) throws Exception
 	{
-		environmentService.deleteEnvironment(environmentId_);
+		// TODO - fix version
+		environmentService.deleteEnvironment(environmentId_, 0);
 
 		return Boolean.TRUE;
 	}
@@ -210,12 +212,12 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
-	public EnvironmentResultInfo findEnvironments(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public EnvironmentSearchResultInfo findEnvironments(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(EnvironmentInfo.class, request_, ui_);
 		final UtestSearchResult result = environmentService.findEnvironments(search);
 
-		return (EnvironmentResultInfo) objectBuilderFactory.createResult(EnvironmentInfo.class, Environment.class, request_, result, ui_.getBaseUriBuilder());
+		return (EnvironmentSearchResultInfo) objectBuilderFactory.createResult(EnvironmentInfo.class, Environment.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 	@POST
@@ -239,7 +241,8 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Secured(Permission.ENVIRONMENT_EDIT)
 	public Boolean deleteTag(@Context final UriInfo ui_, @PathParam("id") final Integer tagId_) throws Exception
 	{
-		environmentService.deleteTag(tagId_);
+		// TODO - fix version
+		environmentService.deleteTag(tagId_, 0);
 
 		return Boolean.TRUE;
 	}
@@ -263,12 +266,12 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
-	public TagResultInfo findTags(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TagSearchResultInfo findTags(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TagInfo.class, request_, ui_);
 		final UtestSearchResult result = environmentService.findTags(search);
 
-		return (TagResultInfo) objectBuilderFactory.createResult(TagInfo.class, Tag.class, request_, result, ui_.getBaseUriBuilder());
+		return (TagSearchResultInfo) objectBuilderFactory.createResult(TagInfo.class, Tag.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -361,12 +364,12 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
-	public EnvironmentGroupResultInfo findEnvironmentGroups(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public EnvironmentGroupSearchResultInfo findEnvironmentGroups(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(EnvironmentGroupInfo.class, request_, ui_);
 		final UtestSearchResult result = environmentService.findEnvironmentGroups(search);
 
-		return (EnvironmentGroupResultInfo) objectBuilderFactory.createResult(EnvironmentGroupInfo.class, EnvironmentGroup.class, request_, result, ui_.getBaseUriBuilder());
+		return (EnvironmentGroupSearchResultInfo) objectBuilderFactory.createResult(EnvironmentGroupInfo.class, EnvironmentGroup.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
@@ -406,7 +409,8 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Secured(Permission.ENVIRONMENT_EDIT)
 	public Boolean deleteEnvironmentGroup(@Context final UriInfo ui_, @PathParam("id") final Integer environmentGroupId_) throws Exception
 	{
-		environmentService.deleteEnvironmentGroup(environmentGroupId_);
+		// TODO - fix version
+		environmentService.deleteEnvironmentGroup(environmentGroupId_, 0);
 
 		return Boolean.TRUE;
 	}

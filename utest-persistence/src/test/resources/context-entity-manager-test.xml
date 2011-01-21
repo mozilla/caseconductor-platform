@@ -27,16 +27,22 @@
 				<prop key="hibernate.connection.isolation">${hibernate.connection.isolation}</prop>
 			</props>
 		</property>
-     	<property name="eventListeners">
+    	<property name="eventListeners">
             <map>
                 <entry key="flush-entity">
                     <ref local="utestFlushEntityEventListener" />
+                </entry>
+               <entry key="delete">
+                    <ref local="utestDeleteEventListener" />
                 </entry>
            </map>
 		</property>
 	</bean>
 	
  	<bean id="utestFlushEntityEventListener" class="com.utest.dao.UtestFlushEntityEventListener">
+	</bean>
+
+ 	<bean id="utestDeleteEventListener" class="com.utest.dao.UtestDeleteEventListener">
 	</bean>
 	
 	<bean id="auditInterseptor" class="com.utest.dao.AuditTrailInterceptor">

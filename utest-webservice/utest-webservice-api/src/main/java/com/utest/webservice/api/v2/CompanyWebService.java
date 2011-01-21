@@ -22,14 +22,14 @@ package com.utest.webservice.api.v2;
 import javax.ws.rs.core.UriInfo;
 
 import com.utest.webservice.model.v2.CompanyInfo;
-import com.utest.webservice.model.v2.CompanyResultInfo;
+import com.utest.webservice.model.v2.CompanySearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface CompanyWebService
 {
 	CompanyInfo updateCompany(UriInfo ui, Integer companyId, CompanyInfo companyInfo) throws Exception;
 
-	CompanyResultInfo findCompanies(UriInfo ui, UtestSearchRequest request) throws Exception;
+	CompanySearchResultInfo findCompanies(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	CompanyInfo createCompany(UriInfo ui, CompanyInfo companyInfo) throws Exception;
 

@@ -36,13 +36,11 @@ public interface TestSuiteService
 	// TestSuite related methods
 	TestSuite addTestSuite(Integer productId, boolean useLatestVersiuons, String name, String description) throws Exception;
 
-	void deleteTestSuite(Integer testSuiteId_) throws Exception;
-
 	TestSuite getTestSuite(Integer testSuiteId_) throws Exception;
 
 	UtestSearchResult findTestSuites(UtestSearch search_) throws Exception;
 
-	void deleteTestSuiteTestCase(Integer testSuiteTestCaseId_) throws Exception;
+	void deleteTestSuiteTestCase(Integer testSuiteTestCaseId_, Integer originalVersionId) throws Exception;
 
 	List<TestSuiteTestCase> getTestSuiteTestCases(Integer testSuiteId) throws Exception;
 
@@ -64,5 +62,7 @@ public interface TestSuiteService
 	TestSuite lockTestSuite(Integer testSuiteId, Integer originalVersionId) throws Exception;
 
 	TestSuiteTestCase saveTestSuiteTestCase(Integer includedTestCaseId, Integer priorityId, Integer runOrder, boolean blocking, Integer originalVersionId);
+
+	void deleteTestSuite(Integer testSuiteId, Integer originalVersionId) throws Exception;
 
 }

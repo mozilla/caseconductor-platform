@@ -42,8 +42,6 @@ public interface TestCycleService
 
 	List<TestRun> getTestRunsForTestCycle(Integer testCycleId) throws Exception;
 
-	void deleteTestCycle(Integer testCycleId) throws Exception;
-
 	UtestSearchResult findTestCycles(UtestSearch search) throws Exception;
 
 	TestCycle getTestCycle(Integer testCycleId) throws Exception;
@@ -57,4 +55,6 @@ public interface TestCycleService
 
 	void saveEnvironmentGroupsForTestCycle(Integer testCycleId, List<Integer> environmentGroupIds, Integer originalVersionId) throws UnsupportedEnvironmentSelectionException,
 			Exception;
+
+	void deleteTestCycle(Integer testCycleId, Integer originalVersionId) throws Exception;
 }

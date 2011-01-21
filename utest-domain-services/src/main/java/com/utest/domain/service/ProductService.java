@@ -39,8 +39,6 @@ public interface ProductService
 
 	List<ProductComponent> getComponentsForProduct(Integer productId) throws Exception;
 
-	void deleteProduct(Integer productId) throws Exception;
-
 	UtestSearchResult findProducts(UtestSearch search) throws Exception;
 
 	UtestSearchResult findProductComponents(UtestSearch search) throws Exception;
@@ -48,8 +46,6 @@ public interface ProductService
 	ProductComponent getProductComponent(Integer productComponentId) throws Exception;
 
 	ProductComponent addProductComponent(Integer productId, String name, String description) throws Exception;
-
-	void deleteProductComponent(Integer productComponentId) throws Exception;
 
 	List<EnvironmentGroup> getEnvironmentGroupsForProduct(Integer productId) throws Exception;
 
@@ -63,4 +59,8 @@ public interface ProductService
 
 	List<EnvironmentGroup> addGeneratedEnvironmentGroupsForProduct(Integer productId, Integer environmentTypeId, List<Integer> environmentIds, Integer originalVersionId)
 			throws Exception;
+
+	void deleteProduct(Integer productId, Integer originalVersionId) throws Exception;
+
+	void deleteProductComponent(Integer productComponentId, Integer originalVersionId) throws Exception;
 }

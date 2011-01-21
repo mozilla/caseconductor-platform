@@ -45,6 +45,7 @@ import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.TestCycle;
 import com.utest.domain.TestPlan;
+import com.utest.domain.TestRun;
 import com.utest.domain.TestSuite;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestFilter;
@@ -53,40 +54,42 @@ import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.search.UtestSort;
 import com.utest.domain.service.Initializable;
 import com.utest.webservice.model.v2.CompanyInfo;
-import com.utest.webservice.model.v2.CompanyResultInfo;
+import com.utest.webservice.model.v2.CompanySearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
-import com.utest.webservice.model.v2.EnvironmentGroupResultInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
-import com.utest.webservice.model.v2.EnvironmentResultInfo;
+import com.utest.webservice.model.v2.EnvironmentSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeInfo;
-import com.utest.webservice.model.v2.EnvironmentTypeResultInfo;
+import com.utest.webservice.model.v2.EnvironmentTypeSearchResultInfo;
 import com.utest.webservice.model.v2.IncludedTestCaseInfo;
-import com.utest.webservice.model.v2.IncludedTestCaseResultInfo;
+import com.utest.webservice.model.v2.IncludedTestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.PermissionInfo;
-import com.utest.webservice.model.v2.PermissionResultInfo;
+import com.utest.webservice.model.v2.PermissionSearchResultInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
-import com.utest.webservice.model.v2.ProductComponentResultInfo;
+import com.utest.webservice.model.v2.ProductComponentSearchResultInfo;
 import com.utest.webservice.model.v2.ProductInfo;
-import com.utest.webservice.model.v2.ProductResultInfo;
+import com.utest.webservice.model.v2.ProductSearchResultInfo;
 import com.utest.webservice.model.v2.RoleInfo;
-import com.utest.webservice.model.v2.RoleResultInfo;
+import com.utest.webservice.model.v2.RoleSearchResultInfo;
+import com.utest.webservice.model.v2.SearchResultInfo;
 import com.utest.webservice.model.v2.TagInfo;
-import com.utest.webservice.model.v2.TagResultInfo;
+import com.utest.webservice.model.v2.TagSearchResultInfo;
 import com.utest.webservice.model.v2.TestCaseInfo;
-import com.utest.webservice.model.v2.TestCaseResultInfo;
+import com.utest.webservice.model.v2.TestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.TestCaseStepInfo;
-import com.utest.webservice.model.v2.TestCaseStepResultInfo;
+import com.utest.webservice.model.v2.TestCaseStepSearchResultInfo;
 import com.utest.webservice.model.v2.TestCaseVersionInfo;
-import com.utest.webservice.model.v2.TestCaseVersionResultInfo;
+import com.utest.webservice.model.v2.TestCaseVersionSearchResultInfo;
 import com.utest.webservice.model.v2.TestCycleInfo;
-import com.utest.webservice.model.v2.TestCycleResultInfo;
+import com.utest.webservice.model.v2.TestCycleSearchResultInfo;
 import com.utest.webservice.model.v2.TestPlanInfo;
-import com.utest.webservice.model.v2.TestPlanResultInfo;
+import com.utest.webservice.model.v2.TestPlanSearchResultInfo;
+import com.utest.webservice.model.v2.TestRunInfo;
+import com.utest.webservice.model.v2.TestRunSearchResultInfo;
 import com.utest.webservice.model.v2.TestSuiteInfo;
-import com.utest.webservice.model.v2.TestSuiteResultInfo;
+import com.utest.webservice.model.v2.TestSuiteSearchResultInfo;
 import com.utest.webservice.model.v2.UserInfo;
-import com.utest.webservice.model.v2.UserResultInfo;
-import com.utest.webservice.model.v2.UtestResult;
+import com.utest.webservice.model.v2.UserSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 import com.utest.webservice.util.RestUtil;
 
@@ -107,24 +110,26 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 	public void initialize()
 	{
 
-		builders.put(UserInfo.class, new Builder<UserInfo, User>(this, UserInfo.class, UserResultInfo.class));
-		builders.put(RoleInfo.class, new Builder<RoleInfo, AccessRole>(this, RoleInfo.class, RoleResultInfo.class));
-		builders.put(PermissionInfo.class, new Builder<PermissionInfo, Permission>(this, PermissionInfo.class, PermissionResultInfo.class));
-		builders.put(EnvironmentInfo.class, new Builder<EnvironmentInfo, Environment>(this, EnvironmentInfo.class, EnvironmentResultInfo.class));
-		builders.put(EnvironmentTypeInfo.class, new Builder<EnvironmentTypeInfo, EnvironmentType>(this, EnvironmentTypeInfo.class, EnvironmentTypeResultInfo.class));
-		builders.put(EnvironmentGroupInfo.class, new Builder<EnvironmentGroupInfo, EnvironmentGroup>(this, EnvironmentGroupInfo.class, EnvironmentGroupResultInfo.class));
-		builders.put(TagInfo.class, new Builder<TagInfo, Tag>(this, TagInfo.class, TagResultInfo.class));
-		builders.put(CompanyInfo.class, new Builder<CompanyInfo, Company>(this, CompanyInfo.class, CompanyResultInfo.class));
-		builders.put(ProductInfo.class, new Builder<ProductInfo, Product>(this, ProductInfo.class, ProductResultInfo.class));
-		builders.put(ProductComponentInfo.class, new Builder<ProductComponentInfo, ProductComponent>(this, ProductComponentInfo.class, ProductComponentResultInfo.class));
-		builders.put(TestCaseStepInfo.class, new Builder<TestCaseStepInfo, TestCaseStep>(this, TestCaseStepInfo.class, TestCaseStepResultInfo.class));
-		builders.put(TestCaseInfo.class, new Builder<TestCaseInfo, TestCase>(this, TestCaseInfo.class, TestCaseResultInfo.class));
-		builders.put(TestCaseVersionInfo.class, new TestCaseVersionBuilder<TestCaseVersionInfo, TestCaseVersion>(this, TestCaseVersionInfo.class, TestCaseVersionResultInfo.class));
-		builders
-				.put(IncludedTestCaseInfo.class, new Builder<IncludedTestCaseInfo, TestCaseContainerDependable>(this, IncludedTestCaseInfo.class, IncludedTestCaseResultInfo.class));
-		builders.put(TestSuiteInfo.class, new Builder<TestSuiteInfo, TestSuite>(this, TestSuiteInfo.class, TestSuiteResultInfo.class));
-		builders.put(TestPlanInfo.class, new Builder<TestPlanInfo, TestPlan>(this, TestPlanInfo.class, TestPlanResultInfo.class));
-		builders.put(TestCycleInfo.class, new Builder<TestCycleInfo, TestCycle>(this, TestCycleInfo.class, TestCycleResultInfo.class));
+		builders.put(UserInfo.class, new Builder<UserInfo, User>(this, UserInfo.class, UserSearchResultInfo.class));
+		builders.put(RoleInfo.class, new Builder<RoleInfo, AccessRole>(this, RoleInfo.class, RoleSearchResultInfo.class));
+		builders.put(PermissionInfo.class, new Builder<PermissionInfo, Permission>(this, PermissionInfo.class, PermissionSearchResultInfo.class));
+		builders.put(EnvironmentInfo.class, new Builder<EnvironmentInfo, Environment>(this, EnvironmentInfo.class, EnvironmentSearchResultInfo.class));
+		builders.put(EnvironmentTypeInfo.class, new Builder<EnvironmentTypeInfo, EnvironmentType>(this, EnvironmentTypeInfo.class, EnvironmentTypeSearchResultInfo.class));
+		builders.put(EnvironmentGroupInfo.class, new Builder<EnvironmentGroupInfo, EnvironmentGroup>(this, EnvironmentGroupInfo.class, EnvironmentGroupSearchResultInfo.class));
+		builders.put(TagInfo.class, new Builder<TagInfo, Tag>(this, TagInfo.class, TagSearchResultInfo.class));
+		builders.put(CompanyInfo.class, new Builder<CompanyInfo, Company>(this, CompanyInfo.class, CompanySearchResultInfo.class));
+		builders.put(ProductInfo.class, new Builder<ProductInfo, Product>(this, ProductInfo.class, ProductSearchResultInfo.class));
+		builders.put(ProductComponentInfo.class, new Builder<ProductComponentInfo, ProductComponent>(this, ProductComponentInfo.class, ProductComponentSearchResultInfo.class));
+		builders.put(TestCaseStepInfo.class, new Builder<TestCaseStepInfo, TestCaseStep>(this, TestCaseStepInfo.class, TestCaseStepSearchResultInfo.class));
+		builders.put(TestCaseInfo.class, new Builder<TestCaseInfo, TestCase>(this, TestCaseInfo.class, TestCaseSearchResultInfo.class));
+		builders.put(TestCaseVersionInfo.class, new TestCaseVersionBuilder<TestCaseVersionInfo, TestCaseVersion>(this, TestCaseVersionInfo.class,
+				TestCaseVersionSearchResultInfo.class));
+		builders.put(IncludedTestCaseInfo.class, new Builder<IncludedTestCaseInfo, TestCaseContainerDependable>(this, IncludedTestCaseInfo.class,
+				IncludedTestCaseSearchResultInfo.class));
+		builders.put(TestSuiteInfo.class, new Builder<TestSuiteInfo, TestSuite>(this, TestSuiteInfo.class, TestSuiteSearchResultInfo.class));
+		builders.put(TestPlanInfo.class, new Builder<TestPlanInfo, TestPlan>(this, TestPlanInfo.class, TestPlanSearchResultInfo.class));
+		builders.put(TestCycleInfo.class, new Builder<TestCycleInfo, TestCycle>(this, TestCycleInfo.class, TestCycleSearchResultInfo.class));
+		builders.put(TestRunInfo.class, new Builder<TestRunInfo, TestRun>(this, TestRunInfo.class, TestRunSearchResultInfo.class));
 
 	}
 
@@ -392,7 +397,7 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <Ti, To> UtestResult<Ti> createResult(final Class<Ti> clazz, final Class<To> clazz1, final UtestSearchRequest request, final UtestSearchResult result,
+	public <Ti, To> SearchResultInfo<Ti> createResult(final Class<Ti> clazz, final Class<To> clazz1, final UtestSearchRequest request, final UtestSearchResult result,
 			final UriBuilder ub) throws Exception
 	{
 		final Builder<Ti, To> builder = getBuilder(clazz, clazz1);

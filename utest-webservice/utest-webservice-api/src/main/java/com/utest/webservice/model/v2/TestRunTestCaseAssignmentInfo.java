@@ -19,8 +19,6 @@
  */
 package com.utest.webservice.model.v2;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -29,32 +27,9 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "testresult")
-public class TestRunResultInfo extends BaseInfo
+@XmlType(name = "testcaseassignment")
+public class TestRunTestCaseAssignmentInfo extends BaseInfo
 {
-
-	@XmlElement(required = true)
-	private Integer			testRunId;
-	@XmlElement(type = ResourceLocator.class, name = "testRunLocator")
-	private ResourceLocator	testRunLocator;
-	@XmlElement(required = false)
-	private Integer			testRunResultStatusId;
-	@XmlElement(required = false)
-	private Date			runDate;
-	@XmlElement(required = false)
-	private String			actualResult;
-	@XmlElement(required = false)
-	private Integer			failedStepNumber;
-	@XmlElement(required = false)
-	private Integer			actualTimeInMin;
-	@XmlElement(required = false)
-	private String			comment;
-	@XmlElement(required = false)
-	private Integer			approvalStatusId;
-	@XmlElement(required = false)
-	private Integer			approvedBy;
-	@XmlElement(required = false)
-	private Date			approveDate;
 	@XmlElement(required = true)
 	private Integer			productId;
 	@XmlElement(type = ResourceLocator.class, name = "productLocator")
@@ -150,116 +125,6 @@ public class TestRunResultInfo extends BaseInfo
 	public void setTestCaseVersionLocator(ResourceLocator testCaseVersionLocator)
 	{
 		this.testCaseVersionLocator = testCaseVersionLocator;
-	}
-
-	public Integer getTestRunId()
-	{
-		return testRunId;
-	}
-
-	public void setTestRunId(Integer testRunId)
-	{
-		this.testRunId = testRunId;
-	}
-
-	public ResourceLocator getTestRunLocator()
-	{
-		return testRunLocator;
-	}
-
-	public void setTestRunLocator(ResourceLocator testRunLocator)
-	{
-		this.testRunLocator = testRunLocator;
-	}
-
-	public Integer getTestRunResultStatusId()
-	{
-		return testRunResultStatusId;
-	}
-
-	public void setTestRunResultStatusId(Integer testRunResultStatusId)
-	{
-		this.testRunResultStatusId = testRunResultStatusId;
-	}
-
-	public Date getRunDate()
-	{
-		return runDate;
-	}
-
-	public void setRunDate(Date runDate)
-	{
-		this.runDate = runDate;
-	}
-
-	public String getActualResult()
-	{
-		return actualResult;
-	}
-
-	public void setActualResult(String actualResult)
-	{
-		this.actualResult = actualResult;
-	}
-
-	public Integer getFailedStepNumber()
-	{
-		return failedStepNumber;
-	}
-
-	public void setFailedStepNumber(Integer failedStepNumber)
-	{
-		this.failedStepNumber = failedStepNumber;
-	}
-
-	public Integer getActualTimeInMin()
-	{
-		return actualTimeInMin;
-	}
-
-	public void setActualTimeInMin(Integer actualTimeInMin)
-	{
-		this.actualTimeInMin = actualTimeInMin;
-	}
-
-	public String getComment()
-	{
-		return comment;
-	}
-
-	public void setComment(String comment)
-	{
-		this.comment = comment;
-	}
-
-	public Integer getApprovalStatusId()
-	{
-		return approvalStatusId;
-	}
-
-	public void setApprovalStatusId(Integer approvalStatusId)
-	{
-		this.approvalStatusId = approvalStatusId;
-	}
-
-	public Integer getApprovedBy()
-	{
-		return approvedBy;
-	}
-
-	public void setApprovedBy(Integer approvedBy)
-	{
-		this.approvedBy = approvedBy;
-	}
-
-	public Date getApproveDate()
-	{
-		return approveDate;
-	}
-
-	public void setApproveDate(Date approveDate)
-	{
-		this.approveDate = approveDate;
 	}
 
 }

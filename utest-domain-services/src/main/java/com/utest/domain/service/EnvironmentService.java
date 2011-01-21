@@ -21,7 +21,6 @@ package com.utest.domain.service;
 
 import java.util.List;
 
-import com.utest.domain.CompanyDependable;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentLocale;
@@ -40,7 +39,6 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 public interface EnvironmentService
 {
 	// Environment Types related methods
-	void deleteEnvironmentType(Integer environmentTypeId_) throws Exception;
 
 	EnvironmentType getEnvironmentType(Integer environmentTypeId_) throws Exception;
 
@@ -48,8 +46,6 @@ public interface EnvironmentService
 
 	// Environments related methods
 	EnvironmentLocale saveEnvironmentLocale(Integer environmentId_, String description_, String localeCode_, Integer sortOrder_) throws Exception;
-
-	void deleteEnvironment(Integer environmentId_) throws Exception;
 
 	Environment getEnvironment(Integer environmentId_) throws Exception;
 
@@ -61,8 +57,6 @@ public interface EnvironmentService
 
 	EnvironmentGroup saveEnvironmentsForGroup(Integer environmentGroupId_, List<Integer> environmentIds_) throws Exception;
 
-	void deleteEnvironmentGroup(Integer environmentGroupId_) throws Exception;
-
 	EnvironmentGroup getEnvironmentGroup(Integer environmentGroupId_) throws Exception;
 
 	List<Environment> getEnvironmentsForGroup(Integer environmentGroupId_) throws Exception;
@@ -72,9 +66,8 @@ public interface EnvironmentService
 	// Environment Profile related methods
 	EnvironmentProfile saveEnvironmentGroupsForProfile(Integer environmentProfileId_, List<Integer> environmentGroupIds_) throws Exception;
 
-	EnvironmentProfile saveEnvironmentProfile(EnvironmentProfile environmentProfile_) throws Exception;
-
-	void deleteEnvironmentProfile(Integer environmentProfileId_) throws Exception;
+	// EnvironmentProfile saveEnvironmentProfile(EnvironmentProfile
+	// environmentProfile_) throws Exception;
 
 	EnvironmentProfile getEnvironmentProfile(Integer environmentProfileId_) throws Exception;
 
@@ -124,8 +117,6 @@ public interface EnvironmentService
 	boolean isValidEnvironmentGroupSelectionForProfile(Integer parentEnvironmentProfile, List<Integer> environmentGroupIds) throws UnsupportedEnvironmentSelectionException,
 			Exception;
 
-	<T extends CompanyDependable> boolean isValidEnvironmentSelectionForCompany(Integer companyId, List<Integer> companyDependableEntitiesIds, Class<T> type) throws Exception;
-
 	EnvironmentGroup saveEnvironmentGroup(Integer environmentGroupId, String name, String description, Integer originalVersionId) throws Exception;
 
 	void saveParentDependableEnvironments(Integer companyId, Integer parentEnvironmentId, List<Integer> environmentIds) throws Exception;
@@ -138,6 +129,14 @@ public interface EnvironmentService
 
 	Tag getTag(Integer tagId) throws Exception;
 
-	void deleteTag(Integer tagId) throws Exception;
+	void deleteEnvironment(Integer environmentId, Integer originalVersionId) throws Exception;
+
+	void deleteEnvironmentGroup(Integer environmentGroupId, Integer originalVersionId) throws Exception;
+
+	void deleteEnvironmentProfile(Integer environmentProfileId, Integer originalVersionId) throws Exception;
+
+	void deleteEnvironmentType(Integer environmentTypeId, Integer originalVersionId) throws Exception;
+
+	void deleteTag(Integer tagId, Integer originalVersionId) throws Exception;
 
 }

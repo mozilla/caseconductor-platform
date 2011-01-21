@@ -31,21 +31,21 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "searchResult")
-public class CompanyResultInfo implements UtestResult<CompanyInfo>
+public class TestRunTestCaseAssignmentSearchResultInfo implements SearchResultInfo<TestRunTestCaseAssignmentInfo>
 {
-	List<CompanyInfo>	rows	= new ArrayList<CompanyInfo>();
+	List<TestRunTestCaseAssignmentInfo>	rows	= new ArrayList<TestRunTestCaseAssignmentInfo>();
 	@XmlElement(required = true)
-	Integer				totalResults;
+	Integer								totalResults;
 
 	@Override
-	public void addRow(final CompanyInfo row)
+	public void addRow(final TestRunTestCaseAssignmentInfo row)
 	{
 		rows.add(row);
 	}
 
+	@XmlElement(name = "testcaseassignments")
 	@Override
-	@XmlElement(name = "companies")
-	public List<CompanyInfo> getRows()
+	public List<TestRunTestCaseAssignmentInfo> getRows()
 	{
 		return rows;
 	}
@@ -57,7 +57,7 @@ public class CompanyResultInfo implements UtestResult<CompanyInfo>
 	}
 
 	@Override
-	public void setRows(final List<CompanyInfo> rows)
+	public void setRows(final List<TestRunTestCaseAssignmentInfo> rows)
 	{
 		this.rows = rows;
 	}

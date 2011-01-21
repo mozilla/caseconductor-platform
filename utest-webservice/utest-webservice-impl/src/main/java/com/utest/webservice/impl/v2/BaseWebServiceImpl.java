@@ -19,6 +19,9 @@
  */
 package com.utest.webservice.impl.v2;
 
+import javax.ws.rs.core.EntityTag;
+
+import com.utest.domain.TimelineEntity;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 
 public class BaseWebServiceImpl
@@ -34,6 +37,11 @@ public class BaseWebServiceImpl
 	{
 		super();
 		this.objectBuilderFactory = objectBuilderFactory;
+	}
+
+	protected EntityTag computeEtagForEntity(TimelineEntity timelineEntity_)
+	{
+		return new EntityTag(timelineEntity_.getId() + "-" + timelineEntity_.getVersion());
 	}
 
 }

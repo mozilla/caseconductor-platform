@@ -49,9 +49,9 @@ import com.utest.webservice.api.v2.ProductWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
-import com.utest.webservice.model.v2.ProductComponentResultInfo;
+import com.utest.webservice.model.v2.ProductComponentSearchResultInfo;
 import com.utest.webservice.model.v2.ProductInfo;
-import com.utest.webservice.model.v2.ProductResultInfo;
+import com.utest.webservice.model.v2.ProductSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 @Path("/products/")
@@ -97,7 +97,8 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Secured( { Permission.PRODUCT_EDIT })
 	public Boolean deleteProduct(@Context final UriInfo ui_, @PathParam("id") final Integer productId) throws Exception
 	{
-		productService.deleteProduct(productId);
+		// TODO - fix version
+		productService.deleteProduct(productId, 0);
 
 		return Boolean.TRUE;
 	}
@@ -110,7 +111,8 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Secured( { Permission.PRODUCT_EDIT })
 	public Boolean deleteProductComponent(@Context final UriInfo ui_, @PathParam("id") final Integer productComponentId_) throws Exception
 	{
-		productService.deleteProductComponent(productComponentId_);
+		// TODO - fix version
+		productService.deleteProductComponent(productComponentId_, 0);
 
 		return Boolean.TRUE;
 	}
@@ -170,11 +172,11 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.PRODUCT_VIEW)
-	public ProductResultInfo findProducts(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
+	public ProductSearchResultInfo findProducts(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
 	{
 		UtestSearch search = objectBuilderFactory.createSearch(ProductInfo.class, request, ui_);
 		UtestSearchResult result = productService.findProducts(search);
-		return (ProductResultInfo) objectBuilderFactory.createResult(ProductInfo.class, Product.class, request, result, ui_.getBaseUriBuilder());
+		return (ProductSearchResultInfo) objectBuilderFactory.createResult(ProductInfo.class, Product.class, request, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -183,11 +185,11 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.PRODUCT_VIEW)
-	public ProductComponentResultInfo findProductComponents(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
+	public ProductComponentSearchResultInfo findProductComponents(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
 	{
 		UtestSearch search = objectBuilderFactory.createSearch(ProductComponentInfo.class, request, ui_);
 		UtestSearchResult result = productService.findProductComponents(search);
-		return (ProductComponentResultInfo) objectBuilderFactory.createResult(ProductComponentInfo.class, ProductComponent.class, request, result, ui_.getBaseUriBuilder());
+		return (ProductComponentSearchResultInfo) objectBuilderFactory.createResult(ProductComponentInfo.class, ProductComponent.class, request, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET

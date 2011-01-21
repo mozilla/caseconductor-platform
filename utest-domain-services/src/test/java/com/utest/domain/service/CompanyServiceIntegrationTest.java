@@ -21,7 +21,6 @@ package com.utest.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import com.utest.domain.Company;
 import com.utest.domain.User;
@@ -45,13 +44,13 @@ public class CompanyServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		Assert.assertTrue(company1 != null);
 	}
 
-	@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testDeleteCompany() throws Exception
 	{
 		final User user = userService.getUser(1);
 		loginUser(user);
-		final Integer originalVersionId = 10;
-		final Integer companyId = 18;
+		final Integer originalVersionId = 0;
+		final Integer companyId = 14;
 		companyService.deleteCompany(companyId, originalVersionId);
 	}
 

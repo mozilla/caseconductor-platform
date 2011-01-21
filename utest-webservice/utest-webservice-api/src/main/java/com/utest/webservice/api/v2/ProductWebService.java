@@ -26,9 +26,9 @@ import javax.ws.rs.core.UriInfo;
 
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
-import com.utest.webservice.model.v2.ProductComponentResultInfo;
+import com.utest.webservice.model.v2.ProductComponentSearchResultInfo;
 import com.utest.webservice.model.v2.ProductInfo;
-import com.utest.webservice.model.v2.ProductResultInfo;
+import com.utest.webservice.model.v2.ProductSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface ProductWebService
@@ -39,7 +39,7 @@ public interface ProductWebService
 
 	ProductInfo getProduct(UriInfo ui, Integer productId) throws Exception;
 
-	ProductResultInfo findProducts(UriInfo ui, UtestSearchRequest request) throws Exception;
+	ProductSearchResultInfo findProducts(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	ProductInfo createProduct(UriInfo ui, ProductInfo productInfo) throws Exception;
 
@@ -51,7 +51,7 @@ public interface ProductWebService
 
 	ProductComponentInfo getProductComponent(UriInfo ui, Integer productComponentId) throws Exception;
 
-	ProductComponentResultInfo findProductComponents(UriInfo ui, UtestSearchRequest request) throws Exception;
+	ProductComponentSearchResultInfo findProductComponents(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	List<ProductComponentInfo> getProductComponents(UriInfo ui, Integer productId) throws Exception;
 

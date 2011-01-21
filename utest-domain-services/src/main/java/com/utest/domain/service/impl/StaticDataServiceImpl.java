@@ -115,10 +115,6 @@ public class StaticDataServiceImpl implements StaticDataService
 	public void addToParent(final Class parentDependableClazz_, final List<Integer> parentId, final Class childClazz_, final Integer childId) throws Exception
 	{
 		final Object child = dao.getById(childClazz_, childId);
-		if (child == null)
-		{
-			throw new IllegalArgumentException("Object of class " + childClazz_.getName() + " with id " + childId + " not found!");
-		}
 		dao.addOrUpdate(createRelationClasses(parentDependableClazz_, parentId, child).toArray());
 		loadNonTranslatableData(_nonTranslatableData);
 	}

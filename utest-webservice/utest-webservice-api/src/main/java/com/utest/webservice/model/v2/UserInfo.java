@@ -32,19 +32,21 @@ public class UserInfo extends BaseInfo
 {
 
 	@XmlElement(required = false)
-	private String	password;
+	private String			password;
 	@XmlElement(required = false)
-	private String	screenName;
+	private String			screenName;
 	@XmlElement(required = false)
-	private String	firstName;
+	private String			firstName;
 	@XmlElement(required = false)
-	private String	lastName;
+	private String			lastName;
 	@XmlElement(required = true)
-	private String	email;
+	private String			email;
 	@XmlElement(required = false)
-	private Integer	userStatusId;
+	private Integer			userStatusId;
 	@XmlElement(required = false)
-	private Integer	companyId;
+	private Integer			companyId;
+	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
+	private ResourceLocator	companyLocator;
 
 	public String getPassword()
 	{
@@ -114,6 +116,16 @@ public class UserInfo extends BaseInfo
 	public String getScreenName()
 	{
 		return screenName;
+	}
+
+	public void setCompanyLocator(ResourceLocator companyLocator)
+	{
+		this.companyLocator = companyLocator;
+	}
+
+	public ResourceLocator getCompanyLocator()
+	{
+		return companyLocator;
 	}
 
 }

@@ -21,7 +21,7 @@ package com.utest.webservice.model.v2;
 
 import java.util.List;
 
-public interface UtestResult<T>
+public interface SearchResultInfo<T>
 {
 	List<T> getRows();
 

@@ -44,7 +44,7 @@ import com.utest.domain.service.UserService;
 import com.utest.webservice.api.v2.CompanyWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.CompanyInfo;
-import com.utest.webservice.model.v2.CompanyResultInfo;
+import com.utest.webservice.model.v2.CompanySearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 @Path("/companies/")
@@ -106,12 +106,12 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.COMPANY_INFO_VIEW)
-	public CompanyResultInfo findCompanies(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
+	public CompanySearchResultInfo findCompanies(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(CompanyInfo.class, request, ui_);
 		final UtestSearchResult result = companyService.findCompanies(search);
 
-		return (CompanyResultInfo) objectBuilderFactory.createResult(CompanyInfo.class, Company.class, request, result, ui_.getBaseUriBuilder());
+		return (CompanySearchResultInfo) objectBuilderFactory.createResult(CompanyInfo.class, Company.class, request, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET

@@ -29,6 +29,7 @@ public class TestRunResultStatus extends LocalizedEntity
 	public static final Integer	PASSED	= new Integer(2);
 	public static final Integer	FAILED	= new Integer(3);
 	public static final Integer	BLOCKED	= new Integer(4);
+	public static final Integer	STARTED	= new Integer(5);
 
 	public TestRunResultStatus()
 	{

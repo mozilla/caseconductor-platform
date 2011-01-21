@@ -42,15 +42,13 @@ public interface TestCaseService
 
 	TestCase getTestCase(Integer testCaseId) throws Exception;
 
-	void deleteTestCase(Integer testCaseId_) throws Exception;
-
 	List<ProductComponent> getComponentsForTestCase(Integer testCaseId_) throws Exception;
 
-	void saveProductComponentsForTestCase(Integer testCaseId_, List<Integer> productComponentIds_) throws Exception;
+	void saveProductComponentsForTestCase(Integer testCaseId_, List<Integer> productComponentIds_, Integer originalVersionId_) throws Exception;
 
-	void deleteTestCaseStep(Integer testCaseStepId_) throws Exception;
+	void deleteTestCaseStep(Integer testCaseStepId_, Integer originalVersionId_) throws Exception;
 
-	void deleteTestCaseVersion(Integer testCaseVersionId_) throws Exception;
+	void deleteTestCaseVersion(Integer testCaseVersionId_, Integer originalVersionId_) throws Exception;
 
 	TestCaseVersion getTestCaseVersion(Integer testCaseVersionId_) throws Exception;
 
@@ -93,18 +91,20 @@ public interface TestCaseService
 
 	TestCaseStep getTestCaseStep(Integer testCaseStepId) throws Exception;
 
-	TestCase saveTestCase(Integer testCaseId, String name, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments) throws Exception;
+	TestCase saveTestCase(Integer testCaseId, String name, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, Integer originalVersionId_) throws Exception;
 
-	TestCaseVersion saveTestCaseVersion(Integer testCaseVersionId, String description, Integer originalVersion, VersionIncrement versionIncrement) throws Exception;
+	TestCaseVersion saveTestCaseVersion(Integer testCaseVersionId, String description, Integer originalVersionId_, VersionIncrement versionIncrement) throws Exception;
 
 	UtestSearchResult findTestCases(UtestSearch search) throws Exception;
 
 	void deleteTestCaseTag(Integer testCaseId, Integer tagId);
 
-	void addTestCaseTag(Integer testCaseId, Integer tagId);
+	void addTestCaseTag(Integer testCaseId, Integer tagId) throws Exception;
 
-	void saveTagsForTestCase(Integer testCaseId, List<Integer> tagIds) throws Exception;
+	void saveTagsForTestCase(Integer testCaseId, List<Integer> tagIds, Integer originalVersionId_) throws Exception;
 
 	void saveEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId, List<Integer> environmentGroupIds, Integer originalVersionId) throws ChangingActivatedEntityException,
 			UnsupportedEnvironmentSelectionException, Exception;
+
+	void deleteTestCase(Integer testCaseId, Integer originalVersionId) throws Exception;
 }
