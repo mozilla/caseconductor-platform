@@ -81,10 +81,12 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.COMPANY_INFO_EDIT })
-	public void deleteCompany(@Context final UriInfo ui_, @PathParam("id") final Integer companyId_, @FormParam("resourceVersionId") final Integer resourceVersionId_)
+	public Boolean deleteCompany(@Context final UriInfo ui_, @PathParam("id") final Integer companyId_, @FormParam("resourceVersionId") final Integer resourceVersionId_)
 			throws Exception
 	{
 		companyService.deleteCompany(companyId_, resourceVersionId_);
+
+		return Boolean.TRUE;
 	}
 
 	@PUT

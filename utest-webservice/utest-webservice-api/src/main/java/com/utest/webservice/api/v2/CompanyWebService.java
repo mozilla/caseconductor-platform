@@ -35,6 +35,5 @@ public interface CompanyWebService
 
 	CompanyInfo getCompany(UriInfo ui, Integer companyId) throws Exception;
 
-	void deleteCompany(UriInfo ui, Integer companyId, Integer resourceVersionId) throws Exception;
-
+	Boolean deleteCompany(UriInfo ui, Integer companyId, Integer resourceVersionId) throws Exception;
 }
