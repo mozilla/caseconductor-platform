@@ -100,13 +100,13 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@DELETE
 	@Path("/environmenttypes/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_EDIT)
-	public Boolean deleteEnvironmentType(@Context final UriInfo ui_, @PathParam("id") final Integer environmentTypeId_) throws Exception
+	public Boolean deleteEnvironmentType(@Context final UriInfo ui_, @PathParam("id") final Integer environmentTypeId_,
+			@FormParam("resourceVersionId") final Integer resourceVersionId_) throws Exception
 	{
-		// TODO - fix version
-		environmentService.deleteEnvironmentType(environmentTypeId_, 0);
+		environmentService.deleteEnvironmentType(environmentTypeId_, resourceVersionId_);
 
 		return Boolean.TRUE;
 	}
@@ -182,13 +182,13 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@DELETE
 	@Path("/environments/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_EDIT)
-	public Boolean deleteEnvironment(@Context final UriInfo ui_, @PathParam("id") final Integer environmentId_) throws Exception
+	public Boolean deleteEnvironment(@Context final UriInfo ui_, @PathParam("id") final Integer environmentId_, @FormParam("resourceVersionId") final Integer resourceVersionId_)
+			throws Exception
 	{
-		// TODO - fix version
-		environmentService.deleteEnvironment(environmentId_, 0);
+		environmentService.deleteEnvironment(environmentId_, resourceVersionId_);
 
 		return Boolean.TRUE;
 	}
@@ -404,13 +404,13 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@DELETE
 	@Path("/environmentgroups/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_EDIT)
-	public Boolean deleteEnvironmentGroup(@Context final UriInfo ui_, @PathParam("id") final Integer environmentGroupId_) throws Exception
+	public Boolean deleteEnvironmentGroup(@Context final UriInfo ui_, @PathParam("id") final Integer environmentGroupId_,
+			@FormParam("resourceVersionId") final Integer resourceVersionId_) throws Exception
 	{
-		// TODO - fix version
-		environmentService.deleteEnvironmentGroup(environmentGroupId_, 0);
+		environmentService.deleteEnvironmentGroup(environmentGroupId_, resourceVersionId_);
 
 		return Boolean.TRUE;
 	}

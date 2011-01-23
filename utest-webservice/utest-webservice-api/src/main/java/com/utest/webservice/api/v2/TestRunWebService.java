@@ -28,6 +28,7 @@ import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.IncludedTestCaseInfo;
 import com.utest.webservice.model.v2.TestRunInfo;
 import com.utest.webservice.model.v2.TestRunSearchResultInfo;
+import com.utest.webservice.model.v2.TestRunTestCaseAssignmentInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface TestRunWebService
@@ -62,5 +63,26 @@ public interface TestRunWebService
 	List<IncludedTestCaseInfo> createTestCasesFromTestPlan(UriInfo ui, Integer testRunId, Integer testPlanId) throws Exception;
 
 	List<IncludedTestCaseInfo> createTestCasesFromTestSuite(UriInfo ui, Integer testRunId, Integer testSuiteId) throws Exception;
+
+	IncludedTestCaseInfo getTestRunTestCase(UriInfo ui, Integer testRunId, Integer includedTestCaseId) throws Exception;
+
+	Boolean updateTestRunTestCaseEnvironmentGroups(UriInfo ui, Integer testRunId, Integer includedTestCaseId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId)
+			throws Exception;
+
+	List<EnvironmentGroupInfo> getTestRunTestCaseEnvironmentGroups(UriInfo ui, Integer testRunId, Integer includedTestCaseId) throws Exception;
+
+	List<TestRunTestCaseAssignmentInfo> getTestRunTestCaseAssignments(UriInfo ui, Integer testRunId, Integer includedTestCaseId) throws Exception;
+
+	TestRunTestCaseAssignmentInfo getTestRunTestCaseAssignment(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId) throws Exception;
+
+	TestRunTestCaseAssignmentInfo createTestRunTestCaseAssignment(UriInfo ui, Integer testRunId, Integer includedTestCaseId, TestRunTestCaseAssignmentInfo assignmentInfo)
+			throws Exception;
+
+	Boolean deleteTestRunTestCaseAssignment(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer originalVesionId) throws Exception;
+
+	Boolean updateTestRunTestCaseAssignmentEnvironmentGroups(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId,
+			ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
+
+	List<EnvironmentGroupInfo> getTestRunTestCaseAssignmentEnvironmentGroups(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId) throws Exception;
 
 }

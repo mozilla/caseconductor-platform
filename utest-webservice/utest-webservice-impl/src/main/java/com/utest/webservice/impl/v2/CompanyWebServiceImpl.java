@@ -78,7 +78,7 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 	@DELETE
 	@Path("/{id}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.COMPANY_INFO_EDIT })
 	public Boolean deleteCompany(@Context final UriInfo ui_, @PathParam("id") final Integer companyId_, @FormParam("resourceVersionId") final Integer resourceVersionId_)

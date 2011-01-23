@@ -112,4 +112,18 @@ public interface TestRunService
 	List<TestRunTestCase> addTestCasesFromTestSuite(Integer testRunId, Integer testSuiteId) throws Exception;
 
 	TestRunTestCase saveTestRunTestCase(Integer includedTestCaseId, Integer priorityId, Integer runOrder, boolean blocking, Integer originalVersionId);
+
+	void saveEnvironmentGroupsForTestRunTestCase(Integer testRunTestCaseId, List<Integer> environmentGroupIds, Integer originalVersionId)
+			throws UnsupportedEnvironmentSelectionException, Exception;
+
+	List<EnvironmentGroup> getEnvironmentGroupsForTestRunTestCase(Integer testRunTestCaseId) throws Exception;
+
+	List<TestRunTestCaseAssignment> getTestRunTestCaseAssignments(Integer testRunTestCaseId) throws Exception;
+
+	TestRunTestCaseAssignment getTestRunTestCaseAssignment(Integer assignmentId) throws Exception;
+
+	void saveEnvironmentGroupsForAssignment(Integer assignmentId, List<Integer> environmentGroupIds, Integer originalVersionId) throws UnsupportedEnvironmentSelectionException,
+			Exception;
+
+	List<EnvironmentGroup> getEnvironmentGroupsForAssignment(Integer assignmentId) throws Exception;
 }

@@ -51,6 +51,7 @@ import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.TestPlanService;
 import com.utest.domain.service.TestRunService;
 import com.utest.domain.service.TestSuiteService;
+import com.utest.domain.service.impl.BaseServiceImpl;
 import com.utest.exception.ActivatingIncompleteEntityException;
 import com.utest.exception.ApprovingIncompleteEntityException;
 import com.utest.exception.ChangingActivatedEntityException;
@@ -182,6 +183,34 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
+	public List<EnvironmentGroup> getEnvironmentGroupsForTestRunTestCase(final Integer testRunTestCaseId_) throws Exception
+	{
+		final TestRunTestCase testRunTestCase = findEntityById(TestRunTestCase.class, testRunTestCaseId_);
+		if (testRunTestCase.getEnvironmentProfileId() != null)
+		{
+			return environmentService.getEnvironmentGroupsForProfile(testRunTestCase.getEnvironmentProfileId());
+		}
+		else
+		{
+			return new ArrayList<EnvironmentGroup>();
+		}
+	}
+
+	@Override
+	public List<EnvironmentGroup> getEnvironmentGroupsForAssignment(final Integer assignmentId_) throws Exception
+	{
+		final TestRunTestCaseAssignment assignment = findEntityById(TestRunTestCaseAssignment.class, assignmentId_);
+		if (assignment.getEnvironmentProfileId() != null)
+		{
+			return environmentService.getEnvironmentGroupsForProfile(assignment.getEnvironmentProfileId());
+		}
+		else
+		{
+			return new ArrayList<EnvironmentGroup>();
+		}
+	}
+
+	@Override
 	public void saveEnvironmentGroupsForTestRun(final Integer testRunId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
 			throws UnsupportedEnvironmentSelectionException, Exception
 	{
@@ -212,6 +241,60 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		testRun.setEnvironmentProfileId(environmentProfile.getId());
 		testRun.setVersion(originalVersionId_);
 		dao.merge(testRun);
+	}
+
+	@Override
+	public void saveEnvironmentGroupsForTestRunTestCase(final Integer testRunTestCaseId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
+			throws UnsupportedEnvironmentSelectionException, Exception
+	{
+		final TestRunTestCase testRunTestCase = findEntityById(TestRunTestCase.class, testRunTestCaseId_);
+		final TestRun testRun = findEntityById(TestRun.class, testRunTestCase.getTestRunId());
+		// cannot change after activation
+		if (!TestRunStatus.PENDING.equals(testRun.getTestRunStatusId()))
+		{
+			throw new ChangingActivatedEntityException(TestRun.class.getSimpleName());
+		}
+		// check that groups are included in the parent profile
+		if (!environmentService.isValidEnvironmentGroupSelectionForProfile(testRun.getEnvironmentProfileId(), environmentGroupIds_))
+		{
+			throw new UnsupportedEnvironmentSelectionException();
+		}
+		// update environment profile
+		final Product product = findEntityById(Product.class, testRun.getProductId());
+		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run test case: " + testRunTestCaseId_,
+				"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
+		testRunTestCase.setEnvironmentProfileId(environmentProfile.getId());
+		testRunTestCase.setVersion(originalVersionId_);
+		dao.merge(testRunTestCase);
+	}
+
+	@Override
+	public void saveEnvironmentGroupsForAssignment(final Integer assignmentId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
+			throws UnsupportedEnvironmentSelectionException, Exception
+	{
+		final TestRunTestCaseAssignment assignment = findEntityById(TestRunTestCaseAssignment.class, assignmentId_);
+		final TestRunTestCase testRunTestCase = findEntityById(TestRunTestCase.class, assignment.getTestRunTestCaseId());
+		final TestRun testRun = findEntityById(TestRun.class, testRunTestCase.getTestRunId());
+		// cannot change after activation
+		if (!TestRunStatus.PENDING.equals(testRun.getTestRunStatusId()))
+		{
+			throw new ChangingActivatedEntityException(TestRun.class.getSimpleName());
+		}
+		// check that groups are included in the parent profile
+		if (!environmentService.isValidEnvironmentGroupSelectionForProfile(testRunTestCase.getEnvironmentProfileId(), environmentGroupIds_))
+		{
+			throw new UnsupportedEnvironmentSelectionException();
+		}
+		// update environment profile
+		final Product product = findEntityById(Product.class, testRun.getProductId());
+		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for assignment: " + assignmentId_,
+				"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
+		assignment.setEnvironmentProfileId(environmentProfile.getId());
+		assignment.setVersion(originalVersionId_);
+		dao.merge(assignment);
+
+		// generate results for new assignment
+		addResultsForAssignment(assignment);
 	}
 
 	@Override
@@ -329,7 +412,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		// TODO - validate if tester from the same company as tested product or
 		// is a community tester?
 		final User tester = findEntityById(User.class, testerId_);
-		assignment.setTesterId(testerId_);
+		assignment.setTesterId(tester.getId());
 		assignment.setEnvironmentProfileId(includedTestCase.getEnvironmentProfileId());
 		final Integer id = dao.addAndReturnId(assignment);
 		return findEntityById(TestRunTestCaseAssignment.class, id);
@@ -338,7 +421,13 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 
 	private void addResultsForAssignment(final TestRunTestCaseAssignment assignment_) throws Exception
 	{
-
+		// delete old results for this assignment if still pending
+		final Search search = new Search(TestRunResult.class);
+		search.addFilterEqual("testRunAssignmentId", assignment_.getId());
+		search.addFilterIn("testRunResultStatusId", TestRunResultStatus.PENDING);
+		List<TestRunResult> results = dao.search(TestRunResult.class, search);
+		dao.delete(results);
+		// insert new results
 		final List<EnvironmentGroup> groups = environmentService.getEnvironmentGroupsForProfile(assignment_.getEnvironmentProfileId());
 		for (final EnvironmentGroup group : groups)
 		{
@@ -475,6 +564,21 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final Search search = new Search(TestRunTestCaseAssignment.class);
 		search.addFilterEqual("testRunId", testRunId_);
 		return dao.search(TestRunTestCaseAssignment.class, search);
+	}
+
+	@Override
+	public List<TestRunTestCaseAssignment> getTestRunTestCaseAssignments(final Integer testRunTestCaseId_) throws Exception
+	{
+		final Search search = new Search(TestRunTestCaseAssignment.class);
+		search.addFilterEqual("testRunTestCaseId", testRunTestCaseId_);
+		return dao.search(TestRunTestCaseAssignment.class, search);
+	}
+
+	@Override
+	public TestRunTestCaseAssignment getTestRunTestCaseAssignment(final Integer assignmentId_) throws Exception
+	{
+		TestRunTestCaseAssignment assignment = findEntityById(TestRunTestCaseAssignment.class, assignmentId_);
+		return assignment;
 	}
 
 	@Override

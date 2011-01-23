@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "testcaseassignment")
 public class TestRunTestCaseAssignmentInfo extends BaseInfo
 {
-	@XmlElement(required = true)
+	@XmlElement(required = false)
 	private Integer			productId;
 	@XmlElement(type = ResourceLocator.class, name = "productLocator")
 	private ResourceLocator	productLocator;
@@ -42,7 +42,7 @@ public class TestRunTestCaseAssignmentInfo extends BaseInfo
 	private Integer			testCaseId;
 	@XmlElement(type = ResourceLocator.class, name = "testCaseLocator")
 	private ResourceLocator	testCaseLocator;
-	@XmlElement(required = true)
+	@XmlElement(required = false)
 	private Integer			testCaseVersionId;
 	@XmlElement(type = ResourceLocator.class, name = "testCaseVersionLocator")
 	private ResourceLocator	testCaseVersionLocator;

@@ -133,7 +133,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		checkForDuplicateStepNumber(testCaseVersionId_, stepNumber_);
 
 		final TestCaseStep step = new TestCaseStep();
-		step.setTestCaseVersionId(testCaseVersionId_);
+		step.setTestCaseVersionId(testCaseVersion.getId());
 		step.setName(name_);
 		step.setStepNumber(stepNumber_);
 		step.setEstimatedTimeInMin(estimatedTimeInMin_);

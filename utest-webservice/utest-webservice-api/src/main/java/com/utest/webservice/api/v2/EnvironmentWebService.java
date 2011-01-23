@@ -65,12 +65,6 @@ public interface EnvironmentWebService
 
 	List<EnvironmentInfo> getEnvironmentGroupEnvironments(UriInfo ui, Integer environmentGroupId, UtestSearchRequest request) throws Exception;
 
-	Boolean deleteEnvironmentType(UriInfo ui, Integer environmentTypeId) throws Exception;
-
-	Boolean deleteEnvironment(UriInfo ui, Integer environmentId) throws Exception;
-
-	Boolean deleteEnvironmentGroup(UriInfo ui, Integer environmentGroupId) throws Exception;
-
 	List<EnvironmentInfo> getEnvironmentTypeEnvironments(UriInfo ui, Integer environmentTypeId, UtestSearchRequest request) throws Exception;
 
 	List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(UriInfo ui, Integer companyId, ArrayList<Integer> environmentIds) throws Exception;
@@ -89,4 +83,10 @@ public interface EnvironmentWebService
 	TagInfo getTag(UriInfo ui, Integer tagId) throws Exception;
 
 	TagSearchResultInfo findTags(UriInfo ui, UtestSearchRequest request) throws Exception;
+
+	Boolean deleteEnvironment(UriInfo ui, Integer environmentId, Integer resourceVersionId) throws Exception;
+
+	Boolean deleteEnvironmentGroup(UriInfo ui, Integer environmentGroupId, Integer resourceVersionId) throws Exception;
+
+	Boolean deleteEnvironmentType(UriInfo ui, Integer environmentTypeId, Integer resourceVersionId) throws Exception;
 }

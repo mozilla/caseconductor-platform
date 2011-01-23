@@ -92,7 +92,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@DELETE
 	@Path("/{id}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
 	public Boolean deleteProduct(@Context final UriInfo ui_, @PathParam("id") final Integer productId) throws Exception
@@ -106,7 +106,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@DELETE
 	@Path("/components/{id}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
 	public Boolean deleteProductComponent(@Context final UriInfo ui_, @PathParam("id") final Integer productComponentId_) throws Exception

@@ -282,7 +282,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@DELETE
 	@Path("/versions/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
 	public Boolean deleteTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
@@ -311,7 +311,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@DELETE
 	@Path("/versions/{id}/steps/{stepId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
 	public Boolean deleteTestCaseStep(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_, @PathParam("stepId") final Integer testCaseStepId_,
@@ -340,7 +340,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@DELETE
 	@Path("/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
 	public Boolean deleteTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_, @FormParam("originalVersionId") final Integer originalVesionId_)

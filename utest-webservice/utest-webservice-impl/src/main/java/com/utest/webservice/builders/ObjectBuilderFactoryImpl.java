@@ -46,6 +46,8 @@ import com.utest.domain.TestCaseVersion;
 import com.utest.domain.TestCycle;
 import com.utest.domain.TestPlan;
 import com.utest.domain.TestRun;
+import com.utest.domain.TestRunResult;
+import com.utest.domain.TestRunTestCaseAssignment;
 import com.utest.domain.TestSuite;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestFilter;
@@ -85,7 +87,11 @@ import com.utest.webservice.model.v2.TestCycleSearchResultInfo;
 import com.utest.webservice.model.v2.TestPlanInfo;
 import com.utest.webservice.model.v2.TestPlanSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunInfo;
+import com.utest.webservice.model.v2.TestRunResultInfo;
+import com.utest.webservice.model.v2.TestRunResultSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunSearchResultInfo;
+import com.utest.webservice.model.v2.TestRunTestCaseAssignmentInfo;
+import com.utest.webservice.model.v2.TestRunTestCaseAssignmentSearchResultInfo;
 import com.utest.webservice.model.v2.TestSuiteInfo;
 import com.utest.webservice.model.v2.TestSuiteSearchResultInfo;
 import com.utest.webservice.model.v2.UserInfo;
@@ -130,7 +136,9 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 		builders.put(TestPlanInfo.class, new Builder<TestPlanInfo, TestPlan>(this, TestPlanInfo.class, TestPlanSearchResultInfo.class));
 		builders.put(TestCycleInfo.class, new Builder<TestCycleInfo, TestCycle>(this, TestCycleInfo.class, TestCycleSearchResultInfo.class));
 		builders.put(TestRunInfo.class, new Builder<TestRunInfo, TestRun>(this, TestRunInfo.class, TestRunSearchResultInfo.class));
-
+		builders.put(TestRunTestCaseAssignmentInfo.class, new Builder<TestRunTestCaseAssignmentInfo, TestRunTestCaseAssignment>(this, TestRunTestCaseAssignmentInfo.class,
+				TestRunTestCaseAssignmentSearchResultInfo.class));
+		builders.put(TestRunResultInfo.class, new Builder<TestRunResultInfo, TestRunResult>(this, TestRunResultInfo.class, TestRunResultSearchResultInfo.class));
 	}
 
 	@SuppressWarnings("unchecked")

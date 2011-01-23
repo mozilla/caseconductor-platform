@@ -64,7 +64,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		// internal users will have company id populated
 		if (companyId_ != null)
 		{
-			final Company company = findEntityById(Company.class, companyId_);
+			findEntityById(Company.class, companyId_);
 		}
 		// check for duplicate email
 		if (getUserByEmail(email_) != null)

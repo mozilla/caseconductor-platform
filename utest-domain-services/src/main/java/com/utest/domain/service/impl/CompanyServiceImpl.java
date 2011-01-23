@@ -53,7 +53,7 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 		checkForDuplicateName(Company.class, name_, null);
 
 		final Company company = new Company();
-		company.setCountryId(countryId_);
+		company.setCountryId(country.getId());
 		company.setName(name_);
 		company.setAddress(address_);
 		company.setCity(city_);

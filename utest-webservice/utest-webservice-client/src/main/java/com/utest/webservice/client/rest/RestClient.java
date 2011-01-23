@@ -117,12 +117,12 @@ public class RestClient
 	{
 		HttpClient httpClient = getClient();
 		httpClient.getState().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(login, password));
-		executeMethod(createGet("users", "login", null));
+		executeMethod(createPut("users", "login", null));
 	}
 
 	public void logout() throws Exception
 	{
-		executeMethod(createGet("users", "logout", null));
+		executeMethod(createPut("users", "logout", null));
 	}
 
 	public int executeMethod(HttpMethod method) throws HttpException, IOException

@@ -106,7 +106,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	{
 		if (!Company.SYSTEM_WIDE_COMPANY_ID.equals(companyId_))
 		{
-			final Company company = findEntityById(Company.class, companyId_);
+			findEntityById(Company.class, companyId_);
 		}
 		// validate type for environment
 		checkValidEnvironmentType(companyId_, environmentTypeId_, false);
@@ -246,7 +246,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	{
 		final Company company = findEntityById(Company.class, companyId_);
 		// validate environmnets velong to the same company
-		checkValidSelectionForCompany(companyId_, environmentIds_, Environment.class);
+		checkValidSelectionForCompany(company.getId(), environmentIds_, Environment.class);
 		// validate type for group
 		checkValidEnvironmentType(companyId_, environmentTypeId_, true);
 
@@ -333,7 +333,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		final EnvironmentProfile profile = new EnvironmentProfile();
 		profile.setName(name_);
 		profile.setDescription(description_);
-		profile.setCompanyId(companyId_);
+		profile.setCompanyId(company.getId());
 		// add profile
 		final Integer profileId = dao.addAndReturnId(profile);
 		// add profile groups
@@ -361,7 +361,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 
 		if (!Company.SYSTEM_WIDE_COMPANY_ID.equals(companyId_))
 		{
-			final Company company = findEntityById(Company.class, companyId_);
+			findEntityById(Company.class, companyId_);
 		}
 		if (parentEnvironmentTypeId_ != null)
 		{

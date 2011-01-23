@@ -162,7 +162,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@DELETE
 	@Path("/{id}/includedtestcases/{includedTestCaseId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
 	public Boolean deleteTestSuiteTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_,
@@ -204,7 +204,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@DELETE
 	@Path("/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_SUITE_EDIT)
 	public Boolean deleteTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_, @FormParam("originalVersionId") final Integer originalVesionId_)

@@ -161,7 +161,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@DELETE
 	@Path("/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_SUITE_EDIT)
 	public Boolean deleteTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("originalVersionId") final Integer originalVesionId_)
