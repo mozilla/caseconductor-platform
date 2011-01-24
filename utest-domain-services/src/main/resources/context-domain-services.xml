@@ -64,6 +64,7 @@
 		<constructor-arg ref="environmentService" />
 		<constructor-arg ref="testPlanService" />
 		<constructor-arg ref="testSuiteService" />
+		<constructor-arg ref="testCaseService" />
 	</bean>
 
 	<bean id="auditService" class="com.utest.domain.service.impl.AuditServiceImpl">

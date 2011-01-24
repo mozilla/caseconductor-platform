@@ -22,7 +22,9 @@ package com.utest.domain.service;
 import java.util.Date;
 import java.util.List;
 
+import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.ProductComponent;
 import com.utest.domain.TestRun;
 import com.utest.domain.TestRunResult;
 import com.utest.domain.TestRunTestCase;
@@ -74,11 +76,7 @@ public interface TestRunService
 
 	TestRunResult approveTestRunResult(Integer testRunResultId, Integer originalVersionId) throws Exception;
 
-	TestRunResult rejectTestRunResult(Integer testRunResultId, Integer originalVersionId) throws Exception;
-
 	TestRunResult startExecutingAssignedTestCase(Integer testRunResultId, Integer originalVersionId) throws Exception;
-
-	TestRunResult finishExecutingAssignedTestCaseWithSuccess(Integer testRunResultId, Integer originalVersionId) throws Exception;
 
 	TestRunResult finishExecutingAssignedTestCaseWithFailure(Integer testRunResultId, Integer failedStepNumber, String actualResult, String comment, Integer originalVersionId)
 			throws Exception;
@@ -126,4 +124,16 @@ public interface TestRunService
 			Exception;
 
 	List<EnvironmentGroup> getEnvironmentGroupsForAssignment(Integer assignmentId) throws Exception;
+
+	List<TestRunResult> getTestRunResultsForAssignment(Integer testRunAssignmentId) throws Exception;
+
+	TestRunResult getTestRunResult(Integer testRunResultId) throws Exception;
+
+	TestRunResult finishExecutingAssignedTestCaseWithSuccess(Integer testRunResultId, String comment, Integer originalVersionId) throws Exception;
+
+	TestRunResult rejectTestRunResult(Integer testRunResultId, String comment, Integer originalVersionId) throws Exception;
+
+	List<Environment> getEnvironmentsForTestResult(Integer resultId) throws Exception;
+
+	List<ProductComponent> getTestRunComponents(Integer testRunId) throws Exception;
 }

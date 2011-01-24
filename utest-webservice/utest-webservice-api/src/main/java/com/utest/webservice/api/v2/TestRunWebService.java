@@ -25,10 +25,15 @@ import java.util.List;
 import javax.ws.rs.core.UriInfo;
 
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
+import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.IncludedTestCaseInfo;
+import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.TestRunInfo;
+import com.utest.webservice.model.v2.TestRunResultInfo;
+import com.utest.webservice.model.v2.TestRunResultSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunTestCaseAssignmentInfo;
+import com.utest.webservice.model.v2.TestRunTestCaseAssignmentSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface TestRunWebService
@@ -84,5 +89,35 @@ public interface TestRunWebService
 			ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
 
 	List<EnvironmentGroupInfo> getTestRunTestCaseAssignmentEnvironmentGroups(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId) throws Exception;
+
+	List<TestRunResultInfo> getTestRunTestCaseAssignmentResults(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId) throws Exception;
+
+	TestRunResultInfo getTestRunResult(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId) throws Exception;
+
+	Boolean startTestRunResultExecution(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId, Integer originalVesionId)
+			throws Exception;
+
+	Boolean finishFailedTestRunResultExecution(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId, TestRunResultInfo resultInfo,
+			Integer originalVersionId) throws Exception;
+
+	Boolean finishSuccessfulTestRunResultExecution(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId, TestRunResultInfo resultInfo,
+			Integer originalVersionId) throws Exception;
+
+	Boolean rejectTestRunResult(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId, String comment, Integer originalVersionId)
+			throws Exception;
+
+	Boolean approveTestRunResult(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId, Integer originalVersionId) throws Exception;
+
+	List<EnvironmentInfo> getTestRunResultEnvironments(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId) throws Exception;
+
+	TestRunTestCaseAssignmentSearchResultInfo findTestRunAssignments(UriInfo ui, UtestSearchRequest request) throws Exception;
+
+	TestRunResultSearchResultInfo findTestRunResults(UriInfo ui, UtestSearchRequest request) throws Exception;
+
+	List<ProductComponentInfo> getTestRunComponents(UriInfo ui, Integer testRunId) throws Exception;
+
+	List<TestRunResultInfo> retestTestRun(UriInfo ui, Integer testRunId, boolean failedResultsOnly) throws Exception;
+
+	TestRunResultInfo retestTestRunResult(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId, Integer testerId) throws Exception;
 
 }

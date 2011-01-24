@@ -26,9 +26,11 @@ import java.util.List;
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.ApprovalStatus;
+import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
+import com.utest.domain.ProductComponent;
 import com.utest.domain.TestCaseStatus;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.TestCycle;
@@ -48,10 +50,10 @@ import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
+import com.utest.domain.service.TestCaseService;
 import com.utest.domain.service.TestPlanService;
 import com.utest.domain.service.TestRunService;
 import com.utest.domain.service.TestSuiteService;
-import com.utest.domain.service.impl.BaseServiceImpl;
 import com.utest.exception.ActivatingIncompleteEntityException;
 import com.utest.exception.ApprovingIncompleteEntityException;
 import com.utest.exception.ChangingActivatedEntityException;
@@ -71,17 +73,20 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	private final EnvironmentService	environmentService;
 	private final TestPlanService		testPlanService;
 	private final TestSuiteService		testSuiteService;
+	private final TestCaseService		testCaseService;
 
 	/**
 	 * Default constructor
 	 */
-	public TestRunServiceImpl(final TypelessDAO dao, final TestPlanService testPlanService, final TestSuiteService testSuiteService, final EnvironmentService environmentService)
+	public TestRunServiceImpl(final TypelessDAO dao, final TestPlanService testPlanService, final TestSuiteService testSuiteService, final TestCaseService testCaseService,
+			final EnvironmentService environmentService)
 	{
 		super(dao);
 		this.dao = dao;
 		this.environmentService = environmentService;
 		this.testPlanService = testPlanService;
 		this.testSuiteService = testSuiteService;
+		this.testCaseService = testCaseService;
 	}
 
 	@Override
@@ -193,6 +198,20 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		else
 		{
 			return new ArrayList<EnvironmentGroup>();
+		}
+	}
+
+	@Override
+	public List<Environment> getEnvironmentsForTestResult(final Integer resultId_) throws Exception
+	{
+		final TestRunResult result = findEntityById(TestRunResult.class, resultId_);
+		if (result.getEnvironmentGroupId() != null)
+		{
+			return environmentService.getEnvironmentsForGroup(result.getEnvironmentGroupId());
+		}
+		else
+		{
+			return new ArrayList<Environment>();
 		}
 	}
 
@@ -567,6 +586,21 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
+	public List<ProductComponent> getTestRunComponents(final Integer testRunId_) throws Exception
+	{
+		List<ProductComponent> components = new ArrayList<ProductComponent>();
+		List<TestRunTestCase> includedTestCases = getTestRunTestCases(testRunId_);
+		if (includedTestCases != null)
+		{
+			for (TestRunTestCase testCase : includedTestCases)
+			{
+				components.addAll(testCaseService.getComponentsForTestCase(testCase.getTestCaseId()));
+			}
+		}
+		return components;
+	}
+
+	@Override
 	public List<TestRunTestCaseAssignment> getTestRunTestCaseAssignments(final Integer testRunTestCaseId_) throws Exception
 	{
 		final Search search = new Search(TestRunTestCaseAssignment.class);
@@ -579,6 +613,20 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	{
 		TestRunTestCaseAssignment assignment = findEntityById(TestRunTestCaseAssignment.class, assignmentId_);
 		return assignment;
+	}
+
+	@Override
+	public List<TestRunResult> getTestRunResultsForAssignment(final Integer testRunAssignmentId_) throws Exception
+	{
+		final Search search = new Search(TestRunResult.class);
+		search.addFilterEqual("testRunAssignmentId", testRunAssignmentId_);
+		return dao.search(TestRunResult.class, search);
+	}
+
+	@Override
+	public TestRunResult getTestRunResult(final Integer testRunResultId_) throws Exception
+	{
+		return findEntityById(TestRunResult.class, testRunResultId_);
 	}
 
 	@Override
@@ -648,13 +696,13 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public TestRunResult approveTestRunResult(final Integer testRunResultId_, final Integer originalVersionId_) throws Exception
 	{
-		return updateApprovalStatus(testRunResultId_, ApprovalStatus.APPROVED, originalVersionId_);
+		return updateApprovalStatus(testRunResultId_, null, ApprovalStatus.APPROVED, originalVersionId_);
 	}
 
 	@Override
-	public TestRunResult rejectTestRunResult(final Integer testRunResultId_, final Integer originalVersionId_) throws Exception
+	public TestRunResult rejectTestRunResult(final Integer testRunResultId_, final String comment_, final Integer originalVersionId_) throws Exception
 	{
-		return updateApprovalStatus(testRunResultId_, ApprovalStatus.REJECTED, originalVersionId_);
+		return updateApprovalStatus(testRunResultId_, comment_, ApprovalStatus.REJECTED, originalVersionId_);
 	}
 
 	@Override
@@ -697,7 +745,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public TestRunResult finishExecutingAssignedTestCaseWithSuccess(final Integer testRunResultId_, final Integer originalVersionId_) throws Exception
+	public TestRunResult finishExecutingAssignedTestCaseWithSuccess(final Integer testRunResultId_, final String comment_, final Integer originalVersionId_) throws Exception
 	{
 		final TestRunResult result = findEntityById(TestRunResult.class, testRunResultId_);
 		if (!TestRunResultStatus.PASSED.equals(result.getTestRunResultStatusId()))
@@ -917,7 +965,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		}
 	}
 
-	private TestRunResult updateApprovalStatus(final Integer testRunResultId_, final Integer approvalStatus_, final Integer originalVersionId_) throws Exception
+	private TestRunResult updateApprovalStatus(final Integer testRunResultId_, final String comment_, final Integer approvalStatus_, final Integer originalVersionId_)
+			throws Exception
 	{
 		final TestRunResult result = findEntityById(TestRunResult.class, testRunResultId_);
 		if (approvalStatus_ != result.getApprovalStatusId())
@@ -936,6 +985,10 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			result.setApprovalStatusId(approvalStatus_);
 			result.setApproveDate(new Date());
 			result.setApprovedBy(getCurrentUserId());
+			if (comment_ != null)
+			{
+				result.setComment(result.getComment() + "\r\n" + getCurrentUserId() + ": " + comment_);
+			}
 			return dao.merge(result);
 		}
 		else

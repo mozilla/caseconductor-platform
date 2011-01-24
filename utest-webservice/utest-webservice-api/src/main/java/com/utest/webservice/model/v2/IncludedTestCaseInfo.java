@@ -44,6 +44,14 @@ public class IncludedTestCaseInfo extends BaseInfo
 	private Integer			runOrder	= 0;
 	@XmlElement(required = false)
 	private boolean			blocking	= false;
+	@XmlElement(required = false)
+	private Integer			testRunId;
+	@XmlElement(type = ResourceLocator.class, name = "testRunLocator")
+	private ResourceLocator	testRunLocator;
+	@XmlElement(required = false)
+	private Integer			testSuiteId;
+	@XmlElement(type = ResourceLocator.class, name = "testSuiteLocator")
+	private ResourceLocator	testSuiteLocator;
 
 	public Integer getPriorityId()
 	{
@@ -113,5 +121,45 @@ public class IncludedTestCaseInfo extends BaseInfo
 	public ResourceLocator getTestCaseVersionLocator()
 	{
 		return testCaseVersionLocator;
+	}
+
+	public Integer getTestRunId()
+	{
+		return testRunId;
+	}
+
+	public void setTestRunId(Integer testRunId)
+	{
+		this.testRunId = testRunId;
+	}
+
+	public ResourceLocator getTestRunLocator()
+	{
+		return testRunLocator;
+	}
+
+	public void setTestRunLocator(ResourceLocator testRunLocator)
+	{
+		this.testRunLocator = testRunLocator;
+	}
+
+	public Integer getTestSuiteId()
+	{
+		return testSuiteId;
+	}
+
+	public void setTestSuiteId(Integer testSuiteId)
+	{
+		this.testSuiteId = testSuiteId;
+	}
+
+	public ResourceLocator getTestSuiteLocator()
+	{
+		return testSuiteLocator;
+	}
+
+	public void setTestSuiteLocator(ResourceLocator testSuiteLocator)
+	{
+		this.testSuiteLocator = testSuiteLocator;
 	}
 }

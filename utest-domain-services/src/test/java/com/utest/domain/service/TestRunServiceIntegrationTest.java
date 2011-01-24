@@ -139,7 +139,7 @@ public class TestRunServiceIntegrationTest extends BaseDomainServiceIntegrationT
 
 		final List<TestRunResult> testRunResults = testRunService.getTestRunResults(16, 1, 51);
 		TestRunResult testRunResult = testRunResults.get(0);
-		testRunResult = testRunService.finishExecutingAssignedTestCaseWithSuccess(testRunResult.getId(), testRunResult.getVersion());
+		testRunResult = testRunService.finishExecutingAssignedTestCaseWithSuccess(testRunResult.getId(), null, testRunResult.getVersion());
 
 		// try to execute un-blocked test case
 		testRunResult = testRunResults.get(1);
