@@ -21,8 +21,9 @@ package com.utest.domain;
 
 import java.security.Principal;
 import java.util.Date;
+import java.io.Serializable;
 
-public class AuthenticatedUserInfo implements Principal
+public class AuthenticatedUserInfo implements Principal, Serializable
 {
 	private final Integer	userId;
 	private final Integer	impsersonatedUserId;
