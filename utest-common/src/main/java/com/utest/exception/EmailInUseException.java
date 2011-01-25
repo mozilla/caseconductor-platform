@@ -26,4 +26,9 @@ public class EmailInUseException extends DomainException
 	{
 		super(DomainErrorMessage.emailInUse);
 	}
+	
+	public EmailInUseException(final String message_)
+	{
+		super(DomainErrorMessage.emailInUse, message_);
+	}
 }

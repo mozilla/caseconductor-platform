@@ -26,4 +26,9 @@ public class ScreenNameInUseException extends DomainException
 	{
 		super(DomainErrorMessage.screenNameInUse);
 	}
+	
+	public ScreenNameInUseException(final String message_)
+	{
+		super(DomainErrorMessage.screenNameInUse, message_);
+	}
 }

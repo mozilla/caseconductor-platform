@@ -69,12 +69,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		// check for duplicate email
 		if (getUserByEmail(email_) != null)
 		{
-			throw new EmailInUseException();
+			throw new EmailInUseException("Email is used: " + email_);
 		}
 		// check for duplicate screen name
 		if (getUserByScreenName(screenName_) != null)
 		{
-			throw new ScreenNameInUseException();
+			throw new ScreenNameInUseException("Screen name is used: " + screenName_);
 		}
 		final User user = new User();
 		user.setCompanyId(companyId_);

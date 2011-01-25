@@ -121,12 +121,12 @@ public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingIntercep
 			final ValidationException ve = (ValidationException) fault.getCause();
 			for (final String errmsg : ve.getMessageKeys())
 			{
-				sb.append(createError(type, errmsg));
+				sb.append(createError(type, fault.getCause(), errmsg));
 			}
 		}
 		else
 		{
-			sb.append(createError(type, fault.getCause().getMessage()));
+			sb.append(createError(type, fault.getCause(), fault.getCause().getMessage()));
 		}
 
 		if ((fault.getCause() instanceof org.apache.cxf.interceptor.security.AccessDeniedException)
@@ -212,9 +212,9 @@ public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingIntercep
 		return sb.toString();
 	}
 
-	private String createError(final int type, String msg)
+	private String createError(final int type, Throwable error, String msg)
 	{
-		msg = translateError(msg);
+		msg = translateError(error, msg);
 		switch (type)
 		{
 			case TYPE_XML:
@@ -252,8 +252,23 @@ public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingIntercep
 		}
 	}
 
-	private String translateError(final String err)
+	private String translateError(Throwable error, final String message)
 	{
-		return err;
+		if (message == null)
+		{
+			if (error != null)
+			{
+				return error.getClass().getSimpleName();
+			}
+			else
+			{
+				return null;
+			}
+		}
+		else
+		{
+			return message;
+		}
+
 	}
 }
