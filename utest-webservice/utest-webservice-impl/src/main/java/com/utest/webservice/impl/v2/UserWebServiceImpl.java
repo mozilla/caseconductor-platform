@@ -221,7 +221,6 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.USER_ACCOUNT_VIEW)
 	public UserInfo getCurrentUser(@Context final UriInfo ui_) throws Exception
 	{
 		final User user = userService.getCurrentUser();
