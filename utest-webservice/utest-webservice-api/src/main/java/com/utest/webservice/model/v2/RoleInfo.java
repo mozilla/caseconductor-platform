@@ -32,8 +32,10 @@ public class RoleInfo extends BaseInfo
 {
 	@XmlElement(required = true)
 	private String			name;
-	@XmlElement(required = true)
+	@XmlElement(required = false)
 	private Integer			companyId;
+	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
+	private ResourceLocator	companyLocator;
 	@XmlElement(required = false)
 	private final Integer	sortOrder	= 0;
 
@@ -60,6 +62,16 @@ public class RoleInfo extends BaseInfo
 	public Integer getSortOrder()
 	{
 		return sortOrder;
+	}
+
+	public void setCompanyLocator(ResourceLocator companyLocator)
+	{
+		this.companyLocator = companyLocator;
+	}
+
+	public ResourceLocator getCompanyLocator()
+	{
+		return companyLocator;
 	}
 
 }

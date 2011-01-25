@@ -45,6 +45,8 @@
                 <entry key="environmenttype" value="/environmenttypes/{id}"/>
                 <entry key="company" value="/companies/{id}"/>
                 <entry key="user" value="/users/{id}"/>
+                <entry key="accessrole" value="/users/roles/{id}"/>
+                <entry key="permission" value="/users/permissions/{id}"/>
                 <entry key="tester" value="/users/{id}"/>
                 <entry key="product" value="/products/{id}"/>
                 <entry key="productcomponent" value="/products/components/{id}"/>
