@@ -568,7 +568,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	// /////// TEST RUN COVERAGE RELATED //////////////
 
 	@GET
-	@Path("/coverage/assignments/")
+	@Path("/assignments/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -583,7 +583,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@GET
-	@Path("/coverage/results/")
+	@Path("/results/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
