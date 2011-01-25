@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import com.utest.domain.AccessRole;
 import com.utest.domain.User;
@@ -74,7 +73,7 @@ public class UserServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 		Assert.assertTrue(permissions != null);
 	}
 
-	@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testSaveUserRoles() throws Exception
 	{
 		User user = userService.getUser(1);

@@ -3,6 +3,8 @@
 	<name>utest-webservice-client</name>
 	<comment></comment>
 	<projects>
+		<project>utest-webservice-api</project>
+		<project>utest-webservice-impl</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
