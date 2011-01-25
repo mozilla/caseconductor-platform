@@ -84,9 +84,9 @@ public interface EnvironmentWebService
 
 	TagSearchResultInfo findTags(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	Boolean deleteEnvironment(UriInfo ui, Integer environmentId, Integer resourceVersionId) throws Exception;
+	Boolean deleteEnvironment(UriInfo ui, Integer environmentId, Integer originalVersionId) throws Exception;
 
-	Boolean deleteEnvironmentGroup(UriInfo ui, Integer environmentGroupId, Integer resourceVersionId) throws Exception;
+	Boolean deleteEnvironmentGroup(UriInfo ui, Integer environmentGroupId, Integer originalVersionId) throws Exception;
 
-	Boolean deleteEnvironmentType(UriInfo ui, Integer environmentTypeId, Integer resourceVersionId) throws Exception;
+	Boolean deleteEnvironmentType(UriInfo ui, Integer environmentTypeId, Integer originalVersionId) throws Exception;
 }

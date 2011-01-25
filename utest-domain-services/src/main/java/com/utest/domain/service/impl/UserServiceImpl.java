@@ -378,7 +378,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	public void addUserRole(final Integer roleId_, final Integer userId_, final Integer originalVersionId_)
 	{
 		final User user = findEntityById(User.class, userId_);
-		@SuppressWarnings("unused")
 		final AccessRole role = findEntityById(AccessRole.class, roleId_);
 		if (AccessRole.getProtectedSystemRoleIds().contains(roleId_))
 		{
@@ -386,12 +385,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		}
 		final Search search = new Search(UserRole.class);
 		search.addFilterEqual("accessRoleId", roleId_);
-		search.addFilterEqual("userId", userId_);
+		search.addFilterEqual("userId", user.getId());
 		UserRole userRole = (UserRole) dao.searchUnique(UserRole.class, search);
 		if (userRole == null)
 		{
 			userRole = new UserRole();
-			userRole.setAccessRoleId(roleId_);
+			userRole.setAccessRoleId(role.getId());
 			userRole.setUserId(userId_);
 			dao.addAndReturnId(userRole);
 

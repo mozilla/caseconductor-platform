@@ -33,8 +33,6 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface ProductWebService
 {
-	Boolean deleteProduct(UriInfo ui, Integer productId) throws Exception;
-
 	ProductInfo updateProduct(UriInfo ui, Integer productId, ProductInfo productInfo) throws Exception;
 
 	ProductInfo getProduct(UriInfo ui, Integer productId) throws Exception;
@@ -44,8 +42,6 @@ public interface ProductWebService
 	ProductInfo createProduct(UriInfo ui, ProductInfo productInfo) throws Exception;
 
 	ProductComponentInfo createProductComponent(UriInfo ui, Integer productId, ProductComponentInfo productComponentInfo) throws Exception;
-
-	Boolean deleteProductComponent(UriInfo ui, Integer productComponentId) throws Exception;
 
 	ProductComponentInfo updateProductComponent(UriInfo ui, Integer productComponentId, ProductComponentInfo productComponentInfo) throws Exception;
 
@@ -64,5 +60,9 @@ public interface ProductWebService
 
 	List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(UriInfo ui, Integer productId, Integer environmentTypeId, ArrayList<Integer> environmentIds,
 			Integer originalVesionId) throws Exception;
+
+	Boolean deleteProduct(UriInfo ui, Integer productId, Integer originalVersionId) throws Exception;
+
+	Boolean deleteProductComponent(UriInfo ui, Integer productComponentId, Integer originalVersionId) throws Exception;
 
 }

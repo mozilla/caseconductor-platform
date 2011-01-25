@@ -104,9 +104,9 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Override
 	@Secured(Permission.ENVIRONMENT_EDIT)
 	public Boolean deleteEnvironmentType(@Context final UriInfo ui_, @PathParam("id") final Integer environmentTypeId_,
-			@FormParam("resourceVersionId") final Integer resourceVersionId_) throws Exception
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		environmentService.deleteEnvironmentType(environmentTypeId_, resourceVersionId_);
+		environmentService.deleteEnvironmentType(environmentTypeId_, originalVersionId_);
 
 		return Boolean.TRUE;
 	}
@@ -185,10 +185,10 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_EDIT)
-	public Boolean deleteEnvironment(@Context final UriInfo ui_, @PathParam("id") final Integer environmentId_, @FormParam("resourceVersionId") final Integer resourceVersionId_)
+	public Boolean deleteEnvironment(@Context final UriInfo ui_, @PathParam("id") final Integer environmentId_, @FormParam("originalVersionId") final Integer originalVersionId_)
 			throws Exception
 	{
-		environmentService.deleteEnvironment(environmentId_, resourceVersionId_);
+		environmentService.deleteEnvironment(environmentId_, originalVersionId_);
 
 		return Boolean.TRUE;
 	}
@@ -408,9 +408,9 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Override
 	@Secured(Permission.ENVIRONMENT_EDIT)
 	public Boolean deleteEnvironmentGroup(@Context final UriInfo ui_, @PathParam("id") final Integer environmentGroupId_,
-			@FormParam("resourceVersionId") final Integer resourceVersionId_) throws Exception
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		environmentService.deleteEnvironmentGroup(environmentGroupId_, resourceVersionId_);
+		environmentService.deleteEnvironmentGroup(environmentGroupId_, originalVersionId_);
 
 		return Boolean.TRUE;
 	}

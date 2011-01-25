@@ -95,10 +95,10 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
-	public Boolean deleteProduct(@Context final UriInfo ui_, @PathParam("id") final Integer productId) throws Exception
+	public Boolean deleteProduct(@Context final UriInfo ui_, @PathParam("id") final Integer productId, @FormParam("originalVersionId") final Integer originalVersionId_)
+			throws Exception
 	{
-		// TODO - fix version
-		productService.deleteProduct(productId, 0);
+		productService.deleteProduct(productId, originalVersionId_);
 
 		return Boolean.TRUE;
 	}
@@ -109,10 +109,10 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
-	public Boolean deleteProductComponent(@Context final UriInfo ui_, @PathParam("id") final Integer productComponentId_) throws Exception
+	public Boolean deleteProductComponent(@Context final UriInfo ui_, @PathParam("id") final Integer productComponentId_,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		// TODO - fix version
-		productService.deleteProductComponent(productComponentId_, 0);
+		productService.deleteProductComponent(productComponentId_, originalVersionId_);
 
 		return Boolean.TRUE;
 	}

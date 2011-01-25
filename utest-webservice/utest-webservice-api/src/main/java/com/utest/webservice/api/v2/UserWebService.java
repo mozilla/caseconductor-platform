@@ -58,34 +58,34 @@ public interface UserWebService
 
 	RoleInfo createRole(UriInfo ui, RoleInfo roleInfo) throws Exception;
 
-	Boolean updateRolePermissions(UriInfo ui, Integer roleId, ArrayList<Integer> permissionIds) throws Exception;
-
-	Boolean addRolePermission(UriInfo ui, Integer roleId, Integer permissionId) throws Exception;
-
-	Boolean deleteRolePermission(UriInfo ui, Integer roleId, Integer permissionId) throws Exception;
-
-	Boolean addUserRole(UriInfo ui, Integer userId, Integer roleId) throws Exception;
-
-	Boolean updateUserRoles(UriInfo ui, Integer userId, ArrayList<Integer> roleIds) throws Exception;
-
-	Boolean deleteUserRole(UriInfo ui, Integer userId, Integer roleId) throws Exception;
-
 	Boolean login(MessageContext context) throws Exception;
 
 	Boolean logout(MessageContext context) throws Exception;
 
 	UserInfo getCurrentUser(UriInfo ui) throws Exception;
 
-	UserInfo activateUser(UriInfo ui, Integer userId, Integer resourceVersionId) throws Exception;
+	UserInfo activateUser(UriInfo ui, Integer userId, Integer originalVersionId) throws Exception;
 
-	UserInfo deactivateUser(UriInfo ui, Integer userId, Integer resourceVersionId) throws Exception;
+	UserInfo deactivateUser(UriInfo ui, Integer userId, Integer originalVersionId) throws Exception;
 
-	UserInfo changeUserEmail(UriInfo ui, Integer userId, String newEmail, Integer resourceVersionId) throws Exception;
+	UserInfo changeUserEmail(UriInfo ui, Integer userId, String newEmail, Integer originalVersionId) throws Exception;
 
-	UserInfo changeUserPassword(UriInfo ui, Integer userId, String newPassword, Integer resourceVersionId) throws Exception;
+	UserInfo changeUserPassword(UriInfo ui, Integer userId, String newPassword, Integer originalVersionId) throws Exception;
 
-	Boolean deleteRole(UriInfo ui, Integer roleId, Integer resourceVersionId) throws Exception;
+	Boolean deleteRole(UriInfo ui, Integer roleId, Integer originalVersionId) throws Exception;
 
-	UserInfo confirmUserEmail(UriInfo ui, Integer userId, Integer resourceVersionId) throws Exception;
+	UserInfo confirmUserEmail(UriInfo ui, Integer userId, Integer originalVersionId) throws Exception;
+
+	Boolean deleteUserRole(UriInfo ui, Integer userId, Integer roleId, Integer originalVersionId) throws Exception;
+
+	Boolean deleteRolePermission(UriInfo ui, Integer roleId, Integer permissionId, Integer originalVersionId) throws Exception;
+
+	Boolean addRolePermission(UriInfo ui, Integer roleId, Integer permissionId, Integer originalVersionId) throws Exception;
+
+	Boolean addUserRole(UriInfo ui, Integer userId, Integer roleId, Integer originalVersionId) throws Exception;
+
+	Boolean updateRolePermissions(UriInfo ui, Integer roleId, ArrayList<Integer> permissionIds, Integer originalVersionId) throws Exception;
+
+	Boolean updateUserRoles(UriInfo ui, Integer userId, ArrayList<Integer> roleIds, Integer originalVersionId) throws Exception;
 
 }
