@@ -41,10 +41,12 @@ import com.utest.exception.DeletingActivatedEntityException;
 import com.utest.exception.DeletingUsedEntityException;
 import com.utest.exception.DuplicateNameException;
 import com.utest.exception.DuplicateTestCaseStepException;
+import com.utest.exception.EmailInUseException;
 import com.utest.exception.IncludingMultileVersionsOfSameEntityException;
 import com.utest.exception.IncludingNotActivatedEntityException;
 import com.utest.exception.InvalidParentChildEnvironmentException;
 import com.utest.exception.NotFoundException;
+import com.utest.exception.ScreenNameInUseException;
 import com.utest.exception.TestCaseExecutionBlockedException;
 import com.utest.exception.TestCaseExecutionWithoutRestartException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
@@ -140,7 +142,14 @@ public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingIntercep
 		{
 			responseCode = HttpURLConnection.HTTP_CONFLICT;// conflict
 		}
-
+		else if (fault.getCause() instanceof EmailInUseException)
+		{
+			responseCode = HttpURLConnection.HTTP_CONFLICT;// conflict
+		}
+		else if (fault.getCause() instanceof ScreenNameInUseException)
+		{
+			responseCode = HttpURLConnection.HTTP_CONFLICT;// conflict
+		}
 		else if (fault.getCause() instanceof InvalidParentChildEnvironmentException)
 		{
 			responseCode = HttpURLConnection.HTTP_CONFLICT;// conflict
