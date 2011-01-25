@@ -8,6 +8,9 @@
             <column name="testCaseStepId" />
             <generator class="identity" />
         </id>
+        <version name="version" type="java.lang.Integer">
+            <column name="version" not-null="true" />
+        </version>
         <property name="testCaseVersionId" type="java.lang.Integer">
             <column name="testCaseVersionId" not-null="true">
                 <comment>Associated test case id.</comment>
