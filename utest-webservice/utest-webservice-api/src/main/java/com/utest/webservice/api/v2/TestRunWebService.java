@@ -27,6 +27,7 @@ import javax.ws.rs.core.UriInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.IncludedTestCaseInfo;
+import com.utest.webservice.model.v2.IncludedTestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.TestRunInfo;
 import com.utest.webservice.model.v2.TestRunResultInfo;
@@ -55,60 +56,15 @@ public interface TestRunWebService
 
 	IncludedTestCaseInfo createTestRunTestCase(UriInfo ui, Integer testRunId, IncludedTestCaseInfo testCaseInfo) throws Exception;
 
-	IncludedTestCaseInfo updateTestRunTestCase(UriInfo ui, Integer testRunId, Integer includedTestCaseId, IncludedTestCaseInfo includedTestCaseInfo) throws Exception;
-
 	TestRunInfo activateTestRun(UriInfo ui, Integer testRunId, Integer originalVesionId) throws Exception;
 
 	TestRunInfo deactivateTestRun(UriInfo ui, Integer testRunId, Integer originalVesionId) throws Exception;
-
-	Boolean deleteTestRunTestCase(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer originalVesionId) throws Exception;
 
 	Boolean deleteTestRun(UriInfo ui, Integer testRunId, Integer originalVesionId) throws Exception;
 
 	List<IncludedTestCaseInfo> createTestCasesFromTestPlan(UriInfo ui, Integer testRunId, Integer testPlanId) throws Exception;
 
 	List<IncludedTestCaseInfo> createTestCasesFromTestSuite(UriInfo ui, Integer testRunId, Integer testSuiteId) throws Exception;
-
-	IncludedTestCaseInfo getTestRunTestCase(UriInfo ui, Integer testRunId, Integer includedTestCaseId) throws Exception;
-
-	Boolean updateTestRunTestCaseEnvironmentGroups(UriInfo ui, Integer testRunId, Integer includedTestCaseId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId)
-			throws Exception;
-
-	List<EnvironmentGroupInfo> getTestRunTestCaseEnvironmentGroups(UriInfo ui, Integer testRunId, Integer includedTestCaseId) throws Exception;
-
-	List<TestRunTestCaseAssignmentInfo> getTestRunTestCaseAssignments(UriInfo ui, Integer testRunId, Integer includedTestCaseId) throws Exception;
-
-	TestRunTestCaseAssignmentInfo getTestRunTestCaseAssignment(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId) throws Exception;
-
-	TestRunTestCaseAssignmentInfo createTestRunTestCaseAssignment(UriInfo ui, Integer testRunId, Integer includedTestCaseId, TestRunTestCaseAssignmentInfo assignmentInfo)
-			throws Exception;
-
-	Boolean deleteTestRunTestCaseAssignment(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer originalVesionId) throws Exception;
-
-	Boolean updateTestRunTestCaseAssignmentEnvironmentGroups(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId,
-			ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
-
-	List<EnvironmentGroupInfo> getTestRunTestCaseAssignmentEnvironmentGroups(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId) throws Exception;
-
-	List<TestRunResultInfo> getTestRunTestCaseAssignmentResults(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId) throws Exception;
-
-	TestRunResultInfo getTestRunResult(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId) throws Exception;
-
-	Boolean startTestRunResultExecution(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId, Integer originalVesionId)
-			throws Exception;
-
-	Boolean finishFailedTestRunResultExecution(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId, TestRunResultInfo resultInfo,
-			Integer originalVersionId) throws Exception;
-
-	Boolean finishSuccessfulTestRunResultExecution(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId, TestRunResultInfo resultInfo,
-			Integer originalVersionId) throws Exception;
-
-	Boolean rejectTestRunResult(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId, String comment, Integer originalVersionId)
-			throws Exception;
-
-	Boolean approveTestRunResult(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId, Integer originalVersionId) throws Exception;
-
-	List<EnvironmentInfo> getTestRunResultEnvironments(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId) throws Exception;
 
 	TestRunTestCaseAssignmentSearchResultInfo findTestRunAssignments(UriInfo ui, UtestSearchRequest request) throws Exception;
 
@@ -118,6 +74,46 @@ public interface TestRunWebService
 
 	List<TestRunResultInfo> retestTestRun(UriInfo ui, Integer testRunId, boolean failedResultsOnly) throws Exception;
 
-	TestRunResultInfo retestTestRunResult(UriInfo ui, Integer testRunId, Integer includedTestCaseId, Integer assignmentId, Integer resultId, Integer testerId) throws Exception;
+	IncludedTestCaseInfo getTestRunTestCase(UriInfo ui, Integer includedTestCaseId) throws Exception;
+
+	Boolean deleteTestRunTestCase(UriInfo ui, Integer includedTestCaseId, Integer originalVersionId) throws Exception;
+
+	IncludedTestCaseInfo updateTestRunTestCase(UriInfo ui, Integer includedTestCaseId, IncludedTestCaseInfo includedTestCaseInfo) throws Exception;
+
+	Boolean updateTestRunTestCaseEnvironmentGroups(UriInfo ui, Integer includedTestCaseId, ArrayList<Integer> environmentGroupIds, Integer originalVersionId) throws Exception;
+
+	List<EnvironmentGroupInfo> getTestRunTestCaseEnvironmentGroups(UriInfo ui, Integer includedTestCaseId) throws Exception;
+
+	List<TestRunTestCaseAssignmentInfo> getTestRunTestCaseAssignments(UriInfo ui, Integer includedTestCaseId) throws Exception;
+
+	TestRunTestCaseAssignmentInfo createTestRunTestCaseAssignment(UriInfo ui, Integer includedTestCaseId, TestRunTestCaseAssignmentInfo assignmentInfo) throws Exception;
+
+	TestRunTestCaseAssignmentInfo getTestRunTestCaseAssignment(UriInfo ui, Integer assignmentId) throws Exception;
+
+	Boolean deleteTestRunTestCaseAssignment(UriInfo ui, Integer assignmentId, Integer originalVersionId) throws Exception;
+
+	Boolean updateTestRunTestCaseAssignmentEnvironmentGroups(UriInfo ui, Integer assignmentId, ArrayList<Integer> environmentGroupIds, Integer originalVersionId) throws Exception;
+
+	List<EnvironmentGroupInfo> getTestRunTestCaseAssignmentEnvironmentGroups(UriInfo ui, Integer assignmentId) throws Exception;
+
+	List<TestRunResultInfo> getTestRunTestCaseAssignmentResults(UriInfo ui, Integer assignmentId) throws Exception;
+
+	TestRunResultInfo retestTestRunResult(UriInfo ui, Integer resultId, Integer testerId) throws Exception;
+
+	TestRunResultInfo getTestRunResult(UriInfo ui, Integer resultId) throws Exception;
+
+	Boolean startTestRunResultExecution(UriInfo ui, Integer resultId, Integer originalVersionId) throws Exception;
+
+	Boolean finishFailedTestRunResultExecution(UriInfo ui, Integer resultId, TestRunResultInfo resultInfo, Integer originalVersionId) throws Exception;
+
+	Boolean finishSuccessfulTestRunResultExecution(UriInfo ui, Integer resultId, TestRunResultInfo resultInfo, Integer originalVersionId) throws Exception;
+
+	Boolean approveTestRunResult(UriInfo ui, Integer resultId, Integer originalVersionId) throws Exception;
+
+	Boolean rejectTestRunResult(UriInfo ui, Integer resultId, String comment, Integer originalVersionId) throws Exception;
+
+	List<EnvironmentInfo> getTestRunResultEnvironments(UriInfo ui, Integer resultId) throws Exception;
+
+	IncludedTestCaseSearchResultInfo findTestRunTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 }

@@ -157,6 +157,13 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	}
 
 	@Override
+	public TestPlanTestSuite getTestPlanTestSuite(final Integer testPlanTestSuiteId_) throws Exception
+	{
+		final TestPlanTestSuite testPlanTestSuite = findEntityById(TestPlanTestSuite.class, testPlanTestSuiteId_);
+		return testPlanTestSuite;
+	}
+
+	@Override
 	public List<TestPlanTestSuite> getTestPlanTestSuites(final Integer testPlanId_) throws Exception
 	{
 		if (testPlanId_ == null)

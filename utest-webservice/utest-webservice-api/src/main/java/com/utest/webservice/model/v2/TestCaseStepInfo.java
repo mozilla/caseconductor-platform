@@ -31,15 +31,19 @@ import javax.xml.bind.annotation.XmlType;
 public class TestCaseStepInfo extends BaseInfo
 {
 	@XmlElement(required = true)
-	private Integer	stepNumber;
+	private Integer			stepNumber;
 	@XmlElement(required = true)
-	private String	name;
+	private String			name;
 	@XmlElement(required = true)
-	private String	instruction;
+	private String			instruction;
 	@XmlElement(required = true)
-	private String	expectedResult;
+	private String			expectedResult;
 	@XmlElement(required = false)
-	private Integer	estimatedTimeInMin;
+	private Integer			estimatedTimeInMin;
+	@XmlElement(required = true)
+	private Integer			testCaseVersionId;
+	@XmlElement(type = ResourceLocator.class, name = "testCaseVersionLocator")
+	private ResourceLocator	testCaseVersionLocator;
 
 	public Integer getStepNumber()
 	{
@@ -89,5 +93,25 @@ public class TestCaseStepInfo extends BaseInfo
 	public void setEstimatedTimeInMin(Integer estimatedTimeInMin)
 	{
 		this.estimatedTimeInMin = estimatedTimeInMin;
+	}
+
+	public Integer getTestCaseVersionId()
+	{
+		return testCaseVersionId;
+	}
+
+	public void setTestCaseVersionId(Integer testCaseVersionId)
+	{
+		this.testCaseVersionId = testCaseVersionId;
+	}
+
+	public ResourceLocator getTestCaseVersionLocator()
+	{
+		return testCaseVersionLocator;
+	}
+
+	public void setTestCaseVersionLocator(ResourceLocator testCaseVersionLocator)
+	{
+		this.testCaseVersionLocator = testCaseVersionLocator;
 	}
 }

@@ -542,6 +542,12 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
+	public UtestSearchResult findTestRunTestCases(final UtestSearch search_) throws Exception
+	{
+		return dao.getBySearch(TestRunTestCase.class, search_);
+	}
+
+	@Override
 	public UtestSearchResult findTestRunResults(final UtestSearch search_) throws Exception
 	{
 		return dao.getBySearch(TestRunResult.class, search_);

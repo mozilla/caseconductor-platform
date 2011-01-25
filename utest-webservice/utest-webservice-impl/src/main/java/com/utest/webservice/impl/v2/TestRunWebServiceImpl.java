@@ -54,6 +54,7 @@ import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.IncludedTestCaseInfo;
+import com.utest.webservice.model.v2.IncludedTestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.TestRunInfo;
 import com.utest.webservice.model.v2.TestRunResultInfo;
@@ -281,25 +282,24 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@GET
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/")
+	@Path("/includedtestcases/{includedTestCaseId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public IncludedTestCaseInfo getTestRunTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_) throws Exception
+	public IncludedTestCaseInfo getTestRunTestCase(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_) throws Exception
 	{
 		final TestRunTestCase includedTestCase = testRunService.getTestRunTestCase(includedTestCaseId_);
 		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
 	}
 
 	@DELETE
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/")
+	@Path("/includedtestcases/{includedTestCaseId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
-	public Boolean deleteTestRunTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
+	public Boolean deleteTestRunTestCase(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		testRunService.deleteTestRunTestCase(includedTestCaseId_, originalVersionId_);
@@ -308,13 +308,13 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@PUT
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/")
+	@Path("/includedtestcases/{includedTestCaseId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
-	public IncludedTestCaseInfo updateTestRunTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @FormParam("") final IncludedTestCaseInfo includedTestCaseInfo_) throws Exception
+	public IncludedTestCaseInfo updateTestRunTestCase(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
+			@FormParam("") final IncludedTestCaseInfo includedTestCaseInfo_) throws Exception
 	{
 
 		final TestRunTestCase includedTestCase = testRunService.saveTestRunTestCase(includedTestCaseId_, includedTestCaseInfo_.getPriorityId(),
@@ -324,27 +324,26 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@PUT
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/environmentgroups/")
+	@Path("/includedtestcases/{includedTestCaseId}/environmentgroups/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public Boolean updateTestRunTestCaseEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @FormParam("environmentGroupIds") final ArrayList<Integer> environmentGroupIds_,
-			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	public Boolean updateTestRunTestCaseEnvironmentGroups(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
+			@FormParam("environmentGroupIds") final ArrayList<Integer> environmentGroupIds_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		testRunService.saveEnvironmentGroupsForTestRunTestCase(includedTestCaseId_, environmentGroupIds_, originalVersionId_);
 		return Boolean.TRUE;
 	}
 
 	@GET
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/environmentgroups/")
+	@Path("/includedtestcases/{includedTestCaseId}/environmentgroups/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public List<EnvironmentGroupInfo> getTestRunTestCaseEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_) throws Exception
+	public List<EnvironmentGroupInfo> getTestRunTestCaseEnvironmentGroups(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_)
+			throws Exception
 	{
 		final List<EnvironmentGroup> groups = testRunService.getEnvironmentGroupsForTestRunTestCase(includedTestCaseId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
@@ -353,26 +352,26 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	// /////////// TEST CASES ASSIGNMENTS RELATED //////////////
 
 	@GET
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/")
+	@Path("/includedtestcases/{includedTestCaseId}/assignments/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public List<TestRunTestCaseAssignmentInfo> getTestRunTestCaseAssignments(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_) throws Exception
+	public List<TestRunTestCaseAssignmentInfo> getTestRunTestCaseAssignments(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_)
+			throws Exception
 	{
 		final List<TestRunTestCaseAssignment> assignments = testRunService.getTestRunTestCaseAssignments(includedTestCaseId_);
 		return objectBuilderFactory.toInfo(TestRunTestCaseAssignmentInfo.class, assignments, ui_.getBaseUriBuilder());
 	}
 
 	@POST
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/")
+	@Path("/includedtestcases/{includedTestCaseId}/assignments/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public TestRunTestCaseAssignmentInfo createTestRunTestCaseAssignment(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @FormParam("") final TestRunTestCaseAssignmentInfo assignmentInfo_) throws Exception
+	public TestRunTestCaseAssignmentInfo createTestRunTestCaseAssignment(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
+			@FormParam("") final TestRunTestCaseAssignmentInfo assignmentInfo_) throws Exception
 	{
 
 		final TestRunTestCaseAssignment assignment = testRunService.addAssignment(includedTestCaseId_, assignmentInfo_.getTesterId());
@@ -380,26 +379,24 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@GET
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/{assignmentId}/")
+	@Path("/assignments/{assignmentId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public TestRunTestCaseAssignmentInfo getTestRunTestCaseAssignment(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @PathParam("assignmentId") final Integer assignmentId_) throws Exception
+	public TestRunTestCaseAssignmentInfo getTestRunTestCaseAssignment(@Context final UriInfo ui_, @PathParam("assignmentId") final Integer assignmentId_) throws Exception
 	{
 		final TestRunTestCaseAssignment assignment = testRunService.getTestRunTestCaseAssignment(assignmentId_);
 		return objectBuilderFactory.toInfo(TestRunTestCaseAssignmentInfo.class, assignment, ui_.getBaseUriBuilder());
 	}
 
 	@DELETE
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/{assignmentId}/")
+	@Path("/assignments/{assignmentId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
-	public Boolean deleteTestRunTestCaseAssignment(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @PathParam("assignmentId") final Integer assignmentId_,
+	public Boolean deleteTestRunTestCaseAssignment(@Context final UriInfo ui_, @PathParam("assignmentId") final Integer assignmentId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		testRunService.deleteAssignment(assignmentId_, originalVersionId_);
@@ -408,13 +405,12 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@PUT
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/{assignmentId}/environmentgroups/")
+	@Path("/assignments/{assignmentId}/environmentgroups/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public Boolean updateTestRunTestCaseAssignmentEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @PathParam("assignmentId") final Integer assignmentId_,
+	public Boolean updateTestRunTestCaseAssignmentEnvironmentGroups(@Context final UriInfo ui_, @PathParam("assignmentId") final Integer assignmentId_,
 			@FormParam("environmentGroupIds") final ArrayList<Integer> environmentGroupIds_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		testRunService.saveEnvironmentGroupsForAssignment(assignmentId_, environmentGroupIds_, originalVersionId_);
@@ -422,13 +418,13 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@GET
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/{assignmentId}/environmentgroups/")
+	@Path("/assignments/{assignmentId}/environmentgroups/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public List<EnvironmentGroupInfo> getTestRunTestCaseAssignmentEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @PathParam("assignmentId") final Integer assignmentId_) throws Exception
+	public List<EnvironmentGroupInfo> getTestRunTestCaseAssignmentEnvironmentGroups(@Context final UriInfo ui_, @PathParam("assignmentId") final Integer assignmentId_)
+			throws Exception
 	{
 		final List<EnvironmentGroup> groups = testRunService.getEnvironmentGroupsForAssignment(assignmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
@@ -437,27 +433,25 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	// /////////// TEST CASES ASSIGNMENT RESULTS RELATED //////////////
 
 	@GET
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/{assignmentId}/results/")
+	@Path("/assignments/{assignmentId}/results/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public List<TestRunResultInfo> getTestRunTestCaseAssignmentResults(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @PathParam("assignmentId") final Integer assignmentId_) throws Exception
+	public List<TestRunResultInfo> getTestRunTestCaseAssignmentResults(@Context final UriInfo ui_, @PathParam("assignmentId") final Integer assignmentId_) throws Exception
 	{
 		final List<TestRunResult> results = testRunService.getTestRunResultsForAssignment(assignmentId_);
 		return objectBuilderFactory.toInfo(TestRunResultInfo.class, results, ui_.getBaseUriBuilder());
 	}
 
 	@POST
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/{assignmentId}/results/{resultId}/retest/")
+	@Path("/results/{resultId}/retest/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public TestRunResultInfo retestTestRunResult(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @PathParam("assignmentId") final Integer assignmentId_,
-			@PathParam("resultId") final Integer resultId_, @FormParam("testerId") final Integer testerId_) throws Exception
+	public TestRunResultInfo retestTestRunResult(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_, @FormParam("testerId") final Integer testerId_)
+			throws Exception
 	{
 
 		final TestRunResult result = testRunService.retestTestRunResult(resultId_, testerId_);
@@ -465,43 +459,38 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@GET
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/{assignmentId}/results/{resultId}/")
+	@Path("/results/{resultId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public TestRunResultInfo getTestRunResult(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @PathParam("assignmentId") final Integer assignmentId_,
-			@PathParam("resultId") final Integer resultId_) throws Exception
+	public TestRunResultInfo getTestRunResult(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_) throws Exception
 	{
 		final TestRunResult result = testRunService.getTestRunResult(resultId_);
 		return objectBuilderFactory.toInfo(TestRunResultInfo.class, result, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/{assignmentId}/results/{resultId}/start/")
+	@Path("/results/{resultId}/start/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public Boolean startTestRunResultExecution(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @PathParam("assignmentId") final Integer assignmentId_,
-			@PathParam("resultId") final Integer resultId_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	public Boolean startTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		testRunService.startExecutingAssignedTestCase(resultId_, originalVersionId_);
 		return Boolean.TRUE;
 	}
 
 	@PUT
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/{assignmentId}/results/{resultId}/fail/")
+	@Path("/results/{resultId}/finishfail/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public Boolean finishFailedTestRunResultExecution(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @PathParam("assignmentId") final Integer assignmentId_,
-			@PathParam("resultId") final Integer resultId_, @FormParam("") final TestRunResultInfo resultInfo_, @FormParam("originalVersionId") final Integer originalVersionId_)
-			throws Exception
+	public Boolean finishFailedTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
+			@FormParam("") final TestRunResultInfo resultInfo_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		testRunService.finishExecutingAssignedTestCaseWithFailure(resultId_, resultInfo_.getFailedStepNumber(), resultInfo_.getActualResult(), resultInfo_.getComment(),
 				originalVersionId_);
@@ -509,28 +498,25 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@PUT
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/{assignmentId}/results/{resultId}/succeed/")
+	@Path("/results/{resultId}/finishsucceed/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public Boolean finishSuccessfulTestRunResultExecution(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @PathParam("assignmentId") final Integer assignmentId_,
-			@PathParam("resultId") final Integer resultId_, @FormParam("") final TestRunResultInfo resultInfo_, @FormParam("originalVersionId") final Integer originalVersionId_)
-			throws Exception
+	public Boolean finishSuccessfulTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
+			@FormParam("") final TestRunResultInfo resultInfo_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		testRunService.finishExecutingAssignedTestCaseWithSuccess(resultId_, resultInfo_.getComment(), originalVersionId_);
 		return Boolean.TRUE;
 	}
 
 	@PUT
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/{assignmentId}/results/{resultId}/approve/")
+	@Path("/results/{resultId}/approve/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public Boolean approveTestRunResult(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
-			@PathParam("assignmentId") final Integer assignmentId_, @PathParam("resultId") final Integer resultId_, @FormParam("originalVersionId") final Integer originalVersionId_)
+	public Boolean approveTestRunResult(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_, @FormParam("originalVersionId") final Integer originalVersionId_)
 			throws Exception
 	{
 		testRunService.approveTestRunResult(resultId_, originalVersionId_);
@@ -538,13 +524,12 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@PUT
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/{assignmentId}/results/{resultId}/reject/")
+	@Path("/results/{resultId}/reject/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public Boolean rejectTestRunResult(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
-			@PathParam("assignmentId") final Integer assignmentId_, @PathParam("resultId") final Integer resultId_, @FormParam("comment") final String comment_,
+	public Boolean rejectTestRunResult(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_, @FormParam("comment") final String comment_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		testRunService.rejectTestRunResult(resultId_, comment_, originalVersionId_);
@@ -552,20 +537,32 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@GET
-	@Path("/{id}/includedtestcases/{includedTestCaseId}/assignments/{assignmentId}/results/{resultId}/environments/")
+	@Path("/results/{resultId}/environments/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public List<EnvironmentInfo> getTestRunResultEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@PathParam("includedTestCaseId") final Integer includedTestCaseId_, @PathParam("assignmentId") final Integer assignmentId_,
-			@PathParam("resultId") final Integer resultId_) throws Exception
+	public List<EnvironmentInfo> getTestRunResultEnvironments(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_) throws Exception
 	{
 		final List<Environment> environments = testRunService.getEnvironmentsForTestResult(resultId_);
 		return objectBuilderFactory.toInfo(EnvironmentInfo.class, environments, ui_.getBaseUriBuilder());
 	}
 
 	// /////// TEST RUN COVERAGE RELATED //////////////
+
+	@GET
+	@Path("/includedtestcases/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_RUN_VIEW)
+	public IncludedTestCaseSearchResultInfo findTestRunTestCases(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	{
+		final UtestSearch search = objectBuilderFactory.createSearch(IncludedTestCaseSearchResultInfo.class, request_, ui_);
+		final UtestSearchResult result = testRunService.findTestRunTestCases(search);
+
+		return (IncludedTestCaseSearchResultInfo) objectBuilderFactory.createResult(IncludedTestCaseInfo.class, TestRunTestCase.class, request_, result, ui_.getBaseUriBuilder());
+	}
 
 	@GET
 	@Path("/assignments/")

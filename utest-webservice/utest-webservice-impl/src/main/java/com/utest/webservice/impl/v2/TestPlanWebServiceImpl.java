@@ -158,27 +158,39 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	}
 
 	@DELETE
-	@Path("/{id}/includedtestsuites/{includedTestSuiteId}/")
+	@Path("/includedtestsuites/{includedTestSuiteId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
-	public Boolean deleteTestPlanTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_,
-			@PathParam("includedTestSuiteId") final Integer includedTestSuiteId_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
+	public Boolean deleteTestPlanTestSuite(@Context final UriInfo ui_, @PathParam("includedTestSuiteId") final Integer includedTestSuiteId_,
+			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
 		testPlanService.deleteTestPlanTestSuite(includedTestSuiteId_, originalVesionId_);
 
 		return Boolean.TRUE;
 	}
 
-	@PUT
-	@Path("/{id}/includedtestsuites/{includedTestSuiteId}/")
+	@GET
+	@Path("/includedtestsuites/{includedTestSuiteId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
-	public IncludedTestSuiteInfo updateTestPlanTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_,
-			@PathParam("includedTestSuiteId") final Integer includedTestSuiteId_, @FormParam("") final IncludedTestSuiteInfo includedTestSuiteInfo_) throws Exception
+	public IncludedTestSuiteInfo getTestPlanTestSuite(@Context final UriInfo ui_, @PathParam("includedTestSuiteId") final Integer includedTestSuiteId_) throws Exception
+	{
+		final TestPlanTestSuite includedTestSuite = testPlanService.getTestPlanTestSuite(includedTestSuiteId_);
+		return objectBuilderFactory.toInfo(IncludedTestSuiteInfo.class, includedTestSuite, ui_.getBaseUriBuilder());
+	}
+
+	@PUT
+	@Path("/includedtestsuites/{includedTestSuiteId}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_CASE_EDIT })
+	public IncludedTestSuiteInfo updateTestPlanTestSuite(@Context final UriInfo ui_, @PathParam("includedTestSuiteId") final Integer includedTestSuiteId_,
+			@FormParam("") final IncludedTestSuiteInfo includedTestSuiteInfo_) throws Exception
 	{
 
 		final TestPlanTestSuite includedTestSuite = testPlanService.saveTestPlanTestSuite(includedTestSuiteId_, includedTestSuiteInfo_.getRunOrder(), includedTestSuiteInfo_

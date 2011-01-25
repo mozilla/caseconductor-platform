@@ -136,4 +136,6 @@ public interface TestRunService
 	List<Environment> getEnvironmentsForTestResult(Integer resultId) throws Exception;
 
 	List<ProductComponent> getTestRunComponents(Integer testRunId) throws Exception;
+
+	UtestSearchResult findTestRunTestCases(UtestSearch search) throws Exception;
 }

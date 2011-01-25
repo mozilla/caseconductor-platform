@@ -49,14 +49,16 @@ public interface TestSuiteWebService
 
 	IncludedTestCaseInfo createTestSuiteTestCase(UriInfo ui, Integer testSuiteId, IncludedTestCaseInfo testCaseInfo) throws Exception;
 
-	IncludedTestCaseInfo updateTestSuiteTestCase(UriInfo ui, Integer testSuiteId, Integer includedTestCaseId, IncludedTestCaseInfo includedTestCaseInfo) throws Exception;
-
 	TestSuiteInfo activateTestSuite(UriInfo ui, Integer testSuiteId, Integer originalVesionId) throws Exception;
 
 	TestSuiteInfo deactivateTestSuite(UriInfo ui, Integer testSuiteId, Integer originalVesionId) throws Exception;
 
-	Boolean deleteTestSuiteTestCase(UriInfo ui, Integer testSuiteId, Integer includedTestCaseId, Integer originalVesionId) throws Exception;
-
 	Boolean deleteTestSuite(UriInfo ui, Integer testSuiteId, Integer originalVesionId) throws Exception;
+
+	Boolean deleteTestSuiteTestCase(UriInfo ui, Integer includedTestCaseId, Integer originalVesionId) throws Exception;
+
+	IncludedTestCaseInfo updateTestSuiteTestCase(UriInfo ui, Integer includedTestCaseId, IncludedTestCaseInfo includedTestCaseInfo) throws Exception;
+
+	IncludedTestCaseInfo getTestSuiteTestCase(UriInfo ui, Integer includedTestCaseId) throws Exception;
 
 }

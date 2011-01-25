@@ -31,9 +31,15 @@ import javax.xml.bind.annotation.XmlType;
 public class IncludedTestSuiteInfo extends BaseInfo
 {
 	@XmlElement(required = false)
-	private Integer	testSuiteId;
+	private Integer			testPlanId;
+	@XmlElement(type = ResourceLocator.class, name = "testPlanLocator")
+	private ResourceLocator	testPlanLocator;
 	@XmlElement(required = false)
-	private Integer	runOrder	= 0;
+	private Integer			testSuiteId;
+	@XmlElement(type = ResourceLocator.class, name = "testSuiteLocator")
+	private ResourceLocator	testSuiteLocator;
+	@XmlElement(required = false)
+	private Integer			runOrder	= 0;
 
 	public Integer getTestSuiteId()
 	{
@@ -53,5 +59,35 @@ public class IncludedTestSuiteInfo extends BaseInfo
 	public void setRunOrder(Integer runOrder)
 	{
 		this.runOrder = runOrder;
+	}
+
+	public Integer getTestPlanId()
+	{
+		return testPlanId;
+	}
+
+	public void setTestPlanId(Integer testPlanId)
+	{
+		this.testPlanId = testPlanId;
+	}
+
+	public ResourceLocator getTestPlanLocator()
+	{
+		return testPlanLocator;
+	}
+
+	public void setTestPlanLocator(ResourceLocator testPlanLocator)
+	{
+		this.testPlanLocator = testPlanLocator;
+	}
+
+	public ResourceLocator getTestSuiteLocator()
+	{
+		return testSuiteLocator;
+	}
+
+	public void setTestSuiteLocator(ResourceLocator testSuiteLocator)
+	{
+		this.testSuiteLocator = testSuiteLocator;
 	}
 }

@@ -309,12 +309,12 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	}
 
 	@DELETE
-	@Path("/versions/{id}/steps/{stepId}/")
+	@Path("/steps/{stepId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
-	public Boolean deleteTestCaseStep(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_, @PathParam("stepId") final Integer testCaseStepId_,
+	public Boolean deleteTestCaseStep(@Context final UriInfo ui_, @PathParam("stepId") final Integer testCaseStepId_,
 			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
 		testCaseService.deleteTestCaseStep(testCaseStepId_, originalVesionId_);
@@ -323,12 +323,12 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	}
 
 	@PUT
-	@Path("/versions/{id}/steps/{stepId}/")
+	@Path("/steps/{stepId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
-	public TestCaseStepInfo updateTestCaseStep(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_, @PathParam("stepId") final Integer testCaseStepId_,
+	public TestCaseStepInfo updateTestCaseStep(@Context final UriInfo ui_, @PathParam("stepId") final Integer testCaseStepId_,
 			@FormParam("") final TestCaseStepInfo testCaseStepInfo_) throws Exception
 	{
 
@@ -412,7 +412,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	}
 
 	@GET
-	@Path("/versions/{id}/steps/{stepId}/")
+	@Path("/steps/{stepId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override

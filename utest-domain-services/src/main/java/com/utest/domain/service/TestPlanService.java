@@ -63,4 +63,6 @@ public interface TestPlanService
 
 	void deleteTestPlan(Integer testPlanId, Integer originalVersionId) throws Exception;
 
+	TestPlanTestSuite getTestPlanTestSuite(Integer testPlanTestSuiteId) throws Exception;
+
 }

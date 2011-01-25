@@ -79,8 +79,6 @@ public interface TestCaseWebService
 
 	TestCaseVersionInfo rejectTestCaseVersion(UriInfo ui, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
 
-	TestCaseStepInfo updateTestCaseStep(UriInfo ui, Integer testCaseVersionId, Integer testCaseStepId, TestCaseStepInfo testCaseStepInfo) throws Exception;
-
 	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String versionIncrement, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
 
 	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
@@ -91,8 +89,10 @@ public interface TestCaseWebService
 
 	Boolean deleteTestCaseVersion(UriInfo ui, Integer testCaseVersionId, Integer originalVesionId) throws Exception;
 
-	Boolean deleteTestCaseStep(UriInfo ui, Integer testCaseVersionId, Integer testCaseStepId, Integer originalVesionId) throws Exception;
-
 	Boolean deleteTestCase(UriInfo ui, Integer testCaseId, Integer originalVesionId) throws Exception;
+
+	Boolean deleteTestCaseStep(UriInfo ui, Integer testCaseStepId, Integer originalVesionId) throws Exception;
+
+	TestCaseStepInfo updateTestCaseStep(UriInfo ui, Integer testCaseStepId, TestCaseStepInfo testCaseStepInfo) throws Exception;
 
 }

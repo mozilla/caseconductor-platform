@@ -43,8 +43,6 @@ public interface TestPlanWebService
 
 	IncludedTestSuiteInfo createTestPlanTestSuite(UriInfo ui, Integer testPlanId, IncludedTestSuiteInfo testSuiteInfo) throws Exception;
 
-	IncludedTestSuiteInfo updateTestPlanTestSuite(UriInfo ui, Integer testPlanId, Integer includedTestSuiteId, IncludedTestSuiteInfo includedTestSuiteInfo) throws Exception;
-
 	TestPlanInfo createTestPlan(UriInfo ui, TestPlanInfo testPlanInfo) throws Exception;
 
 	TestPlanInfo getTestPlan(UriInfo ui, Integer testPlanId) throws Exception;
@@ -55,8 +53,12 @@ public interface TestPlanWebService
 
 	TestPlanInfo deactivateTestPlan(UriInfo ui, Integer testPlanId, Integer originalVesionId) throws Exception;
 
-	Boolean deleteTestPlanTestSuite(UriInfo ui, Integer testPlanId, Integer includedTestSuiteId, Integer originalVesionId) throws Exception;
-
 	Boolean deleteTestPlan(UriInfo ui, Integer testPlanId, Integer originalVesionId) throws Exception;
+
+	Boolean deleteTestPlanTestSuite(UriInfo ui, Integer includedTestSuiteId, Integer originalVesionId) throws Exception;
+
+	IncludedTestSuiteInfo updateTestPlanTestSuite(UriInfo ui, Integer includedTestSuiteId, IncludedTestSuiteInfo includedTestSuiteInfo) throws Exception;
+
+	IncludedTestSuiteInfo getTestPlanTestSuite(UriInfo ui, Integer includedTestSuiteId) throws Exception;
 
 }
