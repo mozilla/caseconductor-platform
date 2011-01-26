@@ -256,10 +256,9 @@ public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingIntercep
 	private String translateError(Throwable error, final String message)
 	{
 
-		String errorKey = null;
 		if (error instanceof DomainException)
 		{
-			errorKey = ((DomainException) error).getErrorMessageKey();
+			return ((DomainException) error).getErrorMessageKey();
 		}
 
 		if (message == null)
