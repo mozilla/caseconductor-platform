@@ -41,4 +41,6 @@ public interface StaticDataWebService
 	List<CodeValue> getCodeValues(@Context final UriInfo ui_, String id, String locale) throws Exception;
 
 	List<CodeValue> getLocales(UriInfo ui) throws Exception;
+
+	Set<String> getErrorKeys() throws Exception;
 }

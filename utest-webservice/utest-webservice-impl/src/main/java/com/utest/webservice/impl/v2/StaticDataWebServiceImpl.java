@@ -21,6 +21,7 @@ package com.utest.webservice.impl.v2;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +41,7 @@ import javax.ws.rs.core.UriInfo;
 import com.utest.domain.CodeValueEntity;
 import com.utest.domain.Locale;
 import com.utest.domain.service.StaticDataService;
+import com.utest.exception.DomainException;
 import com.utest.webservice.api.v2.StaticDataWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.CodeValue;
@@ -64,6 +66,23 @@ public class StaticDataWebServiceImpl extends BaseWebServiceImpl implements Stat
 	public Set<String> getCodeKeys() throws Exception
 	{
 		return staticDataService.getCodeKeys();
+
+	}
+
+	@Override
+	@GET
+	@Path("/errorkeys/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Set<String> getErrorKeys() throws Exception
+	{
+		Set<String> errorKeys = new HashSet<String>();
+		for (DomainException.DomainErrorMessage m : DomainException.DomainErrorMessage.values())
+		{
+			errorKeys.add(m.getMessageKey());
+		}
+
+		return errorKeys;
 
 	}
 

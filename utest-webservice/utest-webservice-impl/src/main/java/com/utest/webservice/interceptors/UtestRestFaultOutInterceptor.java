@@ -39,6 +39,7 @@ import com.utest.exception.ApprovingIncompleteEntityException;
 import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingActivatedEntityException;
 import com.utest.exception.DeletingUsedEntityException;
+import com.utest.exception.DomainException;
 import com.utest.exception.DuplicateNameException;
 import com.utest.exception.DuplicateTestCaseStepException;
 import com.utest.exception.EmailInUseException;
@@ -254,6 +255,13 @@ public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingIntercep
 
 	private String translateError(Throwable error, final String message)
 	{
+
+		String errorKey = null;
+		if (error instanceof DomainException)
+		{
+			errorKey = ((DomainException) error).getErrorMessageKey();
+		}
+
 		if (message == null)
 		{
 			if (error != null)
