@@ -227,6 +227,7 @@ public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingIntercep
 		}
 	}
 
+	// {"ns1.user":[{"@xsi.type":"ns1:user"
 	private String getStart(final int type)
 	{
 		switch (type)
@@ -234,7 +235,7 @@ public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingIntercep
 			case TYPE_XML:
 				return "<errors>";
 			case TYPE_JSON:
-				return "[\"errors\":\"";
+				return "{\"errors\":[";
 			default:
 				return "";
 		}
@@ -247,7 +248,7 @@ public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingIntercep
 			case TYPE_XML:
 				return "</errors>";
 			case TYPE_JSON:
-				return "]";
+				return "]}";
 			default:
 				return "";
 		}
