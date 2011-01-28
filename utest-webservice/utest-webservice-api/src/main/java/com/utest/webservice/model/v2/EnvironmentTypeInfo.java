@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
 public class EnvironmentTypeInfo extends BaseInfo
 {
 	@XmlElement(required = false)
-	private final Integer	parentEnvironmentTypeId	= null;
+	private Integer			parentEnvironmentTypeId	= null;
 	@XmlElement(type = ResourceLocator.class, name = "parentEnvironmentTypeLocator")
 	private ResourceLocator	parentEnvironmentTypeLocator;
 	@XmlElement(required = false)
@@ -120,5 +120,10 @@ public class EnvironmentTypeInfo extends BaseInfo
 	public void setCompanyLocator(ResourceLocator companyLocator)
 	{
 		this.companyLocator = companyLocator;
+	}
+
+	public void setParentEnvironmentTypeId(Integer parentEnvironmentTypeId)
+	{
+		this.parentEnvironmentTypeId = parentEnvironmentTypeId;
 	}
 }

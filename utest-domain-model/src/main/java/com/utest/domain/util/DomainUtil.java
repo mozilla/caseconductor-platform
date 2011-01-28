@@ -49,6 +49,22 @@ public class DomainUtil
 		return ids;
 	}
 
+	public static List<Integer> extractLocalDescriptableIds(final List<?> entities_)
+	{
+		final List<Integer> ids = new ArrayList<Integer>();
+		if (entities_ != null)
+		{
+			for (final Object entity : entities_)
+			{
+				if (entity instanceof LocaleDescriptable)
+				{
+					ids.add(((LocaleDescriptable) entity).getEntityId());
+				}
+			}
+		}
+		return ids;
+	}
+
 	public static <T> List<Entity> buildEntitiesFromIds(final Class<T> destinationClazz, final List<Integer> ids_) throws Exception
 	{
 		final List<Entity> entities = new ArrayList<Entity>();
