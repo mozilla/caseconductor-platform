@@ -86,11 +86,11 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_SUITE_EDIT })
-	public TestCycleInfo activateTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("") final TestCycleInfo testCycleInfo_)
+	public TestCycleInfo activateTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("originalVersionId") final Integer originalVersionId_)
 			throws Exception
 	{
 
-		final TestCycle testCycle = testCycleService.activateTestCycle(testCycleId_, testCycleInfo_.getResourceIdentity().getVersion());
+		final TestCycle testCycle = testCycleService.activateTestCycle(testCycleId_, originalVersionId_);
 		return objectBuilderFactory.toInfo(TestCycleInfo.class, testCycle, ui_.getBaseUriBuilder());
 	}
 
@@ -100,11 +100,11 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_SUITE_EDIT })
-	public TestCycleInfo deactivateTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("") final TestCycleInfo testCycleInfo_)
-			throws Exception
+	public TestCycleInfo deactivateTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 
-		final TestCycle testCycle = testCycleService.lockTestCycle(testCycleId_, testCycleInfo_.getResourceIdentity().getVersion());
+		final TestCycle testCycle = testCycleService.lockTestCycle(testCycleId_, originalVersionId_);
 		return objectBuilderFactory.toInfo(TestCycleInfo.class, testCycle, ui_.getBaseUriBuilder());
 	}
 

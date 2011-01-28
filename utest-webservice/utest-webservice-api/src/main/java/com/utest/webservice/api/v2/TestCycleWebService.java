@@ -35,10 +35,6 @@ public interface TestCycleWebService
 
 	TestCycleInfo updateTestCycle(UriInfo ui, Integer testCycleId, TestCycleInfo testCycleInfo) throws Exception;
 
-	TestCycleInfo activateTestCycle(UriInfo ui, Integer testCycleId, TestCycleInfo testCycleInfo) throws Exception;
-
-	TestCycleInfo deactivateTestCycle(UriInfo ui, Integer testCycleId, TestCycleInfo testCycleInfo) throws Exception;
-
 	Boolean updateTestCycleEnvironmentGroups(UriInfo ui, Integer testCycleId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
 
 	List<EnvironmentGroupInfo> getTestCycleEnvironmentGroups(UriInfo ui, Integer testCycleId) throws Exception;
@@ -52,4 +48,8 @@ public interface TestCycleWebService
 	List<TestRunInfo> getTestCycleTestRuns(UriInfo ui, Integer testCycleId) throws Exception;
 
 	Boolean deleteTestCycle(UriInfo ui, Integer testCycleId, Integer originalVesionId) throws Exception;
+
+	TestCycleInfo activateTestCycle(UriInfo ui, Integer testCycleId, Integer originalVersionId) throws Exception;
+
+	TestCycleInfo deactivateTestCycle(UriInfo ui, Integer testCycleId, Integer originalVersionId) throws Exception;
 }
