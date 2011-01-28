@@ -12,8 +12,8 @@
                 <column  name="localeCode" length="10" />
             </key-property>
         </composite-id>
-        <property  name="description" type="string">
-            <column  name="description" />
+        <property  name="name" type="string">
+            <column  name="name" />
         </property>
         <property  name="countryId" type="java.lang.Integer">
             <column  name="countryId" />

@@ -42,10 +42,13 @@ import com.trg.search.ISearch;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 import com.trg.search.Sort;
+import com.utest.domain.LocaleDescriptable;
+import com.utest.domain.LocalizedEntity;
 import com.utest.domain.search.UtestFilter;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.search.UtestSort;
+import com.utest.domain.util.DomainUtil;
 
 /**
  * An implementation of <code>GenericDAO</code> which extends
@@ -237,6 +240,52 @@ public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements Typele
 
 		final List<T> list = search(type_, s);
 		return list;
+	}
+
+	/**
+	 * Retrieves a list of Localized Entities based on dynamic search, page and
+	 * sort.
+	 * 
+	 * @param type_
+	 * @param search_
+	 * @return
+	 */
+	@Override
+	public UtestSearchResult getByLocalizedSearch(final Class<?> type_, final Class<?> localType_, final UtestSearch search_)
+	{
+		UtestSearch s = applyLocalizedSearch(localType_, search_);
+		return this.getBySearch(type_, s);
+	}
+
+	@SuppressWarnings("unchecked")
+	private UtestSearch applyLocalizedSearch(Class<?> localType_, UtestSearch search_)
+	{
+		UtestSearch localeSearch = new UtestSearch();
+		UtestSearch mainSearch = new UtestSearch();
+		for (UtestFilter filter : search_.getFilters())
+		{
+			if (LocaleDescriptable.NAME.equals(filter.getProperty()) || LocaleDescriptable.LOCALE_CODE.equals(filter.getProperty())
+					|| LocaleDescriptable.SORT_ORDER.equals(filter.getProperty()))
+			{
+				localeSearch.addFilter(filter);
+			}
+			else
+			{
+				mainSearch.addFilter(filter);
+			}
+		}
+		if (localeSearch.getFilters().size() > 0)
+		{
+			UtestSearchResult searchResult = this.getBySearch(localType_, localeSearch);
+			if (searchResult.getTotalRecords() > 0)
+			{
+				List<? extends LocalizedEntity> locales = (List<? extends LocalizedEntity>) searchResult.getResults();
+				List<Integer> ids = DomainUtil.extractLocalDescriptableIds(locales);
+				mainSearch.addFilterIn("id", ids);
+			}
+		}
+		return mainSearch;
+
 	}
 
 	/**

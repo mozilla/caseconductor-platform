@@ -71,11 +71,11 @@ public class EnvironmentLocale extends TimelineEntity implements Named, LocaleDe
 		this.sortOrder = sortOrder;
 	}
 
-	@Override
-	public String getDescription()
-	{
-		return name;
-	}
+	// @Override
+	// public String getDescription()
+	// {
+	// return name;
+	// }
 
 	@Override
 	public Integer getEntityId()

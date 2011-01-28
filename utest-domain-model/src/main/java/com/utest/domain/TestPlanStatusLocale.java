@@ -26,17 +26,17 @@ public class TestPlanStatusLocale implements LocaleDescriptable
 {
 
 	private TestPlanStatusLocaleId	id;
-	private String					description;
+	private String					name;
 	private Integer					sortOrder;
 
 	public TestPlanStatusLocale()
 	{
 	}
 
-	public TestPlanStatusLocale(TestPlanStatusLocaleId id, String description, Integer sortOrder)
+	public TestPlanStatusLocale(TestPlanStatusLocaleId id, String name, Integer sortOrder)
 	{
 		this.id = id;
-		this.description = description;
+		this.name = name;
 		this.sortOrder = sortOrder;
 	}
 
@@ -50,14 +50,14 @@ public class TestPlanStatusLocale implements LocaleDescriptable
 		this.id = id;
 	}
 
-	public String getDescription()
+	public String getName()
 	{
-		return this.description;
+		return this.name;
 	}
 
-	public void setDescription(String description)
+	public void setName(String name)
 	{
-		this.description = description;
+		this.name = name;
 	}
 
 	public Integer getSortOrder()
@@ -74,5 +74,11 @@ public class TestPlanStatusLocale implements LocaleDescriptable
 	public Integer getEntityId()
 	{
 		return getId().getTestPlanStatusId();
+	}
+
+	@Override
+	public String getLocaleCode()
+	{
+		return getId().getLocaleCode();
 	}
 }

@@ -184,7 +184,7 @@ public class DomainUtil
 			{
 				translated.setId(locale.getEntityId().toString());
 			}
-			translated.setDescription(locale.getDescription());
+			translated.setDescription(locale.getName());
 			translated.setSortOrder(locale.getSortOrder());
 		}
 		else if (old_ instanceof Descriptable)
@@ -205,7 +205,7 @@ public class DomainUtil
 		{
 			final Locale locale = (Locale) old_;
 			translated.setId(locale.getCode());
-			translated.setDescription(locale.getDescription());
+			translated.setDescription(locale.getName());
 			translated.setSortOrder(locale.getSortOrder());
 		}
 		return translated;

@@ -95,4 +95,6 @@ public interface TypelessDAO
 
 	void update(Object transientEntities);
 
+	UtestSearchResult getByLocalizedSearch(Class<?> type, Class<?> localLype, UtestSearch search);
+
 }

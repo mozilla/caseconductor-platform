@@ -269,7 +269,7 @@ public class StaticDataServiceImpl implements StaticDataService
 			{
 				CodeValueEntity cve = new CodeValueEntity();
 				cve.setId(locale.getCode());
-				cve.setDescription(locale.getDescription());
+				cve.setDescription(locale.getName());
 				cve.setSortOrder(locale.getSortOrder());
 				_locales.add(cve);
 			}

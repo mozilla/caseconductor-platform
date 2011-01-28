@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Oct 7, 2009 11:18:37 AM by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class  mutable="false" name="com.utest.domain.CountryLocale" table="CountryLocale" >
+    <class  mutable="false" name="com.utest.domain.CountryLocale" table="CountryLocale" catalog="tcm">
         <composite-id  name="id" class="com.utest.domain.CountryLocaleId">
             <key-property  name="countryId" type="java.lang.Integer">
                 <column  name="countryId" />
@@ -12,11 +12,11 @@
                 <column  name="localeCode" length="10" />
             </key-property>
         </composite-id>
-        <property  name="description" type="string">
-            <column  name="description" length="250" />
+        <property  name="name" type="string">
+            <column  name="name" length="250" />
         </property>
         <property  name="sortOrder" type="java.lang.Integer">
-            <column  name="sortOrder" length="250" />
+            <column  name="sortOrder"/>
         </property>
     </class>
 </hibernate-mapping>

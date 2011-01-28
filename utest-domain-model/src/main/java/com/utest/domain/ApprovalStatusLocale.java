@@ -28,17 +28,17 @@ public class ApprovalStatusLocale implements LocaleDescriptable
 {
 
 	private ApprovalStatusLocaleId	id;
-	private String					description;
+	private String					name;
 	private Integer					sortOrder;
 
 	public ApprovalStatusLocale()
 	{
 	}
 
-	public ApprovalStatusLocale(final ApprovalStatusLocaleId id, final String description, final Integer sortOrder)
+	public ApprovalStatusLocale(final ApprovalStatusLocaleId id, final String name, final Integer sortOrder)
 	{
 		this.id = id;
-		this.description = description;
+		this.name = name;
 		this.sortOrder = sortOrder;
 	}
 
@@ -52,14 +52,14 @@ public class ApprovalStatusLocale implements LocaleDescriptable
 		this.id = id;
 	}
 
-	public String getDescription()
+	public String getName()
 	{
-		return this.description;
+		return this.name;
 	}
 
-	public void setDescription(final String description)
+	public void setName(final String name)
 	{
-		this.description = description;
+		this.name = name;
 	}
 
 	public Integer getSortOrder()
@@ -76,5 +76,11 @@ public class ApprovalStatusLocale implements LocaleDescriptable
 	public Integer getEntityId()
 	{
 		return getId().getApprovalStatusId();
+	}
+
+	@Override
+	public String getLocaleCode()
+	{
+		return getId().getLocaleCode();
 	}
 }

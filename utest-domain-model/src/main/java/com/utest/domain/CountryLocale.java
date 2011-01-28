@@ -28,23 +28,23 @@ public class CountryLocale implements LocaleDescriptable
 {
 
 	private CountryLocaleId	id;
-	private String			description;
+	private String			name;
 	private Integer			sortOrder;
 
 	public CountryLocale()
 	{
 	}
 
-	public CountryLocale(final CountryLocaleId id, final String description)
+	public CountryLocale(final CountryLocaleId id, final String name)
 	{
 		this.id = id;
-		this.description = description;
+		this.name = name;
 	}
 
-	public CountryLocale(final CountryLocaleId id, final String description, final Integer sortOrder)
+	public CountryLocale(final CountryLocaleId id, final String name, final Integer sortOrder)
 	{
 		this.id = id;
-		this.description = description;
+		this.name = name;
 		this.sortOrder = sortOrder;
 	}
 
@@ -58,14 +58,14 @@ public class CountryLocale implements LocaleDescriptable
 		this.id = id;
 	}
 
-	public String getDescription()
+	public String getName()
 	{
-		return this.description;
+		return this.name;
 	}
 
-	public void setDescription(final String description)
+	public void setName(final String name)
 	{
-		this.description = description;
+		this.name = name;
 	}
 
 	public Integer getSortOrder()
@@ -83,4 +83,9 @@ public class CountryLocale implements LocaleDescriptable
 		return this.getId().getCountryId();
 	}
 
+	@Override
+	public String getLocaleCode()
+	{
+		return getId().getLocaleCode();
+	}
 }

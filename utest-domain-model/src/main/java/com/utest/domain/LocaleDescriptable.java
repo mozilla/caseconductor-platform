@@ -21,10 +21,16 @@ package com.utest.domain;
 
 public interface LocaleDescriptable extends java.io.Serializable
 {
+	public static final String	NAME		= "name";
+	public static final String	SORT_ORDER	= "sortOrder";
+	public static final String	LOCALE_CODE	= "localeCode";
 
 	Integer getEntityId();
 
-	String getDescription();
+	// String getDescription();
+	String getName();
+
+	String getLocaleCode();
 
 	Integer getSortOrder();
 }

@@ -24,7 +24,6 @@ import java.util.Map;
 
 public class LocalizedEntity extends Entity
 {
-
 	Map<String, LocaleDescriptable>	locales	= new HashMap<String, LocaleDescriptable>();
 
 	public LocalizedEntity()

@@ -8,8 +8,8 @@
             <column name="localeCode" />
             <generator class="assigned" />
         </id>
-        <property name="description" type="string">
-            <column name="description" length="50" not-null="true" />
+        <property name="name" type="string">
+            <column name="name" length="50" not-null="true" />
         </property>
         <property name="sortOrder" type="java.lang.Integer">
             <column name="sortOrder" not-null="true" />

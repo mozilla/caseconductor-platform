@@ -31,21 +31,21 @@ public class Locale implements java.io.Serializable
 	public static final Integer	DEFAULT_SORT_ORDER	= 0;
 
 	private String				code;
-	private String				description;
+	private String				name;
 	private Integer				sortOrder;
 
 	public Locale()
 	{
 	}
 
-	public String getDescription()
+	public String getName()
 	{
-		return this.description;
+		return this.name;
 	}
 
-	public void setDescription(final String description)
+	public void setName(final String name)
 	{
-		this.description = description;
+		this.name = name;
 	}
 
 	public String getCode()

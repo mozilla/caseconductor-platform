@@ -28,17 +28,17 @@ public class UserStatusLocale implements LocaleDescriptable
 {
 
 	private UserStatusLocaleId	id;
-	private String				description;
+	private String				name;
 	private Integer				sortOrder;
 
 	public UserStatusLocale()
 	{
 	}
 
-	public UserStatusLocale(UserStatusLocaleId id, String description, Integer sortOrder)
+	public UserStatusLocale(UserStatusLocaleId id, String name, Integer sortOrder)
 	{
 		this.id = id;
-		this.description = description;
+		this.name = name;
 		this.sortOrder = sortOrder;
 	}
 
@@ -52,14 +52,14 @@ public class UserStatusLocale implements LocaleDescriptable
 		this.id = id;
 	}
 
-	public String getDescription()
+	public String getName()
 	{
-		return this.description;
+		return this.name;
 	}
 
-	public void setDescription(String description)
+	public void setName(String name)
 	{
-		this.description = description;
+		this.name = name;
 	}
 
 	public Integer getSortOrder()
@@ -76,5 +76,11 @@ public class UserStatusLocale implements LocaleDescriptable
 	public Integer getEntityId()
 	{
 		return getId().getUserStatusId();
+	}
+
+	@Override
+	public String getLocaleCode()
+	{
+		return getId().getLocaleCode();
 	}
 }

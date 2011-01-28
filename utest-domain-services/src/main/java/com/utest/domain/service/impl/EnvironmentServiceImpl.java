@@ -38,7 +38,6 @@ import com.utest.domain.EnvironmentProfileEnvironmentGroup;
 import com.utest.domain.EnvironmentType;
 import com.utest.domain.EnvironmentTypeLocale;
 import com.utest.domain.Locale;
-import com.utest.domain.LocalizedEntity;
 import com.utest.domain.ParentDependableEnvironment;
 import com.utest.domain.Product;
 import com.utest.domain.Tag;
@@ -51,7 +50,6 @@ import com.utest.domain.TestRunTestCase;
 import com.utest.domain.TestRunTestCaseAssignment;
 import com.utest.domain.TestSuite;
 import com.utest.domain.TestSuiteTestCase;
-import com.utest.domain.search.UtestFilter;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
@@ -673,43 +671,13 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public UtestSearchResult findEnvironmentTypes(final UtestSearch search_) throws Exception
 	{
-		return dao.getBySearch(EnvironmentType.class, applyLocalizedSearch(EnvironmentTypeLocale.class, search_));
+		return dao.getByLocalizedSearch(EnvironmentType.class, EnvironmentTypeLocale.class, search_);
 	}
 
 	@Override
 	public UtestSearchResult findEnvironments(final UtestSearch search_) throws Exception
 	{
-		return dao.getBySearch(Environment.class, applyLocalizedSearch(EnvironmentLocale.class, search_));
-	}
-
-	@SuppressWarnings("unchecked")
-	private UtestSearch applyLocalizedSearch(Class<?> type_, UtestSearch search_)
-	{
-		UtestSearch localeSearch = new UtestSearch();
-		UtestSearch mainSearch = new UtestSearch();
-		for (UtestFilter filter : search_.getFilters())
-		{
-			if (filter.getProperty().equals("name") || filter.getProperty().equals("localeCode") || filter.getProperty().equals("sortOrder"))
-			{
-				localeSearch.addFilter(filter);
-			}
-			else
-			{
-				mainSearch.addFilter(filter);
-			}
-		}
-		if (localeSearch.getFilters().size() > 0)
-		{
-			UtestSearchResult searchResult = dao.getBySearch(type_, localeSearch);
-			if (searchResult.getTotalRecords() > 0)
-			{
-				List<? extends LocalizedEntity> locales = (List<? extends LocalizedEntity>) searchResult.getResults();
-				List<Integer> ids = DomainUtil.extractLocalDescriptableIds(locales);
-				mainSearch.addFilterIn("id", ids);
-			}
-		}
-		return mainSearch;
-
+		return dao.getByLocalizedSearch(Environment.class, EnvironmentLocale.class, search_);
 	}
 
 	@Override

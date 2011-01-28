@@ -28,7 +28,7 @@ public class CountryStateLocale implements LocaleDescriptable, ParentDependable
 {
 
 	private CountryStateLocaleId	id;
-	private String					description;
+	private String					name;
 	private Integer					countryId;
 	private Integer					sortOrder;
 
@@ -36,10 +36,10 @@ public class CountryStateLocale implements LocaleDescriptable, ParentDependable
 	{
 	}
 
-	public CountryStateLocale(final CountryStateLocaleId id, final String description, final Integer countryId, final Integer sortOrder)
+	public CountryStateLocale(final CountryStateLocaleId id, final String name, final Integer countryId, final Integer sortOrder)
 	{
 		this.id = id;
-		this.description = description;
+		this.name = name;
 		this.countryId = countryId;
 		this.sortOrder = sortOrder;
 	}
@@ -54,14 +54,14 @@ public class CountryStateLocale implements LocaleDescriptable, ParentDependable
 		this.id = id;
 	}
 
-	public String getDescription()
+	public String getName()
 	{
-		return this.description;
+		return this.name;
 	}
 
-	public void setDescription(final String description)
+	public void setName(final String name)
 	{
-		this.description = description;
+		this.name = name;
 	}
 
 	public Integer getCountryId()
@@ -106,5 +106,11 @@ public class CountryStateLocale implements LocaleDescriptable, ParentDependable
 	public Integer getChildId()
 	{
 		return getId().getCountryStateId();
+	}
+
+	@Override
+	public String getLocaleCode()
+	{
+		return getId().getLocaleCode();
 	}
 }
