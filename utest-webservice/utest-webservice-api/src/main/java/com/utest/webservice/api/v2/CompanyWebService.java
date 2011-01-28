@@ -19,10 +19,15 @@
  */
 package com.utest.webservice.api.v2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.core.UriInfo;
 
 import com.utest.webservice.model.v2.CompanyInfo;
 import com.utest.webservice.model.v2.CompanySearchResultInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupInfo;
+import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface CompanyWebService
@@ -36,4 +41,14 @@ public interface CompanyWebService
 	CompanyInfo getCompany(UriInfo ui, Integer companyId) throws Exception;
 
 	Boolean deleteCompany(UriInfo ui, Integer companyId, Integer originalVersionId) throws Exception;
+
+	List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(UriInfo ui, Integer companyId, Integer environmentTypeId, ArrayList<Integer> environmentIds,
+			Integer originalVesionId) throws Exception;
+
+	List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(UriInfo ui, Integer companyId, ArrayList<Integer> environmentIds, Integer originalVesionId)
+			throws Exception;
+
+	Boolean updateParentDependableEnvironments(UriInfo ui, Integer companyId, Integer parentEnvironmentId, ArrayList<Integer> environmentIds) throws Exception;
+
+	List<EnvironmentInfo> getParentDependableEnvironments(UriInfo ui, Integer companyId, Integer parentEnvironmentId) throws Exception;
 }

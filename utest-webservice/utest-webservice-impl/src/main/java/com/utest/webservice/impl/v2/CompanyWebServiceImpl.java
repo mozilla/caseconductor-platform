@@ -19,6 +19,9 @@
  */
 package com.utest.webservice.impl.v2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -36,29 +39,37 @@ import javax.ws.rs.core.UriInfo;
 import org.springframework.security.access.annotation.Secured;
 
 import com.utest.domain.Company;
+import com.utest.domain.Environment;
+import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.Permission;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.CompanyService;
+import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.UserService;
 import com.utest.webservice.api.v2.CompanyWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.CompanyInfo;
 import com.utest.webservice.model.v2.CompanySearchResultInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupInfo;
+import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 @Path("/companies/")
 public class CompanyWebServiceImpl extends BaseWebServiceImpl implements CompanyWebService
 {
 	@SuppressWarnings("unused")
-	private final UserService		userService;
-	private final CompanyService	companyService;
+	private final UserService			userService;
+	private final CompanyService		companyService;
+	private final EnvironmentService	environmentService;
 
-	public CompanyWebServiceImpl(final ObjectBuilderFactory objectBuildFactory, final UserService userService, final CompanyService companyService)
+	public CompanyWebServiceImpl(final ObjectBuilderFactory objectBuildFactory, final UserService userService, final CompanyService companyService,
+			final EnvironmentService environmentService)
 	{
 		super(objectBuildFactory);
 		this.userService = userService;
 		this.companyService = companyService;
+		this.environmentService = environmentService;
 	}
 
 	@POST
@@ -105,7 +116,7 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 
 	@GET
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.COMPANY_INFO_VIEW)
 	public CompanySearchResultInfo findCompanies(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
@@ -129,4 +140,60 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 		return objectBuilderFactory.toInfo(CompanyInfo.class, company, ui_.getBaseUriBuilder());
 	}
 
+	@PUT
+	@Path("/{id}/environmentgroups/autogenerate/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.ENVIRONMENT_EDIT })
+	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer companyId_,
+			@FormParam("environmentIds") final ArrayList<Integer> environmentIds_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
+	{
+		List<EnvironmentGroup> environmentGroups = companyService.addGeneratedEnvironmentGroupsForCompany(companyId_, environmentIds_, originalVesionId_);
+		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder());
+		return environmentGroupsInfo;
+	}
+
+	@PUT
+	@Path("/{id}/environmentgroups/environmenttypes/{typeId}/autogenerate/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.ENVIRONMENT_EDIT })
+	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer companyId_,
+			@PathParam("typeId") final Integer environmentTypeId_, @FormParam("environmentIds") final ArrayList<Integer> environmentIds_,
+			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
+	{
+		List<EnvironmentGroup> environmentGroups = companyService.addGeneratedEnvironmentGroupsForCompany(companyId_, environmentTypeId_, environmentIds_, originalVesionId_);
+		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder());
+		return environmentGroupsInfo;
+	}
+
+	@GET
+	@Path("/{id}/parentchildenvironments/{parentId}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.ENVIRONMENT_VIEW)
+	public List<EnvironmentInfo> getParentDependableEnvironments(@Context UriInfo ui_, @PathParam("id") final Integer companyId_,
+			@PathParam("parentId") final Integer parentEnvironmentId_) throws Exception
+	{
+		final List<Environment> environments = environmentService.getParentDependableEnvironments(companyId_, parentEnvironmentId_);
+		final List<EnvironmentInfo> environmentsInfo = objectBuilderFactory.toInfo(EnvironmentInfo.class, environments, ui_.getBaseUriBuilder());
+		return environmentsInfo;
+	}
+
+	@PUT
+	@Path("/{id}/parentchildenvironments/{parentId}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.ENVIRONMENT_EDIT })
+	public Boolean updateParentDependableEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer companyId_,
+			@PathParam("parentId") final Integer parentEnvironmentId_, @FormParam("environmentIds") final ArrayList<Integer> environmentIds_) throws Exception
+	{
+		environmentService.saveParentDependableEnvironments(companyId_, parentEnvironmentId_, environmentIds_);
+
+		return Boolean.TRUE;
+	}
 }

@@ -43,5 +43,4 @@ public class BaseWebServiceImpl
 	{
 		return new EntityTag(timelineEntity_.getId() + "-" + timelineEntity_.getVersion());
 	}
-
 }

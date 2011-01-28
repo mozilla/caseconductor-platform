@@ -19,7 +19,10 @@
  */
 package com.utest.domain.service;
 
+import java.util.List;
+
 import com.utest.domain.Company;
+import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 
@@ -42,4 +45,8 @@ public interface CompanyService
 
 	void deleteCompany(Integer companyId, Integer originalVersionId) throws Exception;
 
+	List<EnvironmentGroup> addGeneratedEnvironmentGroupsForCompany(Integer companyId, List<Integer> environmentIds, Integer originalVersionId) throws Exception;
+
+	List<EnvironmentGroup> addGeneratedEnvironmentGroupsForCompany(Integer companyId, Integer environmentTypeId, List<Integer> environmentIds, Integer originalVersionId)
+			throws Exception;
 }

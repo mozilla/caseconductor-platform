@@ -31,6 +31,7 @@
 
 	<bean id="companyService" class="com.utest.domain.service.impl.CompanyServiceImpl">
 		<constructor-arg ref="typelessDao" />
+		<constructor-arg ref="environmentService" />
 	</bean>
 	
 	<bean id="productService" class="com.utest.domain.service.impl.ProductServiceImpl">

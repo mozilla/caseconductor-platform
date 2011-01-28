@@ -43,6 +43,7 @@
                	<entry key="environment" value="/environments/{id}"/>
                	<entry key="environmentgroup" value="/environmentgroups/{id}"/>
                 <entry key="environmenttype" value="/environmenttypes/{id}"/>
+                <entry key="parentenvironmenttype" value="/environmenttypes/{id}"/>
                 <entry key="company" value="/companies/{id}"/>
                 <entry key="user" value="/users/{id}"/>
                 <entry key="accessrole" value="/users/roles/{id}"/>
@@ -70,6 +71,7 @@
 		<constructor-arg ref="objectBuilderFactory" />
 		<constructor-arg ref="companyService" />
 		<constructor-arg ref="userService" />
+		<constructor-arg ref="environmentService" />
 	</bean>
 
 	<bean id="productWebService" class="com.utest.webservice.impl.v2.ProductWebServiceImpl">

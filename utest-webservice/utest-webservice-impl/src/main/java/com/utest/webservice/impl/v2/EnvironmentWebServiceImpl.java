@@ -91,7 +91,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Secured( { Permission.ENVIRONMENT_EDIT })
 	public EnvironmentTypeInfo createEnvironmentType(@Context final UriInfo ui_, @FormParam("") final EnvironmentTypeInfo environmentTypeInfo_) throws Exception
 	{
-		final EnvironmentType environmentType = environmentService.addEnvironmentType(environmentTypeInfo_.getCompanyId(), environmentTypeInfo_.getParentEnvironmentTypeId(),
+		EnvironmentType environmentType = environmentService.addEnvironmentType(environmentTypeInfo_.getCompanyId(), environmentTypeInfo_.getParentEnvironmentTypeId(),
 				environmentTypeInfo_.getName(), environmentTypeInfo_.isGroupType(), environmentTypeInfo_.getLocaleCode());
 
 		return objectBuilderFactory.toInfo(EnvironmentTypeInfo.class, environmentType, ui_.getBaseUriBuilder());
@@ -127,7 +127,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@GET
 	@Path("/environmenttypes/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
 	public EnvironmentTypeSearchResultInfo findEnvironmentTypes(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
@@ -209,7 +209,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@GET
 	@Path("/environments/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
 	public EnvironmentSearchResultInfo findEnvironments(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
@@ -263,7 +263,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@GET
 	@Path("/tags/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
 	public TagSearchResultInfo findTags(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
@@ -272,62 +272,6 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 		final UtestSearchResult result = environmentService.findTags(search);
 
 		return (TagSearchResultInfo) objectBuilderFactory.createResult(TagInfo.class, Tag.class, request_, result, ui_.getBaseUriBuilder());
-	}
-
-	@GET
-	@Path("/parentchildenvironments/{companyId}/{parentId}/")
-	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Override
-	@Secured(Permission.ENVIRONMENT_VIEW)
-	public List<EnvironmentInfo> getParentDependableEnvironments(@Context UriInfo ui_, @PathParam("companyId") final Integer companyId_,
-			@PathParam("parentId") final Integer parentEnvironmentId_, @QueryParam("") UtestSearchRequest request) throws Exception
-	{
-		final List<Environment> environments = environmentService.getParentDependableEnvironments(companyId_, parentEnvironmentId_);
-		final List<EnvironmentInfo> environmentsInfo = objectBuilderFactory.toInfo(EnvironmentInfo.class, environments, ui_.getBaseUriBuilder());
-		return environmentsInfo;
-	}
-
-	@PUT
-	@Path("/parentchildenvironments/{companyId}/{parentId}/")
-	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Override
-	@Secured( { Permission.ENVIRONMENT_EDIT })
-	public Boolean updateParentDependableEnvironments(@Context final UriInfo ui_, @PathParam("companyId") final Integer companyId_,
-			@PathParam("parentId") final Integer parentEnvironmentId_, @FormParam("environmentIds") final ArrayList<Integer> environmentIds_) throws Exception
-	{
-		environmentService.saveParentDependableEnvironments(companyId_, parentEnvironmentId_, environmentIds_);
-
-		return Boolean.TRUE;
-	}
-
-	@PUT
-	@Path("/environmentgroups/autogenerate/{companyId}/")
-	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Override
-	@Secured( { Permission.ENVIRONMENT_EDIT })
-	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("companyId") final Integer companyId_,
-			@FormParam("environmentIds") final ArrayList<Integer> environmentIds_) throws Exception
-	{
-		List<EnvironmentGroup> environmentGroups = environmentService.addGeneratedEnvironmentGroups(companyId_, environmentIds_);
-		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder());
-		return environmentGroupsInfo;
-	}
-
-	@PUT
-	@Path("/environmentgroups/autogenerate/{companyId}/{typeId}/")
-	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Override
-	@Secured( { Permission.ENVIRONMENT_EDIT })
-	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("companyId") final Integer companyId_,
-			@PathParam("typeId") final Integer environmentTypeId_, @FormParam("environmentIds") final ArrayList<Integer> environmentIds_) throws Exception
-	{
-		List<EnvironmentGroup> environmentGroups = environmentService.addGeneratedEnvironmentGroups(companyId_, environmentTypeId_, environmentIds_);
-		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder());
-		return environmentGroupsInfo;
 	}
 
 	@PUT
@@ -361,7 +305,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@GET
 	@Path("/environmentgroups/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
 	public EnvironmentGroupSearchResultInfo findEnvironmentGroups(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception

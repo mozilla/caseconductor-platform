@@ -32,9 +32,13 @@ public class EnvironmentTypeInfo extends BaseInfo
 {
 	@XmlElement(required = false)
 	private final Integer	parentEnvironmentTypeId	= null;
+	@XmlElement(type = ResourceLocator.class, name = "parentEnvironmentTypeLocator")
+	private ResourceLocator	parentEnvironmentTypeLocator;
 	@XmlElement(required = false)
 	private Integer			companyId;
-	@XmlElement(required = false)
+	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
+	private ResourceLocator	companyLocator;
+	@XmlElement(required = true)
 	private boolean			groupType;
 	@XmlElement(required = true)
 	private String			name;
@@ -96,5 +100,25 @@ public class EnvironmentTypeInfo extends BaseInfo
 	public Integer getParentEnvironmentTypeId()
 	{
 		return parentEnvironmentTypeId;
+	}
+
+	public ResourceLocator getParentEnvironmentTypeLocator()
+	{
+		return parentEnvironmentTypeLocator;
+	}
+
+	public void setParentEnvironmentTypeLocator(ResourceLocator parentEnvironmentTypeLocator)
+	{
+		this.parentEnvironmentTypeLocator = parentEnvironmentTypeLocator;
+	}
+
+	public ResourceLocator getCompanyLocator()
+	{
+		return companyLocator;
+	}
+
+	public void setCompanyLocator(ResourceLocator companyLocator)
+	{
+		this.companyLocator = companyLocator;
 	}
 }

@@ -67,15 +67,6 @@ public interface EnvironmentWebService
 
 	List<EnvironmentInfo> getEnvironmentTypeEnvironments(UriInfo ui, Integer environmentTypeId, UtestSearchRequest request) throws Exception;
 
-	List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(UriInfo ui, Integer companyId, ArrayList<Integer> environmentIds) throws Exception;
-
-	List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(UriInfo ui, Integer companyId, Integer environmentTypeId, ArrayList<Integer> environmentIds)
-			throws Exception;
-
-	Boolean updateParentDependableEnvironments(UriInfo ui, Integer companyId, Integer parentEnvironmentId, ArrayList<Integer> environmentIds) throws Exception;
-
-	List<EnvironmentInfo> getParentDependableEnvironments(UriInfo ui, Integer companyId, Integer parentEnvironmentId, UtestSearchRequest request) throws Exception;
-
 	TagInfo createTag(UriInfo ui, TagInfo tagInfo) throws Exception;
 
 	Boolean deleteTag(UriInfo ui, Integer tagId) throws Exception;

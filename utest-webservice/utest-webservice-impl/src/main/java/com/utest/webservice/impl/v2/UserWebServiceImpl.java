@@ -230,7 +230,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 
 	@GET
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.USER_ACCOUNT_VIEW)
 	public UserSearchResultInfo findUsers(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
@@ -244,7 +244,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@GET
 	@Path("/permissions/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.USER_ACCOUNT_VIEW)
 	public PermissionSearchResultInfo findPermissions(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
@@ -402,7 +402,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@GET
 	@Path("/roles/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.USER_ACCOUNT_VIEW)
 	public RoleSearchResultInfo findRoles(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception

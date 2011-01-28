@@ -104,6 +104,15 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public Environment addEnvironment(final Integer companyId_, final Integer environmentTypeId_, final String name_, final String localeCode_) throws Exception
 	{
+		String lc = null;
+		if (localeCode_ == null)
+		{
+			lc = Locale.DEFAULT_LOCALE;
+		}
+		else
+		{
+			lc = localeCode_;
+		}
 		if (!Company.SYSTEM_WIDE_COMPANY_ID.equals(companyId_))
 		{
 			findEntityById(Company.class, companyId_);
@@ -114,7 +123,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		// check if exists already with default locale
 		final Search search = new Search(EnvironmentLocale.class);
 		search.addFilterEqual("name", name_);
-		search.addFilterEqual("localeCode", localeCode_);
+		search.addFilterEqual("localeCode", lc);
 		final List<EnvironmentLocale> foundTypes = dao.search(EnvironmentLocale.class, search);
 		// check if exists for the same company
 		if ((foundTypes != null) && !foundTypes.isEmpty())
@@ -129,13 +138,15 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 			}
 		}
 		// add new environment
-		final Environment environment = new Environment();
+		Environment environment = new Environment();
 		environment.setEnvironmentTypeId(environmentTypeId_);
 		environment.setCompanyId(companyId_);
 		final Integer environmentId = dao.addAndReturnId(environment);
 		// TODO - read defaults from application settings
-		saveEnvironmentLocale(environmentId, name_, localeCode_, Locale.DEFAULT_SORT_ORDER);
-		return getEnvironment(environmentId);
+		EnvironmentLocale el = saveEnvironmentLocale(environmentId, name_, lc, Locale.DEFAULT_SORT_ORDER);
+		environment = getEnvironment(environmentId);
+		environment.addLocale(el, lc);
+		return environment;
 	}
 
 	private void checkValidEnvironmentType(Integer companyId_, Integer environmentTypeId_, boolean isGroupType_)
@@ -358,7 +369,15 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	public EnvironmentType addEnvironmentType(final Integer companyId_, final Integer parentEnvironmentTypeId_, final String name_, boolean isGroupType_, final String localeCode_)
 			throws Exception
 	{
-
+		String lc = null;
+		if (localeCode_ == null)
+		{
+			lc = Locale.DEFAULT_LOCALE;
+		}
+		else
+		{
+			lc = localeCode_;
+		}
 		if (!Company.SYSTEM_WIDE_COMPANY_ID.equals(companyId_))
 		{
 			findEntityById(Company.class, companyId_);
@@ -375,7 +394,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		// check if exists already with this locale
 		final Search search = new Search(EnvironmentTypeLocale.class);
 		search.addFilterEqual("name", name_);
-		search.addFilterEqual("localeCode", localeCode_);
+		search.addFilterEqual("localeCode", lc);
 		final List<EnvironmentTypeLocale> foundTypes = dao.search(EnvironmentTypeLocale.class, search);
 		for (final EnvironmentTypeLocale locale : foundTypes)
 		{
@@ -386,14 +405,16 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 			}
 		}
 		// add new environment type
-		final EnvironmentType environmentType = new EnvironmentType();
+		EnvironmentType environmentType = new EnvironmentType();
 		environmentType.setParentEnvironmentTypeId(parentEnvironmentTypeId_);
 		environmentType.setCompanyId(companyId_);
 		environmentType.setGroupType(isGroupType_);
 		final Integer environmentTypeId = dao.addAndReturnId(environmentType);
 		// TODO - read defaults from application settings
-		saveEnvironmentTypeLocale(environmentTypeId, name_, localeCode_, Locale.DEFAULT_SORT_ORDER);
-		return getEnvironmentType(environmentTypeId);
+		EnvironmentTypeLocale etl = saveEnvironmentTypeLocale(environmentTypeId, name_, lc, Locale.DEFAULT_SORT_ORDER);
+		environmentType = getEnvironmentType(environmentTypeId);
+		environmentType.addLocale(etl, lc);
+		return environmentType;
 	}
 
 	@Override
@@ -864,10 +885,28 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public EnvironmentLocale saveEnvironmentLocale(final Integer environmentId_, final String name_, final String localeCode_, final Integer sortOrder_) throws Exception
 	{
+		String lc = null;
+		if (localeCode_ == null)
+		{
+			lc = Locale.DEFAULT_LOCALE;
+		}
+		else
+		{
+			lc = localeCode_;
+		}
+		Integer so = null;
+		if (sortOrder_ == null)
+		{
+			so = Locale.DEFAULT_SORT_ORDER;
+		}
+		else
+		{
+			so = sortOrder_;
+		}
 		// TODO - check for duplicate name
 		final Search search = new Search(EnvironmentLocale.class);
 		search.addFilterEqual("environmentId", environmentId_);
-		search.addFilterEqual("localeCode", localeCode_);
+		search.addFilterEqual("localeCode", lc);
 		EnvironmentLocale locale = (EnvironmentLocale) dao.searchUnique(EnvironmentLocale.class, search);
 		if (locale == null)
 		{
@@ -876,8 +915,8 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		}
 		locale.setName(name_);
 		locale.setEnvironmentId(environmentId_);
-		locale.setLocaleCode(localeCode_);
-		locale.setSortOrder(sortOrder_);
+		locale.setLocaleCode(lc);
+		locale.setSortOrder(so);
 		return dao.merge(locale);
 	}
 
@@ -885,10 +924,28 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	public EnvironmentTypeLocale saveEnvironmentTypeLocale(final Integer environmentTypeId_, final String name_, final String localeCode_, final Integer sortOrder_)
 			throws Exception
 	{
+		String lc = null;
+		if (localeCode_ == null)
+		{
+			lc = Locale.DEFAULT_LOCALE;
+		}
+		else
+		{
+			lc = localeCode_;
+		}
+		Integer so = null;
+		if (sortOrder_ == null)
+		{
+			so = Locale.DEFAULT_SORT_ORDER;
+		}
+		else
+		{
+			so = sortOrder_;
+		}
 		// TODO - check for duplicate name
 		final Search search = new Search(EnvironmentTypeLocale.class);
 		search.addFilterEqual("environmentTypeId", environmentTypeId_);
-		search.addFilterEqual("localeCode", localeCode_);
+		search.addFilterEqual("localeCode", lc);
 		EnvironmentTypeLocale locale = (EnvironmentTypeLocale) dao.searchUnique(EnvironmentTypeLocale.class, search);
 		if (locale == null)
 		{
@@ -897,8 +954,8 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		}
 		locale.setName(name_);
 		locale.setEnvironmentTypeId(environmentTypeId_);
-		locale.setLocaleCode(localeCode_);
-		locale.setSortOrder(sortOrder_);
+		locale.setLocaleCode(lc);
+		locale.setSortOrder(so);
 		return dao.merge(locale);
 	}
 

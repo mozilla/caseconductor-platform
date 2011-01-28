@@ -25,24 +25,28 @@ import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.Company;
 import com.utest.domain.Country;
+import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.Product;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.CompanyService;
+import com.utest.domain.service.EnvironmentService;
 import com.utest.exception.DeletingUsedEntityException;
 
 public class CompanyServiceImpl extends BaseServiceImpl implements CompanyService
 {
-	private final TypelessDAO	dao;
+	private final TypelessDAO			dao;
+	private final EnvironmentService	environmentService;
 
 	/**
 	 * Default constructor
 	 */
-	public CompanyServiceImpl(final TypelessDAO dao)
+	public CompanyServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService)
 	{
 		super(dao);
 		this.dao = dao;
+		this.environmentService = environmentService;
 	}
 
 	@Override
@@ -120,6 +124,22 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 		company.setUrl(url_);
 		company.setPhone(phone_);
 		return dao.merge(company);
+	}
+
+	@Override
+	public List<EnvironmentGroup> addGeneratedEnvironmentGroupsForCompany(final Integer companyId_, final List<Integer> environmentIds_, final Integer originalVersionId_)
+			throws Exception
+	{
+		return addGeneratedEnvironmentGroupsForCompany(companyId_, null, environmentIds_, originalVersionId_);
+	}
+
+	@Override
+	public List<EnvironmentGroup> addGeneratedEnvironmentGroupsForCompany(final Integer companyId_, final Integer environmentTypeId_, final List<Integer> environmentIds_,
+			final Integer originalVersionId_) throws Exception
+	{
+		findEntityById(Company.class, companyId_);
+		final List<EnvironmentGroup> groups = environmentService.addGeneratedEnvironmentGroups(companyId_, environmentTypeId_, environmentIds_);
+		return groups;
 	}
 
 }
