@@ -35,7 +35,7 @@ public class PermissionInfo extends BaseInfo
 	@XmlElement(required = true)
 	private String	permissionCode;
 	@XmlElement(required = true)
-	private boolean	assignable;
+	private String	assignable;
 	@XmlElement(required = true)
 	private Integer	sortOrder	= 0;
 
@@ -59,12 +59,12 @@ public class PermissionInfo extends BaseInfo
 		this.permissionCode = permissionCode;
 	}
 
-	public boolean isAssignable()
+	public String getAssignable()
 	{
 		return assignable;
 	}
 
-	public void setAssignable(final boolean assignable)
+	public void setAssignable(final String assignable)
 	{
 		this.assignable = assignable;
 	}

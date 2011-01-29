@@ -43,7 +43,7 @@ public class IncludedTestCaseInfo extends BaseInfo
 	@XmlElement(required = false)
 	private Integer			runOrder	= 0;
 	@XmlElement(required = false)
-	private boolean			blocking	= false;
+	private String			blocking	= "false";
 	@XmlElement(required = false)
 	private Integer			testRunId;
 	@XmlElement(type = ResourceLocator.class, name = "testRunLocator")
@@ -63,7 +63,7 @@ public class IncludedTestCaseInfo extends BaseInfo
 		return runOrder;
 	}
 
-	public boolean isBlocking()
+	public String getBlocking()
 	{
 		return blocking;
 	}
@@ -78,7 +78,7 @@ public class IncludedTestCaseInfo extends BaseInfo
 		this.runOrder = runOrder;
 	}
 
-	public void setBlocking(boolean blocking)
+	public void setBlocking(String blocking)
 	{
 		this.blocking = blocking;
 	}

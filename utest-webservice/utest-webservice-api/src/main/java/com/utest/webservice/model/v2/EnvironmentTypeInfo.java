@@ -39,7 +39,7 @@ public class EnvironmentTypeInfo extends BaseInfo
 	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
 	private ResourceLocator	companyLocator;
 	@XmlElement(required = true)
-	private boolean			groupType;
+	private String			groupType				= "false";
 	@XmlElement(required = true)
 	private String			name;
 	@XmlElement(required = false)
@@ -57,12 +57,12 @@ public class EnvironmentTypeInfo extends BaseInfo
 		this.companyId = companyId;
 	}
 
-	public boolean isGroupType()
+	public String getGroupType()
 	{
 		return groupType;
 	}
 
-	public void setGroupType(boolean groupType)
+	public void setGroupType(String groupType)
 	{
 		this.groupType = groupType;
 	}

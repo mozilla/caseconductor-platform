@@ -75,8 +75,8 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	{
 
 		final TestCycle testCycle = testCycleService.saveTestCycle(testCycleId_, testCycleInfo_.getName(), testCycleInfo_.getDescription(), testCycleInfo_.getStartDate(),
-				testCycleInfo_.getEndDate(), testCycleInfo_.isCommunityAuthoringAllowed(), testCycleInfo_.isCommunityAccessAllowed(), testCycleInfo_.getResourceIdentity()
-						.getVersion());
+				testCycleInfo_.getEndDate(), "true".equalsIgnoreCase(testCycleInfo_.getCommunityAuthoringAllowed()), "true".equalsIgnoreCase(testCycleInfo_
+						.getCommunityAccessAllowed()), testCycleInfo_.getResourceIdentity().getVersion());
 		return objectBuilderFactory.toInfo(TestCycleInfo.class, testCycle, ui_.getBaseUriBuilder());
 	}
 
@@ -153,7 +153,8 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	public TestCycleInfo createTestCycle(@Context final UriInfo ui_, @FormParam("") final TestCycleInfo testCycleInfo_) throws Exception
 	{
 		final TestCycle testCycle = testCycleService.addTestCycle(testCycleInfo_.getProductId(), testCycleInfo_.getName(), testCycleInfo_.getDescription(), testCycleInfo_
-				.getStartDate(), testCycleInfo_.getEndDate(), testCycleInfo_.isCommunityAuthoringAllowed(), testCycleInfo_.isCommunityAccessAllowed());
+				.getStartDate(), testCycleInfo_.getEndDate(), "true".equalsIgnoreCase(testCycleInfo_.getCommunityAuthoringAllowed()), "true".equalsIgnoreCase(testCycleInfo_
+				.getCommunityAccessAllowed()));
 
 		return objectBuilderFactory.toInfo(TestCycleInfo.class, testCycle, ui_.getBaseUriBuilder());
 	}

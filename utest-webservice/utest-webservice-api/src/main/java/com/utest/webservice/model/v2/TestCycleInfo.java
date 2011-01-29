@@ -7,7 +7,7 @@
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License get distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -47,9 +47,9 @@ public class TestCycleInfo extends BaseInfo
 	@XmlElement(required = false)
 	private Date			endDate;
 	@XmlElement(required = false)
-	private boolean			communityAuthoringAllowed;
+	private String			communityAuthoringAllowed;
 	@XmlElement(required = false)
-	private boolean			communityAccessAllowed;
+	private String			communityAccessAllowed;
 
 	public TestCycleInfo()
 	{
@@ -129,22 +129,22 @@ public class TestCycleInfo extends BaseInfo
 		this.endDate = endDate;
 	}
 
-	public boolean isCommunityAuthoringAllowed()
+	public String getCommunityAuthoringAllowed()
 	{
 		return communityAuthoringAllowed;
 	}
 
-	public void setCommunityAuthoringAllowed(boolean communityAuthoringAllowed)
+	public void setCommunityAuthoringAllowed(String communityAuthoringAllowed)
 	{
 		this.communityAuthoringAllowed = communityAuthoringAllowed;
 	}
 
-	public boolean isCommunityAccessAllowed()
+	public String getCommunityAccessAllowed()
 	{
 		return communityAccessAllowed;
 	}
 
-	public void setCommunityAccessAllowed(boolean communityAccessAllowed)
+	public void setCommunityAccessAllowed(String communityAccessAllowed)
 	{
 		this.communityAccessAllowed = communityAccessAllowed;
 	}

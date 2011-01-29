@@ -57,7 +57,7 @@ public class TestCaseVersionInfo extends BaseInfo
 	@XmlElement(required = false)
 	private Integer			minorVersion;
 	@XmlElement(required = false)
-	private boolean			latestVersion;
+	private String			latestVersion;
 	@XmlElement(required = false)
 	private Integer			approvalStatusId;
 	@XmlElement(required = false)
@@ -157,12 +157,12 @@ public class TestCaseVersionInfo extends BaseInfo
 		this.minorVersion = minorVersion;
 	}
 
-	public boolean isLatestVersion()
+	public String getLatestVersion()
 	{
 		return latestVersion;
 	}
 
-	public void setLatestVersion(boolean latestVersion)
+	public void setLatestVersion(String latestVersion)
 	{
 		this.latestVersion = latestVersion;
 	}

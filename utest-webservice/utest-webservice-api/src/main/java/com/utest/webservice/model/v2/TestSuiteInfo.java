@@ -7,7 +7,7 @@
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License get distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -53,7 +53,7 @@ public class TestSuiteInfo extends BaseInfo
 	@XmlElement(required = false)
 	private Integer			testSuiteStatusId;
 	@XmlElement(required = false)
-	private boolean			useLatestVersions;
+	private String			useLatestVersions;
 
 	public TestSuiteInfo()
 	{
@@ -103,12 +103,12 @@ public class TestSuiteInfo extends BaseInfo
 		return testSuiteStatusId;
 	}
 
-	public void setUseLatestVersions(boolean useLatestVersions)
+	public void setUseLatestVersions(String useLatestVersions)
 	{
 		this.useLatestVersions = useLatestVersions;
 	}
 
-	public boolean isUseLatestVersions()
+	public String getUseLatestVersions()
 	{
 		return useLatestVersions;
 	}

@@ -29,6 +29,8 @@ import java.util.Map;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import com.utest.domain.Entity;
@@ -41,16 +43,16 @@ import com.utest.domain.search.UtestSearchResult;
 import com.utest.webservice.model.v2.BaseInfo;
 import com.utest.webservice.model.v2.ResourceIdentity;
 import com.utest.webservice.model.v2.ResourceLocator;
-import com.utest.webservice.model.v2.Timeline;
 import com.utest.webservice.model.v2.SearchResultInfo;
-import com.utest.webservice.model.v2.UtestSearchResultInfo;
+import com.utest.webservice.model.v2.Timeline;
 import com.utest.webservice.model.v2.UtestSearchRequest;
+import com.utest.webservice.model.v2.UtestSearchResultInfo;
 
 public class Builder<Ti, To>
 {
 
-	protected final ObjectBuilderFactory		factory;
-	protected Class<Ti>							infoClass;
+	protected final ObjectBuilderFactory			factory;
+	protected Class<Ti>								infoClass;
 	protected Class<? extends SearchResultInfo<Ti>>	resultClass;
 
 	Builder(final ObjectBuilderFactory factory, final Class<Ti> clazz, final Class<? extends SearchResultInfo<Ti>> resultClass)
@@ -94,12 +96,18 @@ public class Builder<Ti, To>
 			throw new IllegalArgumentException("No default constructor found for " + infoClass.getName());
 		}
 		result = constr.newInstance(new Object[] {});
-		PropertyUtils.copyProperties(result, object);
+		ConvertUtilsBean cub = new ConvertUtilsBean();
+		// do not throw exceptions on null values
+		cub.register(false, false, 0);
+		BeanUtilsBean bub = new BeanUtilsBean(cub);
+		bub.copyProperties(result, object);
+		// PropertyUtils.copyProperties(result, object);
 		if (object instanceof LocalizedEntity)
 		{
 			LocalizedEntity localizedEntity = (LocalizedEntity) object;
 			LocaleDescriptable localDescriptable = localizedEntity.getLocale(Locale.DEFAULT_LOCALE);
-			PropertyUtils.copyProperties(result, localDescriptable);
+			// PropertyUtils.copyProperties(result, localDescriptable);
+			bub.copyProperties(result, localDescriptable);
 		}
 		Map<?, ?> resultProperties = PropertyUtils.describe(result);
 		// don't return password field

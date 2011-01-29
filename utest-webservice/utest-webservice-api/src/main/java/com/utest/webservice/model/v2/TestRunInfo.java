@@ -7,7 +7,7 @@
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License get distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -52,13 +52,13 @@ public class TestRunInfo extends BaseInfo
 	@XmlElement(required = false)
 	private Date			endDate;
 	@XmlElement(required = false)
-	private boolean			selfAssignAllowed;
+	private String			selfAssignAllowed;
 	@XmlElement(required = false)
 	private Integer			selfAssignLimit;
 	@XmlElement(required = false)
-	private boolean			selfAssignPerEnvironment;
+	private String			selfAssignPerEnvironment;
 	@XmlElement(required = false)
-	private boolean			useLatestVersions;
+	private String			useLatestVersions;
 
 	public TestRunInfo()
 	{
@@ -98,12 +98,12 @@ public class TestRunInfo extends BaseInfo
 		this.name = name;
 	}
 
-	public void setUseLatestVersions(boolean useLatestVersions)
+	public void setUseLatestVersions(String useLatestVersions)
 	{
 		this.useLatestVersions = useLatestVersions;
 	}
 
-	public boolean isUseLatestVersions()
+	public String getUseLatestVersions()
 	{
 		return useLatestVersions;
 	}
@@ -168,12 +168,12 @@ public class TestRunInfo extends BaseInfo
 		this.endDate = endDate;
 	}
 
-	public boolean isSelfAssignAllowed()
+	public String getSelfAssignAllowed()
 	{
 		return selfAssignAllowed;
 	}
 
-	public void setSelfAssignAllowed(boolean selfAssignAllowed)
+	public void setSelfAssignAllowed(String selfAssignAllowed)
 	{
 		this.selfAssignAllowed = selfAssignAllowed;
 	}
@@ -188,12 +188,12 @@ public class TestRunInfo extends BaseInfo
 		this.selfAssignLimit = selfAssignLimit;
 	}
 
-	public boolean isSelfAssignPerEnvironment()
+	public String getSelfAssignPerEnvironment()
 	{
 		return selfAssignPerEnvironment;
 	}
 
-	public void setSelfAssignPerEnvironment(boolean selfAssignPerEnvironment)
+	public void setSelfAssignPerEnvironment(String selfAssignPerEnvironment)
 	{
 		this.selfAssignPerEnvironment = selfAssignPerEnvironment;
 	}

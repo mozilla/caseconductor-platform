@@ -92,7 +92,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	public EnvironmentTypeInfo createEnvironmentType(@Context final UriInfo ui_, @FormParam("") final EnvironmentTypeInfo environmentTypeInfo_) throws Exception
 	{
 		EnvironmentType environmentType = environmentService.addEnvironmentType(environmentTypeInfo_.getCompanyId(), environmentTypeInfo_.getParentEnvironmentTypeId(),
-				environmentTypeInfo_.getName(), environmentTypeInfo_.isGroupType(), environmentTypeInfo_.getLocaleCode());
+				environmentTypeInfo_.getName(), "true".equalsIgnoreCase(environmentTypeInfo_.getGroupType()), environmentTypeInfo_.getLocaleCode());
 
 		return objectBuilderFactory.toInfo(EnvironmentTypeInfo.class, environmentType, ui_.getBaseUriBuilder());
 	}

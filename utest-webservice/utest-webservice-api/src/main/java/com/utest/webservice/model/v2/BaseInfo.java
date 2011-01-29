@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class BaseInfo
 {
+
 	@XmlElement(type = ResourceIdentity.class, name = "resourceIdentity", required = false)
 	private ResourceIdentity	resourceIdentity;
 	@XmlElement(type = Timeline.class, name = "timeline", required = false)

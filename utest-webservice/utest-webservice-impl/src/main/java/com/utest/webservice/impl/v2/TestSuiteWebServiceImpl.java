@@ -73,7 +73,6 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	public TestSuiteInfo updateTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_, @FormParam("") final TestSuiteInfo testSuiteInfo_)
 			throws Exception
 	{
-
 		final TestSuite testSuite = testSuiteService.saveTestSuite(testSuiteId_, testSuiteInfo_.getName(), testSuiteInfo_.getDescription(), testSuiteInfo_.getResourceIdentity()
 				.getVersion());
 		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getBaseUriBuilder());
@@ -155,7 +154,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	{
 
 		final TestSuiteTestCase includedTestCase = testSuiteService.addTestSuiteTestCase(testSuiteId_, testCaseInfo_.getTestCaseVersionId(), testCaseInfo_.getPriorityId(),
-				testCaseInfo_.getRunOrder(), testCaseInfo_.isBlocking());
+				testCaseInfo_.getRunOrder(), "true".equalsIgnoreCase(testCaseInfo_.getBlocking()));
 		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
 	}
 
@@ -197,7 +196,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	{
 
 		final TestSuiteTestCase includedTestCase = testSuiteService.saveTestSuiteTestCase(includedTestCaseId_, includedTestCaseInfo_.getPriorityId(), includedTestCaseInfo_
-				.getRunOrder(), includedTestCaseInfo_.isBlocking(), includedTestCaseInfo_.getResourceIdentity().getVersion());
+				.getRunOrder(), "true".equalsIgnoreCase(includedTestCaseInfo_.getBlocking()), includedTestCaseInfo_.getResourceIdentity().getVersion());
 		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
 	}
 
@@ -208,8 +207,8 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Secured( { Permission.TEST_SUITE_EDIT })
 	public TestSuiteInfo createTestSuite(@Context final UriInfo ui_, @FormParam("") final TestSuiteInfo testSuiteInfo_) throws Exception
 	{
-		final TestSuite testSuite = testSuiteService.addTestSuite(testSuiteInfo_.getProductId(), testSuiteInfo_.isUseLatestVersions(), testSuiteInfo_.getName(), testSuiteInfo_
-				.getDescription());
+		final TestSuite testSuite = testSuiteService.addTestSuite(testSuiteInfo_.getProductId(), "true".equalsIgnoreCase(testSuiteInfo_.getUseLatestVersions()), testSuiteInfo_
+				.getName(), testSuiteInfo_.getDescription());
 
 		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getBaseUriBuilder());
 	}

@@ -87,8 +87,8 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	{
 
 		final TestRun testRun = testRunService.saveTestRun(testRunId_, testRunInfo_.getName(), testRunInfo_.getDescription(), testRunInfo_.getStartDate(), testRunInfo_
-				.getEndDate(), testRunInfo_.isSelfAssignAllowed(), testRunInfo_.isSelfAssignPerEnvironment(), testRunInfo_.getSelfAssignLimit(), testRunInfo_.getResourceIdentity()
-				.getVersion());
+				.getEndDate(), "true".equalsIgnoreCase(testRunInfo_.getSelfAssignAllowed()), "true".equalsIgnoreCase(testRunInfo_.getSelfAssignPerEnvironment()), testRunInfo_
+				.getSelfAssignLimit(), testRunInfo_.getResourceIdentity().getVersion());
 
 		return objectBuilderFactory.toInfo(TestRunInfo.class, testRun, ui_.getBaseUriBuilder());
 	}
@@ -167,9 +167,9 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Secured( { Permission.TEST_RUN_EDIT })
 	public TestRunInfo createTestRun(@Context final UriInfo ui_, @FormParam("") final TestRunInfo testRunInfo_) throws Exception
 	{
-		final TestRun testRun = testRunService.addTestRun(testRunInfo_.getTestCycleId(), testRunInfo_.isUseLatestVersions(), testRunInfo_.getName(), testRunInfo_.getDescription(),
-				testRunInfo_.getStartDate(), testRunInfo_.getEndDate(), testRunInfo_.isSelfAssignAllowed(), testRunInfo_.isSelfAssignPerEnvironment(), testRunInfo_
-						.getSelfAssignLimit());
+		final TestRun testRun = testRunService.addTestRun(testRunInfo_.getTestCycleId(), "true".equalsIgnoreCase(testRunInfo_.getUseLatestVersions()), testRunInfo_.getName(),
+				testRunInfo_.getDescription(), testRunInfo_.getStartDate(), testRunInfo_.getEndDate(), "true".equalsIgnoreCase(testRunInfo_.getSelfAssignAllowed()), "true"
+						.equalsIgnoreCase(testRunInfo_.getSelfAssignPerEnvironment()), testRunInfo_.getSelfAssignLimit());
 		return objectBuilderFactory.toInfo(TestRunInfo.class, testRun, ui_.getBaseUriBuilder());
 	}
 
@@ -249,7 +249,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	{
 
 		final TestRunTestCase includedTestCase = testRunService.addTestRunTestCase(testRunId_, testCaseInfo_.getTestCaseVersionId(), testCaseInfo_.getPriorityId(), testCaseInfo_
-				.getRunOrder(), testCaseInfo_.isBlocking());
+				.getRunOrder(), "true".equalsIgnoreCase(testCaseInfo_.getBlocking()));
 		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
 	}
 
@@ -318,7 +318,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	{
 
 		final TestRunTestCase includedTestCase = testRunService.saveTestRunTestCase(includedTestCaseId_, includedTestCaseInfo_.getPriorityId(),
-				includedTestCaseInfo_.getRunOrder(), includedTestCaseInfo_.isBlocking(), includedTestCaseInfo_.getResourceIdentity().getVersion());
+				includedTestCaseInfo_.getRunOrder(), "true".equalsIgnoreCase(includedTestCaseInfo_.getBlocking()), includedTestCaseInfo_.getResourceIdentity().getVersion());
 
 		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
 	}
