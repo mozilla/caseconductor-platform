@@ -14,6 +14,4 @@ ALTER TABLE UserStatusLocale CHANGE description name VARCHAR(255) NOT NULL;
 ALTER TABLE Environment DROP COLUMN originalId;
 ALTER TABLE EnvironmentGroup DROP COLUMN testerProfileEnvironmentId;
 ALTER TABLE EnvironmentGroup DROP COLUMN testerProfileId;
-ALTER TABLE EnvironmentGroup DROP COLUMN environmentTypeId;
-ALTER TABLE EnvironmentGroup DROP COLUMN externalIdentifier;
 ALTER TABLE EnvironmentProfile DROP COLUMN testerProfileId;
