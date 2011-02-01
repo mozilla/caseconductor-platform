@@ -20,6 +20,7 @@
 package com.utest.webservice.model.v2;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 //@XmlRootElement()
 //@XmlAccessorType(XmlAccessType.FIELD)
@@ -31,11 +32,11 @@ public class ResourceIdentity
 		super();
 	}
 
-	// @XmlElement(required = true)
+	@XmlElement(required = true)
 	private Integer	id;
-	// @XmlElement(required = false)
+	@XmlElement(required = true)
 	private String	url;
-	// @XmlElement(required = false)
+	@XmlElement(required = true)
 	private Integer	version;
 
 	@XmlAttribute(name = "id")

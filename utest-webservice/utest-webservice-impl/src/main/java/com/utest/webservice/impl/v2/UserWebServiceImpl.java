@@ -274,7 +274,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.USER_ACCOUNT_VIEW)
-	public List<PermissionInfo> getUserPermissions(@Context UriInfo ui_, @PathParam("id") final Integer userId_, @QueryParam("") UtestSearchRequest request) throws Exception
+	public List<PermissionInfo> getUserPermissions(@Context UriInfo ui_, @PathParam("id") final Integer userId_) throws Exception
 	{
 		final List<Permission> permissions = userService.getUserPermissions(userId_);
 		final List<PermissionInfo> permissionsInfo = objectBuilderFactory.toInfo(PermissionInfo.class, permissions, ui_.getBaseUriBuilder());
@@ -288,7 +288,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.USER_ACCOUNT_VIEW)
-	public List<RoleInfo> getUserRoles(@Context UriInfo ui_, @PathParam("id") final Integer userId_, @QueryParam("") UtestSearchRequest request) throws Exception
+	public List<RoleInfo> getUserRoles(@Context UriInfo ui_, @PathParam("id") final Integer userId_) throws Exception
 	{
 		final List<AccessRole> roles = userService.getUserRoles(userId_);
 		final List<RoleInfo> rolesInfo = objectBuilderFactory.toInfo(RoleInfo.class, roles, ui_.getBaseUriBuilder());
@@ -424,6 +424,20 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 		final AccessRole role = userService.getRole(roleId_);
 
 		return objectBuilderFactory.toInfo(RoleInfo.class, role, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/roles/{id}/permissions/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.USER_ACCOUNT_VIEW)
+	public List<PermissionInfo> getRolePermissions(@Context UriInfo ui_, @PathParam("id") final Integer roleId_) throws Exception
+	{
+		final List<Permission> permissions = userService.getRolePermissions(roleId_);
+		final List<PermissionInfo> permissionsInfo = objectBuilderFactory.toInfo(PermissionInfo.class, permissions, ui_.getBaseUriBuilder());
+		return permissionsInfo;
+
 	}
 
 }

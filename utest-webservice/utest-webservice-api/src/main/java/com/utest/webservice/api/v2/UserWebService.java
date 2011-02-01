@@ -42,10 +42,6 @@ public interface UserWebService
 
 	UserSearchResultInfo findUsers(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	List<RoleInfo> getUserRoles(UriInfo ui, Integer testCycleId, UtestSearchRequest request) throws Exception;
-
-	List<PermissionInfo> getUserPermissions(UriInfo ui, Integer userId, UtestSearchRequest request) throws Exception;
-
 	PermissionSearchResultInfo findPermissions(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	PermissionInfo getPermission(UriInfo ui, Integer permissionId) throws Exception;
@@ -87,5 +83,11 @@ public interface UserWebService
 	Boolean updateRolePermissions(UriInfo ui, Integer roleId, ArrayList<Integer> permissionIds, Integer originalVersionId) throws Exception;
 
 	Boolean updateUserRoles(UriInfo ui, Integer userId, ArrayList<Integer> roleIds, Integer originalVersionId) throws Exception;
+
+	List<RoleInfo> getUserRoles(UriInfo ui, Integer userId) throws Exception;
+
+	List<PermissionInfo> getRolePermissions(UriInfo ui, Integer roleId) throws Exception;
+
+	List<PermissionInfo> getUserPermissions(UriInfo ui, Integer userId) throws Exception;
 
 }

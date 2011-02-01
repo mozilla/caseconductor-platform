@@ -8,6 +8,9 @@
             <column name="testCaseId" />
             <generator class="identity" />
         </id>
+        <version name="version" type="java.lang.Integer">
+            <column name="version" not-null="true" />
+        </version>
         <property name="name" type="string">
             <column name="name" not-null="true" />
         </property>
