@@ -64,7 +64,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		// internal users will have company id populated
 		if (companyId_ != null)
 		{
-			findEntityById(Company.class, companyId_);
+			getRequiredEntityById(Company.class, companyId_);
 		}
 		// check for duplicate email
 		if (getUserByEmail(email_) != null)
@@ -199,7 +199,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public User getUser(final Integer userId_) throws Exception
 	{
-		final User user = findEntityById(User.class, userId_);
+		final User user = getRequiredEntityById(User.class, userId_);
 		setUserContext(user);
 		return user;
 	}
@@ -242,7 +242,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		if (companyId_ != null)
 		{
 			@SuppressWarnings("unused")
-			final Company company = findEntityById(Company.class, companyId_);
+			final Company company = getRequiredEntityById(Company.class, companyId_);
 		}
 		final User user = getUser(userId_);
 		user.setCompanyId(companyId_);
@@ -287,12 +287,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		role.setName(name_);
 		role.setSortOrder(0);
 		final Integer roleId = dao.addAndReturnId(role);
-		role = findEntityById(AccessRole.class, roleId);
+		role = getRequiredEntityById(AccessRole.class, roleId);
 		for (final Integer permissionId : permissionIds_)
 		{
 			addRolePermission(roleId, permissionId, role.getVersion());
 		}
-		return findEntityById(AccessRole.class, roleId);
+		return getRequiredEntityById(AccessRole.class, roleId);
 	}
 
 	@Override
@@ -348,7 +348,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 			rolePermission.setPermissionId(permissionId_);
 			dao.addAndReturnId(rolePermission);
 
-			final AccessRole role = findEntityById(AccessRole.class, roleId_);
+			final AccessRole role = getRequiredEntityById(AccessRole.class, roleId_);
 			role.setVersion(originalVersionId_);
 			dao.merge(role);
 		}
@@ -356,7 +356,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 
 	private boolean isPermissionAssignable(final Integer permissionId_)
 	{
-		final Permission permission = findEntityById(Permission.class, permissionId_);
+		final Permission permission = getRequiredEntityById(Permission.class, permissionId_);
 		return permission.isAssignable();
 	}
 
@@ -377,8 +377,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public void addUserRole(final Integer roleId_, final Integer userId_, final Integer originalVersionId_)
 	{
-		final User user = findEntityById(User.class, userId_);
-		final AccessRole role = findEntityById(AccessRole.class, roleId_);
+		final User user = getRequiredEntityById(User.class, userId_);
+		final AccessRole role = getRequiredEntityById(AccessRole.class, roleId_);
 		if (AccessRole.getProtectedSystemRoleIds().contains(roleId_))
 		{
 			throw new UnsupportedOperationException("Cannot assign this system role: " + roleId_);
@@ -402,7 +402,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public void deleteRole(final Integer roleId_, final Integer originalVersionId_) throws Exception
 	{
-		final AccessRole role = findEntityById(AccessRole.class, roleId_);
+		final AccessRole role = getRequiredEntityById(AccessRole.class, roleId_);
 		// TODO - check same company before deleting
 		if (isSystemRole(roleId_))
 		{
@@ -420,7 +420,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public void deleteRolePermission(final Integer roleId_, final Integer permissionId_, final Integer originalVersionId_)
 	{
-		final AccessRole role = findEntityById(AccessRole.class, roleId_);
+		final AccessRole role = getRequiredEntityById(AccessRole.class, roleId_);
 		final Search search = new Search(RolePermission.class);
 		search.addFilterEqual("accessRoleId", roleId_);
 		search.addFilterEqual("permissionId", permissionId_);
@@ -442,7 +442,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public void deleteUserRole(final Integer roleId_, final Integer userId_, final Integer originalVersionId_)
 	{
-		final User user = findEntityById(User.class, userId_);
+		final User user = getRequiredEntityById(User.class, userId_);
 		final Search search = new Search(UserRole.class);
 		search.addFilterEqual("accessRoleId", roleId_);
 		search.addFilterEqual("userId", userId_);
@@ -560,14 +560,14 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public Permission getPermission(Integer permissionId_)
 	{
-		final Permission permission = findEntityById(Permission.class, permissionId_);
+		final Permission permission = getRequiredEntityById(Permission.class, permissionId_);
 		return permission;
 	}
 
 	@Override
 	public AccessRole getRole(Integer roleId_)
 	{
-		final AccessRole role = findEntityById(AccessRole.class, roleId_);
+		final AccessRole role = getRequiredEntityById(AccessRole.class, roleId_);
 		return role;
 	}
 

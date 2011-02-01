@@ -147,7 +147,7 @@ public abstract class BaseServiceImpl
 		return true;
 	}
 
-	protected <T> T findEntityById(final Class<T> type_, final Serializable id_)
+	protected <T> T getRequiredEntityById(final Class<T> type_, final Serializable id_)
 	{
 		final T result = dao.getById(type_, id_);
 		if (result == null)

@@ -92,7 +92,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		}
 		final Tag tag = new Tag(companyId_, tag_);
 		final Integer tagId = dao.addAndReturnId(tag);
-		return findEntityById(Tag.class, tagId);
+		return getRequiredEntityById(Tag.class, tagId);
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		}
 		if (!Company.SYSTEM_WIDE_COMPANY_ID.equals(companyId_))
 		{
-			findEntityById(Company.class, companyId_);
+			getRequiredEntityById(Company.class, companyId_);
 		}
 		// validate type for environment
 		checkValidEnvironmentType(companyId_, environmentTypeId_, false);
@@ -130,7 +130,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		{
 			for (final EnvironmentLocale locale : foundTypes)
 			{
-				final Environment environment = findEntityById(Environment.class, locale.getEnvironmentId());
+				final Environment environment = getRequiredEntityById(Environment.class, locale.getEnvironmentId());
 				if (environment.getCompanyId().equals(companyId_))
 				{
 					throw new DuplicateNameException();
@@ -159,7 +159,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 				throw new InvalidParentChildEnvironmentException("EnvironmentTypeId is null for single environment.");
 			}
 		}
-		final EnvironmentType environmentType = findEntityById(EnvironmentType.class, environmentTypeId_);
+		final EnvironmentType environmentType = getRequiredEntityById(EnvironmentType.class, environmentTypeId_);
 		if (environmentType.isGroupType() != isGroupType_)
 		{
 			throw new InvalidParentChildEnvironmentException("Group type no match for EnvironmentType: " + environmentTypeId_);
@@ -175,7 +175,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public void saveParentDependableEnvironments(final Integer companyId_, final Integer parentEnvironmentId_, final List<Integer> environmentIds_) throws Exception
 	{
-		final Environment parentEnvironment = findEntityById(Environment.class, parentEnvironmentId_);
+		final Environment parentEnvironment = getRequiredEntityById(Environment.class, parentEnvironmentId_);
 		// check if valid parent environment for company
 		List<Integer> ids = new ArrayList<Integer>();
 		ids.add(parentEnvironmentId_);
@@ -255,7 +255,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	public EnvironmentGroup addEnvironmentGroup(final Integer companyId_, Integer environmentTypeId_, final String name_, final String description_,
 			final List<Integer> environmentIds_) throws Exception
 	{
-		final Company company = findEntityById(Company.class, companyId_);
+		final Company company = getRequiredEntityById(Company.class, companyId_);
 		// validate environmnets velong to the same company
 		checkValidSelectionForCompany(company.getId(), environmentIds_, Environment.class);
 		// validate type for group
@@ -338,7 +338,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	public EnvironmentProfile addEnvironmentProfile(final Integer companyId_, final String name_, final String description_, final List<Integer> environmentGroupIds_)
 			throws Exception
 	{
-		final Company company = findEntityById(Company.class, companyId_);
+		final Company company = getRequiredEntityById(Company.class, companyId_);
 		checkValidSelectionForCompany(companyId_, environmentGroupIds_, EnvironmentGroup.class);
 
 		final EnvironmentProfile profile = new EnvironmentProfile();
@@ -380,11 +380,11 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		}
 		if (!Company.SYSTEM_WIDE_COMPANY_ID.equals(companyId_))
 		{
-			findEntityById(Company.class, companyId_);
+			getRequiredEntityById(Company.class, companyId_);
 		}
 		if (parentEnvironmentTypeId_ != null)
 		{
-			final EnvironmentType parentEnvironmentType = findEntityById(EnvironmentType.class, parentEnvironmentTypeId_);
+			final EnvironmentType parentEnvironmentType = getRequiredEntityById(EnvironmentType.class, parentEnvironmentTypeId_);
 			if (!Company.SYSTEM_WIDE_COMPANY_ID.equals(companyId_) && !Company.SYSTEM_WIDE_COMPANY_ID.equals(parentEnvironmentType.getCompanyId())
 					&& !companyId_.equals(parentEnvironmentType.getCompanyId()))
 			{
@@ -398,7 +398,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		final List<EnvironmentTypeLocale> foundTypes = dao.search(EnvironmentTypeLocale.class, search);
 		for (final EnvironmentTypeLocale locale : foundTypes)
 		{
-			final EnvironmentType environmentType = findEntityById(EnvironmentType.class, locale.getEnvironmentTypeId());
+			final EnvironmentType environmentType = getRequiredEntityById(EnvironmentType.class, locale.getEnvironmentTypeId());
 			if (environmentType.getCompanyId().equals(companyId_))
 			{
 				throw new DuplicateNameException();
@@ -420,7 +420,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public void deleteEnvironment(final Integer environmentId_, final Integer originalVersionId_) throws Exception
 	{
-		final Environment environment = findEntityById(Environment.class, environmentId_);
+		final Environment environment = getRequiredEntityById(Environment.class, environmentId_);
 		// check if used in any groups before deleting
 		Search search = new Search(EnvironmentGroupEnvironment.class);
 		search.addFilterEqual("environmentId", environmentId_);
@@ -443,7 +443,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	public void deleteTag(final Integer tagId_, final Integer originalVersionId_) throws Exception
 	{
 
-		final Tag tag = findEntityById(Tag.class, tagId_);
+		final Tag tag = getRequiredEntityById(Tag.class, tagId_);
 		// check if used in any groups before deleting
 		Search search = new Search(TestCaseTag.class);
 		search.addFilterEqual("tagId", tagId_);
@@ -460,7 +460,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public void deleteEnvironmentGroup(final Integer environmentGroupId_, final Integer originalVersionId_) throws Exception
 	{
-		final EnvironmentGroup environmentGroup = findEntityById(EnvironmentGroup.class, environmentGroupId_);
+		final EnvironmentGroup environmentGroup = getRequiredEntityById(EnvironmentGroup.class, environmentGroupId_);
 		// check if used in any environments before deleting
 		Search search = new Search(EnvironmentProfileEnvironmentGroup.class);
 		search.addFilterEqual("environmentGroupId", environmentGroupId_);
@@ -496,7 +496,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public void deleteEnvironmentProfile(final Integer environmentProfileId_, final Integer originalVersionId_) throws Exception
 	{
-		final EnvironmentProfile environmentProfile = findEntityById(EnvironmentProfile.class, environmentProfileId_);
+		final EnvironmentProfile environmentProfile = getRequiredEntityById(EnvironmentProfile.class, environmentProfileId_);
 		checkEnvironmentProfileUsage(environmentProfileId_);
 		// continue if not used anywhere
 		// delete profile groups
@@ -582,7 +582,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public void deleteEnvironmentType(final Integer environmentTypeId_, final Integer originalVersionId_) throws Exception
 	{
-		final EnvironmentType environmentType = findEntityById(EnvironmentType.class, environmentTypeId_);
+		final EnvironmentType environmentType = getRequiredEntityById(EnvironmentType.class, environmentTypeId_);
 		// check if used in any environments before deleting
 		Search search = new Search(Environment.class);
 		search.addFilterEqual("environmentTypeId", environmentTypeId_);
@@ -720,35 +720,35 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public Environment getEnvironment(final Integer environmentId_) throws Exception
 	{
-		final Environment environment = findEntityById(Environment.class, environmentId_);
+		final Environment environment = getRequiredEntityById(Environment.class, environmentId_);
 		return environment;
 	}
 
 	@Override
 	public Tag getTag(final Integer tagId_) throws Exception
 	{
-		final Tag tag = findEntityById(Tag.class, tagId_);
+		final Tag tag = getRequiredEntityById(Tag.class, tagId_);
 		return tag;
 	}
 
 	@Override
 	public EnvironmentGroup getEnvironmentGroup(final Integer environmentGroupId_) throws Exception
 	{
-		final EnvironmentGroup environment = findEntityById(EnvironmentGroup.class, environmentGroupId_);
+		final EnvironmentGroup environment = getRequiredEntityById(EnvironmentGroup.class, environmentGroupId_);
 		return environment;
 	}
 
 	@Override
 	public EnvironmentProfile getEnvironmentProfile(final Integer environmentProfileId_) throws Exception
 	{
-		final EnvironmentProfile environment = findEntityById(EnvironmentProfile.class, environmentProfileId_);
+		final EnvironmentProfile environment = getRequiredEntityById(EnvironmentProfile.class, environmentProfileId_);
 		return environment;
 	}
 
 	@Override
 	public EnvironmentType getEnvironmentType(final Integer environmentTypeId_) throws Exception
 	{
-		final EnvironmentType environment = findEntityById(EnvironmentType.class, environmentTypeId_);
+		final EnvironmentType environment = getRequiredEntityById(EnvironmentType.class, environmentTypeId_);
 		return environment;
 	}
 
@@ -775,7 +775,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 			}
 		}
 		// update time stamp
-		final EnvironmentProfile profile = findEntityById(EnvironmentProfile.class, environmentProfileId_);
+		final EnvironmentProfile profile = getRequiredEntityById(EnvironmentProfile.class, environmentProfileId_);
 		profile.setDescription(profile.getDescription() + " [updated on: " + new Date().toString() + "]");
 		// return updated profile
 		return dao.merge(profile);
@@ -792,7 +792,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public EnvironmentGroup saveEnvironmentGroup(final Integer environmentGroupId_, String name_, String description_, Integer originalVersionId_) throws Exception
 	{
-		final EnvironmentGroup group = findEntityById(EnvironmentGroup.class, environmentGroupId_);
+		final EnvironmentGroup group = getRequiredEntityById(EnvironmentGroup.class, environmentGroupId_);
 		group.setName(name_);
 		group.setDescription(description_);
 		group.setVersion(originalVersionId_);
@@ -803,7 +803,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public EnvironmentGroup saveEnvironmentsForGroup(final Integer environmentGroupId_, final List<Integer> environmentIds_) throws Exception
 	{
-		final EnvironmentGroup group = findEntityById(EnvironmentGroup.class, environmentGroupId_);
+		final EnvironmentGroup group = getRequiredEntityById(EnvironmentGroup.class, environmentGroupId_);
 		if (group.isDeprecated())
 		{
 			throw new ChangingActivatedEntityException(EnvironmentGroup.class.getSimpleName());
@@ -879,7 +879,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 			dao.addAndReturnId(profileGroup);
 		}
 		// return updated group
-		return findEntityById(EnvironmentGroup.class, newGroupId);
+		return getRequiredEntityById(EnvironmentGroup.class, newGroupId);
 	}
 
 	@Override

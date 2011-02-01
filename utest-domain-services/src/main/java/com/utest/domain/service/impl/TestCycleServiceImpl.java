@@ -61,7 +61,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	public TestCycle addTestCycle(final Integer productId_, final String name_, final String description_, final Date startDate_, final Date endDate_,
 			final boolean communityAuthoringAllowed_, final boolean communityAccessAllowed_) throws Exception
 	{
-		final Product product = findEntityById(Product.class, productId_);
+		final Product product = getRequiredEntityById(Product.class, productId_);
 		checkForDuplicateNameWithinParent(TestCycle.class, name_, productId_, "productId", null);
 
 		final TestCycle testCycle = new TestCycle();
@@ -84,7 +84,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForTestCycle(final Integer testCycleId_) throws Exception
 	{
-		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
 		if (testCycle.getEnvironmentProfileId() != null)
 		{
 			return environmentService.getEnvironmentGroupsForProfile(testCycle.getEnvironmentProfileId());
@@ -100,13 +100,13 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 			throws UnsupportedEnvironmentSelectionException, Exception
 	{
 		// cannot change after activation
-		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
 		if (!TestCycleStatus.PENDING.equals(testCycle.getTestCycleStatusId()))
 		{
 			throw new DeletingActivatedEntityException(TestCycle.class.getSimpleName());
 		}
 		// check that groups are included in the parent profile
-		final Product product = findEntityById(Product.class, testCycle.getProductId());
+		final Product product = getRequiredEntityById(Product.class, testCycle.getProductId());
 		if (!environmentService.isValidEnvironmentGroupSelectionForProfile(product.getEnvironmentProfileId(), environmentGroupIds_))
 		{
 			throw new UnsupportedEnvironmentSelectionException();
@@ -122,7 +122,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	@Override
 	public void deleteTestCycle(final Integer testCycleId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
 		if (!TestCycleStatus.PENDING.equals(testCycle.getTestCycleStatusId()))
 		{
 			throw new DeletingActivatedEntityException(TestCycle.class.getSimpleName());
@@ -147,7 +147,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	@Override
 	public TestCycle getTestCycle(final Integer testCycleId_) throws Exception
 	{
-		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
 		return testCycle;
 
 	}
@@ -164,7 +164,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	public TestCycle saveTestCycle(final Integer testCycleId_, final String name_, final String description_, final Date startDate_, final Date endDate_,
 			final boolean communityAuthoringAllowed_, final boolean communityAccessAllowed_, final Integer originalVersionId_) throws Exception
 	{
-		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
 		if (!TestCycleStatus.PENDING.equals(testCycle.getTestCycleStatusId()))
 		{
 			throw new ChangingActivatedEntityException(TestCycle.class.getSimpleName() + " : " + testCycleId_);
@@ -185,7 +185,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	public TestCycle activateTestCycle(final Integer testCycleId_, final Integer originalVersionId_) throws Exception
 	{
 		// change status for the test run
-		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
 		testCycle.setTestCycleStatusId(TestCycleStatus.ACTIVE);
 		testCycle.setVersion(originalVersionId_);
 		return dao.merge(testCycle);
@@ -195,7 +195,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	public TestCycle lockTestCycle(final Integer testCycleId_, final Integer originalVersionId_) throws Exception
 	{
 		// change status for the test run
-		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
 
 		// lock all included test runs
 		final List<TestRun> includedTestRuns = getTestRunsForTestCycle(testCycleId_);

@@ -93,7 +93,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	public TestRun addTestRun(final Integer testCycleId_, final boolean useLatestVersions_, final String name_, final String description_, final Date startDate_,
 			final Date endDate_, final boolean selfAssignAllowed_, final boolean selfAssignPerEnvironment_, final Integer selfAssignLimit_) throws Exception
 	{
-		final TestCycle testCycle = findEntityById(TestCycle.class, testCycleId_);
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
 		checkForDuplicateNameWithinParent(TestRun.class, name_, testCycleId_, "testCycleId", null);
 
 		// TODO - do we need to validate test cycle status before creating a
@@ -119,7 +119,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public List<TestRunTestCase> addTestCasesFromTestPlan(final Integer testRunId_, final Integer testPlanId_) throws Exception
 	{
-		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
+		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);
 		// check if test plan is activated
 		if (!TestPlanStatus.ACTIVE.equals(testPlan.getTestPlanStatusId()))
 		{
@@ -145,8 +145,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 
 	private Integer addTestCasesFromTestSuite(final Integer testRunId_, final Integer testSuiteId_, final Integer startingRunOrder_) throws Exception
 	{
-		final TestRun testRun = findEntityById(TestRun.class, testRunId_);
-		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
+		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
 		// check if test plan is activated
 		if (!TestSuiteStatus.ACTIVE.equals(testSuite.getTestSuiteStatusId()))
 		{
@@ -176,7 +176,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForTestRun(final Integer testRunId_) throws Exception
 	{
-		final TestRun testRun = findEntityById(TestRun.class, testRunId_);
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		if (testRun.getEnvironmentProfileId() != null)
 		{
 			return environmentService.getEnvironmentGroupsForProfile(testRun.getEnvironmentProfileId());
@@ -190,7 +190,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForTestRunTestCase(final Integer testRunTestCaseId_) throws Exception
 	{
-		final TestRunTestCase testRunTestCase = findEntityById(TestRunTestCase.class, testRunTestCaseId_);
+		final TestRunTestCase testRunTestCase = getRequiredEntityById(TestRunTestCase.class, testRunTestCaseId_);
 		if (testRunTestCase.getEnvironmentProfileId() != null)
 		{
 			return environmentService.getEnvironmentGroupsForProfile(testRunTestCase.getEnvironmentProfileId());
@@ -204,7 +204,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public List<Environment> getEnvironmentsForTestResult(final Integer resultId_) throws Exception
 	{
-		final TestRunResult result = findEntityById(TestRunResult.class, resultId_);
+		final TestRunResult result = getRequiredEntityById(TestRunResult.class, resultId_);
 		if (result.getEnvironmentGroupId() != null)
 		{
 			return environmentService.getEnvironmentsForGroup(result.getEnvironmentGroupId());
@@ -218,7 +218,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForAssignment(final Integer assignmentId_) throws Exception
 	{
-		final TestRunTestCaseAssignment assignment = findEntityById(TestRunTestCaseAssignment.class, assignmentId_);
+		final TestRunTestCaseAssignment assignment = getRequiredEntityById(TestRunTestCaseAssignment.class, assignmentId_);
 		if (assignment.getEnvironmentProfileId() != null)
 		{
 			return environmentService.getEnvironmentGroupsForProfile(assignment.getEnvironmentProfileId());
@@ -233,7 +233,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	public void saveEnvironmentGroupsForTestRun(final Integer testRunId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
 			throws UnsupportedEnvironmentSelectionException, Exception
 	{
-		final TestRun testRun = findEntityById(TestRun.class, testRunId_);
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		// cannot change after activation
 		if (!TestRunStatus.PENDING.equals(testRun.getTestRunStatusId()))
 		{
@@ -248,13 +248,13 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			throw new UnsupportedEnvironmentSelectionException(TestRun.class.getSimpleName() + " : " + testRunId_);
 		}
 		// check that groups are included in the parent profile
-		final TestCycle testCycle = findEntityById(TestCycle.class, testRun.getTestCycleId());
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testRun.getTestCycleId());
 		if (!environmentService.isValidEnvironmentGroupSelectionForProfile(testCycle.getEnvironmentProfileId(), environmentGroupIds_))
 		{
 			throw new UnsupportedEnvironmentSelectionException();
 		}
 		// update environment profile
-		final Product product = findEntityById(Product.class, testRun.getProductId());
+		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
 		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run : " + testRunId_, "Included groups: "
 				+ environmentGroupIds_.toString(), environmentGroupIds_);
 		testRun.setEnvironmentProfileId(environmentProfile.getId());
@@ -266,8 +266,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	public void saveEnvironmentGroupsForTestRunTestCase(final Integer testRunTestCaseId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
 			throws UnsupportedEnvironmentSelectionException, Exception
 	{
-		final TestRunTestCase testRunTestCase = findEntityById(TestRunTestCase.class, testRunTestCaseId_);
-		final TestRun testRun = findEntityById(TestRun.class, testRunTestCase.getTestRunId());
+		final TestRunTestCase testRunTestCase = getRequiredEntityById(TestRunTestCase.class, testRunTestCaseId_);
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunTestCase.getTestRunId());
 		// cannot change after activation
 		if (!TestRunStatus.PENDING.equals(testRun.getTestRunStatusId()))
 		{
@@ -279,7 +279,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			throw new UnsupportedEnvironmentSelectionException();
 		}
 		// update environment profile
-		final Product product = findEntityById(Product.class, testRun.getProductId());
+		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
 		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run test case: " + testRunTestCaseId_,
 				"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
 		testRunTestCase.setEnvironmentProfileId(environmentProfile.getId());
@@ -291,9 +291,9 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	public void saveEnvironmentGroupsForAssignment(final Integer assignmentId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
 			throws UnsupportedEnvironmentSelectionException, Exception
 	{
-		final TestRunTestCaseAssignment assignment = findEntityById(TestRunTestCaseAssignment.class, assignmentId_);
-		final TestRunTestCase testRunTestCase = findEntityById(TestRunTestCase.class, assignment.getTestRunTestCaseId());
-		final TestRun testRun = findEntityById(TestRun.class, testRunTestCase.getTestRunId());
+		final TestRunTestCaseAssignment assignment = getRequiredEntityById(TestRunTestCaseAssignment.class, assignmentId_);
+		final TestRunTestCase testRunTestCase = getRequiredEntityById(TestRunTestCase.class, assignment.getTestRunTestCaseId());
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunTestCase.getTestRunId());
 		// cannot change after activation
 		if (!TestRunStatus.PENDING.equals(testRun.getTestRunStatusId()))
 		{
@@ -305,7 +305,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			throw new UnsupportedEnvironmentSelectionException();
 		}
 		// update environment profile
-		final Product product = findEntityById(Product.class, testRun.getProductId());
+		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
 		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for assignment: " + assignmentId_,
 				"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
 		assignment.setEnvironmentProfileId(environmentProfile.getId());
@@ -333,8 +333,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	public TestRunTestCase addTestRunTestCase(final Integer testRunId_, final Integer testCaseVersionId_, final Integer priorityId_, final Integer runOrder_,
 			final boolean isBlocking_, final Integer testSuiteId_) throws Exception
 	{
-		final TestCaseVersion testCaseVersion = findEntityById(TestCaseVersion.class, testCaseVersionId_);
-		final TestRun testRun = findEntityById(TestRun.class, testRunId_);
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		// prevent if already activated
 		if (!TestRunStatus.PENDING.equals(testRun.getTestRunStatusId()))
 		{
@@ -382,9 +382,9 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public TestRunTestCaseAssignment addAssignment(final Integer testRunTestCaseId_, final Integer testerId_, final List<Integer> environmentGroupIds_) throws Exception
 	{
-		final TestRunTestCase includedTestCase = findEntityById(TestRunTestCase.class, testRunTestCaseId_);
+		final TestRunTestCase includedTestCase = getRequiredEntityById(TestRunTestCase.class, testRunTestCaseId_);
 		@SuppressWarnings("unused")
-		final User tester = findEntityById(User.class, testerId_);
+		final User tester = getRequiredEntityById(User.class, testerId_);
 		// check if groups assignment is correct
 		if (!environmentService.isValidEnvironmentGroupSelectionForProfile(includedTestCase.getEnvironmentProfileId(), environmentGroupIds_))
 		{
@@ -393,8 +393,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 
 		TestRunTestCaseAssignment assignment = addAssignmentNoResults(testRunTestCaseId_, testerId_);
 		// create new profile for new group selection
-		final TestRun testRun = findEntityById(TestRun.class, includedTestCase.getTestRunId());
-		final Product product = findEntityById(Product.class, testRun.getProductId());
+		final TestRun testRun = getRequiredEntityById(TestRun.class, includedTestCase.getTestRunId());
+		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
 		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run assignment. Test run: "
 				+ testRun.getId() + ", tester: " + testerId_, "Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
 		assignment.setEnvironmentProfileId(environmentProfile.getId());
@@ -419,10 +419,10 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		// TODO - check if this test case is already assigned and test run
 		// settings allow to assign again to another tester or another
 		// environment
-		final TestRunTestCase includedTestCase = findEntityById(TestRunTestCase.class, testRunTestCaseId_);
+		final TestRunTestCase includedTestCase = getRequiredEntityById(TestRunTestCase.class, testRunTestCaseId_);
 		final TestRunTestCaseAssignment assignment = new TestRunTestCaseAssignment();
 		// prevent if already activated
-		final TestRun testRun = findEntityById(TestRun.class, includedTestCase.getTestRunId());
+		final TestRun testRun = getRequiredEntityById(TestRun.class, includedTestCase.getTestRunId());
 		assignment.setTestRunId(testRun.getId());
 		assignment.setProductId(testRun.getProductId());
 		assignment.setTestCaseId(includedTestCase.getTestCaseId());
@@ -430,11 +430,11 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		assignment.setTestRunTestCaseId(testRunTestCaseId_);
 		// TODO - validate if tester from the same company as tested product or
 		// is a community tester?
-		final User tester = findEntityById(User.class, testerId_);
+		final User tester = getRequiredEntityById(User.class, testerId_);
 		assignment.setTesterId(tester.getId());
 		assignment.setEnvironmentProfileId(includedTestCase.getEnvironmentProfileId());
 		final Integer id = dao.addAndReturnId(assignment);
-		return findEntityById(TestRunTestCaseAssignment.class, id);
+		return getRequiredEntityById(TestRunTestCaseAssignment.class, id);
 
 	}
 
@@ -456,7 +456,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 
 	private TestRunResult addResultForEnvironmentGroup(final Integer assignmentId_, final Integer environmentGroupId_) throws Exception
 	{
-		final TestRunTestCaseAssignment assignment = findEntityById(TestRunTestCaseAssignment.class, assignmentId_);
+		final TestRunTestCaseAssignment assignment = getRequiredEntityById(TestRunTestCaseAssignment.class, assignmentId_);
 		return addResultForEnvironmentGroup(assignment, environmentGroupId_);
 	}
 
@@ -479,7 +479,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public void deleteTestRun(final Integer testRunId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestRun testRun = findEntityById(TestRun.class, testRunId_);
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		if (!TestRunStatus.PENDING.equals(testRun.getTestRunStatusId()))
 		{
 			throw new DeletingActivatedEntityException(TestRun.class.getSimpleName());
@@ -502,8 +502,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public void deleteTestRunTestCase(final Integer testRunTestCaseId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestRunTestCase includedTestCase = findEntityById(TestRunTestCase.class, testRunTestCaseId_);
-		final TestRun testRun = findEntityById(TestRun.class, includedTestCase.getTestRunId());
+		final TestRunTestCase includedTestCase = getRequiredEntityById(TestRunTestCase.class, testRunTestCaseId_);
+		final TestRun testRun = getRequiredEntityById(TestRun.class, includedTestCase.getTestRunId());
 		// prevent if already activated
 		if (!TestRunStatus.PENDING.equals(testRun.getTestRunStatusId()))
 		{
@@ -516,7 +516,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public void deleteAssignment(final Integer assignmentId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestRunTestCaseAssignment assignment = findEntityById(TestRunTestCaseAssignment.class, assignmentId_);
+		final TestRunTestCaseAssignment assignment = getRequiredEntityById(TestRunTestCaseAssignment.class, assignmentId_);
 		// prevent if already any of the results were executed
 		final Search search = new Search(TestRunResult.class);
 		search.addFilterEqual("testRunAssignmentId", assignmentId_);
@@ -562,7 +562,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public TestRun getTestRun(final Integer testRunId_) throws Exception
 	{
-		final TestRun testRun = findEntityById(TestRun.class, testRunId_);
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		return testRun;
 
 	}
@@ -570,7 +570,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public TestRunTestCase getTestRunTestCase(final Integer testRunTestCaseId_) throws Exception
 	{
-		final TestRunTestCase testRunTestCase = findEntityById(TestRunTestCase.class, testRunTestCaseId_);
+		final TestRunTestCase testRunTestCase = getRequiredEntityById(TestRunTestCase.class, testRunTestCaseId_);
 		return testRunTestCase;
 
 	}
@@ -617,7 +617,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public TestRunTestCaseAssignment getTestRunTestCaseAssignment(final Integer assignmentId_) throws Exception
 	{
-		TestRunTestCaseAssignment assignment = findEntityById(TestRunTestCaseAssignment.class, assignmentId_);
+		TestRunTestCaseAssignment assignment = getRequiredEntityById(TestRunTestCaseAssignment.class, assignmentId_);
 		return assignment;
 	}
 
@@ -632,7 +632,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public TestRunResult getTestRunResult(final Integer testRunResultId_) throws Exception
 	{
-		return findEntityById(TestRunResult.class, testRunResultId_);
+		return getRequiredEntityById(TestRunResult.class, testRunResultId_);
 	}
 
 	@Override
@@ -672,7 +672,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public List<TestRunResult> retestTestRun(final Integer testRunId_, final boolean retestFailedOnly_) throws Exception
 	{
-		final TestRun testRun = findEntityById(TestRun.class, testRunId_);
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		final List<Integer> statusesToRetest = new ArrayList<Integer>();
 		statusesToRetest.add(TestRunResultStatus.FAILED);
 		if (!retestFailedOnly_)
@@ -691,8 +691,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public TestRunResult retestTestRunResult(final Integer testRunResultId_, final Integer testerId_) throws Exception
 	{
-		final TestRunResult result = findEntityById(TestRunResult.class, testRunResultId_);
-		final TestRunTestCaseAssignment assignment = findEntityById(TestRunTestCaseAssignment.class, result.getTestRunAssignmentId());
+		final TestRunResult result = getRequiredEntityById(TestRunResult.class, testRunResultId_);
+		final TestRunTestCaseAssignment assignment = getRequiredEntityById(TestRunTestCaseAssignment.class, result.getTestRunAssignmentId());
 		// create new assignment for new tester
 		final TestRunTestCaseAssignment newAssignment = addAssignmentNoResults(assignment.getTestRunTestCaseId(), testerId_);
 		// create pending result for new assignment
@@ -714,7 +714,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public TestRunResult startExecutingAssignedTestCase(final Integer testRunResultId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestRunResult result = findEntityById(TestRunResult.class, testRunResultId_);
+		final TestRunResult result = getRequiredEntityById(TestRunResult.class, testRunResultId_);
 		// only do if not started already
 		if (!TestRunResultStatus.STARTED.equals(result.getTestRunResultStatusId()))
 		{
@@ -729,7 +729,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 				throw new InvalidUserException();
 			}
 			// prevent if test run locked
-			final TestRun testRun = findEntityById(TestRun.class, result.getTestRunId());
+			final TestRun testRun = getRequiredEntityById(TestRun.class, result.getTestRunId());
 			if (TestRunStatus.LOCKED.equals(testRun.getTestRunStatusId()))
 			{
 				throw new TestCycleClosedException();
@@ -753,7 +753,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public TestRunResult finishExecutingAssignedTestCaseWithSuccess(final Integer testRunResultId_, final String comment_, final Integer originalVersionId_) throws Exception
 	{
-		final TestRunResult result = findEntityById(TestRunResult.class, testRunResultId_);
+		final TestRunResult result = getRequiredEntityById(TestRunResult.class, testRunResultId_);
 		if (!TestRunResultStatus.PASSED.equals(result.getTestRunResultStatusId()))
 		{
 			if (!TestRunStatus.ACTIVE.equals(result.getTestRunResultStatusId()))
@@ -770,7 +770,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 				throw new InvalidUserException();
 			}
 			// prevent if test run locked
-			final TestRun testRun = findEntityById(TestRun.class, result.getTestRunId());
+			final TestRun testRun = getRequiredEntityById(TestRun.class, result.getTestRunId());
 			if (TestRunStatus.LOCKED.equals(testRun.getTestRunStatusId()))
 			{
 				throw new TestCycleClosedException();
@@ -797,7 +797,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	public TestRunResult finishExecutingAssignedTestCaseWithFailure(final Integer testRunResultId_, final Integer failedStepNumber_, final String actualResult_,
 			final String comment_, final Integer originalVersionId_) throws Exception
 	{
-		final TestRunResult result = findEntityById(TestRunResult.class, testRunResultId_);
+		final TestRunResult result = getRequiredEntityById(TestRunResult.class, testRunResultId_);
 		if (!TestRunResultStatus.FAILED.equals(result.getTestRunResultStatusId()))
 		{
 			if (!TestRunResultStatus.STARTED.equals(result.getTestRunResultStatusId()))
@@ -814,7 +814,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 				throw new InvalidUserException();
 			}
 			// prevent if test run locked
-			final TestRun testRun = findEntityById(TestRun.class, result.getTestRunId());
+			final TestRun testRun = getRequiredEntityById(TestRun.class, result.getTestRunId());
 			if (TestRunStatus.LOCKED.equals(testRun.getTestRunStatusId()))
 			{
 				throw new TestCycleClosedException();
@@ -892,7 +892,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	public TestRun saveTestRun(final Integer testRunId_, final String name_, final String description_, final Date startDate_, final Date endDate_,
 			final boolean selfAssignAllowed_, final boolean selfAssignPerEnvironment_, final Integer selfAssignLimit_, final Integer originalVersionId_) throws Exception
 	{
-		final TestRun testRun = findEntityById(TestRun.class, testRunId_);
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		checkForDuplicateNameWithinParent(TestRun.class, name_, testRun.getTestCycleId(), "testCycleId", testRunId_);
 
 		testRun.setName(name_);
@@ -910,9 +910,9 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	public TestRunTestCase saveTestRunTestCase(final Integer includedTestCaseId_, final Integer priorityId_, final Integer runOrder_, final boolean blocking_,
 			final boolean selfAssignAllowed_, final boolean selfAssignPerEnvironment_, final Integer selfAssignLimit_, final Integer originalVersionId_)
 	{
-		final TestRunTestCase includedTestCase = findEntityById(TestRunTestCase.class, includedTestCaseId_);
+		final TestRunTestCase includedTestCase = getRequiredEntityById(TestRunTestCase.class, includedTestCaseId_);
 		// prevent if already activated
-		final TestRun testRun = findEntityById(TestRun.class, includedTestCase.getTestRunId());
+		final TestRun testRun = getRequiredEntityById(TestRun.class, includedTestCase.getTestRunId());
 		if (!TestRunStatus.PENDING.equals(testRun.getTestRunStatusId()))
 		{
 			throw new ChangingActivatedEntityException(TestRun.class.getSimpleName());
@@ -932,9 +932,9 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	public TestRunTestCase saveTestRunTestCase(final Integer includedTestCaseId_, final Integer priorityId_, final Integer runOrder_, final boolean blocking_,
 			final Integer originalVersionId_)
 	{
-		final TestRunTestCase includedTestCase = findEntityById(TestRunTestCase.class, includedTestCaseId_);
+		final TestRunTestCase includedTestCase = getRequiredEntityById(TestRunTestCase.class, includedTestCaseId_);
 		// prevent if already activated
-		final TestRun testRun = findEntityById(TestRun.class, includedTestCase.getTestRunId());
+		final TestRun testRun = getRequiredEntityById(TestRun.class, includedTestCase.getTestRunId());
 
 		return saveTestRunTestCase(includedTestCaseId_, priorityId_, runOrder_, blocking_, testRun.isSelfAssignAllowed(), testRun.isSelfAssignPerEnvironment(), testRun
 				.getSelfAssignLimit(), originalVersionId_);
@@ -949,13 +949,13 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	private TestRun updateActivationStatus(final Integer testRunId_, final Integer activationStatusId_, final Integer originalVersionId_) throws Exception
 	{
 		// change status for the test run
-		final TestRun testRun = findEntityById(TestRun.class, testRunId_);
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		if (!testRun.getTestRunStatusId().equals(activationStatusId_))
 		{
 			if (TestRunStatus.ACTIVE.equals(activationStatusId_))
 			{
 				// prevent activating if parent test cycle is not activated
-				final TestCycle testCycle = findEntityById(TestCycle.class, testRun.getTestCycleId());
+				final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testRun.getTestCycleId());
 				if (!TestRunStatus.ACTIVE.equals(testCycle.getTestCycleStatusId()))
 				{
 					throw new ActivatingIncompleteEntityException(TestRun.class.getSimpleName() + " : " + testRunId_);
@@ -974,7 +974,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	private TestRunResult updateApprovalStatus(final Integer testRunResultId_, final String comment_, final Integer approvalStatus_, final Integer originalVersionId_)
 			throws Exception
 	{
-		final TestRunResult result = findEntityById(TestRunResult.class, testRunResultId_);
+		final TestRunResult result = getRequiredEntityById(TestRunResult.class, testRunResultId_);
 		if (approvalStatus_ != result.getApprovalStatusId())
 		{
 			// make sure user approving the result is not the same as assigned

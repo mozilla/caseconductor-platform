@@ -53,7 +53,7 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 	public Company addCompany(final Integer countryId_, final String name_, final String address_, final String city_, final String zip_, final String url_, final String phone_)
 			throws Exception
 	{
-		final Country country = findEntityById(Country.class, countryId_);
+		final Country country = getRequiredEntityById(Country.class, countryId_);
 		checkForDuplicateName(Company.class, name_, null);
 
 		final Company company = new Company();
@@ -71,7 +71,7 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 	@Override
 	public void deleteCompany(final Integer companyId_, final Integer originalVersionId_) throws Exception
 	{
-		Company company = findEntityById(Company.class, companyId_);
+		Company company = getRequiredEntityById(Company.class, companyId_);
 		// check for companys
 		Search search = new Search(Product.class);
 		search.addFilterEqual("companyId", companyId_);
@@ -102,7 +102,7 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 	@Override
 	public Company getCompany(final Integer companyId_) throws Exception
 	{
-		final Company company = findEntityById(Company.class, companyId_);
+		final Company company = getRequiredEntityById(Company.class, companyId_);
 		return company;
 
 	}
@@ -111,7 +111,7 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 	public Company saveCompany(final Integer companyId_, final Integer countryId_, final String name_, final String address_, final String city_, final String zip_,
 			final String url_, final String phone_, final Integer originalVersionId_) throws Exception
 	{
-		final Company company = findEntityById(Company.class, companyId_);
+		final Company company = getRequiredEntityById(Company.class, companyId_);
 		// check for duplicate name
 		checkForDuplicateName(Company.class, name_, companyId_);
 
@@ -137,7 +137,7 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 	public List<EnvironmentGroup> addGeneratedEnvironmentGroupsForCompany(final Integer companyId_, final Integer environmentTypeId_, final List<Integer> environmentIds_,
 			final Integer originalVersionId_) throws Exception
 	{
-		findEntityById(Company.class, companyId_);
+		getRequiredEntityById(Company.class, companyId_);
 		final List<EnvironmentGroup> groups = environmentService.addGeneratedEnvironmentGroups(companyId_, environmentTypeId_, environmentIds_);
 		return groups;
 	}

@@ -61,7 +61,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	@Override
 	public TestSuite addTestSuite(final Integer productId_, final boolean useLatestVersions_, final String name_, final String description_) throws Exception
 	{
-		final Product product = findEntityById(Product.class, productId_);
+		final Product product = getRequiredEntityById(Product.class, productId_);
 
 		checkForDuplicateNameWithinParent(TestSuite.class, name_, productId_, "productId", null);
 
@@ -80,7 +80,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForTestSuite(final Integer testSuiteId_) throws Exception
 	{
-		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
+		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
 		if (testSuite.getEnvironmentProfileId() != null)
 		{
 			return environmentService.getEnvironmentGroupsForProfile(testSuite.getEnvironmentProfileId());
@@ -95,7 +95,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	public void saveEnvironmentGroupsForTestSuite(final Integer testSuiteId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
 			throws UnsupportedEnvironmentSelectionException, Exception
 	{
-		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
+		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
 		// cannot change after activation
 		if (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
 		{
@@ -110,7 +110,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 			throw new UnsupportedEnvironmentSelectionException(TestSuite.class.getSimpleName() + " : " + testSuiteId_);
 		}
 		// check that groups are included in the parent profile.
-		final Product product = findEntityById(Product.class, testSuite.getProductId());
+		final Product product = getRequiredEntityById(Product.class, testSuite.getProductId());
 		if (!environmentService.isValidEnvironmentGroupSelectionForProfile(product.getEnvironmentProfileId(), environmentGroupIds_))
 		{
 			throw new UnsupportedEnvironmentSelectionException(TestSuite.class.getSimpleName() + " : " + testSuiteId_);
@@ -136,8 +136,8 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	public TestSuiteTestCase addTestSuiteTestCase(final Integer testSuiteId_, final Integer testCaseVersionId_, final Integer priorityId_, final Integer runOrder_,
 			final boolean blocking_) throws Exception
 	{
-		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
-		final TestCaseVersion testCaseVersion = findEntityById(TestCaseVersion.class, testCaseVersionId_);
+		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		// prevent adding to activated test suite
 		if (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
 		{
@@ -175,13 +175,13 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 			includedTestCase.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
 		}
 		final Integer id = dao.addAndReturnId(includedTestCase);
-		return findEntityById(TestSuiteTestCase.class, id);
+		return getRequiredEntityById(TestSuiteTestCase.class, id);
 	}
 
 	@Override
 	public void deleteTestSuite(final Integer testSuiteId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
+		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
 		if (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
 		{
 			throw new DeletingActivatedEntityException(TestSuite.class.getSimpleName());
@@ -197,8 +197,8 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	@Override
 	public void deleteTestSuiteTestCase(final Integer testSuiteTestCaseId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestSuiteTestCase includedTestCase = findEntityById(TestSuiteTestCase.class, testSuiteTestCaseId_);
-		final TestSuite testSuite = findEntityById(TestSuite.class, includedTestCase.getTestSuiteId());
+		final TestSuiteTestCase includedTestCase = getRequiredEntityById(TestSuiteTestCase.class, testSuiteTestCaseId_);
+		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, includedTestCase.getTestSuiteId());
 		// prevent if already activated
 		if (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
 		{
@@ -217,7 +217,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	@Override
 	public TestSuite getTestSuite(final Integer testSuiteId_) throws Exception
 	{
-		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
+		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
 		return testSuite;
 
 	}
@@ -225,7 +225,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	@Override
 	public TestSuiteTestCase getTestSuiteTestCase(final Integer testSuiteTestCaseId_) throws Exception
 	{
-		final TestSuiteTestCase testSuiteTestCase = findEntityById(TestSuiteTestCase.class, testSuiteTestCaseId_);
+		final TestSuiteTestCase testSuiteTestCase = getRequiredEntityById(TestSuiteTestCase.class, testSuiteTestCaseId_);
 		return testSuiteTestCase;
 
 	}
@@ -242,7 +242,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	@Override
 	public TestSuite saveTestSuite(final Integer testSuiteId_, final String name_, final String description_, final Integer originalVersionId_) throws Exception
 	{
-		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
+		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
 		//
 		checkForDuplicateNameWithinParent(TestSuite.class, name_, testSuite.getProductId(), "productId", testSuiteId_);
 
@@ -256,8 +256,8 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	public TestSuiteTestCase saveTestSuiteTestCase(final Integer includedTestCaseId_, final Integer priorityId_, final Integer runOrder_, final boolean blocking_,
 			final Integer originalVersionId_)
 	{
-		final TestSuiteTestCase includedTestCase = findEntityById(TestSuiteTestCase.class, includedTestCaseId_);
-		final TestSuite testSuite = findEntityById(TestSuite.class, includedTestCase.getTestSuiteId());
+		final TestSuiteTestCase includedTestCase = getRequiredEntityById(TestSuiteTestCase.class, includedTestCaseId_);
+		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, includedTestCase.getTestSuiteId());
 		// prevent if already activated
 		if (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
 		{
@@ -285,7 +285,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 
 	private TestSuite updateActivationStatus(final Integer testSuiteId_, final Integer activationStatusId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
+		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
 		if (activationStatusId_ != testSuite.getTestSuiteStatusId())
 		{
 			final List<TestSuiteTestCase> includedTestCases = getTestSuiteTestCases(testSuiteId_);

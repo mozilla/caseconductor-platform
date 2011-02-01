@@ -57,7 +57,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public Product addProduct(final Integer companyId_, final String name_, final String description_) throws Exception
 	{
-		final Company company = findEntityById(Company.class, companyId_);
+		final Company company = getRequiredEntityById(Company.class, companyId_);
 		checkForDuplicateNameWithinParent(Product.class, name_, companyId_, "companyId", null);
 
 		final Product product = new Product();
@@ -72,7 +72,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public ProductComponent addProductComponent(final Integer productId_, final String name_, final String description_) throws Exception
 	{
-		final Product product = findEntityById(Product.class, productId_);
+		final Product product = getRequiredEntityById(Product.class, productId_);
 		checkForDuplicateNameWithinParent(ProductComponent.class, name_, productId_, "productId", null);
 
 		final ProductComponent productComponent = new ProductComponent();
@@ -95,7 +95,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	public List<EnvironmentGroup> addGeneratedEnvironmentGroupsForProduct(final Integer productId_, final Integer environmentTypeId_, final List<Integer> environmentIds_,
 			final Integer originalVersionId_) throws Exception
 	{
-		final Product product = findEntityById(Product.class, productId_);
+		final Product product = getRequiredEntityById(Product.class, productId_);
 		final List<EnvironmentGroup> groups = environmentService.addGeneratedEnvironmentGroups(product.getCompanyId(), environmentTypeId_, environmentIds_);
 		saveEnvironmentGroupsForProduct(productId_, DomainUtil.extractEntityIds(groups), originalVersionId_);
 		return groups;
@@ -104,7 +104,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForProduct(final Integer productId_) throws Exception
 	{
-		final Product product = findEntityById(Product.class, productId_);
+		final Product product = getRequiredEntityById(Product.class, productId_);
 		if (product.getEnvironmentProfileId() != null)
 		{
 			return environmentService.getEnvironmentGroupsForProfile(product.getEnvironmentProfileId());
@@ -119,7 +119,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	public void saveEnvironmentGroupsForProduct(final Integer productId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
 			throws UnsupportedEnvironmentSelectionException, Exception
 	{
-		final Product product = findEntityById(Product.class, productId_);
+		final Product product = getRequiredEntityById(Product.class, productId_);
 		// check that groups are selected from system wide groups or from the
 		// groups defined by this company
 		if (!isValidSelectionForCompany(product.getCompanyId(), environmentGroupIds_, EnvironmentGroup.class))
@@ -145,7 +145,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public void deleteProduct(final Integer productId_, final Integer originalVersionId_) throws Exception
 	{
-		Product product = findEntityById(Product.class, productId_);
+		Product product = getRequiredEntityById(Product.class, productId_);
 		final Search search = new Search(TestCase.class);
 		search.addFilterEqual("productId", productId_);
 		final List<TestCase> foundTestCases = dao.search(TestCase.class, search);
@@ -164,7 +164,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public void deleteProductComponent(final Integer productComponentId_, final Integer originalVersionId_) throws Exception
 	{
-		ProductComponent productComponent = findEntityById(ProductComponent.class, productComponentId_);
+		ProductComponent productComponent = getRequiredEntityById(ProductComponent.class, productComponentId_);
 		final Search search = new Search(TestCaseProductComponent.class);
 		search.addFilterEqual("productComponentId", productComponentId_);
 		final List<TestCaseProductComponent> foundEntities = dao.search(TestCaseProductComponent.class, search);
@@ -192,7 +192,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public Product getProduct(final Integer productId_) throws Exception
 	{
-		final Product product = findEntityById(Product.class, productId_);
+		final Product product = getRequiredEntityById(Product.class, productId_);
 		return product;
 
 	}
@@ -200,7 +200,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public ProductComponent getProductComponent(final Integer productComponentId_) throws Exception
 	{
-		final ProductComponent productComponent = findEntityById(ProductComponent.class, productComponentId_);
+		final ProductComponent productComponent = getRequiredEntityById(ProductComponent.class, productComponentId_);
 		return productComponent;
 	}
 
@@ -215,7 +215,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public Product saveProduct(final Integer productId_, final String name_, final String description_, final Integer originalVersionId_) throws Exception
 	{
-		final Product product = findEntityById(Product.class, productId_);
+		final Product product = getRequiredEntityById(Product.class, productId_);
 		checkForDuplicateNameWithinParent(Product.class, name_, product.getCompanyId(), "companyId", productId_);
 
 		product.setName(name_);
@@ -228,7 +228,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	public ProductComponent saveProductComponent(final Integer productComponentId_, final String name_, final String description_, final Integer originalVersionId_)
 			throws Exception
 	{
-		final ProductComponent productComponent = findEntityById(ProductComponent.class, productComponentId_);
+		final ProductComponent productComponent = getRequiredEntityById(ProductComponent.class, productComponentId_);
 		checkForDuplicateNameWithinParent(ProductComponent.class, name_, productComponent.getProductId(), "productId", productComponentId_);
 
 		productComponent.setName(name_);

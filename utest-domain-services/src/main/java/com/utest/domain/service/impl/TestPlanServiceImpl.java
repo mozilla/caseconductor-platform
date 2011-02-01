@@ -61,7 +61,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public TestPlan addTestPlan(final Integer productId_, final String name_, final String description_) throws Exception
 	{
-		final Product product = findEntityById(Product.class, productId_);
+		final Product product = getRequiredEntityById(Product.class, productId_);
 		checkForDuplicateNameWithinParent(TestPlan.class, name_, productId_, "productId", null);
 
 		final TestPlan testPlan = new TestPlan();
@@ -84,8 +84,8 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public TestPlanTestSuite addTestPlanTestSuite(final Integer testPlanId_, final Integer testSuiteId_, final Integer runOrder_) throws Exception
 	{
-		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
-		final TestSuite testSuite = findEntityById(TestSuite.class, testSuiteId_);
+		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);
+		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
 		// prevent if test suite not activated
 		if (!TestSuiteStatus.ACTIVE.equals(testSuite.getTestSuiteStatusId()))
 		{
@@ -116,7 +116,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public void deleteTestPlan(final Integer testPlanId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
+		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);
 		if (!TestPlanStatus.PENDING.equals(testPlan.getTestPlanStatusId()))
 		{
 			throw new DeletingActivatedEntityException(TestPlan.class.getSimpleName());
@@ -132,9 +132,9 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public void deleteTestPlanTestSuite(final Integer testPlanTestSuiteId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestPlanTestSuite includedTestSuite = findEntityById(TestPlanTestSuite.class, testPlanTestSuiteId_);
+		final TestPlanTestSuite includedTestSuite = getRequiredEntityById(TestPlanTestSuite.class, testPlanTestSuiteId_);
 		// prevent if already activated
-		final TestPlan testPlan = findEntityById(TestPlan.class, includedTestSuite.getTestPlanId());
+		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, includedTestSuite.getTestPlanId());
 		if (!TestPlanStatus.PENDING.equals(testPlan.getTestPlanStatusId()))
 		{
 			throw new ChangingActivatedEntityException(TestPlanTestSuite.class.getSimpleName());
@@ -152,14 +152,14 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public TestPlan getTestPlan(final Integer testPlanId_) throws Exception
 	{
-		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
+		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);
 		return testPlan;
 	}
 
 	@Override
 	public TestPlanTestSuite getTestPlanTestSuite(final Integer testPlanTestSuiteId_) throws Exception
 	{
-		final TestPlanTestSuite testPlanTestSuite = findEntityById(TestPlanTestSuite.class, testPlanTestSuiteId_);
+		final TestPlanTestSuite testPlanTestSuite = getRequiredEntityById(TestPlanTestSuite.class, testPlanTestSuiteId_);
 		return testPlanTestSuite;
 	}
 
@@ -179,7 +179,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public TestPlan saveTestPlan(final Integer testPlanId_, final String name_, final String description_, final Integer originalVersionId_) throws Exception
 	{
-		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
+		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);
 		checkForDuplicateNameWithinParent(TestPlan.class, name_, testPlan.getProductId(), "productId", testPlanId_);
 
 		testPlan.setName(name_);
@@ -191,9 +191,9 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public TestPlanTestSuite saveTestPlanTestSuite(final Integer includedTestSuiteId_, final Integer runOrder_, final Integer originalVersionId_)
 	{
-		final TestPlanTestSuite includedTestSuite = findEntityById(TestPlanTestSuite.class, includedTestSuiteId_);
+		final TestPlanTestSuite includedTestSuite = getRequiredEntityById(TestPlanTestSuite.class, includedTestSuiteId_);
 		// prevent if test plan already activated
-		final TestPlan testPlan = findEntityById(TestPlan.class, includedTestSuite.getTestPlanId());
+		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, includedTestSuite.getTestPlanId());
 		if (!TestPlanStatus.PENDING.equals(testPlan.getTestPlanStatusId()))
 		{
 			throw new ChangingActivatedEntityException(TestPlan.class.getSimpleName() + " : " + testPlan.getId());
@@ -218,7 +218,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 
 	private TestPlan updateActivationStatus(final Integer testPlanId_, final Integer activationStatusId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
+		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);
 		if (TestPlanStatus.ACTIVE != testPlan.getTestPlanStatusId())
 		{
 			final List<TestPlanTestSuite> includedTestSuites = getTestPlanTestSuites(testPlanId_);
@@ -240,7 +240,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	public void saveEnvironmentGroupsForTestPlan(final Integer testPlanId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
 			throws UnsupportedEnvironmentSelectionException, Exception
 	{
-		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
+		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);
 		// cannot change after activation
 		if (!TestPlanStatus.PENDING.equals(testPlan.getTestPlanStatusId()))
 		{
@@ -255,7 +255,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 			throw new UnsupportedEnvironmentSelectionException(TestPlanTestSuite.class.getSimpleName() + " : " + testPlanId_);
 		}
 		// check that groups are included in the parent profile.
-		final Product product = findEntityById(Product.class, testPlan.getProductId());
+		final Product product = getRequiredEntityById(Product.class, testPlan.getProductId());
 		if (!environmentService.isValidEnvironmentGroupSelectionForProfile(product.getEnvironmentProfileId(), environmentGroupIds_))
 		{
 			throw new UnsupportedEnvironmentSelectionException(TestPlan.class.getSimpleName() + " : " + testPlanId_);
@@ -271,7 +271,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForTestPlan(final Integer testPlanId_) throws Exception
 	{
-		final TestPlan testPlan = findEntityById(TestPlan.class, testPlanId_);
+		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);
 		if (testPlan.getEnvironmentProfileId() != null)
 		{
 			return environmentService.getEnvironmentGroupsForProfile(testPlan.getEnvironmentProfileId());

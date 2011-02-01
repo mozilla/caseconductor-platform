@@ -83,7 +83,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public TestCase addTestCase(final Integer productId_, final Integer testCycleId_, final Integer maxAttachmentSizeInMbytes_, final Integer maxNumberOfAttachments_,
 			final String name_, final String description_) throws Exception
 	{
-		final Product product = findEntityById(Product.class, productId_);
+		final Product product = getRequiredEntityById(Product.class, productId_);
 		checkForDuplicateNameWithinParent(TestCase.class, name_, productId_, "productId", null);
 
 		final TestCase testCase = new TestCase(name_, productId_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, testCycleId_);
@@ -105,10 +105,10 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public void addTestCaseTag(final Integer testCaseId_, final Integer tagId_) throws Exception
 	{
-		final TestCase testCase = findEntityById(TestCase.class, testCaseId_);
-		final Tag tag = findEntityById(Tag.class, tagId_);
+		final TestCase testCase = getRequiredEntityById(TestCase.class, testCaseId_);
+		final Tag tag = getRequiredEntityById(Tag.class, tagId_);
 		// check that Tag and TestCase from the same Company
-		Product product = findEntityById(Product.class, testCase.getProductId());
+		Product product = getRequiredEntityById(Product.class, testCase.getProductId());
 		List<CompanyDependable> entities = new ArrayList<CompanyDependable>();
 		entities.add(tag);
 		checkValidSelectionForCompany(product.getCompanyId(), entities);
@@ -128,7 +128,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public TestCaseStep addTestCaseStep(final Integer testCaseVersionId_, final String name_, final Integer stepNumber_, final String instruction_, final String expectedResult_,
 			final Integer estimatedTimeInMin_) throws Exception
 	{
-		final TestCaseVersion testCaseVersion = findEntityById(TestCaseVersion.class, testCaseVersionId_);
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		checkForDuplicateNameWithinParent(TestCaseStep.class, name_, testCaseVersionId_, "testCaseVersionId", null);
 		checkForDuplicateStepNumber(testCaseVersionId_, stepNumber_);
 
@@ -140,7 +140,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		step.setInstruction(instruction_);
 		step.setExpectedResult(expectedResult_);
 		final Integer id = dao.addAndReturnId(step);
-		return findEntityById(TestCaseStep.class, id);
+		return getRequiredEntityById(TestCaseStep.class, id);
 	}
 
 	private void checkForDuplicateStepNumber(final Integer testCaseVersionId_, final Integer stepNumber_) throws DuplicateTestCaseStepException
@@ -201,7 +201,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public void deleteTestCase(final Integer testCaseId_, final Integer originalVersionId_) throws Exception
 	{
-		TestCase testCase = findEntityById(TestCase.class, testCaseId_);
+		TestCase testCase = getRequiredEntityById(TestCase.class, testCaseId_);
 		final Search search = new Search(TestCaseVersion.class);
 		search.addFilterEqual("testCaseId", testCaseId_);
 		final List<TestCaseVersion> foundEntities = dao.search(TestCaseVersion.class, search);
@@ -221,8 +221,8 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public void deleteTestCaseStep(final Integer testCaseStepId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestCaseStep testCaseStep = findEntityById(TestCaseStep.class, testCaseStepId_);
-		final TestCaseVersion testCaseVersion = findEntityById(TestCaseVersion.class, testCaseStep.getTestCaseVersionId());
+		final TestCaseStep testCaseStep = getRequiredEntityById(TestCaseStep.class, testCaseStepId_);
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseStep.getTestCaseVersionId());
 		// cannot delete if not DRAFT
 		if (!TestCaseStatus.PENDING.equals(testCaseVersion.getTestCaseStatusId()))
 		{
@@ -287,7 +287,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 
 	private TestCaseVersion updateActivationStatus(final Integer testCaseVersionId_, final Integer activationStatusId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestCaseVersion testCaseVersion = findEntityById(TestCaseVersion.class, testCaseVersionId_);
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		if (activationStatusId_ != testCaseVersion.getTestCaseStatusId())
 		{
 			// test case must be approved before activation
@@ -328,7 +328,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public void deleteTestCaseVersion(final Integer testCaseVersionId_, final Integer originalVersionId_) throws Exception
 	{
-		final TestCaseVersion testCaseVersion = findEntityById(TestCaseVersion.class, testCaseVersionId_);
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		if (!TestCaseStatus.PENDING.equals(testCaseVersion.getTestCaseStatusId()))
 		{
 			throw new DeletingActivatedEntityException(TestCaseVersion.class.getSimpleName());
@@ -393,7 +393,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public void saveProductComponentsForTestCase(final Integer testCaseId_, final List<Integer> productComponentIds_, final Integer originalVersionId_) throws Exception
 	{
-		final TestCase testCase = findEntityById(TestCase.class, testCaseId_);
+		final TestCase testCase = getRequiredEntityById(TestCase.class, testCaseId_);
 		// delete old components for test case
 		final Search search = new Search(TestCaseProductComponent.class);
 		search.addFilterEqual("testCaseId", testCaseId_);
@@ -403,7 +403,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		// add new components for test case
 		for (final Integer productComponentId : productComponentIds_)
 		{
-			final ProductComponent productComponent = findEntityById(ProductComponent.class, productComponentId);
+			final ProductComponent productComponent = getRequiredEntityById(ProductComponent.class, productComponentId);
 			if (productComponent != null)
 			{
 				if (!productComponent.getProductId().equals(testCase.getProductId()))
@@ -421,7 +421,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(final Integer testCaseVersionId_) throws Exception
 	{
-		final TestCaseVersion testCaseVersion = findEntityById(TestCaseVersion.class, testCaseVersionId_);
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		if (testCaseVersion != null)
 		{
 			if (testCaseVersion.getEnvironmentProfileId() != null)
@@ -435,8 +435,11 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public TestCase getTestCase(final Integer testCaseId_) throws Exception
 	{
-		final TestCase testCase = findEntityById(TestCase.class, testCaseId_);
-		testCase.setLatestVersion(getLatestTestCaseVersion(testCaseId_));
+		final TestCase testCase = getRequiredEntityById(TestCase.class, testCaseId_);
+		final TestCaseVersion latestVersion = getLatestTestCaseVersion(testCaseId_);
+		// hiberante doesn't map on newly added objects, need workaround
+		latestVersion.setTestCase(testCase);
+		testCase.setLatestVersion(latestVersion);
 		return testCase;
 	}
 
@@ -504,7 +507,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public TestCaseVersion getTestCaseVersion(final Integer testCaseVersionId_) throws Exception
 	{
-		final TestCaseVersion testCaseVersion = findEntityById(TestCaseVersion.class, testCaseVersionId_);
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		testCaseVersion.setSteps(getTestCaseVersionSteps(testCaseVersionId_));
 		return testCaseVersion;
 	}
@@ -512,7 +515,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public TestCaseStep getTestCaseStep(final Integer testCaseStepId_) throws Exception
 	{
-		final TestCaseStep testCaseStep = findEntityById(TestCaseStep.class, testCaseStepId_);
+		final TestCaseStep testCaseStep = getRequiredEntityById(TestCaseStep.class, testCaseStepId_);
 		return testCaseStep;
 	}
 
@@ -538,15 +541,15 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public void saveEnvironmentGroupsForTestCaseVersion(final Integer testCaseVersionId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
 			throws ChangingActivatedEntityException, UnsupportedEnvironmentSelectionException, Exception
 	{
-		final TestCaseVersion testCaseVersion = findEntityById(TestCaseVersion.class, testCaseVersionId_);
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		// cannot change after activation
 		if (!TestCaseStatus.PENDING.equals(testCaseVersion.getTestCaseStatusId()))
 		{
 			throw new ChangingActivatedEntityException(TestCaseVersion.class.getSimpleName());
 		}
 		// check that groups are included in the parent profile
-		final TestCase testCase = findEntityById(TestCase.class, testCaseVersion.getTestCaseId());
-		final Product product = findEntityById(Product.class, testCase.getProductId());
+		final TestCase testCase = getRequiredEntityById(TestCase.class, testCaseVersion.getTestCaseId());
+		final Product product = getRequiredEntityById(Product.class, testCase.getProductId());
 
 		if (!environmentService.isValidEnvironmentGroupSelectionForProfile(product.getEnvironmentProfileId(), environmentGroupIds_))
 		{
@@ -564,7 +567,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public TestCase saveTestCase(final Integer testCaseId_, final String name_, final Integer maxAttachmentSizeInMbytes_, final Integer maxNumberOfAttachments_,
 			final Integer originalVersionId_) throws Exception
 	{
-		final TestCase testCase = findEntityById(TestCase.class, testCaseId_);
+		final TestCase testCase = getRequiredEntityById(TestCase.class, testCaseId_);
 		checkForDuplicateNameWithinParent(TestCase.class, name_, testCase.getProductId(), "productId", testCaseId_);
 
 		testCase.setName(name_);
@@ -579,11 +582,11 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public TestCaseStep saveTestCaseStep(final Integer testCaseStepId_, final String name_, final Integer stepNumber_, final String instruction_, final String expectedResult_,
 			final Integer estimatedTimeInMin_, final Integer originalVersionId_) throws Exception
 	{
-		final TestCaseStep step = findEntityById(TestCaseStep.class, testCaseStepId_);
+		final TestCaseStep step = getRequiredEntityById(TestCaseStep.class, testCaseStepId_);
 		checkForDuplicateNameWithinParent(TestCaseStep.class, name_, step.getTestCaseVersionId(), "testCaseVersionId", testCaseStepId_);
 
 		// cannot change after activation
-		final TestCaseVersion testCaseVersion = findEntityById(TestCaseVersion.class, step.getTestCaseVersionId());
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, step.getTestCaseVersionId());
 		if (!TestCaseStatus.PENDING.equals(testCaseVersion.getTestCaseStatusId()))
 		{
 			throw new ChangingActivatedEntityException(TestCaseStep.class.getSimpleName());
@@ -595,14 +598,14 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		step.setInstruction(instruction_);
 		step.setExpectedResult(expectedResult_);
 		dao.merge(step);
-		return findEntityById(TestCaseStep.class, step.getId());
+		return getRequiredEntityById(TestCaseStep.class, step.getId());
 	}
 
 	@Override
 	public TestCaseVersion saveTestCaseVersion(final Integer testCaseVersionId_, final String description_, final Integer originalVersion_, final VersionIncrement versionIncrement_)
 			throws Exception
 	{
-		final TestCaseVersion testCaseVersion = findEntityById(TestCaseVersion.class, testCaseVersionId_);
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		if (versionIncrement_.equals(VersionIncrement.NONE))
 		{
 			testCaseVersion.setDescription(description_);
