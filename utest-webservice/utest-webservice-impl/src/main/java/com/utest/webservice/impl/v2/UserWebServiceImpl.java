@@ -407,7 +407,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Secured(Permission.USER_ACCOUNT_VIEW)
 	public RoleSearchResultInfo findRoles(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
 	{
-		final UtestSearch search = objectBuilderFactory.createSearch(PermissionInfo.class, request, ui_);
+		final UtestSearch search = objectBuilderFactory.createSearch(RoleInfo.class, request, ui_);
 		final UtestSearchResult result = userService.findRoles(search);
 
 		return (RoleSearchResultInfo) objectBuilderFactory.createResult(RoleInfo.class, AccessRole.class, request, result, ui_.getBaseUriBuilder());
