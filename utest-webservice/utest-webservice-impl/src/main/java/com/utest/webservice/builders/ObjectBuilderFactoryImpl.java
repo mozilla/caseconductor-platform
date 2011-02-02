@@ -102,11 +102,16 @@ import com.utest.webservice.util.RestUtil;
 public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializable
 {
 
-	private static final String			FROM		= "From";
-	private static final String			TO			= "To";
+	private static final String			FROM			= "From";
+	private static final String			TO				= "To";
+	private static final String			ID				= "id";
+	private static final String			CREATE_DATE		= "createDate";
+	private static final String			CHANGE_DATE		= "lastChangeDate";
+	private static final String			CREATE_USER_ID	= "createdBy";
+	private static final String			CHANGE_USER_ID	= "lastChangedBy";
 
 	@SuppressWarnings("unchecked")
-	private static Map<Class, Builder>	builders	= new HashMap<Class, Builder>();
+	private static Map<Class, Builder>	builders		= new HashMap<Class, Builder>();
 
 	ObjectBuilderFactoryImpl()
 	{
@@ -210,10 +215,6 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 		{
 			addFilter(objectClass, ui, search);
 		}
-		else
-		{
-			addFilter(objectClass, request, search);
-		}
 		return search;
 
 	}
@@ -235,21 +236,46 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 
 			Class propertyType = null;
 			Method getter = null;
-			try
+			// special properties derived from Resourse Identity and Timeline
+			// nodes
+			if (propertyName.equalsIgnoreCase(ID))
 			{
-				getter = objectClass.getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1), new Class[] {});
-				propertyType = getter.getReturnType();
+				propertyType = Integer.class;
 			}
-			catch (final Exception e)
+			else if (propertyName.equalsIgnoreCase(CREATE_USER_ID))
+			{
+				propertyType = Integer.class;
+			}
+			else if (propertyName.equalsIgnoreCase(CHANGE_USER_ID))
+			{
+				propertyType = Integer.class;
+			}
+			else if (propertyName.equalsIgnoreCase(CREATE_DATE))
+			{
+				propertyType = Date.class;
+			}
+			else if (propertyName.equalsIgnoreCase(CHANGE_DATE))
+			{
+				propertyType = Date.class;
+			}
+			else
 			{
 				try
 				{
-					getter = objectClass.getMethod("is" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1), new Class[] {});
+					getter = objectClass.getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1), new Class[] {});
 					propertyType = getter.getReturnType();
 				}
-				catch (final Exception ex)
+				catch (final Exception e)
 				{
-					continue;
+					try
+					{
+						getter = objectClass.getMethod("is" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1), new Class[] {});
+						propertyType = getter.getReturnType();
+					}
+					catch (final Exception ex)
+					{
+						continue;
+					}
 				}
 			}
 			if (propertyType == null)
@@ -308,7 +334,7 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 			{
 				filter.setOperator(UtestFilter.OP_IN);
 			}
-			else
+			else if (filter.getValue() == null)
 			{
 				Method valueOf = null;
 				try
@@ -327,75 +353,6 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 				{
 					continue;
 				}
-			}
-
-			search.addFilter(filter);
-		}
-
-	}
-
-	@SuppressWarnings("unchecked")
-	private <Ti, T extends UtestSearchRequest> void addFilter(final Class<Ti> objectClass, final T request, final UtestSearch search)
-	{
-		final Class clazz = request.getClass();
-		for (final Method mt : clazz.getDeclaredMethods())
-		{
-			if (!mt.getName().startsWith("get"))
-			{
-				continue;
-			}
-			String propertyName = mt.getName();
-			if (propertyName.endsWith(FROM))
-			{
-				propertyName = propertyName.substring(0, propertyName.lastIndexOf(FROM));
-			}
-			if (propertyName.endsWith(TO))
-			{
-				propertyName = propertyName.substring(0, propertyName.lastIndexOf(TO));
-			}
-
-			try
-			{
-				objectClass.getMethod(propertyName, new Class[] {});
-			}
-			catch (final Exception e)
-			{
-				continue;
-			}
-
-			propertyName = propertyName.substring(3, 4).toLowerCase() + propertyName.substring(4);
-			final UtestFilter filter = new UtestFilter();
-			filter.setProperty(propertyName);
-			Object value;
-			try
-			{
-				value = mt.invoke(request, new Object[] {});
-			}
-			catch (final Exception e)
-			{
-				continue;
-			}
-			filter.setValue(value);
-			filter.setOperator(UtestFilter.OP_EQUAL);
-			if (value instanceof Date)
-			{
-				if (mt.getName().endsWith(FROM))
-				{
-					filter.setOperator(UtestFilter.OP_GREATER_OR_EQUAL);
-				}
-				if (mt.getName().endsWith(TO))
-				{
-					filter.setOperator(UtestFilter.OP_LESS_OR_EQUAL);
-				}
-			}
-			if (value instanceof String)
-			{
-				filter.setValue(value + "%");
-				filter.setOperator(UtestFilter.OP_LIKE);
-			}
-			if (value instanceof List)
-			{
-				filter.setOperator(UtestFilter.OP_IN);
 			}
 
 			search.addFilter(filter);
