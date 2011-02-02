@@ -37,6 +37,10 @@ import com.utest.domain.search.UtestSearchResult;
  */
 public interface TypelessDAO
 {
+	/*
+	 * Suplemment in complex queries where no real ids could be found
+	 */
+	public static final Integer	PLACE_HOLDER_ID	= -666;
 
 	<T> List<T> getAll(Class<T> type_);
 
