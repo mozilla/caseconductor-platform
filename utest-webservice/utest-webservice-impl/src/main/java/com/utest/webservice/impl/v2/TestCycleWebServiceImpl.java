@@ -69,7 +69,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_SUITE_EDIT })
+	@Secured( { Permission.TEST_CYCLE_EDIT })
 	public TestCycleInfo updateTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("") final TestCycleInfo testCycleInfo_)
 			throws Exception
 	{
@@ -85,7 +85,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_SUITE_EDIT })
+	@Secured( { Permission.TEST_CYCLE_EDIT })
 	public TestCycleInfo activateTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("originalVersionId") final Integer originalVersionId_)
 			throws Exception
 	{
@@ -99,7 +99,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_SUITE_EDIT })
+	@Secured( { Permission.TEST_CYCLE_EDIT })
 	public TestCycleInfo deactivateTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
@@ -113,7 +113,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_SUITE_EDIT })
+	@Secured( { Permission.TEST_CYCLE_EDIT })
 	public Boolean updateTestCycleEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_,
 			@FormParam("environmentGroupIds") final ArrayList<Integer> environmentGroupIds_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
@@ -126,7 +126,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.TEST_SUITE_VIEW)
+	@Secured(Permission.TEST_CYCLE_VIEW)
 	public List<EnvironmentGroupInfo> getTestCycleEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_) throws Exception
 	{
 		final List<EnvironmentGroup> groups = testCycleService.getEnvironmentGroupsForTestCycle(testCycleId_);
@@ -138,7 +138,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.TEST_SUITE_VIEW)
+	@Secured(Permission.TEST_CYCLE_VIEW)
 	public List<TestRunInfo> getTestCycleTestRuns(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_) throws Exception
 	{
 		final List<TestRun> includedTestRuns = testCycleService.getTestRunsForTestCycle(testCycleId_);
@@ -149,7 +149,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_SUITE_EDIT })
+	@Secured( { Permission.TEST_CYCLE_EDIT })
 	public TestCycleInfo createTestCycle(@Context final UriInfo ui_, @FormParam("") final TestCycleInfo testCycleInfo_) throws Exception
 	{
 		final TestCycle testCycle = testCycleService.addTestCycle(testCycleInfo_.getProductId(), testCycleInfo_.getName(), testCycleInfo_.getDescription(), testCycleInfo_
@@ -164,7 +164,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.TEST_SUITE_EDIT)
+	@Secured(Permission.TEST_CYCLE_EDIT)
 	public Boolean deleteTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("originalVersionId") final Integer originalVesionId_)
 			throws Exception
 	{
@@ -178,7 +178,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.TEST_SUITE_VIEW)
+	@Secured(Permission.TEST_CYCLE_VIEW)
 	public TestCycleInfo getTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_) throws Exception
 	{
 		final TestCycle testCycle = testCycleService.getTestCycle(testCycleId_);
@@ -189,7 +189,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.TEST_SUITE_VIEW)
+	@Secured(Permission.TEST_CYCLE_VIEW)
 	public TestCycleSearchResultInfo findTestCycles(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestCycleInfo.class, request_, ui_);
