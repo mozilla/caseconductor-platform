@@ -51,6 +51,7 @@
                 <entry key="tester" value="/users/{id}"/>
                 <entry key="product" value="/products/{id}"/>
                 <entry key="productcomponent" value="/products/components/{id}"/>
+                <entry key="tag" value="/tags/{id}"/>
                 <entry key="testcase" value="/testcases/{id}"/>
                 <entry key="testcaseversion" value="/testcases/versions/{id}"/>
                 <entry key="testcasestep" value="/testcases/steps/{id}"/>

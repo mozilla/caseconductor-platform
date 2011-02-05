@@ -37,7 +37,7 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 public interface EnvironmentWebService
 {
 
-	Boolean updateEnvironmentType(UriInfo ui, Integer environmentTypeId, EnvironmentTypeInfo environmentTypeInfo) throws Exception;
+	EnvironmentTypeInfo updateEnvironmentType(UriInfo ui, Integer environmentTypeId, EnvironmentTypeInfo environmentTypeInfo) throws Exception;
 
 	EnvironmentTypeInfo createEnvironmentType(UriInfo ui, EnvironmentTypeInfo environmentTypeInfo) throws Exception;
 
@@ -45,7 +45,7 @@ public interface EnvironmentWebService
 
 	EnvironmentTypeSearchResultInfo findEnvironmentTypes(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	Boolean updateEnvironment(UriInfo ui, Integer environmentId, EnvironmentInfo environmentInfo) throws Exception;
+	EnvironmentInfo updateEnvironment(UriInfo ui, Integer environmentId, EnvironmentInfo environmentInfo) throws Exception;
 
 	EnvironmentInfo createEnvironment(UriInfo ui, EnvironmentInfo environmentInfo) throws Exception;
 
@@ -53,7 +53,7 @@ public interface EnvironmentWebService
 
 	EnvironmentSearchResultInfo findEnvironments(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	Boolean updateEnvironmentGroup(UriInfo ui, Integer environmentGroupId, EnvironmentGroupInfo environmentGroupInfo) throws Exception;
+	EnvironmentGroupInfo updateEnvironmentGroup(UriInfo ui, Integer environmentGroupId, EnvironmentGroupInfo environmentGroupInfo) throws Exception;
 
 	EnvironmentGroupInfo createEnvironmentGroup(UriInfo ui, EnvironmentGroupInfo environmentGroupInfo) throws Exception;
 
@@ -80,4 +80,6 @@ public interface EnvironmentWebService
 	Boolean deleteEnvironmentGroup(UriInfo ui, Integer environmentGroupId, Integer originalVersionId) throws Exception;
 
 	Boolean deleteEnvironmentType(UriInfo ui, Integer environmentTypeId, Integer originalVersionId) throws Exception;
+
+	TagInfo updateTag(UriInfo ui, Integer tagId, TagInfo tagInfo) throws Exception;
 }

@@ -75,12 +75,12 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.ENVIRONMENT_EDIT })
-	public Boolean updateEnvironmentType(@Context final UriInfo ui_, @PathParam("id") final Integer environmentTypeId_,
+	public EnvironmentTypeInfo updateEnvironmentType(@Context final UriInfo ui_, @PathParam("id") final Integer environmentTypeId_,
 			@FormParam("") final EnvironmentTypeInfo environmentTypeInfo_) throws Exception
 	{
 		environmentService.saveEnvironmentTypeLocale(environmentTypeId_, environmentTypeInfo_.getName(), environmentTypeInfo_.getLocaleCode(), environmentTypeInfo_.getSortOrder());
 
-		return Boolean.TRUE;
+		return getEnvironmentType(ui_, environmentTypeId_);
 	}
 
 	@POST
@@ -158,12 +158,24 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.ENVIRONMENT_EDIT })
-	public Boolean updateEnvironment(@Context final UriInfo ui_, @PathParam("id") final Integer environmentId_, @FormParam("") final EnvironmentInfo environmentInfo_)
+	public EnvironmentInfo updateEnvironment(@Context final UriInfo ui_, @PathParam("id") final Integer environmentId_, @FormParam("") final EnvironmentInfo environmentInfo_)
 			throws Exception
 	{
 		environmentService.saveEnvironmentLocale(environmentId_, environmentInfo_.getName(), environmentInfo_.getLocaleCode(), environmentInfo_.getSortOrder());
+		return getEnvironment(ui_, environmentId_);
+	}
 
-		return Boolean.TRUE;
+	@PUT
+	@Path("/tags/{id}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.ENVIRONMENT_EDIT })
+	public TagInfo updateTag(@Context final UriInfo ui_, @PathParam("id") final Integer tagId_, @FormParam("") final TagInfo tagInfo_) throws Exception
+	{
+		Tag tag = environmentService.saveTag(tagId_, tagInfo_.getTag(), tagInfo_.getResourceIdentity().getVersion());
+
+		return objectBuilderFactory.toInfo(TagInfo.class, tag, ui_.getBaseUriBuilder());
 	}
 
 	@POST
@@ -322,13 +334,12 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.ENVIRONMENT_EDIT })
-	public Boolean updateEnvironmentGroup(@Context final UriInfo ui_, @PathParam("id") final Integer environmentGroupId_,
+	public EnvironmentGroupInfo updateEnvironmentGroup(@Context final UriInfo ui_, @PathParam("id") final Integer environmentGroupId_,
 			@FormParam("") final EnvironmentGroupInfo environmentGroupInfo_) throws Exception
 	{
-		environmentService.saveEnvironmentGroup(environmentGroupId_, environmentGroupInfo_.getName(), environmentGroupInfo_.getDescription(), environmentGroupInfo_
-				.getResourceIdentity().getVersion());
-
-		return Boolean.TRUE;
+		EnvironmentGroup environmentGroup = environmentService.saveEnvironmentGroup(environmentGroupId_, environmentGroupInfo_.getName(), environmentGroupInfo_.getDescription(),
+				environmentGroupInfo_.getResourceIdentity().getVersion());
+		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroup, ui_.getBaseUriBuilder());
 	}
 
 	@POST

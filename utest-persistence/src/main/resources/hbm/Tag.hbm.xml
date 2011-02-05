@@ -8,6 +8,9 @@
             <column name="tagId" />
             <generator class="identity" />
         </id>
+        <version name="version" type="java.lang.Integer">
+            <column name="version" not-null="true" />
+        </version>
          <property name="tag" type="string">
            <column name="tag" length="45" not-null="true">
                 <comment>Short text.</comment>
@@ -15,7 +18,7 @@
         </property>
         <property name="companyId" type="java.lang.Integer">
             <column name="companyId" not-null="false">
-                <comment>Comapny who created this.</comment>
+                <comment>Company who created this.</comment>
             </column>
         </property>
         <property name="createdBy" type="java.lang.Integer">

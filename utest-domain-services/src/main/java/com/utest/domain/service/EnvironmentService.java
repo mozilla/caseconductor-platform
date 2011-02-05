@@ -139,4 +139,6 @@ public interface EnvironmentService
 
 	void deleteTag(Integer tagId, Integer originalVersionId) throws Exception;
 
+	Tag saveTag(Integer tagId, String tag, Integer originalVersionId) throws Exception;
+
 }

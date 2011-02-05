@@ -781,14 +781,6 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		return dao.merge(profile);
 	}
 
-	// @Override
-	// public EnvironmentProfile saveEnvironmentProfile(final EnvironmentProfile
-	// environmentProfile_) throws Exception
-	// {
-	// // return updated profile
-	// return dao.merge(environmentProfile_);
-	// }
-
 	@Override
 	public EnvironmentGroup saveEnvironmentGroup(final Integer environmentGroupId_, String name_, String description_, Integer originalVersionId_) throws Exception
 	{
@@ -797,6 +789,16 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		group.setDescription(description_);
 		group.setVersion(originalVersionId_);
 		return dao.merge(group);
+
+	}
+
+	@Override
+	public Tag saveTag(final Integer tagId_, String tag_, Integer originalVersionId_) throws Exception
+	{
+		final Tag tag = getRequiredEntityById(Tag.class, tagId_);
+		tag.setTag(tag_);
+		tag.setVersion(originalVersionId_);
+		return dao.merge(tag);
 
 	}
 
