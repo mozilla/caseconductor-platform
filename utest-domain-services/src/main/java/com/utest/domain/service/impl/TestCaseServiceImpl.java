@@ -295,7 +295,8 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			{
 				throw new ActivatingNotApprovedEntityException(TestCaseVersion.class.getSimpleName() + " : " + testCaseVersionId_);
 			}
-			if ((testCaseVersion.getSteps() == null) || testCaseVersion.getSteps().isEmpty())
+			List<TestCaseStep> steps = getTestCaseVersionSteps(testCaseVersionId_);
+			if ((steps == null) || steps.isEmpty())
 			{
 				throw new ActivatingIncompleteEntityException(TestCaseVersion.class.getSimpleName() + " : " + testCaseVersionId_);
 			}

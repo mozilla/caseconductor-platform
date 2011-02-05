@@ -53,6 +53,8 @@ public class TestRunResultInfo extends BaseInfo
 	private Integer			approvalStatusId;
 	@XmlElement(required = false)
 	private Integer			approvedBy;
+	@XmlElement(type = ResourceLocator.class, name = "approvedByLocator")
+	private ResourceLocator	approvedByLocator;
 	@XmlElement(required = false)
 	private Date			approveDate;
 	@XmlElement(required = true)
@@ -260,6 +262,16 @@ public class TestRunResultInfo extends BaseInfo
 	public void setApproveDate(Date approveDate)
 	{
 		this.approveDate = approveDate;
+	}
+
+	public void setApprovedByLocator(ResourceLocator approvedByLocator)
+	{
+		this.approvedByLocator = approvedByLocator;
+	}
+
+	public ResourceLocator getApprovedByLocator()
+	{
+		return approvedByLocator;
 	}
 
 }

@@ -84,7 +84,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		}
 		final Search search = new Search(Tag.class);
 		search.addFilterEqual("companyId", companyId_);
-		search.addFilterEqual("name", tag_);
+		search.addFilterEqual("tag", tag_);
 		final List<Tag> tags = dao.search(Tag.class, search);
 		if ((tags != null) && !tags.isEmpty())
 		{
