@@ -108,11 +108,11 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
-	public TestCaseVersionInfo approveTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_,
-			@PathParam("versionId") final Integer testCaseVersionId_, @FormParam("") final TestCaseVersionInfo testCaseVersionInfo_) throws Exception
+	public TestCaseVersionInfo approveTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 
-		final TestCaseVersion testCaseVersion = testCaseService.approveTestCaseVersion(testCaseVersionId_, testCaseVersionInfo_.getResourceIdentity().getVersion());
+		final TestCaseVersion testCaseVersion = testCaseService.approveTestCaseVersion(testCaseVersionId_, originalVersionId_);
 		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder());
 	}
 
@@ -123,10 +123,10 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
 	public TestCaseVersionInfo rejectTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
-			@FormParam("") final TestCaseVersionInfo testCaseVersionInfo_) throws Exception
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 
-		final TestCaseVersion testCaseVersion = testCaseService.rejectTestCaseVersion(testCaseVersionId_, testCaseVersionInfo_.getResourceIdentity().getVersion());
+		final TestCaseVersion testCaseVersion = testCaseService.rejectTestCaseVersion(testCaseVersionId_, originalVersionId_);
 		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder());
 	}
 
@@ -136,11 +136,11 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
-	public TestCaseVersionInfo activateTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_,
-			@PathParam("versionId") final Integer testCaseVersionId_, @FormParam("") final TestCaseVersionInfo testCaseVersionInfo_) throws Exception
+	public TestCaseVersionInfo activateTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 
-		final TestCaseVersion testCaseVersion = testCaseService.activateTestCaseVersion(testCaseVersionId_, testCaseVersionInfo_.getResourceIdentity().getVersion());
+		final TestCaseVersion testCaseVersion = testCaseService.activateTestCaseVersion(testCaseVersionId_, originalVersionId_);
 		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder());
 	}
 
@@ -151,10 +151,10 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
 	public TestCaseVersionInfo deactivateTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
-			@FormParam("") final TestCaseVersionInfo testCaseVersionInfo_) throws Exception
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 
-		final TestCaseVersion testCaseVersion = testCaseService.lockTestCaseVersion(testCaseVersionId_, testCaseVersionInfo_.getResourceIdentity().getVersion());
+		final TestCaseVersion testCaseVersion = testCaseService.lockTestCaseVersion(testCaseVersionId_, originalVersionId_);
 		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder());
 	}
 

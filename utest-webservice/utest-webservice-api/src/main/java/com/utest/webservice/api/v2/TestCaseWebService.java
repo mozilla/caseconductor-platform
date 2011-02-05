@@ -37,10 +37,6 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 public interface TestCaseWebService
 {
 
-	TestCaseVersionInfo activateTestCaseVersion(UriInfo ui, Integer testCaseId, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
-
-	TestCaseVersionInfo approveTestCaseVersion(UriInfo ui, Integer testCaseId, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
-
 	TestCaseVersionInfo cloneTestCase(UriInfo ui, Integer testCaseId) throws Exception;
 
 	TestCaseVersionInfo createTestCase(UriInfo ui, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
@@ -71,13 +67,9 @@ public interface TestCaseWebService
 
 	TestCaseStepInfo createTestCaseStep(UriInfo ui, Integer testCaseVersionId, TestCaseStepInfo testCaseStepInfo) throws Exception;
 
-	TestCaseVersionInfo deactivateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
-
 	TestCaseVersionInfo getTestCaseVersion(UriInfo ui, Integer testCaseVersionId) throws Exception;
 
 	List<TestCaseStepInfo> getTestCaseVersionSteps(UriInfo ui, Integer testCaseVersionId) throws Exception;
-
-	TestCaseVersionInfo rejectTestCaseVersion(UriInfo ui, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
 
 	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String versionIncrement, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
 
@@ -94,5 +86,13 @@ public interface TestCaseWebService
 	Boolean deleteTestCaseStep(UriInfo ui, Integer testCaseStepId, Integer originalVesionId) throws Exception;
 
 	TestCaseStepInfo updateTestCaseStep(UriInfo ui, Integer testCaseStepId, TestCaseStepInfo testCaseStepInfo) throws Exception;
+
+	TestCaseVersionInfo activateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, Integer originalVersionId) throws Exception;
+
+	TestCaseVersionInfo deactivateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, Integer originalVersionId) throws Exception;
+
+	TestCaseVersionInfo rejectTestCaseVersion(UriInfo ui, Integer testCaseVersionId, Integer originalVersionId) throws Exception;
+
+	TestCaseVersionInfo approveTestCaseVersion(UriInfo ui, Integer testCaseVersionId, Integer originalVersionId) throws Exception;
 
 }
