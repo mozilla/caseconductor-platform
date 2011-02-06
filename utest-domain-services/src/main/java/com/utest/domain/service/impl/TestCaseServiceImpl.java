@@ -182,6 +182,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		{
 			final Integer priorVersion = priorMinorVersion_;
 			testCaseVersion_.setMinorVersion(priorVersion + 1);
+			testCaseVersion_.setMajorVersion(priorMajorVersion_);
 		}
 		else if (versionIncrement_.equals(VersionIncrement.MAJOR))
 		{
