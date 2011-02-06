@@ -624,6 +624,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			dao.merge(testCaseVersion);
 			// insert new version
 			final TestCaseVersion newTestCaseVersion = new TestCaseVersion();
+			newTestCaseVersion.setProductId(testCaseVersion.getProductId());
 			newTestCaseVersion.setTestCaseId(testCaseVersion.getTestCaseId());
 			newTestCaseVersion.setDescription(testCaseVersion.getDescription());
 			newTestCaseVersion.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
