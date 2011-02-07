@@ -70,11 +70,10 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_SUITE_EDIT })
-	public TestSuiteInfo updateTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_, @FormParam("") final TestSuiteInfo testSuiteInfo_)
-			throws Exception
+	public TestSuiteInfo updateTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_, @FormParam("name") final String name_,
+			@FormParam("description") final String description_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		final TestSuite testSuite = testSuiteService.saveTestSuite(testSuiteId_, testSuiteInfo_.getName(), testSuiteInfo_.getDescription(), testSuiteInfo_.getResourceIdentity()
-				.getVersion());
+		final TestSuite testSuite = testSuiteService.saveTestSuite(testSuiteId_, name_, description_, originalVersionId_);
 		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getBaseUriBuilder());
 	}
 
@@ -150,11 +149,12 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Override
 	@Secured( { Permission.TEST_SUITE_EDIT })
 	public IncludedTestCaseInfo createTestSuiteTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_,
-			@FormParam("") final IncludedTestCaseInfo testCaseInfo_) throws Exception
+			@FormParam("testCaseVersionId") final Integer testCaseVersionId_, @FormParam("priorityId") final Integer priorityId_, @FormParam("runOrder") final Integer runOrder_,
+			@FormParam("blocking") final String blocking_) throws Exception
 	{
 
-		final TestSuiteTestCase includedTestCase = testSuiteService.addTestSuiteTestCase(testSuiteId_, testCaseInfo_.getTestCaseVersionId(), testCaseInfo_.getPriorityId(),
-				testCaseInfo_.getRunOrder(), "true".equalsIgnoreCase(testCaseInfo_.getBlocking()));
+		final TestSuiteTestCase includedTestCase = testSuiteService.addTestSuiteTestCase(testSuiteId_, testCaseVersionId_, priorityId_, runOrder_, "true"
+				.equalsIgnoreCase(blocking_));
 		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
 	}
 
@@ -192,11 +192,12 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
 	public IncludedTestCaseInfo updateTestSuiteTestCase(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
-			@FormParam("") final IncludedTestCaseInfo includedTestCaseInfo_) throws Exception
+			@FormParam("testCaseVersionId") final Integer testCaseVersionId_, @FormParam("priorityId") final Integer priorityId_, @FormParam("runOrder") final Integer runOrder_,
+			@FormParam("blocking") final String blocking_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 
-		final TestSuiteTestCase includedTestCase = testSuiteService.saveTestSuiteTestCase(includedTestCaseId_, includedTestCaseInfo_.getPriorityId(), includedTestCaseInfo_
-				.getRunOrder(), "true".equalsIgnoreCase(includedTestCaseInfo_.getBlocking()), includedTestCaseInfo_.getResourceIdentity().getVersion());
+		final TestSuiteTestCase includedTestCase = testSuiteService.saveTestSuiteTestCase(includedTestCaseId_, priorityId_, runOrder_, "true".equalsIgnoreCase(blocking_),
+				originalVersionId_);
 		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
 	}
 
@@ -205,10 +206,11 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_SUITE_EDIT })
-	public TestSuiteInfo createTestSuite(@Context final UriInfo ui_, @FormParam("") final TestSuiteInfo testSuiteInfo_) throws Exception
+	public TestSuiteInfo createTestSuite(@Context final UriInfo ui_, @FormParam("productId") final Integer productId_,
+			@FormParam("useLatestVersions") final String useLatestVersions_, @FormParam("name") final String name_, @FormParam("description") final String description_)
+			throws Exception
 	{
-		final TestSuite testSuite = testSuiteService.addTestSuite(testSuiteInfo_.getProductId(), "true".equalsIgnoreCase(testSuiteInfo_.getUseLatestVersions()), testSuiteInfo_
-				.getName(), testSuiteInfo_.getDescription());
+		final TestSuite testSuite = testSuiteService.addTestSuite(productId_, "true".equalsIgnoreCase(useLatestVersions_), name_, description_);
 
 		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getBaseUriBuilder());
 	}

@@ -33,17 +33,9 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface ProductWebService
 {
-	ProductInfo updateProduct(UriInfo ui, Integer productId, ProductInfo productInfo) throws Exception;
-
 	ProductInfo getProduct(UriInfo ui, Integer productId) throws Exception;
 
 	ProductSearchResultInfo findProducts(UriInfo ui, UtestSearchRequest request) throws Exception;
-
-	ProductInfo createProduct(UriInfo ui, ProductInfo productInfo) throws Exception;
-
-	ProductComponentInfo createProductComponent(UriInfo ui, Integer productId, ProductComponentInfo productComponentInfo) throws Exception;
-
-	ProductComponentInfo updateProductComponent(UriInfo ui, Integer productComponentId, ProductComponentInfo productComponentInfo) throws Exception;
 
 	ProductComponentInfo getProductComponent(UriInfo ui, Integer productComponentId) throws Exception;
 
@@ -64,5 +56,13 @@ public interface ProductWebService
 	Boolean deleteProduct(UriInfo ui, Integer productId, Integer originalVersionId) throws Exception;
 
 	Boolean deleteProductComponent(UriInfo ui, Integer productComponentId, Integer originalVersionId) throws Exception;
+
+	ProductComponentInfo createProductComponent(UriInfo ui, Integer productId, String name, String description) throws Exception;
+
+	ProductInfo createProduct(UriInfo ui, Integer companyId, String name, String description) throws Exception;
+
+	ProductInfo updateProduct(UriInfo ui, Integer productId, String name, String description, Integer originalVersionId) throws Exception;
+
+	ProductComponentInfo updateProductComponent(UriInfo ui, Integer productComponentId, String name, String description, Integer originalVersionId) throws Exception;
 
 }

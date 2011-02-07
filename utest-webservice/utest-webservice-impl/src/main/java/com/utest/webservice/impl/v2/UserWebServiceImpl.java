@@ -183,9 +183,11 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.USER_ACCOUNT_EDIT })
-	public UserInfo updateUser(@Context final UriInfo ui_, @PathParam("id") final Integer userId, @FormParam("") final UserInfo userInfo) throws Exception
+	public UserInfo updateUser(@Context final UriInfo ui_, @PathParam("id") final Integer userId, @FormParam("companyId") final Integer companyId_,
+			@FormParam("firstName") final String firstName_, @FormParam("lastName") final String lastName_, @FormParam("originalVersionId") final Integer originalVersionId_)
+			throws Exception
 	{
-		final User user = userService.saveUser(userId, userInfo.getCompanyId(), userInfo.getFirstName(), userInfo.getLastName(), userInfo.getResourceIdentity().getVersion());
+		final User user = userService.saveUser(userId, companyId_, firstName_, lastName_, originalVersionId_);
 
 		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getBaseUriBuilder());
 	}
@@ -195,10 +197,11 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.USER_ACCOUNT_EDIT })
-	public UserInfo createUser(@Context final UriInfo ui_, @FormParam("") final UserInfo userInfo) throws Exception
+	public UserInfo createUser(@Context final UriInfo ui_, @FormParam("companyId") final Integer companyId_, @FormParam("firstName") final String firstName_,
+			@FormParam("lastName") final String lastName_, @FormParam("email") final String email_, @FormParam("password") final String password_,
+			@FormParam("screenName") final String screenName_) throws Exception
 	{
-		final User user = userService.addUser(userInfo.getCompanyId(), userInfo.getFirstName(), userInfo.getLastName(), userInfo.getEmail(), userInfo.getPassword(), userInfo
-				.getScreenName());
+		final User user = userService.addUser(companyId_, firstName_, lastName_, email_, password_, screenName_);
 
 		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getBaseUriBuilder());
 	}
@@ -301,9 +304,9 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.ROLE_EDIT })
-	public RoleInfo createRole(@Context final UriInfo ui_, @FormParam("") final RoleInfo roleInfo) throws Exception
+	public RoleInfo createRole(@Context final UriInfo ui_, @FormParam("companyId") final Integer companyId_, @FormParam("name") final String name_) throws Exception
 	{
-		final AccessRole role = userService.addRole(roleInfo.getCompanyId(), roleInfo.getName(), new ArrayList<Integer>());
+		final AccessRole role = userService.addRole(companyId_, name_, new ArrayList<Integer>());
 
 		return objectBuilderFactory.toInfo(RoleInfo.class, role, ui_.getBaseUriBuilder());
 	}
@@ -353,11 +356,11 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.USER_ACCOUNT_EDIT })
-	public Boolean addRolePermission(@Context final UriInfo ui_, @PathParam("id") final Integer roleId_, @PathParam("permissionId") final Integer permissionId_,
+	public RoleInfo addRolePermission(@Context final UriInfo ui_, @PathParam("id") final Integer roleId_, @PathParam("permissionId") final Integer permissionId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		userService.addRolePermission(roleId_, permissionId_, originalVersionId_);
-		return Boolean.TRUE;
+		return getRole(ui_, roleId_);
 	}
 
 	@POST
@@ -366,11 +369,11 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.USER_ACCOUNT_EDIT })
-	public Boolean addUserRole(@Context final UriInfo ui_, @PathParam("id") final Integer userId_, @PathParam("roleId") final Integer roleId_,
+	public UserInfo addUserRole(@Context final UriInfo ui_, @PathParam("id") final Integer userId_, @PathParam("roleId") final Integer roleId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		userService.addUserRole(roleId_, userId_, originalVersionId_);
-		return Boolean.TRUE;
+		return getUser(ui_, userId_);
 	}
 
 	@DELETE
@@ -379,11 +382,11 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.USER_ACCOUNT_EDIT })
-	public Boolean deleteRolePermission(@Context final UriInfo ui_, @PathParam("id") final Integer roleId_, @PathParam("permissionId") final Integer permissionId_,
+	public RoleInfo deleteRolePermission(@Context final UriInfo ui_, @PathParam("id") final Integer roleId_, @PathParam("permissionId") final Integer permissionId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		userService.deleteRolePermission(roleId_, permissionId_, originalVersionId_);
-		return Boolean.TRUE;
+		return getRole(ui_, roleId_);
 	}
 
 	@DELETE
@@ -392,11 +395,11 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.USER_ACCOUNT_EDIT })
-	public Boolean deleteUserRole(@Context final UriInfo ui_, @PathParam("id") final Integer userId_, @PathParam("roleId") final Integer roleId_,
+	public UserInfo deleteUserRole(@Context final UriInfo ui_, @PathParam("id") final Integer userId_, @PathParam("roleId") final Integer roleId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		userService.deleteUserRole(roleId_, userId_, originalVersionId_);
-		return Boolean.TRUE;
+		return getUser(ui_, userId_);
 	}
 
 	@GET

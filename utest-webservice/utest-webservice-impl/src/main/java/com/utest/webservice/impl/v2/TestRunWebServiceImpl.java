@@ -20,6 +20,7 @@
 package com.utest.webservice.impl.v2;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -83,12 +84,15 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public TestRunInfo updateTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @FormParam("") final TestRunInfo testRunInfo_) throws Exception
+	public TestRunInfo updateTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @FormParam("name") final String name_,
+			@FormParam("description") final String description_, @FormParam("selfAssignAllowed") final String selfAssignAllowed_,
+			@FormParam("selfAssignPerEnvironment") final String selfAssignPerEnvironment_, @FormParam("selfAssignLimit") final Integer selfAssignLimit_,
+			@FormParam("startDate") final Date startDate_, @FormParam("endDate") final Date endDate_, @FormParam("originalVersonId") final Integer originalVersionId_)
+			throws Exception
 	{
 
-		final TestRun testRun = testRunService.saveTestRun(testRunId_, testRunInfo_.getName(), testRunInfo_.getDescription(), testRunInfo_.getStartDate(), testRunInfo_
-				.getEndDate(), "true".equalsIgnoreCase(testRunInfo_.getSelfAssignAllowed()), "true".equalsIgnoreCase(testRunInfo_.getSelfAssignPerEnvironment()), testRunInfo_
-				.getSelfAssignLimit(), testRunInfo_.getResourceIdentity().getVersion());
+		final TestRun testRun = testRunService.saveTestRun(testRunId_, name_, description_, startDate_, endDate_, "true".equalsIgnoreCase(selfAssignAllowed_), "true"
+				.equalsIgnoreCase(selfAssignPerEnvironment_), selfAssignLimit_, originalVersionId_);
 
 		return objectBuilderFactory.toInfo(TestRunInfo.class, testRun, ui_.getBaseUriBuilder());
 	}
@@ -165,11 +169,14 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public TestRunInfo createTestRun(@Context final UriInfo ui_, @FormParam("") final TestRunInfo testRunInfo_) throws Exception
+	public TestRunInfo createTestRun(@Context final UriInfo ui_, @FormParam("testCycleId") final Integer testCycleId_, @FormParam("name") final String name_,
+			@FormParam("description") final String description_, @FormParam("selfAssignAllowed") final String selfAssignAllowed_,
+			@FormParam("selfAssignPerEnvironment") final String selfAssignPerEnvironment_, @FormParam("selfAssignLimit") final Integer selfAssignLimit_,
+			@FormParam("startDate") final Date startDate_, @FormParam("endDate") final Date endDate_, @FormParam("useLatestVersions") final String useLatestVersions_)
+			throws Exception
 	{
-		final TestRun testRun = testRunService.addTestRun(testRunInfo_.getTestCycleId(), "true".equalsIgnoreCase(testRunInfo_.getUseLatestVersions()), testRunInfo_.getName(),
-				testRunInfo_.getDescription(), testRunInfo_.getStartDate(), testRunInfo_.getEndDate(), "true".equalsIgnoreCase(testRunInfo_.getSelfAssignAllowed()), "true"
-						.equalsIgnoreCase(testRunInfo_.getSelfAssignPerEnvironment()), testRunInfo_.getSelfAssignLimit());
+		final TestRun testRun = testRunService.addTestRun(testCycleId_, "true".equalsIgnoreCase(useLatestVersions_), name_, description_, startDate_, endDate_, "true"
+				.equalsIgnoreCase(selfAssignAllowed_), "true".equalsIgnoreCase(selfAssignPerEnvironment_), selfAssignLimit_);
 		return objectBuilderFactory.toInfo(TestRunInfo.class, testRun, ui_.getBaseUriBuilder());
 	}
 
@@ -244,12 +251,12 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public IncludedTestCaseInfo createTestRunTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @FormParam("") final IncludedTestCaseInfo testCaseInfo_)
-			throws Exception
+	public IncludedTestCaseInfo createTestRunTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
+			@FormParam("testCaseVersionId") final Integer testCaseVersionId_, @FormParam("priorityId") final Integer priorityId_, @FormParam("runOrder") final Integer runOrder_,
+			@FormParam("blocking") final String blocking_) throws Exception
 	{
 
-		final TestRunTestCase includedTestCase = testRunService.addTestRunTestCase(testRunId_, testCaseInfo_.getTestCaseVersionId(), testCaseInfo_.getPriorityId(), testCaseInfo_
-				.getRunOrder(), "true".equalsIgnoreCase(testCaseInfo_.getBlocking()));
+		final TestRunTestCase includedTestCase = testRunService.addTestRunTestCase(testRunId_, testCaseVersionId_, priorityId_, runOrder_, "true".equalsIgnoreCase(blocking_));
 		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
 	}
 
@@ -314,11 +321,12 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
 	public IncludedTestCaseInfo updateTestRunTestCase(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
-			@FormParam("") final IncludedTestCaseInfo includedTestCaseInfo_) throws Exception
+			@FormParam("testCaseVersionId") final Integer testCaseVersionId_, @FormParam("priorityId") final Integer priorityId_, @FormParam("runOrder") final Integer runOrder_,
+			@FormParam("blocking") final String blocking_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 
-		final TestRunTestCase includedTestCase = testRunService.saveTestRunTestCase(includedTestCaseId_, includedTestCaseInfo_.getPriorityId(),
-				includedTestCaseInfo_.getRunOrder(), "true".equalsIgnoreCase(includedTestCaseInfo_.getBlocking()), includedTestCaseInfo_.getResourceIdentity().getVersion());
+		final TestRunTestCase includedTestCase = testRunService.saveTestRunTestCase(includedTestCaseId_, priorityId_, runOrder_, "true".equalsIgnoreCase(blocking_),
+				originalVersionId_);
 
 		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
 	}
@@ -371,10 +379,10 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
 	public TestRunTestCaseAssignmentInfo createTestRunTestCaseAssignment(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
-			@FormParam("") final TestRunTestCaseAssignmentInfo assignmentInfo_) throws Exception
+			@FormParam("testerId") final Integer testerId_) throws Exception
 	{
 
-		final TestRunTestCaseAssignment assignment = testRunService.addAssignment(includedTestCaseId_, assignmentInfo_.getTesterId());
+		final TestRunTestCaseAssignment assignment = testRunService.addAssignment(includedTestCaseId_, testerId_);
 		return objectBuilderFactory.toInfo(TestRunTestCaseAssignmentInfo.class, assignment, ui_.getBaseUriBuilder());
 	}
 
@@ -400,7 +408,6 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		testRunService.deleteAssignment(assignmentId_, originalVersionId_);
-
 		return Boolean.TRUE;
 	}
 
@@ -476,11 +483,11 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public Boolean startTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
+	public TestRunResultInfo startTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		testRunService.startExecutingAssignedTestCase(resultId_, originalVersionId_);
-		return Boolean.TRUE;
+		return getTestRunResult(ui_, resultId_);
 	}
 
 	@PUT
@@ -489,12 +496,12 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public Boolean finishFailedTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
-			@FormParam("") final TestRunResultInfo resultInfo_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	public TestRunResultInfo finishFailedTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
+			@FormParam("failedStepNumber") final Integer failedStepNumber_, @FormParam("actualResult") final String actualResult_, @FormParam("comment") final String comment_,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		testRunService.finishExecutingAssignedTestCaseWithFailure(resultId_, resultInfo_.getFailedStepNumber(), resultInfo_.getActualResult(), resultInfo_.getComment(),
-				originalVersionId_);
-		return Boolean.TRUE;
+		testRunService.finishExecutingAssignedTestCaseWithFailure(resultId_, failedStepNumber_, actualResult_, comment_, originalVersionId_);
+		return getTestRunResult(ui_, resultId_);
 	}
 
 	@PUT
@@ -503,11 +510,11 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public Boolean finishSuccessfulTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
-			@FormParam("") final TestRunResultInfo resultInfo_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	public TestRunResultInfo finishSuccessfulTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
+			@FormParam("comment") final String comment_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		testRunService.finishExecutingAssignedTestCaseWithSuccess(resultId_, resultInfo_.getComment(), originalVersionId_);
-		return Boolean.TRUE;
+		testRunService.finishExecutingAssignedTestCaseWithSuccess(resultId_, comment_, originalVersionId_);
+		return getTestRunResult(ui_, resultId_);
 	}
 
 	@PUT
@@ -516,11 +523,11 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public Boolean approveTestRunResult(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_, @FormParam("originalVersionId") final Integer originalVersionId_)
-			throws Exception
+	public TestRunResultInfo approveTestRunResult(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		testRunService.approveTestRunResult(resultId_, originalVersionId_);
-		return Boolean.TRUE;
+		return getTestRunResult(ui_, resultId_);
 	}
 
 	@PUT
@@ -529,11 +536,11 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
-	public Boolean rejectTestRunResult(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_, @FormParam("comment") final String comment_,
+	public TestRunResultInfo rejectTestRunResult(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_, @FormParam("comment") final String comment_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		testRunService.rejectTestRunResult(resultId_, comment_, originalVersionId_);
-		return Boolean.TRUE;
+		return getTestRunResult(ui_, resultId_);
 	}
 
 	@GET
@@ -589,7 +596,6 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestRunResultInfo.class, request_, ui_);
 		final UtestSearchResult result = testRunService.findTestRunResults(search);
-
 		return (TestRunResultSearchResultInfo) objectBuilderFactory.createResult(TestRunResultInfo.class, TestRunResult.class, request_, result, ui_.getBaseUriBuilder());
 	}
 

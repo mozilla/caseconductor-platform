@@ -511,6 +511,12 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	{
 		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		testCaseVersion.setSteps(getTestCaseVersionSteps(testCaseVersionId_));
+		// hibernate workaround for newly added entities
+		if (testCaseVersion.getTestCase() == null)
+		{
+			TestCase testCase = getTestCase(testCaseVersion.getTestCaseId());
+			testCaseVersion.setTestCase(testCase);
+		}
 		return testCaseVersion;
 	}
 

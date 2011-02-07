@@ -39,8 +39,6 @@ public interface TestCaseWebService
 
 	TestCaseVersionInfo cloneTestCase(UriInfo ui, Integer testCaseId) throws Exception;
 
-	TestCaseVersionInfo createTestCase(UriInfo ui, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
-
 	TestCaseVersionSearchResultInfo findLatestTestCaseVersions(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	TestCaseVersionInfo getLatestTestCaseVersion(UriInfo ui, Integer testCaseId) throws Exception;
@@ -59,21 +57,13 @@ public interface TestCaseWebService
 
 	TestCaseSearchResultInfo findTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	TestCaseInfo updateTestCase(UriInfo ui, Integer testCaseId, TestCaseInfo testCaseInfo) throws Exception;
-
 	Boolean updateTestCaseTags(UriInfo ui, Integer testCaseId, ArrayList<Integer> tagIds) throws Exception;
 
 	TestCaseVersionSearchResultInfo findTestCaseVersions(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	TestCaseStepInfo createTestCaseStep(UriInfo ui, Integer testCaseVersionId, TestCaseStepInfo testCaseStepInfo) throws Exception;
-
 	TestCaseVersionInfo getTestCaseVersion(UriInfo ui, Integer testCaseVersionId) throws Exception;
 
 	List<TestCaseStepInfo> getTestCaseVersionSteps(UriInfo ui, Integer testCaseVersionId) throws Exception;
-
-	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String versionIncrement, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
-
-	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, TestCaseVersionInfo testCaseVersionInfo) throws Exception;
 
 	TestCaseStepInfo getTestCaseVersionStep(UriInfo ui, Integer testCaseVersionId, Integer testCaseStepId) throws Exception;
 
@@ -85,8 +75,6 @@ public interface TestCaseWebService
 
 	Boolean deleteTestCaseStep(UriInfo ui, Integer testCaseStepId, Integer originalVesionId) throws Exception;
 
-	TestCaseStepInfo updateTestCaseStep(UriInfo ui, Integer testCaseStepId, TestCaseStepInfo testCaseStepInfo) throws Exception;
-
 	TestCaseVersionInfo activateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, Integer originalVersionId) throws Exception;
 
 	TestCaseVersionInfo deactivateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, Integer originalVersionId) throws Exception;
@@ -94,5 +82,21 @@ public interface TestCaseWebService
 	TestCaseVersionInfo rejectTestCaseVersion(UriInfo ui, Integer testCaseVersionId, Integer originalVersionId) throws Exception;
 
 	TestCaseVersionInfo approveTestCaseVersion(UriInfo ui, Integer testCaseVersionId, Integer originalVersionId) throws Exception;
+
+	TestCaseVersionInfo createTestCase(UriInfo ui, Integer productId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, String description)
+			throws Exception;
+
+	TestCaseInfo updateTestCase(UriInfo ui, Integer testCaseId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, Integer originalVersionId)
+			throws Exception;
+
+	TestCaseStepInfo createTestCaseStep(UriInfo ui, Integer testCaseVersionId, Integer stepNumber, String name, String instruction, String expectedResult,
+			Integer estimatedTimeInMin) throws Exception;
+
+	TestCaseStepInfo updateTestCaseStep(UriInfo ui, Integer testCaseStepId, Integer stepNumber, String name, String instruction, String expectedResult, Integer estimatedTimeInMin,
+			Integer originalVersionId) throws Exception;
+
+	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String versionIncrement, String description, Integer originalVersionId) throws Exception;
+
+	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String description, Integer originalVersionId) throws Exception;
 
 }

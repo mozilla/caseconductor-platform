@@ -79,11 +79,12 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
 	public TestCaseVersionInfo updateTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
-			@PathParam("increment") final String versionIncrement_, @FormParam("") final TestCaseVersionInfo testCaseVersionInfo_) throws Exception
+			@PathParam("increment") final String versionIncrement_, @FormParam("description") final String description_,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 
-		final TestCaseVersion testCaseVersion = testCaseService.saveTestCaseVersion(testCaseVersionId_, testCaseVersionInfo_.getDescription(), testCaseVersionInfo_
-				.getResourceIdentity().getVersion(), VersionIncrement.valueOf(versionIncrement_));
+		final TestCaseVersion testCaseVersion = testCaseService.saveTestCaseVersion(testCaseVersionId_, description_, originalVersionId_, VersionIncrement
+				.valueOf(versionIncrement_));
 		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder());
 	}
 
@@ -94,11 +95,10 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
 	public TestCaseVersionInfo updateTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
-			@FormParam("") final TestCaseVersionInfo testCaseVersionInfo_) throws Exception
+			@FormParam("description") final String description_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 
-		final TestCaseVersion testCaseVersion = testCaseService.saveTestCaseVersion(testCaseVersionId_, testCaseVersionInfo_.getDescription(), testCaseVersionInfo_
-				.getResourceIdentity().getVersion(), VersionIncrement.NONE);
+		final TestCaseVersion testCaseVersion = testCaseService.saveTestCaseVersion(testCaseVersionId_, description_, originalVersionId_, VersionIncrement.NONE);
 		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder());
 	}
 
@@ -164,10 +164,11 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
-	public TestCaseInfo updateTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_, @FormParam("") final TestCaseInfo testCaseInfo_) throws Exception
+	public TestCaseInfo updateTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_,
+			@FormParam("maxAttachmentSizeInMbytes") final Integer maxAttachmentSizeInMbytes_, @FormParam("maxNumberOfAttachments") final Integer maxNumberOfAttachments_,
+			@FormParam("name") final String name_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		final TestCase testCase = testCaseService.saveTestCase(testCaseId_, testCaseInfo_.getName(), testCaseInfo_.getMaxAttachmentSizeInMbytes(), testCaseInfo_
-				.getMaxNumberOfAttachments(), testCaseInfo_.getResourceIdentity().getVersion());
+		final TestCase testCase = testCaseService.saveTestCase(testCaseId_, name_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, originalVersionId_);
 		return objectBuilderFactory.toInfo(TestCaseInfo.class, testCase, ui_.getBaseUriBuilder());
 	}
 
@@ -271,10 +272,11 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
-	public TestCaseVersionInfo createTestCase(@Context final UriInfo ui_, @FormParam("") final TestCaseVersionInfo testCaseVersionInfo_) throws Exception
+	public TestCaseVersionInfo createTestCase(@Context final UriInfo ui_, @FormParam("productId") final Integer productId_,
+			@FormParam("maxAttachmentSizeInMbytes") final Integer maxAttachmentSizeInMbytes_, @FormParam("maxNumberOfAttachments") final Integer maxNumberOfAttachments_,
+			@FormParam("name") final String name_, @FormParam("description") final String description_) throws Exception
 	{
-		final TestCase testCase = testCaseService.addTestCase(testCaseVersionInfo_.getProductId(), testCaseVersionInfo_.getMaxAttachmentSizeInMbytes(), testCaseVersionInfo_
-				.getMaxNumberOfAttachments(), testCaseVersionInfo_.getName(), testCaseVersionInfo_.getDescription());
+		final TestCase testCase = testCaseService.addTestCase(productId_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, name_, description_);
 
 		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCase.getLatestVersion(), ui_.getBaseUriBuilder());
 	}
@@ -299,12 +301,12 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
-	public TestCaseStepInfo createTestCaseStep(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
-			@FormParam("") final TestCaseStepInfo testCaseStepInfo_) throws Exception
+	public TestCaseStepInfo createTestCaseStep(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_, @FormParam("stepNumber") final Integer stepNumber_,
+			@FormParam("name") final String name_, @FormParam("instruction") final String instruction_, @FormParam("expectedResult") final String expectedResult_,
+			@FormParam("estimatedTimeInMin") final Integer estimatedTimeInMin_) throws Exception
 	{
 
-		final TestCaseStep testCaseStep = testCaseService.addTestCaseStep(testCaseVersionId_, testCaseStepInfo_.getName(), testCaseStepInfo_.getStepNumber(), testCaseStepInfo_
-				.getInstruction(), testCaseStepInfo_.getExpectedResult(), testCaseStepInfo_.getEstimatedTimeInMin());
+		final TestCaseStep testCaseStep = testCaseService.addTestCaseStep(testCaseVersionId_, name_, stepNumber_, instruction_, expectedResult_, estimatedTimeInMin_);
 		return objectBuilderFactory.toInfo(TestCaseStepInfo.class, testCaseStep, ui_.getBaseUriBuilder());
 	}
 
@@ -328,12 +330,13 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
-	public TestCaseStepInfo updateTestCaseStep(@Context final UriInfo ui_, @PathParam("stepId") final Integer testCaseStepId_,
-			@FormParam("") final TestCaseStepInfo testCaseStepInfo_) throws Exception
+	public TestCaseStepInfo updateTestCaseStep(@Context final UriInfo ui_, @PathParam("stepId") final Integer testCaseStepId_, @FormParam("stepNumber") final Integer stepNumber_,
+			@FormParam("name") final String name_, @FormParam("instruction") final String instruction_, @FormParam("expectedResult") final String expectedResult_,
+			@FormParam("estimatedTimeInMin") final Integer estimatedTimeInMin_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 
-		final TestCaseStep testCaseStep = testCaseService.saveTestCaseStep(testCaseStepId_, testCaseStepInfo_.getName(), testCaseStepInfo_.getStepNumber(), testCaseStepInfo_
-				.getInstruction(), testCaseStepInfo_.getExpectedResult(), testCaseStepInfo_.getEstimatedTimeInMin(), testCaseStepInfo_.getResourceIdentity().getVersion());
+		final TestCaseStep testCaseStep = testCaseService.saveTestCaseStep(testCaseStepId_, name_, stepNumber_, instruction_, expectedResult_, estimatedTimeInMin_,
+				originalVersionId_);
 		return objectBuilderFactory.toInfo(TestCaseStepInfo.class, testCaseStep, ui_.getBaseUriBuilder());
 	}
 

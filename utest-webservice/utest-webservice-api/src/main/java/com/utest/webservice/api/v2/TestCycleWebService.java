@@ -20,6 +20,7 @@
 package com.utest.webservice.api.v2;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
@@ -33,13 +34,9 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 public interface TestCycleWebService
 {
 
-	TestCycleInfo updateTestCycle(UriInfo ui, Integer testCycleId, TestCycleInfo testCycleInfo) throws Exception;
-
 	Boolean updateTestCycleEnvironmentGroups(UriInfo ui, Integer testCycleId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
 
 	List<EnvironmentGroupInfo> getTestCycleEnvironmentGroups(UriInfo ui, Integer testCycleId) throws Exception;
-
-	TestCycleInfo createTestCycle(UriInfo ui, TestCycleInfo testCycleInfo) throws Exception;
 
 	TestCycleInfo getTestCycle(UriInfo ui, Integer testCycleId) throws Exception;
 
@@ -52,4 +49,10 @@ public interface TestCycleWebService
 	TestCycleInfo activateTestCycle(UriInfo ui, Integer testCycleId, Integer originalVersionId) throws Exception;
 
 	TestCycleInfo deactivateTestCycle(UriInfo ui, Integer testCycleId, Integer originalVersionId) throws Exception;
+
+	TestCycleInfo createTestCycle(UriInfo ui, String name, String description, Integer productId, String communityAuthoringAllowed, String communityAccessAllowed, Date startDate,
+			Date endDate) throws Exception;
+
+	TestCycleInfo updateTestCycle(UriInfo ui, Integer testCycleId, String name, String description, Integer productId, String communityAuthoringAllowed,
+			String communityAccessAllowed, Date startDate, Date endDate, Integer originalVersionId) throws Exception;
 }

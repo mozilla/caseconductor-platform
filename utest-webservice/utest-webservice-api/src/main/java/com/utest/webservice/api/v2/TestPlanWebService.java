@@ -33,17 +33,11 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 public interface TestPlanWebService
 {
 
-	TestPlanInfo updateTestPlan(UriInfo ui, Integer testPlanId, TestPlanInfo testPlanInfo) throws Exception;
-
 	Boolean updateTestPlanEnvironmentGroups(UriInfo ui, Integer testPlanId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
 
 	List<EnvironmentGroupInfo> getTestPlanEnvironmentGroups(UriInfo ui, Integer testPlanId) throws Exception;
 
 	List<IncludedTestSuiteInfo> getTestPlanTestSuites(UriInfo ui, Integer testPlanId) throws Exception;
-
-	IncludedTestSuiteInfo createTestPlanTestSuite(UriInfo ui, Integer testPlanId, IncludedTestSuiteInfo testSuiteInfo) throws Exception;
-
-	TestPlanInfo createTestPlan(UriInfo ui, TestPlanInfo testPlanInfo) throws Exception;
 
 	TestPlanInfo getTestPlan(UriInfo ui, Integer testPlanId) throws Exception;
 
@@ -57,8 +51,14 @@ public interface TestPlanWebService
 
 	Boolean deleteTestPlanTestSuite(UriInfo ui, Integer includedTestSuiteId, Integer originalVesionId) throws Exception;
 
-	IncludedTestSuiteInfo updateTestPlanTestSuite(UriInfo ui, Integer includedTestSuiteId, IncludedTestSuiteInfo includedTestSuiteInfo) throws Exception;
-
 	IncludedTestSuiteInfo getTestPlanTestSuite(UriInfo ui, Integer includedTestSuiteId) throws Exception;
+
+	TestPlanInfo createTestPlan(UriInfo ui, Integer productId, String name, String description) throws Exception;
+
+	IncludedTestSuiteInfo updateTestPlanTestSuite(UriInfo ui, Integer includedTestSuiteId, Integer runOrder, Integer originalVesionId) throws Exception;
+
+	IncludedTestSuiteInfo createTestPlanTestSuite(UriInfo ui, Integer testPlanId, Integer testSuiteId, Integer runOrder) throws Exception;
+
+	TestPlanInfo updateTestPlan(UriInfo ui, Integer testPlanId, String name, String description, Integer originalVesionId) throws Exception;
 
 }

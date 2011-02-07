@@ -36,8 +36,6 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface UserWebService
 {
-	UserInfo updateUser(UriInfo ui, Integer userId, UserInfo userInfo) throws Exception;
-
 	UserInfo getUser(UriInfo ui, Integer userId) throws Exception;
 
 	UserSearchResultInfo findUsers(UriInfo ui, UtestSearchRequest request) throws Exception;
@@ -49,10 +47,6 @@ public interface UserWebService
 	RoleSearchResultInfo findRoles(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	RoleInfo getRole(UriInfo ui, Integer roleId) throws Exception;
-
-	UserInfo createUser(UriInfo ui, UserInfo userInfo) throws Exception;
-
-	RoleInfo createRole(UriInfo ui, RoleInfo roleInfo) throws Exception;
 
 	Boolean login(MessageContext context) throws Exception;
 
@@ -72,13 +66,13 @@ public interface UserWebService
 
 	UserInfo confirmUserEmail(UriInfo ui, Integer userId, Integer originalVersionId) throws Exception;
 
-	Boolean deleteUserRole(UriInfo ui, Integer userId, Integer roleId, Integer originalVersionId) throws Exception;
+	UserInfo deleteUserRole(UriInfo ui, Integer userId, Integer roleId, Integer originalVersionId) throws Exception;
 
-	Boolean deleteRolePermission(UriInfo ui, Integer roleId, Integer permissionId, Integer originalVersionId) throws Exception;
+	RoleInfo deleteRolePermission(UriInfo ui, Integer roleId, Integer permissionId, Integer originalVersionId) throws Exception;
 
-	Boolean addRolePermission(UriInfo ui, Integer roleId, Integer permissionId, Integer originalVersionId) throws Exception;
+	RoleInfo addRolePermission(UriInfo ui, Integer roleId, Integer permissionId, Integer originalVersionId) throws Exception;
 
-	Boolean addUserRole(UriInfo ui, Integer userId, Integer roleId, Integer originalVersionId) throws Exception;
+	UserInfo addUserRole(UriInfo ui, Integer userId, Integer roleId, Integer originalVersionId) throws Exception;
 
 	Boolean updateRolePermissions(UriInfo ui, Integer roleId, ArrayList<Integer> permissionIds, Integer originalVersionId) throws Exception;
 
@@ -89,5 +83,11 @@ public interface UserWebService
 	List<PermissionInfo> getRolePermissions(UriInfo ui, Integer roleId) throws Exception;
 
 	List<PermissionInfo> getUserPermissions(UriInfo ui, Integer userId) throws Exception;
+
+	UserInfo updateUser(UriInfo ui, Integer userId, Integer companyId, String firstName, String lastName, Integer originalVersionId) throws Exception;
+
+	UserInfo createUser(UriInfo ui, Integer companyId, String firstName, String lastName, String email, String password, String screenName) throws Exception;
+
+	RoleInfo createRole(UriInfo ui, Integer companyId, String name) throws Exception;
 
 }

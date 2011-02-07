@@ -32,11 +32,7 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface CompanyWebService
 {
-	CompanyInfo updateCompany(UriInfo ui, Integer companyId, CompanyInfo companyInfo) throws Exception;
-
 	CompanySearchResultInfo findCompanies(UriInfo ui, UtestSearchRequest request) throws Exception;
-
-	CompanyInfo createCompany(UriInfo ui, CompanyInfo companyInfo) throws Exception;
 
 	CompanyInfo getCompany(UriInfo ui, Integer companyId) throws Exception;
 
@@ -51,4 +47,9 @@ public interface CompanyWebService
 	Boolean updateParentDependableEnvironments(UriInfo ui, Integer companyId, Integer parentEnvironmentId, ArrayList<Integer> environmentIds) throws Exception;
 
 	List<EnvironmentInfo> getParentDependableEnvironments(UriInfo ui, Integer companyId, Integer parentEnvironmentId) throws Exception;
+
+	CompanyInfo createCompany(UriInfo ui, Integer countryId, String name, String address, String city, String zip, String url, String phone) throws Exception;
+
+	CompanyInfo updateCompany(UriInfo ui, Integer companyId, Integer countryId, String name, String address, String city, String zip, String url, String phone,
+			Integer originalVersionId) throws Exception;
 }

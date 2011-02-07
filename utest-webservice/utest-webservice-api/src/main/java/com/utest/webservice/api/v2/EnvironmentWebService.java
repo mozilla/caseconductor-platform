@@ -37,25 +37,13 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 public interface EnvironmentWebService
 {
 
-	EnvironmentTypeInfo updateEnvironmentType(UriInfo ui, Integer environmentTypeId, EnvironmentTypeInfo environmentTypeInfo) throws Exception;
-
-	EnvironmentTypeInfo createEnvironmentType(UriInfo ui, EnvironmentTypeInfo environmentTypeInfo) throws Exception;
-
 	EnvironmentTypeInfo getEnvironmentType(UriInfo ui, Integer environmentTypeId) throws Exception;
 
 	EnvironmentTypeSearchResultInfo findEnvironmentTypes(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	EnvironmentInfo updateEnvironment(UriInfo ui, Integer environmentId, EnvironmentInfo environmentInfo) throws Exception;
-
-	EnvironmentInfo createEnvironment(UriInfo ui, EnvironmentInfo environmentInfo) throws Exception;
-
 	EnvironmentInfo getEnvironment(UriInfo ui, Integer environmentId) throws Exception;
 
 	EnvironmentSearchResultInfo findEnvironments(UriInfo ui, UtestSearchRequest request) throws Exception;
-
-	EnvironmentGroupInfo updateEnvironmentGroup(UriInfo ui, Integer environmentGroupId, EnvironmentGroupInfo environmentGroupInfo) throws Exception;
-
-	EnvironmentGroupInfo createEnvironmentGroup(UriInfo ui, EnvironmentGroupInfo environmentGroupInfo) throws Exception;
 
 	EnvironmentGroupInfo getEnvironmentGroup(UriInfo ui, Integer environmentGroupId) throws Exception;
 
@@ -67,10 +55,6 @@ public interface EnvironmentWebService
 
 	List<EnvironmentInfo> getEnvironmentTypeEnvironments(UriInfo ui, Integer environmentTypeId, UtestSearchRequest request) throws Exception;
 
-	TagInfo createTag(UriInfo ui, TagInfo tagInfo) throws Exception;
-
-	Boolean deleteTag(UriInfo ui, Integer tagId) throws Exception;
-
 	TagInfo getTag(UriInfo ui, Integer tagId) throws Exception;
 
 	TagSearchResultInfo findTags(UriInfo ui, UtestSearchRequest request) throws Exception;
@@ -81,5 +65,22 @@ public interface EnvironmentWebService
 
 	Boolean deleteEnvironmentType(UriInfo ui, Integer environmentTypeId, Integer originalVersionId) throws Exception;
 
-	TagInfo updateTag(UriInfo ui, Integer tagId, TagInfo tagInfo) throws Exception;
+	EnvironmentTypeInfo updateEnvironmentType(UriInfo ui, Integer environmentTypeId, String name, String localeCode, Integer sortOrder) throws Exception;
+
+	EnvironmentTypeInfo createEnvironmentType(UriInfo ui, Integer companyId, Integer parentEnvironmentTypeId, String name, String localeCode, Integer sortOrder, String groupType)
+			throws Exception;
+
+	EnvironmentInfo updateEnvironment(UriInfo ui, Integer environmentId, String name, String localeCode, Integer sortOrder) throws Exception;
+
+	TagInfo updateTag(UriInfo ui, Integer tagId, String tag, Integer originalVersionId) throws Exception;
+
+	EnvironmentInfo createEnvironment(UriInfo ui, Integer companyId, Integer environmentTypeId, String name, String localeCode, Integer sortOrder) throws Exception;
+
+	TagInfo createTag(UriInfo ui, Integer companyId, String tag) throws Exception;
+
+	Boolean deleteTag(UriInfo ui, Integer tagId, Integer originalVersionId) throws Exception;
+
+	EnvironmentGroupInfo updateEnvironmentGroup(UriInfo ui, Integer environmentGroupId, String name, String description, Integer originalVersionId) throws Exception;
+
+	EnvironmentGroupInfo createEnvironmentGroup(UriInfo ui, Integer companyId, Integer environmentTypeId, String name, String description) throws Exception;
 }

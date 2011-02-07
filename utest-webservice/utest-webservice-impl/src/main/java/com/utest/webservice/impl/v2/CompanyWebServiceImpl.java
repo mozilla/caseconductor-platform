@@ -77,12 +77,11 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.COMPANY_INFO_EDIT })
-	public CompanyInfo createCompany(@Context final UriInfo ui_, @FormParam("") final CompanyInfo companyInfo) throws Exception
+	public CompanyInfo createCompany(@Context final UriInfo ui_, @FormParam("countryId") final Integer countryId_, @FormParam("name") final String name_,
+			@FormParam("address") final String address_, @FormParam("city") final String city_, @FormParam("zip") final String zip_, @FormParam("url") final String url_,
+			@FormParam("phone") final String phone_) throws Exception
 	{
-		final Company company = companyService.addCompany(companyInfo.getCountryId(), companyInfo.getName(), companyInfo.getAddress(), companyInfo.getCity(), companyInfo.getZip(),
-				companyInfo.getUrl(), companyInfo.getPhone());
-
-		// TODO - create default TM if needed ?
+		final Company company = companyService.addCompany(countryId_, name_, address_, city_, zip_, url_, phone_);
 		return objectBuilderFactory.toInfo(CompanyInfo.class, company, ui_.getBaseUriBuilder());
 	}
 
@@ -106,10 +105,11 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.COMPANY_INFO_EDIT })
-	public CompanyInfo updateCompany(@Context final UriInfo ui_, @PathParam("id") final Integer companyId, @FormParam("") final CompanyInfo companyInfo) throws Exception
+	public CompanyInfo updateCompany(@Context final UriInfo ui_, @PathParam("id") final Integer companyId, @FormParam("countryId") final Integer countryId_,
+			@FormParam("name") final String name_, @FormParam("address") final String address_, @FormParam("city") final String city_, @FormParam("zip") final String zip_,
+			@FormParam("url") final String url_, @FormParam("phone") final String phone_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		final Company company = companyService.saveCompany(companyId, companyInfo.getCountryId(), companyInfo.getName(), companyInfo.getAddress(), companyInfo.getCity(),
-				companyInfo.getZip(), companyInfo.getUrl(), companyInfo.getPhone(), companyInfo.getResourceIdentity().getVersion());
+		final Company company = companyService.saveCompany(companyId, countryId_, name_, address_, city_, zip_, url_, phone_, originalVersionId_);
 
 		return objectBuilderFactory.toInfo(CompanyInfo.class, company, ui_.getBaseUriBuilder());
 	}
@@ -155,13 +155,13 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 	}
 
 	@PUT
-	@Path("/{id}/environmentgroups/environmenttypes/{typeId}/autogenerate/")
+	@Path("/{id}/environmentgroups/environmenttypes/{environmentTypeId}/autogenerate/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.ENVIRONMENT_EDIT })
 	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer companyId_,
-			@PathParam("typeId") final Integer environmentTypeId_, @FormParam("environmentIds") final ArrayList<Integer> environmentIds_,
+			@PathParam("environmentTypeId") final Integer environmentTypeId_, @FormParam("environmentIds") final ArrayList<Integer> environmentIds_,
 			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
 		List<EnvironmentGroup> environmentGroups = companyService.addGeneratedEnvironmentGroupsForCompany(companyId_, environmentTypeId_, environmentIds_, originalVesionId_);
@@ -170,13 +170,13 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 	}
 
 	@GET
-	@Path("/{id}/parentchildenvironments/{parentId}/")
+	@Path("/{id}/parentchildenvironments/{parentEnvironmentId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
 	public List<EnvironmentInfo> getParentDependableEnvironments(@Context UriInfo ui_, @PathParam("id") final Integer companyId_,
-			@PathParam("parentId") final Integer parentEnvironmentId_) throws Exception
+			@PathParam("parentEnvironmentId") final Integer parentEnvironmentId_) throws Exception
 	{
 		final List<Environment> environments = environmentService.getParentDependableEnvironments(companyId_, parentEnvironmentId_);
 		final List<EnvironmentInfo> environmentsInfo = objectBuilderFactory.toInfo(EnvironmentInfo.class, environments, ui_.getBaseUriBuilder());

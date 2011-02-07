@@ -70,11 +70,11 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_PLAN_EDIT })
-	public TestPlanInfo updateTestPlan(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_, @FormParam("") final TestPlanInfo testPlanInfo_) throws Exception
+	public TestPlanInfo updateTestPlan(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_, @FormParam("name") final String name_,
+			@FormParam("description") final String description_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
 
-		final TestPlan testPlan = testPlanService.saveTestPlan(testPlanId_, testPlanInfo_.getName(), testPlanInfo_.getDescription(), testPlanInfo_.getResourceIdentity()
-				.getVersion());
+		final TestPlan testPlan = testPlanService.saveTestPlan(testPlanId_, name_, description_, originalVesionId_);
 		return objectBuilderFactory.toInfo(TestPlanInfo.class, testPlan, ui_.getBaseUriBuilder());
 	}
 
@@ -150,10 +150,10 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Override
 	@Secured( { Permission.TEST_PLAN_EDIT })
 	public IncludedTestSuiteInfo createTestPlanTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_,
-			@FormParam("") final IncludedTestSuiteInfo testSuiteInfo_) throws Exception
+			@FormParam("testSuiteId") final Integer testSuiteId_, @FormParam("runOrder") final Integer runOrder_) throws Exception
 	{
 
-		final TestPlanTestSuite includedTestSuite = testPlanService.addTestPlanTestSuite(testPlanId_, testSuiteInfo_.getTestSuiteId(), testSuiteInfo_.getRunOrder());
+		final TestPlanTestSuite includedTestSuite = testPlanService.addTestPlanTestSuite(testPlanId_, testSuiteId_, runOrder_);
 		return objectBuilderFactory.toInfo(IncludedTestSuiteInfo.class, includedTestSuite, ui_.getBaseUriBuilder());
 	}
 
@@ -190,11 +190,10 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
 	public IncludedTestSuiteInfo updateTestPlanTestSuite(@Context final UriInfo ui_, @PathParam("includedTestSuiteId") final Integer includedTestSuiteId_,
-			@FormParam("") final IncludedTestSuiteInfo includedTestSuiteInfo_) throws Exception
+			@FormParam("runOrder") final Integer runOrder_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
 
-		final TestPlanTestSuite includedTestSuite = testPlanService.saveTestPlanTestSuite(includedTestSuiteId_, includedTestSuiteInfo_.getRunOrder(), includedTestSuiteInfo_
-				.getResourceIdentity().getVersion());
+		final TestPlanTestSuite includedTestSuite = testPlanService.saveTestPlanTestSuite(includedTestSuiteId_, runOrder_, originalVesionId_);
 		return objectBuilderFactory.toInfo(IncludedTestSuiteInfo.class, includedTestSuite, ui_.getBaseUriBuilder());
 	}
 
@@ -203,9 +202,10 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_PLAN_EDIT })
-	public TestPlanInfo createTestPlan(@Context final UriInfo ui_, @FormParam("") final TestPlanInfo testPlanInfo_) throws Exception
+	public TestPlanInfo createTestPlan(@Context final UriInfo ui_, @FormParam("productId") final Integer productId_, @FormParam("name") final String name_,
+			@FormParam("description") final String description_) throws Exception
 	{
-		final TestPlan testPlan = testPlanService.addTestPlan(testPlanInfo_.getProductId(), testPlanInfo_.getName(), testPlanInfo_.getDescription());
+		final TestPlan testPlan = testPlanService.addTestPlan(productId_, name_, description_);
 
 		return objectBuilderFactory.toInfo(TestPlanInfo.class, testPlan, ui_.getBaseUriBuilder());
 	}

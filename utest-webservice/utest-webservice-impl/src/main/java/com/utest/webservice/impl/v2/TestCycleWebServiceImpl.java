@@ -20,6 +20,7 @@
 package com.utest.webservice.impl.v2;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -70,13 +71,16 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CYCLE_EDIT })
-	public TestCycleInfo updateTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("") final TestCycleInfo testCycleInfo_)
-			throws Exception
+	public TestCycleInfo updateTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("name") final String name_,
+			@FormParam("description") final String description_, @FormParam("productId") final Integer productId_,
+			@FormParam("communityAuthoringAllowed") final String communityAuthoringAllowed_, @FormParam("communityAccessAllowed") final String communityAccessAllowed_,
+			@FormParam("startDate") final Date startDate_, @FormParam("endDate") final Date endDate_, @FormParam("originalVersionId") final Integer originalVersionId_)
+
+	throws Exception
 	{
 
-		final TestCycle testCycle = testCycleService.saveTestCycle(testCycleId_, testCycleInfo_.getName(), testCycleInfo_.getDescription(), testCycleInfo_.getStartDate(),
-				testCycleInfo_.getEndDate(), "true".equalsIgnoreCase(testCycleInfo_.getCommunityAuthoringAllowed()), "true".equalsIgnoreCase(testCycleInfo_
-						.getCommunityAccessAllowed()), testCycleInfo_.getResourceIdentity().getVersion());
+		final TestCycle testCycle = testCycleService.saveTestCycle(testCycleId_, name_, description_, startDate_, endDate_, "true".equalsIgnoreCase(communityAuthoringAllowed_),
+				"true".equalsIgnoreCase(communityAccessAllowed_), originalVersionId_);
 		return objectBuilderFactory.toInfo(TestCycleInfo.class, testCycle, ui_.getBaseUriBuilder());
 	}
 
@@ -150,11 +154,13 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CYCLE_EDIT })
-	public TestCycleInfo createTestCycle(@Context final UriInfo ui_, @FormParam("") final TestCycleInfo testCycleInfo_) throws Exception
+	public TestCycleInfo createTestCycle(@Context final UriInfo ui_, @FormParam("name") final String name_, @FormParam("description") final String description_,
+			@FormParam("productId") final Integer productId_, @FormParam("communityAuthoringAllowed") final String communityAuthoringAllowed_,
+			@FormParam("communityAccessAllowed") final String communityAccessAllowed_, @FormParam("startDate") final Date startDate_, @FormParam("endDate") final Date endDate_)
+			throws Exception
 	{
-		final TestCycle testCycle = testCycleService.addTestCycle(testCycleInfo_.getProductId(), testCycleInfo_.getName(), testCycleInfo_.getDescription(), testCycleInfo_
-				.getStartDate(), testCycleInfo_.getEndDate(), "true".equalsIgnoreCase(testCycleInfo_.getCommunityAuthoringAllowed()), "true".equalsIgnoreCase(testCycleInfo_
-				.getCommunityAccessAllowed()));
+		final TestCycle testCycle = testCycleService.addTestCycle(productId_, name_, description_, startDate_, endDate_, "true".equalsIgnoreCase(communityAuthoringAllowed_),
+				"true".equalsIgnoreCase(communityAccessAllowed_));
 
 		return objectBuilderFactory.toInfo(TestCycleInfo.class, testCycle, ui_.getBaseUriBuilder());
 	}

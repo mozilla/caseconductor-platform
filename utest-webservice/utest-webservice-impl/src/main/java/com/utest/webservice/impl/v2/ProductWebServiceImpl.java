@@ -71,10 +71,10 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
-	public ProductComponentInfo createProductComponent(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
-			@FormParam("") final ProductComponentInfo productComponentInfo_) throws Exception
+	public ProductComponentInfo createProductComponent(@Context final UriInfo ui_, @PathParam("id") final Integer productId_, @FormParam("name") final String name_,
+			@FormParam("description") final String description_) throws Exception
 	{
-		final ProductComponent productComponent = productService.addProductComponent(productId_, productComponentInfo_.getName(), productComponentInfo_.getDescription());
+		final ProductComponent productComponent = productService.addProductComponent(productId_, name_, description_);
 		return objectBuilderFactory.toInfo(ProductComponentInfo.class, productComponent, ui_.getBaseUriBuilder());
 	}
 
@@ -83,9 +83,10 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
-	public ProductInfo createProduct(@Context final UriInfo ui_, @FormParam("") final ProductInfo productInfo) throws Exception
+	public ProductInfo createProduct(@Context final UriInfo ui_, @FormParam("companyId") final Integer companyId_, @FormParam("name") final String name_,
+			@FormParam("description") final String description_) throws Exception
 	{
-		final Product product = productService.addProduct(productInfo.getCompanyId(), productInfo.getName(), productInfo.getDescription());
+		final Product product = productService.addProduct(companyId_, name_, description_);
 		return objectBuilderFactory.toInfo(ProductInfo.class, product, ui_.getBaseUriBuilder());
 	}
 
@@ -123,9 +124,10 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
-	public ProductInfo updateProduct(@Context final UriInfo ui_, @PathParam("id") final Integer productId, @FormParam("") final ProductInfo productInfo) throws Exception
+	public ProductInfo updateProduct(@Context final UriInfo ui_, @PathParam("id") final Integer productId, @FormParam("name") final String name_,
+			@FormParam("description") final String description_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		Product product = productService.saveProduct(productId, productInfo.getName(), productInfo.getDescription(), productInfo.getResourceIdentity().getVersion());
+		Product product = productService.saveProduct(productId, name_, description_, originalVersionId_);
 		return objectBuilderFactory.toInfo(ProductInfo.class, product, ui_.getBaseUriBuilder());
 	}
 
@@ -135,11 +137,10 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
-	public ProductComponentInfo updateProductComponent(@Context final UriInfo ui_, @PathParam("id") final Integer productComponentId_,
-			@FormParam("") final ProductComponentInfo productComponentInfo_) throws Exception
+	public ProductComponentInfo updateProductComponent(@Context final UriInfo ui_, @PathParam("id") final Integer productComponentId_, @FormParam("name") final String name_,
+			@FormParam("description") final String description_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		ProductComponent productComponent = productService.saveProductComponent(productComponentId_, productComponentInfo_.getName(), productComponentInfo_.getDescription(),
-				productComponentInfo_.getResourceIdentity().getVersion());
+		ProductComponent productComponent = productService.saveProductComponent(productComponentId_, name_, description_, originalVersionId_);
 		return objectBuilderFactory.toInfo(ProductComponentInfo.class, productComponent, ui_.getBaseUriBuilder());
 	}
 
