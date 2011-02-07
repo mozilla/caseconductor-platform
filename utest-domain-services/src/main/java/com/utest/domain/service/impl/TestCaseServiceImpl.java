@@ -256,7 +256,8 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			{
 				throw new InvalidUserException();
 			}
-			if (((testCaseVersion.getSteps() == null) || testCaseVersion.getSteps().isEmpty()) && ApprovalStatus.APPROVED.equals(approvalStatus_))
+			List<TestCaseStep> steps = getTestCaseVersionSteps(testCaseVersion.getId());
+			if (((steps == null) || !steps.isEmpty()) && ApprovalStatus.APPROVED.equals(approvalStatus_))
 			{
 				throw new ApprovingIncompleteEntityException(TestCaseVersion.class.getSimpleName() + " : " + testCaseVersionId_);
 			}
@@ -636,15 +637,16 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			newTestCaseVersion.setDescription(description_);
 			newTestCaseVersion.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
 			initializeTestCaseVersion(newTestCaseVersion, testCaseVersion.getMajorVersion(), testCaseVersion.getMinorVersion(), versionIncrement_);
-			final Integer id = dao.addAndReturnId(newTestCaseVersion);
+			final Integer newVersionid = dao.addAndReturnId(newTestCaseVersion);
 			// copy steps from last version
 			// clone steps
-			if ((testCaseVersion.getSteps() != null) && !testCaseVersion.getSteps().isEmpty())
+			List<TestCaseStep> steps = getTestCaseVersionSteps(testCaseVersionId_);
+			if ((steps != null) && !steps.isEmpty())
 			{
-				for (final TestCaseStep step : testCaseVersion.getSteps())
+				for (final TestCaseStep step : steps)
 				{
 					final TestCaseStep clonedStep = new TestCaseStep();
-					clonedStep.setTestCaseVersionId(id);
+					clonedStep.setTestCaseVersionId(newVersionid);
 					clonedStep.setName(step.getName());
 					clonedStep.setStepNumber(step.getStepNumber());
 					clonedStep.setEstimatedTimeInMin(step.getEstimatedTimeInMin());
@@ -653,7 +655,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 					dao.addAndReturnId(clonedStep);
 				}
 			}
-			return getTestCaseVersion(id);
+			return getTestCaseVersion(newVersionid);
 		}
 	}
 
@@ -675,9 +677,10 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		clonedTestCaseVersion.setProductId(testCaseVersion.getProductId());
 		final Integer clonedVersionId = dao.addAndReturnId(clonedTestCaseVersion);
 		// clone steps
-		if ((testCaseVersion.getSteps() != null) && !testCaseVersion.getSteps().isEmpty())
+		List<TestCaseStep> steps = getTestCaseVersionSteps(testCaseVersion.getId());
+		if ((steps != null) && !steps.isEmpty())
 		{
-			for (final TestCaseStep step : testCaseVersion.getSteps())
+			for (final TestCaseStep step : steps)
 			{
 				final TestCaseStep clonedStep = new TestCaseStep();
 				clonedStep.setTestCaseVersionId(clonedVersionId);
