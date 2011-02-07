@@ -633,7 +633,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			final TestCaseVersion newTestCaseVersion = new TestCaseVersion();
 			newTestCaseVersion.setProductId(testCaseVersion.getProductId());
 			newTestCaseVersion.setTestCaseId(testCaseVersion.getTestCaseId());
-			newTestCaseVersion.setDescription(testCaseVersion.getDescription());
+			newTestCaseVersion.setDescription(description_);
 			newTestCaseVersion.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
 			initializeTestCaseVersion(newTestCaseVersion, testCaseVersion.getMajorVersion(), testCaseVersion.getMinorVersion(), versionIncrement_);
 			final Integer id = dao.addAndReturnId(newTestCaseVersion);
