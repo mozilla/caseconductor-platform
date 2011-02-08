@@ -61,6 +61,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	public User addUser(final Integer companyId_, final String firstName_, final String lastName_, final String email_, final String password_, String screenName_)
 			throws Exception
 	{
+		if (password_ == null)
+		{
+			throw new IllegalArgumentException("Password is null");
+		}
 		// internal users will have company id populated
 		if (companyId_ != null)
 		{
@@ -229,6 +233,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	@Override
 	public User changeUserPassword(final Integer userId_, final String newPassword_, final Integer originalVersionId_) throws Exception
 	{
+		if (newPassword_ == null)
+		{
+			throw new IllegalArgumentException("Password is null");
+		}
 		final User user = getUser(userId_);
 		user.setPassword(EncodeUtil.encode(newPassword_));
 		user.setVersion(originalVersionId_);
