@@ -291,10 +291,21 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 			{
 				propertyValue = true;
 			}
+			// special handling for Boolean types
+			if (String.class.equals(propertyType) && (propertyValue instanceof String))
+			{
+				if (((String) propertyValue).equalsIgnoreCase("true"))
+				{
+					propertyValue = Boolean.TRUE;
+				}
+				else if (((String) propertyValue).equalsIgnoreCase("false"))
+				{
+					propertyValue = Boolean.FALSE;
+				}
+			}
 			final UtestFilter filter = new UtestFilter();
 			filter.setProperty(propertyName);
 			filter.setValue(propertyValue);
-
 			if (Date.class.equals(propertyType))
 			{
 				if (propertyValue instanceof List)
@@ -354,7 +365,6 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 					continue;
 				}
 			}
-
 			search.addFilter(filter);
 		}
 
