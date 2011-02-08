@@ -87,7 +87,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	public TestRunInfo updateTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @FormParam("name") final String name_,
 			@FormParam("description") final String description_, @FormParam("selfAssignAllowed") final String selfAssignAllowed_,
 			@FormParam("selfAssignPerEnvironment") final String selfAssignPerEnvironment_, @FormParam("selfAssignLimit") final Integer selfAssignLimit_,
-			@FormParam("startDate") final Date startDate_, @FormParam("endDate") final Date endDate_, @FormParam("originalVersonId") final Integer originalVersionId_)
+			@FormParam("startDate") final Date startDate_, @FormParam("endDate") final Date endDate_, @FormParam("originalVersionId") final Integer originalVersionId_)
 			throws Exception
 	{
 
