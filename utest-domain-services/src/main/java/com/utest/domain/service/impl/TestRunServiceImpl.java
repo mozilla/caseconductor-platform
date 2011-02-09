@@ -783,7 +783,38 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			result.setTestRunResultStatusId(TestRunResultStatus.PASSED);
 			result.setActualTimeInMin((int) DateUtil.minutesDifference(result.getRunDate(), new Date()));
 			result.setActualResult(null);
-			result.setComment(null);
+			result.setComment(comment_);
+			result.setFailedStepNumber(null);
+			return dao.merge(result);
+		}
+		else
+		{
+			return result;
+		}
+	}
+
+	@Override
+	public TestRunResult finishExecutingAssignedTestCaseWithInvalidation(final Integer testRunResultId_, final String comment_, final Integer originalVersionId_) throws Exception
+	{
+		final TestRunResult result = getRequiredEntityById(TestRunResult.class, testRunResultId_);
+		if (!TestRunResultStatus.INVALIDATED.equals(result.getTestRunResultStatusId()))
+		{
+			// make sure user executing the result is the same as assigned
+			if (!getCurrentUserId().equals(result.getTesterId()))
+			{
+				throw new InvalidUserException();
+			}
+			// prevent if test run locked
+			final TestRun testRun = getRequiredEntityById(TestRun.class, result.getTestRunId());
+			if (TestRunStatus.LOCKED.equals(testRun.getTestRunStatusId()))
+			{
+				throw new TestCycleClosedException();
+			}
+			result.setVersion(originalVersionId_);
+			result.setTestRunResultStatusId(TestRunResultStatus.INVALIDATED);
+			result.setActualTimeInMin(0);
+			result.setActualResult(null);
+			result.setComment(comment_);
 			result.setFailedStepNumber(null);
 			return dao.merge(result);
 		}

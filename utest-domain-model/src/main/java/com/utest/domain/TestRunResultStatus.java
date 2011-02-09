@@ -25,11 +25,12 @@ package com.utest.domain;
 public class TestRunResultStatus extends LocalizedEntity
 {
 
-	public static final Integer	PENDING	= new Integer(1);
-	public static final Integer	PASSED	= new Integer(2);
-	public static final Integer	FAILED	= new Integer(3);
-	public static final Integer	BLOCKED	= new Integer(4);
-	public static final Integer	STARTED	= new Integer(5);
+	public static final Integer	PENDING		= new Integer(1);
+	public static final Integer	PASSED		= new Integer(2);
+	public static final Integer	FAILED		= new Integer(3);
+	public static final Integer	BLOCKED		= new Integer(4);
+	public static final Integer	STARTED		= new Integer(5);
+	public static final Integer	INVALIDATED	= new Integer(6);
 
 	public TestRunResultStatus()
 	{

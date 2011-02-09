@@ -518,6 +518,19 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@PUT
+	@Path("/results/{resultId}/finishinvalidate/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_RUN_EDIT })
+	public TestRunResultInfo finishInvalidatedTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
+			@FormParam("comment") final String comment_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		testRunService.finishExecutingAssignedTestCaseWithInvalidation(resultId_, comment_, originalVersionId_);
+		return getTestRunResult(ui_, resultId_);
+	}
+
+	@PUT
 	@Path("/results/{resultId}/approve/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

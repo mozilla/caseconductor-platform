@@ -121,4 +121,6 @@ public interface TestRunWebService
 	TestRunResultInfo finishFailedTestRunResultExecution(UriInfo ui, Integer resultId, Integer failedStepNumber, String actualResult, String comment, Integer originalVersionId)
 			throws Exception;
 
+	TestRunResultInfo finishInvalidatedTestRunResultExecution(UriInfo ui, Integer resultId, String comment, Integer originalVersionId) throws Exception;
+
 }

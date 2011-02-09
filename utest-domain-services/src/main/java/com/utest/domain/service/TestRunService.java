@@ -138,4 +138,6 @@ public interface TestRunService
 	List<ProductComponent> getTestRunComponents(Integer testRunId) throws Exception;
 
 	UtestSearchResult findTestRunTestCases(UtestSearch search) throws Exception;
+
+	TestRunResult finishExecutingAssignedTestCaseWithInvalidation(Integer testRunResultId, String comment, Integer originalVersionId) throws Exception;
 }
