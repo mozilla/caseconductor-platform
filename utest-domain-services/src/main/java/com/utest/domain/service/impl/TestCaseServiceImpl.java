@@ -256,7 +256,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			{
 				throw new InvalidUserException();
 			}
-			List<TestCaseStep> steps = getTestCaseVersionSteps(testCaseVersion.getId());
+			List<TestCaseStep> steps = getTestCaseVersionSteps(testCaseVersionId_);
 			if (((steps == null) || !steps.isEmpty()) && ApprovalStatus.APPROVED.equals(approvalStatus_))
 			{
 				throw new ApprovingIncompleteEntityException(TestCaseVersion.class.getSimpleName() + " : " + testCaseVersionId_);
