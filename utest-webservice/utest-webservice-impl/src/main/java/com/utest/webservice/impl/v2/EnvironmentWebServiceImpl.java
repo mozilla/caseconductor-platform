@@ -252,7 +252,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_EDIT)
-	public Boolean deleteTag(@Context final UriInfo ui_, @PathParam("id") final Integer tagId_, @PathParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	public Boolean deleteTag(@Context final UriInfo ui_, @PathParam("id") final Integer tagId_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		environmentService.deleteTag(tagId_, originalVersionId_);
 		return Boolean.TRUE;
