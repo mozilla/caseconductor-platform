@@ -49,8 +49,6 @@ public interface TestCaseWebService
 
 	List<ProductComponentInfo> getTestCaseComponents(UriInfo ui, Integer testCaseId) throws Exception;
 
-	List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseId, Integer testCaseVersionId) throws Exception;
-
 	List<TagInfo> getTestCaseTags(UriInfo ui, Integer testCaseId) throws Exception;
 
 	TestCaseInfo getTestCase(UriInfo ui, Integer testCaseId) throws Exception;
@@ -98,5 +96,7 @@ public interface TestCaseWebService
 	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String versionIncrement, String description, Integer originalVersionId) throws Exception;
 
 	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String description, Integer originalVersionId) throws Exception;
+
+	List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseVersionId) throws Exception;
 
 }

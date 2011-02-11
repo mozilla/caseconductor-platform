@@ -260,8 +260,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_VIEW)
-	public List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_,
-			@PathParam("versionId") final Integer testCaseVersionId_) throws Exception
+	public List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_) throws Exception
 	{
 		final List<EnvironmentGroup> groups = testCaseService.getEnvironmentGroupsForTestCaseVersion(testCaseVersionId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
