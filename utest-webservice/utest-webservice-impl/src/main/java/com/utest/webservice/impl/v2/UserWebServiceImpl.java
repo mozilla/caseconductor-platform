@@ -360,7 +360,8 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		userService.addRolePermission(roleId_, permissionId_, originalVersionId_);
-		return getRole(ui_, roleId_);
+		final AccessRole role = userService.getRole(roleId_);
+		return objectBuilderFactory.toInfo(RoleInfo.class, role, ui_.getBaseUriBuilder());
 	}
 
 	@POST
@@ -373,7 +374,8 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		userService.addUserRole(roleId_, userId_, originalVersionId_);
-		return getUser(ui_, userId_);
+		final User user = userService.getUser(userId_);
+		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getBaseUriBuilder());
 	}
 
 	@DELETE
