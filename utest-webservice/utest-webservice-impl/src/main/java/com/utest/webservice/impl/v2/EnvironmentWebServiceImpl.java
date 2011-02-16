@@ -249,7 +249,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@DELETE
 	@Path("/tags/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_EDIT)
 	public Boolean deleteTag(@Context final UriInfo ui_, @PathParam("id") final Integer tagId_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
