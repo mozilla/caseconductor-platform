@@ -107,7 +107,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_CASE_APPROVE })
 	public TestCaseVersionInfo approveTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
@@ -121,7 +121,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_CASE_APPROVE })
 	public TestCaseVersionInfo rejectTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
@@ -135,7 +135,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_CASE_ACTIVATE })
 	public TestCaseVersionInfo activateTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
@@ -149,7 +149,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_CASE_ACTIVATE })
 	public TestCaseVersionInfo deactivateTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{

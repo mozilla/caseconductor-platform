@@ -89,7 +89,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CYCLE_EDIT })
+	@Secured( { Permission.TEST_CYCLE_ACTIVATE })
 	public TestCycleInfo activateTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("originalVersionId") final Integer originalVersionId_)
 			throws Exception
 	{
@@ -103,7 +103,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CYCLE_EDIT })
+	@Secured( { Permission.TEST_CYCLE_ACTIVATE })
 	public TestCycleInfo deactivateTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{

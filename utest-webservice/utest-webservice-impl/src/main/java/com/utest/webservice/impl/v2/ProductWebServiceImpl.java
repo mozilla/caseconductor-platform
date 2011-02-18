@@ -241,7 +241,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.ENVIRONMENT_EDIT })
+	@Secured( { Permission.PRODUCT_EDIT })
 	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
 			@FormParam("environmentIds") final ArrayList<Integer> environmentIds_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
@@ -255,7 +255,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.ENVIRONMENT_EDIT })
+	@Secured( { Permission.PRODUCT_EDIT })
 	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
 			@PathParam("typeId") final Integer environmentTypeId_, @FormParam("environmentIds") final ArrayList<Integer> environmentIds_,
 			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception

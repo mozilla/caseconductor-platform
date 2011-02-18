@@ -83,7 +83,7 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_PLAN_EDIT })
+	@Secured( { Permission.TEST_PLAN_ACTIVATE })
 	public TestPlanInfo activateTestPlan(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_, @FormParam("originalVersionId") final Integer originalVesionId_)
 			throws Exception
 	{
@@ -97,7 +97,7 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_PLAN_EDIT })
+	@Secured( { Permission.TEST_PLAN_ACTIVATE })
 	public TestPlanInfo deactivateTestPlan(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_, @FormParam("originalVersionId") final Integer originalVesionId_)
 			throws Exception
 	{
@@ -162,7 +162,7 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.TEST_CASE_EDIT)
+	@Secured(Permission.TEST_PLAN_EDIT)
 	public Boolean deleteTestPlanTestSuite(@Context final UriInfo ui_, @PathParam("includedTestSuiteId") final Integer includedTestSuiteId_,
 			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
@@ -176,7 +176,7 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_PLAN_VIEW })
 	public IncludedTestSuiteInfo getTestPlanTestSuite(@Context final UriInfo ui_, @PathParam("includedTestSuiteId") final Integer includedTestSuiteId_) throws Exception
 	{
 		final TestPlanTestSuite includedTestSuite = testPlanService.getTestPlanTestSuite(includedTestSuiteId_);
@@ -188,7 +188,7 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_PLAN_EDIT })
 	public IncludedTestSuiteInfo updateTestPlanTestSuite(@Context final UriInfo ui_, @PathParam("includedTestSuiteId") final Integer includedTestSuiteId_,
 			@FormParam("runOrder") final Integer runOrder_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{

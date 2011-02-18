@@ -82,7 +82,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_SUITE_EDIT })
+	@Secured( { Permission.TEST_SUITE_ACTIVATE })
 	public TestSuiteInfo activateTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_, @FormParam("originalVersionId") final Integer originalVesionId_)
 			throws Exception
 	{
@@ -96,7 +96,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_SUITE_EDIT })
+	@Secured( { Permission.TEST_SUITE_ACTIVATE })
 	public TestSuiteInfo deactivateTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_,
 			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{

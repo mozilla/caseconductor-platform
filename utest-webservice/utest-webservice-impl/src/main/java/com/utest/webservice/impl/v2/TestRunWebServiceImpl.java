@@ -102,7 +102,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_RUN_EDIT })
+	@Secured( { Permission.TEST_RUN_ACTIVATE })
 	public TestRunInfo activateTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @FormParam("originalVersionId") final Integer originalVersionId_)
 			throws Exception
 	{
@@ -116,7 +116,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_RUN_EDIT })
+	@Secured( { Permission.TEST_RUN_ACTIVATE })
 	public TestRunInfo deactivateTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @FormParam("originalVersionId") final Integer originalVersionId_)
 			throws Exception
 	{
@@ -305,7 +305,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.TEST_CASE_EDIT)
+	@Secured(Permission.TEST_RUN_EDIT)
 	public Boolean deleteTestRunTestCase(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
@@ -319,7 +319,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_RUN_EDIT })
 	public IncludedTestCaseInfo updateTestRunTestCase(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
 			@FormParam("testCaseVersionId") final Integer testCaseVersionId_, @FormParam("priorityId") final Integer priorityId_, @FormParam("runOrder") final Integer runOrder_,
 			@FormParam("blocking") final String blocking_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
@@ -377,7 +377,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_RUN_EDIT })
+	@Secured( { Permission.TEST_RUN_TEST_CASE_ASSIGN })
 	public TestRunTestCaseAssignmentInfo createTestRunTestCaseAssignment(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
 			@FormParam("testerId") final Integer testerId_) throws Exception
 	{
@@ -403,7 +403,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.TEST_CASE_EDIT)
+	@Secured(Permission.TEST_RUN_TEST_CASE_ASSIGN)
 	public Boolean deleteTestRunTestCaseAssignment(@Context final UriInfo ui_, @PathParam("assignmentId") final Integer assignmentId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
@@ -416,7 +416,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_RUN_EDIT })
+	@Secured( { Permission.TEST_RUN_TEST_CASE_ASSIGN })
 	public Boolean updateTestRunTestCaseAssignmentEnvironmentGroups(@Context final UriInfo ui_, @PathParam("assignmentId") final Integer assignmentId_,
 			@FormParam("environmentGroupIds") final ArrayList<Integer> environmentGroupIds_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
@@ -482,7 +482,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_RUN_EDIT })
+	@Secured( { Permission.TEST_RUN_ASSIGNMENT_EXECUTE })
 	public TestRunResultInfo startTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
@@ -495,7 +495,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_RUN_EDIT })
+	@Secured( { Permission.TEST_RUN_ASSIGNMENT_EXECUTE })
 	public TestRunResultInfo finishFailedTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
 			@FormParam("failedStepNumber") final Integer failedStepNumber_, @FormParam("actualResult") final String actualResult_, @FormParam("comment") final String comment_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
@@ -509,7 +509,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_RUN_EDIT })
+	@Secured( { Permission.TEST_RUN_ASSIGNMENT_EXECUTE })
 	public TestRunResultInfo finishSuccessfulTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
 			@FormParam("comment") final String comment_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
@@ -522,7 +522,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_RUN_EDIT })
+	@Secured( { Permission.TEST_RUN_ASSIGNMENT_EXECUTE })
 	public TestRunResultInfo finishInvalidatedTestRunResultExecution(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
 			@FormParam("comment") final String comment_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
@@ -535,7 +535,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_RUN_EDIT })
+	@Secured( { Permission.TEST_RUN_RESULT_APPROVE })
 	public TestRunResultInfo approveTestRunResult(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
@@ -548,7 +548,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_RUN_EDIT })
+	@Secured( { Permission.TEST_RUN_RESULT_APPROVE })
 	public TestRunResultInfo rejectTestRunResult(@Context final UriInfo ui_, @PathParam("resultId") final Integer resultId_, @FormParam("comment") final String comment_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
