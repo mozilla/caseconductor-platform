@@ -42,7 +42,8 @@ public class DomainException extends RuntimeException
 				"no.active.purchase.order"), testerDoesNotMatchTestCycle("tester.does.not.match.testing.profile"), messagingExceptionQueueNotFound("queue.not.found"), favoriteTestersSharedSetupViolated(
 				"favorite.tester.shared.setup"), favoriteTestersLimitViolated("favorite.tester.limit"), testerCantFileBugToTestCycleException(
 				"test.cycle.notactive.or.tester.is.not.a.participant"), fileNoFoundException("file.not.found.exception"), activatingIncompleteEntity("activating.incomplete.entity"), changingUsedEntity(
-				"changing.used.entity"), activatingNotApprovedEntity("activating.not.approved.entity"), includingMultipleTestCaseVersions("including.multiple.testcase.versions"), testCaseExecutionBlockedException(
+				"changing.used.entity"), activatingNotApprovedEntity("activating.not.approved.entity"), includingMultipleTestCaseVersions("including.multiple.testcase.versions"), 
+				assigningSameTestCaseVersionsToTester("assigning.same.testcase.versions.to.tester"), testCaseExecutionBlockedException(
 				"testcase.execution.blocked"), testCaseExecutionWithoutRestartException("testcase.execution.without.restart"), includingNotActiveEntity(
 				"including.not.activated.entity"), entityNotFound("entity.not.found"), unsupportedEnvironmentSelection("unsupported.environment.selection"), testCycleStepsLimitException(
 				"steps.limit.reached"), duplicateStepNumberException("testcase.duplicate.step.number"), invalidParentChildRelationship("invalid.parent.child"), approvingIncompleteEntity(
