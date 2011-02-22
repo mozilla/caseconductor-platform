@@ -50,9 +50,9 @@ public class TestCaseVersion extends TimelineEntity implements EnvironmentDepend
 	}
 
 	public TestCaseVersion(final Integer testCaseId, final Integer testCaseStatusId, final String description, final Integer majorVersion, final Integer minorVersion,
-			final boolean latestVersion, final Integer approvalStatusId, final Integer createdBy, final Date createDate, final Integer lastChangedBy, final Date lastChangeDate)
+			final boolean latestVersion, final Integer approvalStatusId)
 	{
-		super(createdBy, createDate, lastChangedBy, lastChangeDate);
+		super();
 		this.testCaseId = testCaseId;
 		// this.name = name;
 		this.testCaseStatusId = testCaseStatusId;
@@ -64,10 +64,9 @@ public class TestCaseVersion extends TimelineEntity implements EnvironmentDepend
 	}
 
 	public TestCaseVersion(final Integer testCaseId, final Integer testCaseStatusId, final String description, final Integer majorVersion, final Integer minorVersion,
-			final boolean latestVersion, final Integer approvalStatusId, final Integer approvedBy, final Date approveDate, final Integer environmentProfileId,
-			final Integer createdBy, final Date createDate, final Integer lastChangedBy, final Date lastChangeDate)
+			final boolean latestVersion, final Integer approvalStatusId, final Integer approvedBy, final Date approveDate, final Integer environmentProfileId)
 	{
-		super(createdBy, createDate, lastChangedBy, lastChangeDate);
+		super();
 		this.testCaseId = testCaseId;
 		// this.name = name;
 		this.testCaseStatusId = testCaseStatusId;

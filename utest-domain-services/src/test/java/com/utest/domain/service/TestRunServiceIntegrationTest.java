@@ -61,7 +61,7 @@ public class TestRunServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		Assert.assertTrue(testCycle11 != null);
 
 		final TestRun testRun = testRunService.addTestRun(testCycle11.getId(), true, "Test Run for cycle: " + testCycle11.getName(), "VMK testing description.", new Date(),
-				DateUtil.addMonths(new Date(), 12), true, false, 3);
+				DateUtil.addMonths(new Date(), 12), true, false, 3, true);
 		Assert.assertTrue(testRun != null);
 	}
 
@@ -89,7 +89,7 @@ public class TestRunServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		Assert.assertTrue(testCycle11 != null);
 
 		final TestRun testRun = testRunService.addTestRun(testCycleId, true, "Test run from test suite: " + testSuiteId, "VMK test run from test suite.", new Date(), DateUtil
-				.addMonths(new Date(), 12), true, false, 3);
+				.addMonths(new Date(), 12), true, false, 3, false);
 		Assert.assertTrue(testRun != null);
 		final List<TestRunTestCase> includedCases = testRunService.addTestCasesFromTestSuite(testRun.getId(), testSuiteId);
 		final Integer testerId = 1;

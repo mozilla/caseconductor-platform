@@ -38,10 +38,12 @@ import javax.ws.rs.core.UriInfo;
 
 import org.springframework.security.access.annotation.Secured;
 
+import com.utest.domain.AccessRole;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.Permission;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
+import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.ProductService;
@@ -52,6 +54,8 @@ import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.ProductComponentSearchResultInfo;
 import com.utest.webservice.model.v2.ProductInfo;
 import com.utest.webservice.model.v2.ProductSearchResultInfo;
+import com.utest.webservice.model.v2.RoleInfo;
+import com.utest.webservice.model.v2.UserInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 @Path("/products/")
@@ -217,10 +221,67 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	/**
 	 * Returns all versions of a test case
 	 */
-	public List<EnvironmentGroupInfo> getProducEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
+	public List<EnvironmentGroupInfo> getProductEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
 	{
 		final List<EnvironmentGroup> groups = productService.getEnvironmentGroupsForProduct(productId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/{id}/team/members/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.PRODUCT_VIEW)
+	/**
+	 * Returns all versions of a test case
+	 */
+	public List<UserInfo> getProductTeamMembers(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
+	{
+		final List<User> users = productService.getTestingTeamForProduct(productId_);
+		return objectBuilderFactory.toInfo(UserInfo.class, users, ui_.getBaseUriBuilder());
+	}
+
+	@PUT
+	@Path("/{id}/team/members/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.PRODUCT_EDIT })
+	public Boolean updateProductTeamMembers(@Context final UriInfo ui_, @PathParam("id") final Integer productId_, @FormParam("userIds") final ArrayList<Integer> userIds_,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		productService.saveTestingTeamForProduct(productId_, userIds_, originalVersionId_);
+		return Boolean.TRUE;
+	}
+
+	@GET
+	@Path("/{id}/team/members/{userId}/roles/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.PRODUCT_VIEW)
+	/**
+	 * Returns all versions of a test case
+	 */
+	public List<RoleInfo> getProductTeamMemberRoles(@Context final UriInfo ui_, @PathParam("id") final Integer productId_, @PathParam("userId") final Integer userId_)
+			throws Exception
+	{
+		final List<AccessRole> roles = productService.getTestingTeamMemberRolesForProduct(productId_, userId_);
+		return objectBuilderFactory.toInfo(RoleInfo.class, roles, ui_.getBaseUriBuilder());
+	}
+
+	@PUT
+	@Path("/{id}/team/members/{userId}/roles/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.PRODUCT_EDIT })
+	public Boolean updateProductTeamMemberRoles(@Context final UriInfo ui_, @PathParam("id") final Integer productId_, @PathParam("userId") final Integer userId_,
+			@FormParam("roleIds") final ArrayList<Integer> roleIds_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		productService.saveTestingTeamMemberRolesForProduct(productId_, userId_, roleIds_, originalVersionId_);
+		return Boolean.TRUE;
 	}
 
 	@PUT
@@ -230,9 +291,9 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
 	public Boolean updateProductEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
-			@FormParam("environmentGroupIds") final ArrayList<Integer> environmentGroupIds_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
+			@FormParam("environmentGroupIds") final ArrayList<Integer> environmentGroupIds_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		productService.saveEnvironmentGroupsForProduct(productId_, environmentGroupIds_, originalVesionId_);
+		productService.saveEnvironmentGroupsForProduct(productId_, environmentGroupIds_, originalVersionId_);
 		return Boolean.TRUE;
 	}
 
@@ -243,9 +304,9 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Override
 	@Secured( { Permission.PRODUCT_EDIT })
 	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
-			@FormParam("environmentIds") final ArrayList<Integer> environmentIds_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
+			@FormParam("environmentIds") final ArrayList<Integer> environmentIds_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		List<EnvironmentGroup> environmentGroups = productService.addGeneratedEnvironmentGroupsForProduct(productId_, environmentIds_, originalVesionId_);
+		List<EnvironmentGroup> environmentGroups = productService.addGeneratedEnvironmentGroupsForProduct(productId_, environmentIds_, originalVersionId_);
 		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder());
 		return environmentGroupsInfo;
 	}
@@ -258,9 +319,9 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Secured( { Permission.PRODUCT_EDIT })
 	public List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
 			@PathParam("typeId") final Integer environmentTypeId_, @FormParam("environmentIds") final ArrayList<Integer> environmentIds_,
-			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		List<EnvironmentGroup> environmentGroups = productService.addGeneratedEnvironmentGroupsForProduct(productId_, environmentTypeId_, environmentIds_, originalVesionId_);
+		List<EnvironmentGroup> environmentGroups = productService.addGeneratedEnvironmentGroupsForProduct(productId_, environmentTypeId_, environmentIds_, originalVersionId_);
 		final List<EnvironmentGroupInfo> environmentGroupsInfo = objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroups, ui_.getBaseUriBuilder());
 		return environmentGroupsInfo;
 	}

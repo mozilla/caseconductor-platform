@@ -30,12 +30,14 @@ import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.IncludedTestCaseInfo;
 import com.utest.webservice.model.v2.IncludedTestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
+import com.utest.webservice.model.v2.RoleInfo;
 import com.utest.webservice.model.v2.TestRunInfo;
 import com.utest.webservice.model.v2.TestRunResultInfo;
 import com.utest.webservice.model.v2.TestRunResultSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunTestCaseAssignmentInfo;
 import com.utest.webservice.model.v2.TestRunTestCaseAssignmentSearchResultInfo;
+import com.utest.webservice.model.v2.UserInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface TestRunWebService
@@ -103,12 +105,6 @@ public interface TestRunWebService
 
 	IncludedTestCaseSearchResultInfo findTestRunTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	TestRunInfo updateTestRun(UriInfo ui, Integer testRunId, String name, String description, String selfAssignAllowed, String selfAssignPerEnvironment, Integer selfAssignLimit,
-			Date startDate, Date endDate, Integer originalVersionId) throws Exception;
-
-	TestRunInfo createTestRun(UriInfo ui, Integer testCycleId, String name, String description, String selfAssignAllowed, String selfAssignPerEnvironment, Integer selfAssignLimit,
-			Date startDate, Date endDate, String useLatestVersions) throws Exception;
-
 	IncludedTestCaseInfo createTestRunTestCase(UriInfo ui, Integer testRunId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, String blocking) throws Exception;
 
 	IncludedTestCaseInfo updateTestRunTestCase(UriInfo ui, Integer includedTestCaseId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, String blocking,
@@ -122,5 +118,19 @@ public interface TestRunWebService
 			throws Exception;
 
 	TestRunResultInfo finishInvalidatedTestRunResultExecution(UriInfo ui, Integer resultId, String comment, Integer originalVersionId) throws Exception;
+
+	TestRunInfo createTestRun(UriInfo ui, Integer testCycleId, String name, String description, String selfAssignAllowed, String selfAssignPerEnvironment, Integer selfAssignLimit,
+			Date startDate, Date endDate, String useLatestVersions, String autoAssignToTeam) throws Exception;
+
+	TestRunInfo updateTestRun(UriInfo ui, Integer testRunId, String name, String description, String selfAssignAllowed, String selfAssignPerEnvironment, Integer selfAssignLimit,
+			Date startDate, Date endDate, Integer originalVersionId, String autoAssignToTeam) throws Exception;
+
+	List<UserInfo> getTestRunTeamMembers(UriInfo ui, Integer testCycleId) throws Exception;
+
+	Boolean updateTestRunTeamMembers(UriInfo ui, Integer productId, ArrayList<Integer> userIds, Integer originalVersionId) throws Exception;
+
+	List<RoleInfo> getTestRunTeamMemberRoles(UriInfo ui, Integer productId, Integer userId) throws Exception;
+
+	Boolean updateTestRunTeamMemberRoles(UriInfo ui, Integer productId, Integer userId, ArrayList<Integer> roleIds, Integer originalVersionId) throws Exception;
 
 }

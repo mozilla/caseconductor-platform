@@ -26,9 +26,11 @@ import java.util.List;
 import javax.ws.rs.core.UriInfo;
 
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
+import com.utest.webservice.model.v2.RoleInfo;
 import com.utest.webservice.model.v2.TestCycleInfo;
 import com.utest.webservice.model.v2.TestCycleSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunInfo;
+import com.utest.webservice.model.v2.UserInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface TestCycleWebService
@@ -55,4 +57,12 @@ public interface TestCycleWebService
 
 	TestCycleInfo updateTestCycle(UriInfo ui, Integer testCycleId, String name, String description, Integer productId, String communityAuthoringAllowed,
 			String communityAccessAllowed, Date startDate, Date endDate, Integer originalVersionId) throws Exception;
+
+	List<UserInfo> getTestCycleTeamMembers(UriInfo ui, Integer testCycleId) throws Exception;
+
+	Boolean updateTestCycleTeamMembers(UriInfo ui, Integer productId, ArrayList<Integer> userIds, Integer originalVersionId) throws Exception;
+
+	List<RoleInfo> getTestCycleTeamMemberRoles(UriInfo ui, Integer productId, Integer userId) throws Exception;
+
+	Boolean updateTestCycleTeamMemberRoles(UriInfo ui, Integer productId, Integer userId, ArrayList<Integer> roleIds, Integer originalVersionId) throws Exception;
 }

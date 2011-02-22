@@ -25,36 +25,44 @@ import java.util.List;
 
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
+import com.utest.domain.AccessRole;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
+import com.utest.domain.Team;
 import com.utest.domain.TestCycle;
 import com.utest.domain.TestCycleStatus;
 import com.utest.domain.TestRun;
+import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
+import com.utest.domain.service.TeamService;
 import com.utest.domain.service.TestCycleService;
 import com.utest.domain.service.TestRunService;
 import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingActivatedEntityException;
+import com.utest.exception.NoTeamDefinitionException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
+import com.utest.exception.UnsupportedTeamSelectionException;
 
 public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleService
 {
 	private final TypelessDAO			dao;
 	private final EnvironmentService	environmentService;
 	private final TestRunService		testRunService;
+	private final TeamService			teamService;
 
 	/**
 	 * Default constructor
 	 */
-	public TestCycleServiceImpl(final TypelessDAO dao, final TestRunService testRunService, final EnvironmentService environmentService)
+	public TestCycleServiceImpl(final TypelessDAO dao, final TestRunService testRunService, final EnvironmentService environmentService, final TeamService teamService)
 	{
 		super(dao);
 		this.dao = dao;
 		this.environmentService = environmentService;
 		this.testRunService = testRunService;
+		this.teamService = teamService;
 	}
 
 	@Override
@@ -75,10 +83,91 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 		testCycle.setCommunityAuthoringAllowed(communityAuthoringAllowed_);
 		// set environment profile from product by default
 		testCycle.setEnvironmentProfileId(product.getEnvironmentProfileId());
+		// set team from product by default
+		testCycle.setTeamId(product.getTeamId());
 
 		final Integer testCycleId = dao.addAndReturnId(testCycle);
 		dao.flush();
 		return getTestCycle(testCycleId);
+	}
+
+	@Override
+	public List<User> getTestingTeamForTestCycle(final Integer testCycleId_) throws Exception
+	{
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
+		if (testCycle.getTeamId() != null)
+		{
+			return teamService.getTeamUsers(testCycle.getTeamId());
+		}
+		else
+		{
+			return new ArrayList<User>();
+		}
+	}
+
+	@Override
+	public void saveTestingTeamForTestCycle(final Integer testCycleId_, final List<Integer> userIds_, final Integer originalVersionId_)
+			throws UnsupportedEnvironmentSelectionException, Exception
+	{
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
+		final Product product = getRequiredEntityById(Product.class, testCycle.getProductId());
+		// check that users are selected from community users or users from the
+		// matching company
+		if (!isValidSelectionForCompany(product.getCompanyId(), userIds_, User.class))
+		{
+			throw new UnsupportedTeamSelectionException("Selecting testers from other company.");
+		}
+		// update team profile
+		Team team = null;
+		if ((product.getTeamId() != null && product.getTeamId() == testCycle.getTeamId()) || testCycle.getTeamId() == null)
+		{
+			team = teamService.addTeam(product.getCompanyId(), "Created for test cycle : " + testCycleId_, "Included users: " + userIds_.toString());
+			teamService.saveTeamUsers(team.getId(), userIds_, team.getVersion());
+			testCycle.setTeamId(team.getId());
+		}
+		else
+		{
+			team = getRequiredEntityById(Team.class, testCycle.getTeamId());
+			teamService.saveTeamUsers(team.getId(), userIds_, team.getVersion());
+		}
+		// update version
+		testCycle.setVersion(originalVersionId_);
+		dao.merge(testCycle);
+	}
+
+	@Override
+	public List<AccessRole> getTestingTeamMemberRolesForTestCycle(final Integer testCycleId_, final Integer userId_) throws Exception
+	{
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
+		// update team profile
+		if (testCycle.getTeamId() != null)
+		{
+			return teamService.getTeamUserRoles(testCycle.getTeamId(), userId_);
+		}
+		else
+		{
+			return new ArrayList<AccessRole>();
+		}
+	}
+
+	@Override
+	public void saveTestingTeamMemberRolesForTestCycle(final Integer testCycleId_, final Integer userId_, final List<Integer> roleIds_, final Integer originalVersionId_)
+			throws UnsupportedEnvironmentSelectionException, Exception
+	{
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
+		// update team profile
+		if (testCycle.getTeamId() != null)
+		{
+			Team team = getRequiredEntityById(Team.class, testCycle.getTeamId());
+			teamService.saveTeamUserRoles(testCycle.getTeamId(), userId_, roleIds_, team.getVersion());
+		}
+		else
+		{
+			throw new NoTeamDefinitionException("No team defined for TestCycle: " + testCycleId_);
+		}
+		// update version
+		testCycle.setVersion(originalVersionId_);
+		dao.merge(testCycle);
 	}
 
 	@Override
@@ -112,8 +201,18 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 			throw new UnsupportedEnvironmentSelectionException();
 		}
 		// update environment profile
-		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test cycle : " + testCycleId_,
-				"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
+		EnvironmentProfile environmentProfile = null;
+		// create new one if still uses parent's profile
+		if ((product.getEnvironmentProfileId() != null && product.getEnvironmentProfileId() == testCycle.getEnvironmentProfileId()) || testCycle.getEnvironmentProfileId() == null)
+		{
+			environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test cycle : " + testCycleId_, "Included groups: "
+					+ environmentGroupIds_.toString(), environmentGroupIds_);
+		}
+		// or update existing profile
+		else
+		{
+			environmentService.saveEnvironmentGroupsForProfile(testCycle.getEnvironmentProfileId(), environmentGroupIds_);
+		}
 		testCycle.setEnvironmentProfileId(environmentProfile.getId());
 		testCycle.setVersion(originalVersionId_);
 		dao.merge(testCycle);

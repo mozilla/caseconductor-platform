@@ -21,9 +21,11 @@ package com.utest.domain.service;
 
 import java.util.List;
 
+import com.utest.domain.AccessRole;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
+import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
@@ -63,4 +65,13 @@ public interface ProductService
 	void deleteProduct(Integer productId, Integer originalVersionId) throws Exception;
 
 	void deleteProductComponent(Integer productComponentId, Integer originalVersionId) throws Exception;
+
+	List<User> getTestingTeamForProduct(Integer productId) throws Exception;
+
+	void saveTestingTeamForProduct(Integer productId, List<Integer> userIds, Integer originalVersionId) throws UnsupportedEnvironmentSelectionException, Exception;
+
+	void saveTestingTeamMemberRolesForProduct(Integer productId, Integer userId, List<Integer> roleIds, Integer originalVersionId) throws UnsupportedEnvironmentSelectionException,
+			Exception;
+
+	List<AccessRole> getTestingTeamMemberRolesForProduct(Integer productId, Integer userId) throws Exception;
 }

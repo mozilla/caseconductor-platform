@@ -22,6 +22,7 @@ package com.utest.domain.service;
 import java.util.Date;
 import java.util.List;
 
+import com.utest.domain.AccessRole;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.ProductComponent;
@@ -29,6 +30,7 @@ import com.utest.domain.TestRun;
 import com.utest.domain.TestRunResult;
 import com.utest.domain.TestRunTestCase;
 import com.utest.domain.TestRunTestCaseAssignment;
+import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
@@ -88,9 +90,6 @@ public interface TestRunService
 	TestRunTestCase saveTestRunTestCase(Integer includedTestCaseId, Integer priorityId, Integer runOrder, boolean blocking, boolean selfAssignAllowed,
 			boolean selfAssignPerEnvironment, Integer selfAssignLimit, Integer originalVersionId);
 
-	TestRun addTestRun(Integer testCycleId, boolean useLatestVersiuons, String name, String description, Date startDate, Date endDate, boolean selfAssignAllowed,
-			boolean selfAssignPerEnvironment, Integer selfAssignLimit) throws Exception;
-
 	TestRunTestCase addTestRunTestCase(Integer testRunId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, boolean isBlocking, Integer testSuiteId)
 			throws Exception;
 
@@ -101,9 +100,6 @@ public interface TestRunService
 	void deleteAssignment(Integer assignmentId, Integer originalVersionId) throws Exception;
 
 	TestRunTestCase addTestRunTestCase(Integer testRunId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, boolean isBlocking) throws Exception;
-
-	TestRun saveTestRun(Integer testRunId, String name, String description, Date startDate, Date endDate, boolean selfAssignAllowed, boolean selfAssignPerEnvironment,
-			Integer selfAssignLimit, Integer originalVersionId) throws Exception;
 
 	List<TestRunTestCase> addTestCasesFromTestPlan(Integer testRunId, Integer testPlanId) throws Exception;
 
@@ -140,4 +136,19 @@ public interface TestRunService
 	UtestSearchResult findTestRunTestCases(UtestSearch search) throws Exception;
 
 	TestRunResult finishExecutingAssignedTestCaseWithInvalidation(Integer testRunResultId, String comment, Integer originalVersionId) throws Exception;
+
+	List<User> getTestingTeamForTestRun(Integer testRunId) throws Exception;
+
+	void saveTestingTeamForTestRun(Integer testRunId, List<Integer> userIds, Integer originalVersionId) throws UnsupportedEnvironmentSelectionException, Exception;
+
+	void saveTestingTeamMemberRolesForTestRun(Integer testRunId, Integer userId, List<Integer> roleIds, Integer originalVersionId) throws UnsupportedEnvironmentSelectionException,
+			Exception;
+
+	TestRun addTestRun(Integer testCycleId, boolean useLatestVersions, String name, String description, Date startDate, Date endDate, boolean selfAssignAllowed,
+			boolean selfAssignPerEnvironment, Integer selfAssignLimit, boolean autoAssignToTeam) throws Exception;
+
+	TestRun saveTestRun(Integer testRunId, String name, String description, Date startDate, Date endDate, boolean selfAssignAllowed, boolean selfAssignPerEnvironment,
+			Integer selfAssignLimit, Integer originalVersionId, boolean autoAssignToTeam) throws Exception;
+
+	List<AccessRole> getTestingTeamMemberRolesForTestRun(Integer testRunId, Integer userId) throws Exception;
 }

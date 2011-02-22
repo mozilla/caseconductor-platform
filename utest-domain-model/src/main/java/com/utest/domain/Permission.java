@@ -59,6 +59,8 @@ public class Permission extends Entity implements Named
 	public static final String	TEST_RUN_RESULT_APPROVE		= "PERMISSION_TEST_RUN_RESULT_APPROVE";
 	public static final String	USER_ACCOUNT_VIEW			= "PERMISSION_USER_ACCOUNT_VIEW";
 	public static final String	USER_ACCOUNT_EDIT			= "PERMISSION_USER_ACCOUNT_EDIT";
+	public static final String	TEAM_VIEW					= "PERMISSION_TEAM_VIEW";
+	public static final String	TEAM_EDIT					= "PERMISSION_TEAM_EDIT";
 
 	private String				permissionCode;
 	private String				name;

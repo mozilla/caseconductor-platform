@@ -37,6 +37,9 @@
         <property name="useLatestVersions" type="boolean">
             <column name="useLatestVersions" not-null="true" />
         </property>
+        <property name="autoAssignToTeam" type="boolean">
+            <column name="autoAssignToTeam" not-null="true" />
+        </property>
         <property name="selfAssignAllowed" type="boolean">
             <column name="selfAssignAllowed" not-null="true" />
         </property>
@@ -49,6 +52,9 @@
         <property name="environmentProfileId" type="java.lang.Integer">
             <column name="environmentProfileId" />
         </property>
+		<property name="teamId" type="java.lang.Integer">
+			<column name="teamId"/>
+		</property>
         <property name="createdBy" type="java.lang.Integer">
             <column name="createdBy" not-null="true" />
         </property>

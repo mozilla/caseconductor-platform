@@ -29,6 +29,8 @@ import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.ProductComponentSearchResultInfo;
 import com.utest.webservice.model.v2.ProductInfo;
 import com.utest.webservice.model.v2.ProductSearchResultInfo;
+import com.utest.webservice.model.v2.RoleInfo;
+import com.utest.webservice.model.v2.UserInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface ProductWebService
@@ -43,7 +45,7 @@ public interface ProductWebService
 
 	List<ProductComponentInfo> getProductComponents(UriInfo ui, Integer productId) throws Exception;
 
-	List<EnvironmentGroupInfo> getProducEnvironmentGroups(UriInfo ui, Integer productId) throws Exception;
+	List<EnvironmentGroupInfo> getProductEnvironmentGroups(UriInfo ui, Integer productId) throws Exception;
 
 	Boolean updateProductEnvironmentGroups(UriInfo ui, Integer productId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
 
@@ -64,5 +66,13 @@ public interface ProductWebService
 	ProductInfo updateProduct(UriInfo ui, Integer productId, String name, String description, Integer originalVersionId) throws Exception;
 
 	ProductComponentInfo updateProductComponent(UriInfo ui, Integer productComponentId, String name, String description, Integer originalVersionId) throws Exception;
+
+	Boolean updateProductTeamMembers(UriInfo ui, Integer productId, ArrayList<Integer> userIds, Integer originalVesionId) throws Exception;
+
+	List<UserInfo> getProductTeamMembers(UriInfo ui, Integer productId) throws Exception;
+
+	List<RoleInfo> getProductTeamMemberRoles(UriInfo ui, Integer productId, Integer userId) throws Exception;
+
+	Boolean updateProductTeamMemberRoles(UriInfo ui, Integer productId, Integer userId, ArrayList<Integer> roleIds, Integer originalVersionId) throws Exception;
 
 }

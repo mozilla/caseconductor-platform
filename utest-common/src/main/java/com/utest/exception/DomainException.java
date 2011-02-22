@@ -31,9 +31,9 @@ public class DomainException extends RuntimeException
 	{
 
 		genericErrorMessage("generic.error.message"), noEnoughBudgetMessage("release.out.of.budget"), requiredAttachmentNotFound("attachment.not.found"), releaseInvalidStatus(
-				"testcycle.invalid.status"), tmRegistrationExistentCompanyName("company.name.in.use"), tmRegistrationExistentCompanyUrl(
-				"company.url.in.use"), emailInUse("email.in.use"), screenNameInUse("screenname.in.use"), hubspotPostExecution("hubspot.post.execution"), invalidConfigurationExecution(
-				"invalid.configuration"), invalidUserExecution("invalid.user"), dataRequiredNotFoundException("required.data.not.found"), invalidRemoteAccess("invalid.remote.access"), notApplicableBusinessRule(
+				"testcycle.invalid.status"), tmRegistrationExistentCompanyName("company.name.in.use"), tmRegistrationExistentCompanyUrl("company.url.in.use"), emailInUse(
+				"email.in.use"), screenNameInUse("screenname.in.use"), hubspotPostExecution("hubspot.post.execution"), invalidConfigurationExecution("invalid.configuration"), invalidUserExecution(
+				"invalid.user"), dataRequiredNotFoundException("required.data.not.found"), invalidRemoteAccess("invalid.remote.access"), notApplicableBusinessRule(
 				"business.rule.not.applicable"), paymentTransaction("payment.transaction.failed"), releaseAlreadyExistsError("testcycle.already.exists"), projectAlreadyExistsError(
 				"project.already.exists"), notEnoughCreditError("not.enough.credit"), applicationTypeIsRequired("application.type.required"), duplicateTestCycleName(
 				"duplicate.testcycle.name"), duplicateProjectName("duplicate.project.name"), duplicateName("duplicate.name"), deletingActivatdEntity("deleting.activated.entity"), deletingUsedEntity(
@@ -42,12 +42,12 @@ public class DomainException extends RuntimeException
 				"no.active.purchase.order"), testerDoesNotMatchTestCycle("tester.does.not.match.testing.profile"), messagingExceptionQueueNotFound("queue.not.found"), favoriteTestersSharedSetupViolated(
 				"favorite.tester.shared.setup"), favoriteTestersLimitViolated("favorite.tester.limit"), testerCantFileBugToTestCycleException(
 				"test.cycle.notactive.or.tester.is.not.a.participant"), fileNoFoundException("file.not.found.exception"), activatingIncompleteEntity("activating.incomplete.entity"), changingUsedEntity(
-				"changing.used.entity"), activatingNotApprovedEntity("activating.not.approved.entity"), includingMultipleTestCaseVersions("including.multiple.testcase.versions"), 
-				assigningSameTestCaseVersionsToTester("assigning.same.testcase.versions.to.tester"), testCaseExecutionBlockedException(
-				"testcase.execution.blocked"), testCaseExecutionWithoutRestartException("testcase.execution.without.restart"), includingNotActiveEntity(
-				"including.not.activated.entity"), entityNotFound("entity.not.found"), unsupportedEnvironmentSelection("unsupported.environment.selection"), testCycleStepsLimitException(
-				"steps.limit.reached"), duplicateStepNumberException("testcase.duplicate.step.number"), invalidParentChildRelationship("invalid.parent.child"), approvingIncompleteEntity(
-				"approving.incomplete.entity");
+				"changing.used.entity"), activatingNotApprovedEntity("activating.not.approved.entity"), includingMultipleTestCaseVersions("including.multiple.testcase.versions"), assigningSameTestCaseVersionsToTester(
+				"assigning.same.testcase.versions.to.tester"), testCaseExecutionBlockedException("testcase.execution.blocked"), testCaseExecutionWithoutRestartException(
+				"testcase.execution.without.restart"), includingNotActiveEntity("including.not.activated.entity"), entityNotFound("entity.not.found"), unsupportedEnvironmentSelection(
+				"unsupported.environment.selection"), unsupportedTeamSelection("unsupported.team.selection"), teamNotDefined("team.not.defined"), teamMemberNotDefined(
+				"team.member.not.defined"), testCycleStepsLimitException("steps.limit.reached"), duplicateStepNumberException("testcase.duplicate.step.number"), invalidParentChildRelationship(
+				"invalid.parent.child"), approvingIncompleteEntity("approving.incomplete.entity");
 
 		private String	messageKey;
 

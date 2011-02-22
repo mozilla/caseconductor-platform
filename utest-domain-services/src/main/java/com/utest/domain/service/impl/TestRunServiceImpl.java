@@ -25,12 +25,14 @@ import java.util.List;
 
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
+import com.utest.domain.AccessRole;
 import com.utest.domain.ApprovalStatus;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
+import com.utest.domain.Team;
 import com.utest.domain.TestCaseStatus;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.TestCycle;
@@ -50,22 +52,25 @@ import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
+import com.utest.domain.service.TeamService;
 import com.utest.domain.service.TestCaseService;
 import com.utest.domain.service.TestPlanService;
 import com.utest.domain.service.TestRunService;
 import com.utest.domain.service.TestSuiteService;
-import com.utest.exception.AssigningMultileVersionsOfSameEntityException;
 import com.utest.exception.ActivatingIncompleteEntityException;
 import com.utest.exception.ApprovingIncompleteEntityException;
+import com.utest.exception.AssigningMultileVersionsOfSameEntityException;
 import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingActivatedEntityException;
 import com.utest.exception.IncludingMultileVersionsOfSameEntityException;
 import com.utest.exception.IncludingNotActivatedEntityException;
 import com.utest.exception.InvalidUserException;
+import com.utest.exception.NoTeamDefinitionException;
 import com.utest.exception.TestCaseExecutionBlockedException;
 import com.utest.exception.TestCaseExecutionWithoutRestartException;
 import com.utest.exception.TestCycleClosedException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
+import com.utest.exception.UnsupportedTeamSelectionException;
 import com.utest.util.DateUtil;
 
 public class TestRunServiceImpl extends BaseServiceImpl implements TestRunService
@@ -75,12 +80,13 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	private final TestPlanService		testPlanService;
 	private final TestSuiteService		testSuiteService;
 	private final TestCaseService		testCaseService;
+	private final TeamService			teamService;
 
 	/**
 	 * Default constructor
 	 */
 	public TestRunServiceImpl(final TypelessDAO dao, final TestPlanService testPlanService, final TestSuiteService testSuiteService, final TestCaseService testCaseService,
-			final EnvironmentService environmentService)
+			final EnvironmentService environmentService, final TeamService teamService)
 	{
 		super(dao);
 		this.dao = dao;
@@ -88,11 +94,13 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		this.testPlanService = testPlanService;
 		this.testSuiteService = testSuiteService;
 		this.testCaseService = testCaseService;
+		this.teamService = teamService;
 	}
 
 	@Override
 	public TestRun addTestRun(final Integer testCycleId_, final boolean useLatestVersions_, final String name_, final String description_, final Date startDate_,
-			final Date endDate_, final boolean selfAssignAllowed_, final boolean selfAssignPerEnvironment_, final Integer selfAssignLimit_) throws Exception
+			final Date endDate_, final boolean selfAssignAllowed_, final boolean selfAssignPerEnvironment_, final Integer selfAssignLimit_, final boolean autoAssignToTeam_)
+			throws Exception
 	{
 		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
 		checkForDuplicateNameWithinParent(TestRun.class, name_, testCycleId_, "testCycleId", null);
@@ -110,8 +118,11 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		testRun.setSelfAssignAllowed(selfAssignAllowed_);
 		testRun.setSelfAssignLimit(selfAssignLimit_);
 		testRun.setSelfAssignPerEnvironment(selfAssignPerEnvironment_);
+		testRun.setAutoAssignToTeam(autoAssignToTeam_);
 		// set environment profile from test cycle by default
 		testRun.setEnvironmentProfileId(testCycle.getEnvironmentProfileId());
+		// set team profile from test cycle by default
+		testRun.setTeamId(testCycle.getTeamId());
 
 		final Integer testRunId = dao.addAndReturnId(testRun);
 		return getTestRun(testRunId);
@@ -256,8 +267,19 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		}
 		// update environment profile
 		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
-		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run : " + testRunId_, "Included groups: "
-				+ environmentGroupIds_.toString(), environmentGroupIds_);
+		// update environment profile
+		EnvironmentProfile environmentProfile = null;
+		// create new one if still uses parent's profile
+		if ((testCycle.getEnvironmentProfileId() != null && testRun.getEnvironmentProfileId() == testCycle.getEnvironmentProfileId()) || testRun.getEnvironmentProfileId() == null)
+		{
+			environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run : " + testRunId_, "Included groups: "
+					+ environmentGroupIds_.toString(), environmentGroupIds_);
+		}
+		// or update existing profile
+		else
+		{
+			environmentService.saveEnvironmentGroupsForProfile(testRun.getEnvironmentProfileId(), environmentGroupIds_);
+		}
 		testRun.setEnvironmentProfileId(environmentProfile.getId());
 		testRun.setVersion(originalVersionId_);
 		dao.merge(testRun);
@@ -355,7 +377,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		{
 			throw new IncludingMultileVersionsOfSameEntityException(TestCaseVersion.class.getSimpleName() + " : " + testCaseVersionId_);
 		}
-		final TestRunTestCase includedTestCase = new TestRunTestCase();
+		TestRunTestCase includedTestCase = new TestRunTestCase();
 		includedTestCase.setTestRunId(testRunId_);
 		includedTestCase.setTestCaseId(testCaseVersion.getTestCaseId());
 		includedTestCase.setTestCaseVersionId(testCaseVersion.getId());
@@ -377,7 +399,66 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			includedTestCase.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
 
 		}
-		return dao.merge(includedTestCase);
+
+		includedTestCase = dao.merge(includedTestCase);
+		//
+		autoAssignTestCaseToTeam(testRun, includedTestCase);
+		return includedTestCase;
+	}
+
+	private void autoAssignTestCaseToTeam(TestRun testRun_, TestRunTestCase includedTestCase_) throws Exception
+	{
+		if (!testRun_.isAutoAssignToTeam())
+		{
+			return;
+		}
+		List<User> teamMembers = getTestingTeamForTestRun(testRun_.getId());
+		if (teamMembers != null)
+		{
+			for (User teamMember : teamMembers)
+			{
+				addAssignment(includedTestCase_.getId(), teamMember.getId());
+			}
+		}
+	}
+
+	private void autoAssignAllTestCasesToTeam(TestRun testRun_) throws Exception
+	{
+		if (!testRun_.isAutoAssignToTeam())
+		{
+			return;
+		}
+		List<User> teamMembers = getTestingTeamForTestRun(testRun_.getId());
+		if (teamMembers == null || teamMembers.isEmpty())
+		{
+			return;
+		}
+		List<TestRunTestCase> includedTestCases = getTestRunTestCases(testRun_.getId());
+		if (includedTestCases == null || includedTestCases.isEmpty())
+		{
+			return;
+		}
+		List<TestRunTestCaseAssignment> assignments = getTestRunAssignments(testRun_.getId());
+
+		for (TestRunTestCase includedTestCase : includedTestCases)
+		{
+			for (User teamMember : teamMembers)
+			{
+				boolean found = false;
+				for (TestRunTestCaseAssignment assignment : assignments)
+				{
+					if (includedTestCase.getId().equals(assignment.getTestRunTestCaseId()) && teamMember.getId().equals(assignment.getTesterId()))
+					{
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+				{
+					addAssignment(includedTestCase.getId(), teamMember.getId());
+				}
+			}
+		}
 	}
 
 	@Override
@@ -932,7 +1013,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 
 	@Override
 	public TestRun saveTestRun(final Integer testRunId_, final String name_, final String description_, final Date startDate_, final Date endDate_,
-			final boolean selfAssignAllowed_, final boolean selfAssignPerEnvironment_, final Integer selfAssignLimit_, final Integer originalVersionId_) throws Exception
+			final boolean selfAssignAllowed_, final boolean selfAssignPerEnvironment_, final Integer selfAssignLimit_, final Integer originalVersionId_,
+			final boolean autoAssignToTeam_) throws Exception
 	{
 		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		checkForDuplicateNameWithinParent(TestRun.class, name_, testRun.getTestCycleId(), "testCycleId", testRunId_);
@@ -944,6 +1026,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		testRun.setSelfAssignAllowed(selfAssignAllowed_);
 		testRun.setSelfAssignLimit(selfAssignLimit_);
 		testRun.setSelfAssignPerEnvironment(selfAssignPerEnvironment_);
+		testRun.setAutoAssignToTeam(autoAssignToTeam_);
 		testRun.setVersion(originalVersionId_);
 		return dao.merge(testRun);
 	}
@@ -1050,4 +1133,88 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	{
 		return updateActivationStatus(testRunId_, TestRunStatus.LOCKED, originalVersionId_);
 	}
+
+	@Override
+	public List<User> getTestingTeamForTestRun(final Integer testRunId_) throws Exception
+	{
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
+		if (testRun.getTeamId() != null)
+		{
+			return teamService.getTeamUsers(testRun.getTeamId());
+		}
+		else
+		{
+			return new ArrayList<User>();
+		}
+	}
+
+	@Override
+	public void saveTestingTeamForTestRun(final Integer testRunId_, final List<Integer> userIds_, final Integer originalVersionId_)
+			throws UnsupportedEnvironmentSelectionException, Exception
+	{
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testRun.getTestCycleId());
+		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
+		// check that users are selected from community users or users from the
+		// matching company
+		if (!isValidSelectionForCompany(product.getCompanyId(), userIds_, User.class))
+		{
+			throw new UnsupportedTeamSelectionException("Selecting testers from other company.");
+		}
+		// update team profile
+		Team team = null;
+		if ((testCycle.getTeamId() != null && testCycle.getTeamId() == testRun.getTeamId()) || testRun.getTeamId() == null)
+		{
+			team = teamService.addTeam(product.getCompanyId(), "Created for test run : " + testRunId_, "Included users: " + userIds_.toString());
+			teamService.saveTeamUsers(team.getId(), userIds_, team.getVersion());
+			testRun.setTeamId(team.getId());
+		}
+		else
+		{
+			team = getRequiredEntityById(Team.class, testRun.getTeamId());
+			teamService.saveTeamUsers(team.getId(), userIds_, team.getVersion());
+		}
+		// update version
+		testRun.setVersion(originalVersionId_);
+		dao.merge(testRun);
+
+		// assign all test cases to new team members
+		autoAssignAllTestCasesToTeam(testRun);
+	}
+
+	@Override
+	public List<AccessRole> getTestingTeamMemberRolesForTestRun(final Integer testRunId_, final Integer userId_) throws Exception
+	{
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
+		// update team profile
+		if (testRun.getTeamId() != null)
+		{
+			return teamService.getTeamUserRoles(testRun.getTeamId(), userId_);
+		}
+		else
+		{
+			return new ArrayList<AccessRole>();
+		}
+	}
+
+	@Override
+	public void saveTestingTeamMemberRolesForTestRun(final Integer testRunId_, final Integer userId_, final List<Integer> roleIds_, final Integer originalVersionId_)
+			throws UnsupportedEnvironmentSelectionException, Exception
+	{
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
+		// update team profile
+		if (testRun.getTeamId() != null)
+		{
+			Team team = getRequiredEntityById(Team.class, testRun.getTeamId());
+			teamService.saveTeamUserRoles(testRun.getTeamId(), userId_, roleIds_, team.getVersion());
+		}
+		else
+		{
+			throw new NoTeamDefinitionException("No team defined for TestRun: " + testRunId_);
+		}
+		// update version
+		testRun.setVersion(originalVersionId_);
+		dao.merge(testRun);
+	}
+
 }

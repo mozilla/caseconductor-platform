@@ -24,34 +24,42 @@ import java.util.List;
 
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
+import com.utest.domain.AccessRole;
 import com.utest.domain.Company;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
+import com.utest.domain.Team;
 import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseProductComponent;
+import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.ProductService;
+import com.utest.domain.service.TeamService;
 import com.utest.domain.util.DomainUtil;
 import com.utest.exception.DeletingUsedEntityException;
+import com.utest.exception.NoTeamDefinitionException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
+import com.utest.exception.UnsupportedTeamSelectionException;
 
 public class ProductServiceImpl extends BaseServiceImpl implements ProductService
 {
 	private final TypelessDAO			dao;
 	private final EnvironmentService	environmentService;
+	private final TeamService			teamService;
 
 	/**
 	 * Default constructor
 	 */
-	public ProductServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService)
+	public ProductServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService, final TeamService teamService)
 	{
 		super(dao);
 		this.dao = dao;
 		this.environmentService = environmentService;
+		this.teamService = teamService;
 	}
 
 	@Override
@@ -99,6 +107,82 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 		final List<EnvironmentGroup> groups = environmentService.addGeneratedEnvironmentGroups(product.getCompanyId(), environmentTypeId_, environmentIds_);
 		saveEnvironmentGroupsForProduct(productId_, DomainUtil.extractEntityIds(groups), originalVersionId_);
 		return groups;
+	}
+
+	@Override
+	public List<User> getTestingTeamForProduct(final Integer productId_) throws Exception
+	{
+		final Product product = getRequiredEntityById(Product.class, productId_);
+		if (product.getTeamId() != null)
+		{
+			return teamService.getTeamUsers(product.getTeamId());
+		}
+		else
+		{
+			return new ArrayList<User>();
+		}
+	}
+
+	@Override
+	public void saveTestingTeamForProduct(final Integer productId_, final List<Integer> userIds_, final Integer originalVersionId_)
+			throws UnsupportedEnvironmentSelectionException, Exception
+	{
+		final Product product = getRequiredEntityById(Product.class, productId_);
+		// check that users are selected from community users or users from the
+		// matching company
+		if (!isValidSelectionForCompany(product.getCompanyId(), userIds_, User.class))
+		{
+			throw new UnsupportedTeamSelectionException("Selecting testers from other company.");
+		}
+		// update team profile
+		if (product.getTeamId() != null)
+		{
+			Team team = getRequiredEntityById(Team.class, product.getTeamId());
+			teamService.saveTeamUsers(team.getId(), userIds_, team.getVersion());
+		}
+		else
+		{
+			final Team team = teamService.addTeam(product.getCompanyId(), "Created for product : " + productId_, "Included users: " + userIds_.toString());
+			teamService.saveTeamUsers(team.getId(), userIds_, team.getVersion());
+			product.setTeamId(team.getId());
+		}
+		// update product
+		product.setVersion(originalVersionId_);
+		dao.merge(product);
+	}
+
+	@Override
+	public List<AccessRole> getTestingTeamMemberRolesForProduct(final Integer productId_, final Integer userId_) throws Exception
+	{
+		final Product product = getRequiredEntityById(Product.class, productId_);
+		if (product.getTeamId() != null)
+		{
+			return teamService.getTeamUserRoles(product.getTeamId(), userId_);
+		}
+		else
+		{
+			return new ArrayList<AccessRole>();
+		}
+	}
+
+	@Override
+	public void saveTestingTeamMemberRolesForProduct(final Integer productId_, final Integer userId_, final List<Integer> roleIds_, final Integer originalVersionId_)
+			throws UnsupportedEnvironmentSelectionException, Exception
+	{
+		final Product product = getRequiredEntityById(Product.class, productId_);
+		// update team profile
+		if (product.getTeamId() != null)
+		{
+			Team team = getRequiredEntityById(Team.class, product.getTeamId());
+			teamService.saveTeamUserRoles(team.getId(), userId_, roleIds_, team.getVersion());
+		}
+		else
+		{
+			throw new NoTeamDefinitionException("No team defined for Product: " + productId_);
+		}
+		// update product
+		product.setVersion(originalVersionId_);
+		dao.merge(product);
 	}
 
 	@Override

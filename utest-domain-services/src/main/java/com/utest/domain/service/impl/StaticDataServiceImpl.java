@@ -301,7 +301,7 @@ public class StaticDataServiceImpl implements StaticDataService
 			// for each new Locale implemented in DB new map should be created
 			// and loaded
 			// database should be called only once per entity
-			if (list.size() > 0)
+			if (!list.isEmpty())
 			{
 				final LocalizedEntity entity = list.get(0);
 				final Map locales = entity.getLocales();
@@ -352,7 +352,7 @@ public class StaticDataServiceImpl implements StaticDataService
 		{
 			final Vector<T> list = new Vector<T>();
 			list.addAll(dao.getAll(clazz));
-			if (list.size() > 0)
+			if (!list.isEmpty())
 			{
 				final Object entity = list.get(0);
 				if (entity instanceof ParentDependable)

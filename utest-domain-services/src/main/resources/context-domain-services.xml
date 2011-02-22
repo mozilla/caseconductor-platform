@@ -29,6 +29,11 @@
 		<constructor-arg ref="typelessDao" />
 	</bean>
 
+	<bean id="teamService" class="com.utest.domain.service.impl.TeamServiceImpl">
+		<constructor-arg ref="typelessDao" />
+		<constructor-arg ref="userService" />
+	</bean>
+
 	<bean id="companyService" class="com.utest.domain.service.impl.CompanyServiceImpl">
 		<constructor-arg ref="typelessDao" />
 		<constructor-arg ref="environmentService" />
@@ -37,6 +42,7 @@
 	<bean id="productService" class="com.utest.domain.service.impl.ProductServiceImpl">
 		<constructor-arg ref="typelessDao" />
 		<constructor-arg ref="environmentService" />
+		<constructor-arg ref="teamService" />
 	</bean>
 
 	<bean id="testCaseService" class="com.utest.domain.service.impl.TestCaseServiceImpl">
@@ -58,6 +64,7 @@
 		<constructor-arg ref="typelessDao" />
 		<constructor-arg ref="environmentService" />
 		<constructor-arg ref="testRunService" />
+		<constructor-arg ref="teamService" />
 	</bean>
 
 	<bean id="testRunService" class="com.utest.domain.service.impl.TestRunServiceImpl">
@@ -66,6 +73,7 @@
 		<constructor-arg ref="testPlanService" />
 		<constructor-arg ref="testSuiteService" />
 		<constructor-arg ref="testCaseService" />
+		<constructor-arg ref="teamService" />
 	</bean>
 
 	<bean id="auditService" class="com.utest.domain.service.impl.AuditServiceImpl">

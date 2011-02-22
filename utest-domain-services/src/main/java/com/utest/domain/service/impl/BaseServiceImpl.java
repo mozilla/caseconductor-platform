@@ -139,7 +139,7 @@ public abstract class BaseServiceImpl
 		for (final T foundType : companyDependableEntities_)
 		{
 			final Integer companyId = foundType.getCompanyId();
-			if (!Company.SYSTEM_WIDE_COMPANY_ID.equals(companyId) && !companyId.equals(companyId_))
+			if (companyId != null && !Company.SYSTEM_WIDE_COMPANY_ID.equals(companyId) && !companyId.equals(companyId_))
 			{
 				return false;
 			}

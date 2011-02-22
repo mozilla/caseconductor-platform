@@ -39,19 +39,23 @@ import javax.ws.rs.core.UriInfo;
 
 import org.springframework.security.access.annotation.Secured;
 
+import com.utest.domain.AccessRole;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.Permission;
 import com.utest.domain.TestCycle;
 import com.utest.domain.TestRun;
+import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.TestCycleService;
 import com.utest.webservice.api.v2.TestCycleWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
+import com.utest.webservice.model.v2.RoleInfo;
 import com.utest.webservice.model.v2.TestCycleInfo;
 import com.utest.webservice.model.v2.TestCycleSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunInfo;
+import com.utest.webservice.model.v2.UserInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 @Path("/testcycles/")
@@ -202,6 +206,63 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 		final UtestSearchResult result = testCycleService.findTestCycles(search);
 
 		return (TestCycleSearchResultInfo) objectBuilderFactory.createResult(TestCycleInfo.class, TestCycle.class, request_, result, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/{id}/team/members/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CYCLE_VIEW)
+	/**
+	 * Returns all versions of a test case
+	 */
+	public List<UserInfo> getTestCycleTeamMembers(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_) throws Exception
+	{
+		final List<User> users = testCycleService.getTestingTeamForTestCycle(testCycleId_);
+		return objectBuilderFactory.toInfo(UserInfo.class, users, ui_.getBaseUriBuilder());
+	}
+
+	@PUT
+	@Path("/{id}/team/members/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_CYCLE_EDIT })
+	public Boolean updateTestCycleTeamMembers(@Context final UriInfo ui_, @PathParam("id") final Integer productId_, @FormParam("userIds") final ArrayList<Integer> userIds_,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		testCycleService.saveTestingTeamForTestCycle(productId_, userIds_, originalVersionId_);
+		return Boolean.TRUE;
+	}
+
+	@GET
+	@Path("/{id}/team/members/{userId}/roles/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CYCLE_VIEW)
+	/**
+	 * Returns all versions of a test case
+	 */
+	public List<RoleInfo> getTestCycleTeamMemberRoles(@Context final UriInfo ui_, @PathParam("id") final Integer productId_, @PathParam("userId") final Integer userId_)
+			throws Exception
+	{
+		final List<AccessRole> roles = testCycleService.getTestingTeamMemberRolesForTestCycle(productId_, userId_);
+		return objectBuilderFactory.toInfo(RoleInfo.class, roles, ui_.getBaseUriBuilder());
+	}
+
+	@PUT
+	@Path("/{id}/team/members/{userId}/roles/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_CYCLE_EDIT })
+	public Boolean updateTestCycleTeamMemberRoles(@Context final UriInfo ui_, @PathParam("id") final Integer productId_, @PathParam("userId") final Integer userId_,
+			@FormParam("roleIds") final ArrayList<Integer> roleIds_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		testCycleService.saveTestingTeamMemberRolesForTestCycle(productId_, userId_, roleIds_, originalVersionId_);
+		return Boolean.TRUE;
 	}
 
 }

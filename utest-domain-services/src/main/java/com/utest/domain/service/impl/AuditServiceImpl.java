@@ -143,7 +143,7 @@ public class AuditServiceImpl implements AuditService
 		s.addFilterEqual("entity", type.getSimpleName());
 		s.addSortDesc("date");
 		final List<AuditRecord> list = dao.search(AuditRecord.class, s);
-		if (list.size() > 0)
+		if (!list.isEmpty())
 		{
 			return list.get(0);
 		}
@@ -161,7 +161,7 @@ public class AuditServiceImpl implements AuditService
 		s.setMaxResults(1);
 
 		final List<AuditRecord> list = dao.search(AuditRecord.class, s);
-		if (list.size() > 0)
+		if (!list.isEmpty())
 		{
 			return list.get(0);
 		}
@@ -181,7 +181,7 @@ public class AuditServiceImpl implements AuditService
 		s.setMaxResults(1);
 
 		final List<AuditRecord> list = dao.search(AuditRecord.class, s);
-		if (list.size() > 0)
+		if (!list.isEmpty())
 		{
 			return list.get(0);
 		}
@@ -200,7 +200,7 @@ public class AuditServiceImpl implements AuditService
 		s.setMaxResults(1);
 
 		final List<AuditRecord> list = dao.search(AuditRecord.class, s);
-		if (list.size() > 0)
+		if (!list.isEmpty())
 		{
 			return list.get(0);
 		}
@@ -219,7 +219,7 @@ public class AuditServiceImpl implements AuditService
 		s.setMaxResults(1);
 
 		final List<AuditRecord> list = dao.search(AuditRecord.class, s);
-		if (list.size() > 0)
+		if (!list.isEmpty())
 		{
 			return list.get(0);
 		}
@@ -239,7 +239,7 @@ public class AuditServiceImpl implements AuditService
 		s.setMaxResults(1);
 
 		final List<AuditRecord> list = dao.search(AuditRecord.class, s);
-		if (list.size() > 0)
+		if (!list.isEmpty())
 		{
 			return list.get(0);
 		}
@@ -261,7 +261,7 @@ public class AuditServiceImpl implements AuditService
 		s.setMaxResults(1);
 
 		final List<AuditRecord> list = dao.search(AuditRecord.class, s);
-		if (list.size() > 0)
+		if (!list.isEmpty())
 		{
 			return list.get(0);
 		}
@@ -282,7 +282,7 @@ public class AuditServiceImpl implements AuditService
 		s.setMaxResults(1);
 
 		final List<AuditRecord> list = dao.search(AuditRecord.class, s);
-		if (list.size() > 0)
+		if (!list.isEmpty())
 		{
 			return list.get(0);
 		}
@@ -322,7 +322,7 @@ public class AuditServiceImpl implements AuditService
 		s.setMaxResults(1);
 
 		final List<AuditRecord> list = dao.search(AuditRecord.class, s);
-		if (list.size() > 0)
+		if (!list.isEmpty())
 		{
 			return list.get(0);
 		}

@@ -274,7 +274,7 @@ public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements Typele
 				mainSearch.addFilter(filter);
 			}
 		}
-		if (localeSearch.getFilters().size() > 0)
+		if (!localeSearch.getFilters().isEmpty())
 		{
 			UtestSearchResult searchResult = this.getBySearch(localType_, localeSearch);
 			List<Integer> ids = new ArrayList<Integer>();

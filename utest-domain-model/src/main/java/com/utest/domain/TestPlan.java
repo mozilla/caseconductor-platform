@@ -21,7 +21,6 @@ package com.utest.domain;
 
 // Generated Sep 3, 2010 1:57:10 PM by Hibernate Tools 3.2.4.GA
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,19 +41,17 @@ public class TestPlan extends TimelineEntity implements ProductDependable, Envir
 		super();
 	}
 
-	public TestPlan(final Integer productId, final String name, final Integer testPlanStatusId, final Integer createdBy, final Date createDate, final Integer lastChangedBy,
-			final Date lastChangeDate)
+	public TestPlan(final Integer productId, final String name, final Integer testPlanStatusId)
 	{
-		super(createdBy, createDate, lastChangedBy, lastChangeDate);
+		super();
 		this.productId = productId;
 		this.name = name;
 		this.testPlanStatusId = testPlanStatusId;
 	}
 
-	public TestPlan(final Integer productId, final String name, final String description, final Integer testPlanStatusId, final Integer environmentProfileId,
-			final Integer createdBy, final Date createDate, final Integer lastChangedBy, final Date lastChangeDate)
+	public TestPlan(final Integer productId, final String name, final String description, final Integer testPlanStatusId, final Integer environmentProfileId)
 	{
-		super(createdBy, createDate, lastChangedBy, lastChangeDate);
+		super();
 		this.productId = productId;
 		this.name = name;
 		this.description = description;

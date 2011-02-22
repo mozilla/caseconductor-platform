@@ -115,7 +115,7 @@ public class AuthenticationProviderImpl implements AuthenticationProvider
 		}
 		final List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 		final List<Permission> permissions = user.getPermissions();
-		if ((permissions != null) && (permissions.size() > 0))
+		if ((permissions != null) && (!permissions.isEmpty()))
 		{
 			for (int i = 0; i < permissions.size(); i++)
 			{

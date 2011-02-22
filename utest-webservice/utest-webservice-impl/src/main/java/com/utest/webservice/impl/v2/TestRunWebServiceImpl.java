@@ -39,6 +39,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.springframework.security.access.annotation.Secured;
 
+import com.utest.domain.AccessRole;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.Permission;
@@ -47,6 +48,7 @@ import com.utest.domain.TestRun;
 import com.utest.domain.TestRunResult;
 import com.utest.domain.TestRunTestCase;
 import com.utest.domain.TestRunTestCaseAssignment;
+import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.TestRunService;
@@ -57,12 +59,14 @@ import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.IncludedTestCaseInfo;
 import com.utest.webservice.model.v2.IncludedTestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
+import com.utest.webservice.model.v2.RoleInfo;
 import com.utest.webservice.model.v2.TestRunInfo;
 import com.utest.webservice.model.v2.TestRunResultInfo;
 import com.utest.webservice.model.v2.TestRunResultSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunTestCaseAssignmentInfo;
 import com.utest.webservice.model.v2.TestRunTestCaseAssignmentSearchResultInfo;
+import com.utest.webservice.model.v2.UserInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 @Path("/testruns/")
@@ -87,12 +91,12 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	public TestRunInfo updateTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @FormParam("name") final String name_,
 			@FormParam("description") final String description_, @FormParam("selfAssignAllowed") final String selfAssignAllowed_,
 			@FormParam("selfAssignPerEnvironment") final String selfAssignPerEnvironment_, @FormParam("selfAssignLimit") final Integer selfAssignLimit_,
-			@FormParam("startDate") final Date startDate_, @FormParam("endDate") final Date endDate_, @FormParam("originalVersionId") final Integer originalVersionId_)
-			throws Exception
+			@FormParam("startDate") final Date startDate_, @FormParam("endDate") final Date endDate_, @FormParam("originalVersionId") final Integer originalVersionId_,
+			@FormParam("autoAssignToTeam") final String autoAssignToTeam_) throws Exception
 	{
 
 		final TestRun testRun = testRunService.saveTestRun(testRunId_, name_, description_, startDate_, endDate_, "true".equalsIgnoreCase(selfAssignAllowed_), "true"
-				.equalsIgnoreCase(selfAssignPerEnvironment_), selfAssignLimit_, originalVersionId_);
+				.equalsIgnoreCase(selfAssignPerEnvironment_), selfAssignLimit_, originalVersionId_, "true".equalsIgnoreCase(autoAssignToTeam_));
 
 		return objectBuilderFactory.toInfo(TestRunInfo.class, testRun, ui_.getBaseUriBuilder());
 	}
@@ -172,11 +176,11 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	public TestRunInfo createTestRun(@Context final UriInfo ui_, @FormParam("testCycleId") final Integer testCycleId_, @FormParam("name") final String name_,
 			@FormParam("description") final String description_, @FormParam("selfAssignAllowed") final String selfAssignAllowed_,
 			@FormParam("selfAssignPerEnvironment") final String selfAssignPerEnvironment_, @FormParam("selfAssignLimit") final Integer selfAssignLimit_,
-			@FormParam("startDate") final Date startDate_, @FormParam("endDate") final Date endDate_, @FormParam("useLatestVersions") final String useLatestVersions_)
-			throws Exception
+			@FormParam("startDate") final Date startDate_, @FormParam("endDate") final Date endDate_, @FormParam("useLatestVersions") final String useLatestVersions_,
+			@FormParam("autoAssignToTeam") final String autoAssignToTeam_) throws Exception
 	{
 		final TestRun testRun = testRunService.addTestRun(testCycleId_, "true".equalsIgnoreCase(useLatestVersions_), name_, description_, startDate_, endDate_, "true"
-				.equalsIgnoreCase(selfAssignAllowed_), "true".equalsIgnoreCase(selfAssignPerEnvironment_), selfAssignLimit_);
+				.equalsIgnoreCase(selfAssignAllowed_), "true".equalsIgnoreCase(selfAssignPerEnvironment_), selfAssignLimit_, "true".equalsIgnoreCase(autoAssignToTeam_));
 		return objectBuilderFactory.toInfo(TestRunInfo.class, testRun, ui_.getBaseUriBuilder());
 	}
 
@@ -610,6 +614,63 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 		final UtestSearch search = objectBuilderFactory.createSearch(TestRunResultInfo.class, request_, ui_);
 		final UtestSearchResult result = testRunService.findTestRunResults(search);
 		return (TestRunResultSearchResultInfo) objectBuilderFactory.createResult(TestRunResultInfo.class, TestRunResult.class, request_, result, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/{id}/team/members/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_RUN_VIEW)
+	/**
+	 * Returns all versions of a test case
+	 */
+	public List<UserInfo> getTestRunTeamMembers(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_) throws Exception
+	{
+		final List<User> users = testRunService.getTestingTeamForTestRun(testCycleId_);
+		return objectBuilderFactory.toInfo(UserInfo.class, users, ui_.getBaseUriBuilder());
+	}
+
+	@PUT
+	@Path("/{id}/team/members/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_RUN_EDIT })
+	public Boolean updateTestRunTeamMembers(@Context final UriInfo ui_, @PathParam("id") final Integer productId_, @FormParam("userIds") final ArrayList<Integer> userIds_,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		testRunService.saveTestingTeamForTestRun(productId_, userIds_, originalVersionId_);
+		return Boolean.TRUE;
+	}
+
+	@GET
+	@Path("/{id}/team/members/{userId}/roles/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_RUN_VIEW)
+	/**
+	 * Returns all versions of a test case
+	 */
+	public List<RoleInfo> getTestRunTeamMemberRoles(@Context final UriInfo ui_, @PathParam("id") final Integer productId_, @PathParam("userId") final Integer userId_)
+			throws Exception
+	{
+		final List<AccessRole> roles = testRunService.getTestingTeamMemberRolesForTestRun(productId_, userId_);
+		return objectBuilderFactory.toInfo(RoleInfo.class, roles, ui_.getBaseUriBuilder());
+	}
+
+	@PUT
+	@Path("/{id}/team/members/{userId}/roles/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_RUN_EDIT })
+	public Boolean updateTestRunTeamMemberRoles(@Context final UriInfo ui_, @PathParam("id") final Integer productId_, @PathParam("userId") final Integer userId_,
+			@FormParam("roleIds") final ArrayList<Integer> roleIds_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		testRunService.saveTestingTeamMemberRolesForTestRun(productId_, userId_, roleIds_, originalVersionId_);
+		return Boolean.TRUE;
 	}
 
 }

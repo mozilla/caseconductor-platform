@@ -22,9 +22,11 @@ package com.utest.domain.service;
 import java.util.Date;
 import java.util.List;
 
+import com.utest.domain.AccessRole;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.TestCycle;
 import com.utest.domain.TestRun;
+import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
@@ -57,4 +59,13 @@ public interface TestCycleService
 			Exception;
 
 	void deleteTestCycle(Integer testCycleId, Integer originalVersionId) throws Exception;
+
+	List<User> getTestingTeamForTestCycle(Integer testCycleId) throws Exception;
+
+	void saveTestingTeamForTestCycle(Integer testCycleId, List<Integer> userIds, Integer originalVersionId) throws UnsupportedEnvironmentSelectionException, Exception;
+
+	void saveTestingTeamMemberRolesForTestCycle(Integer testCycleId, Integer userId, List<Integer> roleIds, Integer originalVersionId)
+			throws UnsupportedEnvironmentSelectionException, Exception;
+
+	List<AccessRole> getTestingTeamMemberRolesForTestCycle(Integer testCycleId, Integer userId) throws Exception;
 }

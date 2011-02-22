@@ -39,6 +39,9 @@
 		<property name="environmentProfileId" type="java.lang.Integer">
 			<column name="environmentProfileId"/>
 		</property>
+		<property name="teamId" type="java.lang.Integer">
+			<column name="teamId"/>
+		</property>
 		<property name="createDate" type="timestamp">
 			<column name="createDate" />
 		</property>

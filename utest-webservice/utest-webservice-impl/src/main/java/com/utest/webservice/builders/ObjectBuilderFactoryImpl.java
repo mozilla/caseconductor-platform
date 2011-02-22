@@ -39,6 +39,7 @@ import com.utest.domain.Permission;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.Tag;
+import com.utest.domain.Team;
 import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseContainerDependable;
 import com.utest.domain.TestCaseStep;
@@ -76,6 +77,8 @@ import com.utest.webservice.model.v2.RoleSearchResultInfo;
 import com.utest.webservice.model.v2.SearchResultInfo;
 import com.utest.webservice.model.v2.TagInfo;
 import com.utest.webservice.model.v2.TagSearchResultInfo;
+import com.utest.webservice.model.v2.TeamInfo;
+import com.utest.webservice.model.v2.TeamSearchResultInfo;
 import com.utest.webservice.model.v2.TestCaseInfo;
 import com.utest.webservice.model.v2.TestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.TestCaseStepInfo;
@@ -120,7 +123,7 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 	@Override
 	public void initialize()
 	{
-
+		builders.put(TeamInfo.class, new Builder<TeamInfo, Team>(this, TeamInfo.class, TeamSearchResultInfo.class));
 		builders.put(UserInfo.class, new Builder<UserInfo, User>(this, UserInfo.class, UserSearchResultInfo.class));
 		builders.put(RoleInfo.class, new Builder<RoleInfo, AccessRole>(this, RoleInfo.class, RoleSearchResultInfo.class));
 		builders.put(PermissionInfo.class, new Builder<PermissionInfo, Permission>(this, PermissionInfo.class, PermissionSearchResultInfo.class));

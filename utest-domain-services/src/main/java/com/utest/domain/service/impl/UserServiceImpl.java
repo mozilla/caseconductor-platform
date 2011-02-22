@@ -514,7 +514,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		final Search search = new Search(User.class);
 		search.addFilterEqual("email", email_);
 		final List<?> list = dao.search(User.class, search);
-		return list.size() > 0;
+		return !list.isEmpty();
 	}
 
 	@Override

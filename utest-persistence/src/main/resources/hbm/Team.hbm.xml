@@ -3,29 +3,23 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Oct 7, 2009 11:18:37 AM by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="com.utest.domain.Product" catalog="tcm" table="Product" >
+    <class name="com.utest.domain.Team" catalog="tcm" table="Team" >
         <id name="id" type="java.lang.Integer" unsaved-value="0">
-            <column name="productId" />
+            <column name="teamId" />
 			<generator class="identity"/>
 		</id>
         <version name="version" type="java.lang.Integer">
             <column name="version" not-null="true" />
         </version>
- 		<property name="companyId" type="java.lang.Integer">
-			<column name="companyId" />
-		</property>
         <property name="name" type="string">
             <column name="name" length="50" not-null="true" />
         </property>
        <property name="description" type="string">
             <column name="description" length="50" not-null="true" />
         </property>
-		<property name="environmentProfileId" type="java.lang.Integer">
-			<column name="environmentProfileId"/>
-		</property>
-		<property name="teamId" type="java.lang.Integer">
-			<column name="teamId"/>
-		</property>
+        <property name="companyId" type="java.lang.Integer">
+            <column name="companyId" not-null="true" />
+        </property>
 		<property name="createDate" type="timestamp">
 			<column name="createDate" />
 		</property>
