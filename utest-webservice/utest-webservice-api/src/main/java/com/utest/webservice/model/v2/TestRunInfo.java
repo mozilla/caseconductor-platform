@@ -59,6 +59,8 @@ public class TestRunInfo extends BaseInfo
 	private String			selfAssignPerEnvironment;
 	@XmlElement(required = false)
 	private String			useLatestVersions;
+	@XmlElement(required = false)
+	private String			autoAssignToTeam;
 
 	public TestRunInfo()
 	{
@@ -196,6 +198,16 @@ public class TestRunInfo extends BaseInfo
 	public void setSelfAssignPerEnvironment(String selfAssignPerEnvironment)
 	{
 		this.selfAssignPerEnvironment = selfAssignPerEnvironment;
+	}
+
+	public void setAutoAssignToTeam(String autoAssignToTeam)
+	{
+		this.autoAssignToTeam = autoAssignToTeam;
+	}
+
+	public String getAutoAssignToTeam()
+	{
+		return autoAssignToTeam;
 	}
 
 }
