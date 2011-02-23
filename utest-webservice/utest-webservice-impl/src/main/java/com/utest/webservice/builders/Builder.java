@@ -98,7 +98,7 @@ public class Builder<Ti, To>
 		result = constr.newInstance(new Object[] {});
 		ConvertUtilsBean cub = new ConvertUtilsBean();
 		// do not throw exceptions on null values
-		cub.register(false, false, 0);
+		cub.register(false, true, 0);
 		BeanUtilsBean bub = new BeanUtilsBean(cub);
 		bub.copyProperties(result, object);
 		// PropertyUtils.copyProperties(result, object);

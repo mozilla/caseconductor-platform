@@ -45,6 +45,7 @@ public class TestRunResult extends TimelineEntity implements ProductDependable
 	private Integer	approvedBy;
 	private Date	approveDate;
 	private Integer	environmentGroupId;
+	private Integer	testSuiteId;
 
 	public TestRunResult()
 	{
@@ -65,7 +66,8 @@ public class TestRunResult extends TimelineEntity implements ProductDependable
 
 	public TestRunResult(final Integer testRunAssignmentId, final Integer testRunId, final Integer productId, final Integer testCaseId, final Integer testCaseVersionId,
 			final Integer testerId, final Integer testRunResultStatusId, final Date runDate, final String actualResult, final Integer failedStepNumber,
-			final Integer actualTimeInMin, final String comment, final Integer approvalStatusId, final Integer approvedBy, final Date approveDate, final Integer environmentGroupId)
+			final Integer actualTimeInMin, final String comment, final Integer approvalStatusId, final Integer approvedBy, final Date approveDate,
+			final Integer environmentGroupId, final Integer testSuiteId)
 	{
 		this.testRunAssignmentId = testRunAssignmentId;
 		this.testRunId = testRunId;
@@ -83,6 +85,7 @@ public class TestRunResult extends TimelineEntity implements ProductDependable
 		this.approvedBy = approvedBy;
 		this.approveDate = approveDate;
 		this.environmentGroupId = environmentGroupId;
+		this.testSuiteId = testSuiteId;
 	}
 
 	public Integer getTestRunAssignmentId()
@@ -243,6 +246,16 @@ public class TestRunResult extends TimelineEntity implements ProductDependable
 	public void setEnvironmentGroupId(final Integer environmentGroupId)
 	{
 		this.environmentGroupId = environmentGroupId;
+	}
+
+	public void setTestSuiteId(Integer testSuiteId)
+	{
+		this.testSuiteId = testSuiteId;
+	}
+
+	public Integer getTestSuiteId()
+	{
+		return testSuiteId;
 	}
 
 }

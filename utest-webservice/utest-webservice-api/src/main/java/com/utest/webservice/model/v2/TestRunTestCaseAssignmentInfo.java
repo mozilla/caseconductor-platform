@@ -50,6 +50,10 @@ public class TestRunTestCaseAssignmentInfo extends BaseInfo
 	private Integer			testCaseVersionId;
 	@XmlElement(type = ResourceLocator.class, name = "testCaseVersionLocator")
 	private ResourceLocator	testCaseVersionLocator;
+	@XmlElement(required = false)
+	private Integer			testSuiteId;
+	@XmlElement(type = ResourceLocator.class, name = "testSuiteLocator")
+	private ResourceLocator	testSuiteLocator;
 
 	public Integer getProductId()
 	{
@@ -149,6 +153,26 @@ public class TestRunTestCaseAssignmentInfo extends BaseInfo
 	public void setTestRunLocator(ResourceLocator testRunLocator)
 	{
 		this.testRunLocator = testRunLocator;
+	}
+
+	public Integer getTestSuiteId()
+	{
+		return testSuiteId;
+	}
+
+	public void setTestSuiteId(Integer testSuiteId)
+	{
+		this.testSuiteId = testSuiteId;
+	}
+
+	public ResourceLocator getTestSuiteLocator()
+	{
+		return testSuiteLocator;
+	}
+
+	public void setTestSuiteLocator(ResourceLocator testSuiteLocator)
+	{
+		this.testSuiteLocator = testSuiteLocator;
 	}
 
 }

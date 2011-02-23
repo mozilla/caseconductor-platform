@@ -489,19 +489,27 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public TestRunTestCaseAssignment addAssignment(final Integer testRunTestCaseId_, final Integer testerId_) throws Exception
 	{
-		// TODO - check tester company, community and profile matching
 		final TestRunTestCaseAssignment assignment = addAssignmentNoResults(testRunTestCaseId_, testerId_);
 		// generate results for new assignment
 		addResultsForAssignment(assignment);
 		return assignment;
 	}
 
-	private TestRunTestCaseAssignment addAssignmentNoResults(final Integer testRunTestCaseId_, final Integer testerId_)
+	private TestRunTestCaseAssignment addAssignmentNoResults(final Integer testRunTestCaseId_, final Integer testerId_) throws Exception
 	{
-		// TODO - check if this test case is already assigned and test run
-		// settings allow to assign again to another tester or another
-		// environment
 		final TestRunTestCase includedTestCase = getRequiredEntityById(TestRunTestCase.class, testRunTestCaseId_);
+		final User tester = getRequiredEntityById(User.class, testerId_);
+		final TestRun testRun = getRequiredEntityById(TestRun.class, includedTestCase.getTestRunId());
+		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
+		// check that users are selected from community users or users from the
+		// matching company
+		List<Integer> userIds = new ArrayList<Integer>();
+		userIds.add(testerId_);
+		if (!isValidSelectionForCompany(product.getCompanyId(), userIds, User.class))
+		{
+			throw new UnsupportedTeamSelectionException("Selecting testers from other company.");
+		}
+
 		// prevent if another version of the same test case already included
 		final Search search = new Search(TestRunTestCaseAssignment.class);
 		search.addFilterEqual("testerId", testerId_);
@@ -513,16 +521,11 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		}
 
 		final TestRunTestCaseAssignment assignment = new TestRunTestCaseAssignment();
-		// prevent if already activated
-		final TestRun testRun = getRequiredEntityById(TestRun.class, includedTestCase.getTestRunId());
 		assignment.setTestRunId(testRun.getId());
 		assignment.setProductId(testRun.getProductId());
 		assignment.setTestCaseId(includedTestCase.getTestCaseId());
 		assignment.setTestCaseVersionId(includedTestCase.getTestCaseVersionId());
-		assignment.setTestRunTestCaseId(testRunTestCaseId_);
-		// TODO - validate if tester from the same company as tested product or
-		// is a community tester?
-		final User tester = getRequiredEntityById(User.class, testerId_);
+		assignment.setTestSuiteId(includedTestCase.getTestSuiteId());
 		assignment.setTesterId(tester.getId());
 		assignment.setEnvironmentProfileId(includedTestCase.getEnvironmentProfileId());
 		final Integer id = dao.addAndReturnId(assignment);
@@ -560,6 +563,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		result.setTestRunResultStatusId(TestRunStatus.PENDING);
 		result.setEnvironmentGroupId(environmentGroupId_);
 		result.setProductId(assignment_.getProductId());
+		result.setTestSuiteId(assignment_.getTestSuiteId());
 		result.setTestCaseId(assignment_.getTestCaseId());
 		result.setTestCaseVersionId(assignment_.getTestCaseVersionId());
 		result.setTesterId(assignment_.getTesterId());
