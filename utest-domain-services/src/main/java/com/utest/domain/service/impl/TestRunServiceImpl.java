@@ -525,6 +525,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		assignment.setProductId(testRun.getProductId());
 		assignment.setTestCaseId(includedTestCase.getTestCaseId());
 		assignment.setTestCaseVersionId(includedTestCase.getTestCaseVersionId());
+		assignment.setTestRunTestCaseId(includedTestCase.getId());
 		assignment.setTestSuiteId(includedTestCase.getTestSuiteId());
 		assignment.setTesterId(tester.getId());
 		assignment.setEnvironmentProfileId(includedTestCase.getEnvironmentProfileId());
@@ -563,12 +564,12 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		result.setTestRunResultStatusId(TestRunStatus.PENDING);
 		result.setEnvironmentGroupId(environmentGroupId_);
 		result.setProductId(assignment_.getProductId());
+		result.setTestRunId(assignment_.getTestRunId());
 		result.setTestSuiteId(assignment_.getTestSuiteId());
 		result.setTestCaseId(assignment_.getTestCaseId());
 		result.setTestCaseVersionId(assignment_.getTestCaseVersionId());
 		result.setTesterId(assignment_.getTesterId());
 		result.setTestRunAssignmentId(assignment_.getId());
-		result.setTestRunId(assignment_.getTestRunId());
 		return dao.merge(result);
 	}
 
