@@ -53,6 +53,7 @@ import com.utest.exception.NotFoundException;
 import com.utest.exception.ScreenNameInUseException;
 import com.utest.exception.TestCaseExecutionBlockedException;
 import com.utest.exception.TestCaseExecutionWithoutRestartException;
+import com.utest.exception.TestCycleClosedException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
 import com.utest.exception.UnsupportedTeamSelectionException;
 import com.utest.exception.ValidationException;
@@ -228,6 +229,16 @@ public class UtestRestFaultOutInterceptor extends AbstractOutDatabindingIntercep
 			responseCode = HttpURLConnection.HTTP_CONFLICT;// conflict
 		}
 		else if (fault.getCause() instanceof InvalidTeamMemberException)
+		{
+			responseCode = HttpURLConnection.HTTP_CONFLICT;// conflict
+		}
+		else if (fault.getCause() instanceof TestCycleClosedException)
+		{
+			responseCode = HttpURLConnection.HTTP_CONFLICT;// conflict
+		}
+		// this is here to catch all business exceptions if this interceptor
+		// wasn't updated properly
+		else if (fault.getCause() instanceof DomainException)
 		{
 			responseCode = HttpURLConnection.HTTP_CONFLICT;// conflict
 		}
