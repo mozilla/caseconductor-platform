@@ -27,7 +27,7 @@
             <column name="testCaseVersionId" not-null="true" />
         </property>
         <property name="testSuiteId" type="java.lang.Integer">
-            <column name="testSuiteId" not-null="true" />
+            <column name="testSuiteId"  not-null="false"/>
         </property>
         <property name="testerId" type="java.lang.Integer">
             <column name="testerId" not-null="true" />
