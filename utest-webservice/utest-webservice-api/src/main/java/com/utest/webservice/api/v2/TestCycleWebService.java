@@ -65,4 +65,6 @@ public interface TestCycleWebService
 	List<RoleInfo> getTestCycleTeamMemberRoles(UriInfo ui, Integer productId, Integer userId) throws Exception;
 
 	Boolean updateTestCycleTeamMemberRoles(UriInfo ui, Integer productId, Integer userId, ArrayList<Integer> roleIds, Integer originalVersionId) throws Exception;
+
+	Boolean approveAllResultsForTestCycle(UriInfo ui, Integer testCycleId) throws Exception;
 }

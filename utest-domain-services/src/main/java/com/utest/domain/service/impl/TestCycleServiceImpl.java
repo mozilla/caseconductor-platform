@@ -291,6 +291,16 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	}
 
 	@Override
+	public void approveAllTestRunResultsForTestCycle(final Integer testCycleId_) throws Exception
+	{
+		List<TestRun> testRuns = getTestRunsForTestCycle(testCycleId_);
+		for (TestRun testRun : testRuns)
+		{
+			testRunService.approveAllTestRunResultsForTestRun(testRun.getId());
+		}
+	}
+
+	@Override
 	public TestCycle lockTestCycle(final Integer testCycleId_, final Integer originalVersionId_) throws Exception
 	{
 		// change status for the test run

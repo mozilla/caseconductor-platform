@@ -133,4 +133,6 @@ public interface TestRunWebService
 
 	Boolean updateTestRunTeamMemberRoles(UriInfo ui, Integer productId, Integer userId, ArrayList<Integer> roleIds, Integer originalVersionId) throws Exception;
 
+	Boolean approveAllResultsForTestRun(UriInfo ui, Integer testRunId) throws Exception;
+
 }

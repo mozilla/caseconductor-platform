@@ -68,4 +68,6 @@ public interface TestCycleService
 			throws UnsupportedEnvironmentSelectionException, Exception;
 
 	List<AccessRole> getTestingTeamMemberRolesForTestCycle(Integer testCycleId, Integer userId) throws Exception;
+
+	void approveAllTestRunResultsForTestCycle(Integer testCycleId) throws Exception;
 }

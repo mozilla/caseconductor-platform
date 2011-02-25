@@ -89,6 +89,18 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	}
 
 	@PUT
+	@Path("/{id}/approveallresults/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_RUN_RESULT_APPROVE })
+	public Boolean approveAllResultsForTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_) throws Exception
+	{
+		testCycleService.approveAllTestRunResultsForTestCycle(testCycleId_);
+		return Boolean.TRUE;
+	}
+
+	@PUT
 	@Path("/{id}/activate/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

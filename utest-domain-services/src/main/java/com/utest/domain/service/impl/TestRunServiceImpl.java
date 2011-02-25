@@ -796,6 +796,25 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		return addResultForEnvironmentGroup(newAssignment, result.getEnvironmentGroupId());
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public void approveAllTestRunResultsForTestRun(final Integer testRunId_) throws Exception
+	{
+		UtestSearch usearch = new UtestSearch();
+		usearch.addFilterEqual("testRunId", testRunId_);
+		List<Integer> statuses = new ArrayList<Integer>();
+		statuses.add(TestRunResultStatus.FAILED);
+		statuses.add(TestRunResultStatus.PASSED);
+		statuses.add(TestRunResultStatus.INVALIDATED);
+		usearch.addFilterIn("testRunResultStatusId", statuses);
+		UtestSearchResult uresult = findTestRunResults(usearch);
+		List<TestRunResult> allResults = (List<TestRunResult>) uresult.getResults();
+		for (TestRunResult result : allResults)
+		{
+			updateApprovalStatus(result.getId(), null, ApprovalStatus.APPROVED, result.getVersion());
+		}
+	}
+
 	@Override
 	public TestRunResult approveTestRunResult(final Integer testRunResultId_, final Integer originalVersionId_) throws Exception
 	{
@@ -1112,7 +1131,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			{
 				throw new InvalidUserException();
 			}
-			if ((!TestRunResultStatus.FAILED.equals(result.getTestRunResultStatusId()) && !TestRunResultStatus.PASSED.equals(result.getTestRunResultStatusId()))
+			if ((!TestRunResultStatus.FAILED.equals(result.getTestRunResultStatusId()) && !TestRunResultStatus.INVALIDATED.equals(result.getTestRunResultStatusId()) && !TestRunResultStatus.PASSED
+					.equals(result.getTestRunResultStatusId()))
 					&& ApprovalStatus.APPROVED.equals(approvalStatus_))
 			{
 				throw new ApprovingIncompleteEntityException(TestRunResult.class.getSimpleName() + " : " + testRunResultId_);

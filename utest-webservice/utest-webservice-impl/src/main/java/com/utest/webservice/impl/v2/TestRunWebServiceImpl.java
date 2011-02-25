@@ -116,6 +116,18 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@PUT
+	@Path("/{id}/approveallresults/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_RUN_RESULT_APPROVE })
+	public Boolean approveAllResultsForTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_) throws Exception
+	{
+		testRunService.approveAllTestRunResultsForTestRun(testRunId_);
+		return Boolean.TRUE;
+	}
+
+	@PUT
 	@Path("/{id}/deactivate/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

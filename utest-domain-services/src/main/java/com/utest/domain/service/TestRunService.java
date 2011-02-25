@@ -151,4 +151,6 @@ public interface TestRunService
 			Integer selfAssignLimit, Integer originalVersionId, boolean autoAssignToTeam) throws Exception;
 
 	List<AccessRole> getTestingTeamMemberRolesForTestRun(Integer testRunId, Integer userId) throws Exception;
+
+	void approveAllTestRunResultsForTestRun(Integer testRunId) throws Exception;
 }
