@@ -129,6 +129,70 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
+	public TestRun cloneTestRun(final Integer fromTestRunId_, final boolean cloneAssignments_) throws Exception
+	{
+		final TestRun fromTestRun = getRequiredEntityById(TestRun.class, fromTestRunId_);
+		// clone test run
+		final TestRun toTestRun = new TestRun();
+		toTestRun.setTestRunStatusId(TestRunStatus.PENDING);
+		toTestRun.setTestCycleId(fromTestRun.getTestCycleId());
+		toTestRun.setProductId(fromTestRun.getProductId());
+		toTestRun.setName("Cloned on " + new Date() + " " + fromTestRun.getName());
+		toTestRun.setDescription(fromTestRun.getDescription());
+		toTestRun.setStartDate(fromTestRun.getStartDate());
+		toTestRun.setEndDate(null);
+		toTestRun.setSelfAssignAllowed(fromTestRun.isSelfAssignAllowed());
+		toTestRun.setSelfAssignLimit(fromTestRun.getSelfAssignLimit());
+		toTestRun.setSelfAssignPerEnvironment(fromTestRun.isSelfAssignPerEnvironment());
+		toTestRun.setAutoAssignToTeam(fromTestRun.isAutoAssignToTeam());
+		toTestRun.setEnvironmentProfileId(fromTestRun.getEnvironmentProfileId());
+		toTestRun.setTeamId(fromTestRun.getTeamId());
+		final Integer toTestRunId = dao.addAndReturnId(toTestRun);
+
+		// clone test cases
+		List<TestRunTestCase> oldTestCases = getTestRunTestCases(fromTestRunId_);
+		if (oldTestCases != null)
+		{
+			for (TestRunTestCase oldCase : oldTestCases)
+			{
+				addTestRunTestCase(toTestRunId, oldCase.getTestCaseVersionId(), oldCase.getPriorityId(), oldCase.getRunOrder(), oldCase.isBlocking(), oldCase.getTestSuiteId());
+			}
+		}
+		// clone assignments if requested
+		if (cloneAssignments_)
+		{
+			List<TestRunTestCaseAssignment> assignments = getTestRunAssignments(fromTestRunId_);
+			if (assignments != null)
+			{
+				List<TestRunTestCase> newTestCases = getTestRunTestCases(toTestRunId);
+				for (TestRunTestCaseAssignment oldAssignment : assignments)
+				{
+					TestRunTestCase newTestCase = getIncludedTestCase(newTestCases, oldAssignment.getTestCaseVersionId());
+					if (newTestCase != null)
+					{
+						addAssignment(newTestCase.getId(), oldAssignment.getTesterId());
+					}
+				}
+			}
+
+		}
+		// return newly created test run
+		return getTestRun(toTestRunId);
+	}
+
+	private TestRunTestCase getIncludedTestCase(List<TestRunTestCase> includedTestCases_, Integer testCaseVersionId_)
+	{
+		for (TestRunTestCase includedTestCase : includedTestCases_)
+		{
+			if (includedTestCase.getTestCaseVersionId().equals(testCaseVersionId_))
+			{
+				return includedTestCase;
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public List<TestRunTestCase> addTestCasesFromTestPlan(final Integer testRunId_, final Integer testPlanId_) throws Exception
 	{
 		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);

@@ -153,4 +153,6 @@ public interface TestRunService
 	List<AccessRole> getTestingTeamMemberRolesForTestRun(Integer testRunId, Integer userId) throws Exception;
 
 	void approveAllTestRunResultsForTestRun(Integer testRunId) throws Exception;
+
+	TestRun cloneTestRun(Integer fromTestRunId, boolean cloneAssignments) throws Exception;
 }
