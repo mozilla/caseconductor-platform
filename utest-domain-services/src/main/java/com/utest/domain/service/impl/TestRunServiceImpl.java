@@ -903,7 +903,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final TestRunResult result = getRequiredEntityById(TestRunResult.class, testRunResultId_);
 		if (!TestRunResultStatus.PASSED.equals(result.getTestRunResultStatusId()))
 		{
-			if (!TestRunStatus.ACTIVE.equals(result.getTestRunResultStatusId()))
+			if (!TestRunResultStatus.STARTED.equals(result.getTestRunResultStatusId()))
 			{
 				throw new TestCaseExecutionWithoutRestartException();
 			}
