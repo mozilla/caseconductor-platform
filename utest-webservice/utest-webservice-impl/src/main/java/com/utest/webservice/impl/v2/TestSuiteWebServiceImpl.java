@@ -211,7 +211,18 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 			throws Exception
 	{
 		final TestSuite testSuite = testSuiteService.addTestSuite(productId_, "true".equalsIgnoreCase(useLatestVersions_), name_, description_);
+		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getBaseUriBuilder());
+	}
 
+	@POST
+	@Path("/{id}/clone/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_SUITE_EDIT })
+	public TestSuiteInfo cloneTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_) throws Exception
+	{
+		final TestSuite testSuite = testSuiteService.cloneTestSuite(testSuiteId_);
 		return objectBuilderFactory.toInfo(TestSuiteInfo.class, testSuite, ui_.getBaseUriBuilder());
 	}
 

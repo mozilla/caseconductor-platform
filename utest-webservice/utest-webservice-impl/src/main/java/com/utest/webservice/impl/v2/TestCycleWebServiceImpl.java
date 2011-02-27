@@ -88,6 +88,19 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 		return objectBuilderFactory.toInfo(TestCycleInfo.class, testCycle, ui_.getBaseUriBuilder());
 	}
 
+	@POST
+	@Path("/{id}/clone/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_CYCLE_EDIT })
+	public TestCycleInfo cloneTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("cloneAssignments") final String cloneAssignments_)
+			throws Exception
+	{
+		final TestCycle testCycle = testCycleService.cloneTestCycle(testCycleId_, "true".equalsIgnoreCase(cloneAssignments_));
+		return objectBuilderFactory.toInfo(TestCycleInfo.class, testCycle, ui_.getBaseUriBuilder());
+	}
+
 	@PUT
 	@Path("/{id}/approveallresults/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

@@ -37,6 +37,7 @@ import com.utest.webservice.model.v2.TestRunResultSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunTestCaseAssignmentInfo;
 import com.utest.webservice.model.v2.TestRunTestCaseAssignmentSearchResultInfo;
+import com.utest.webservice.model.v2.TestSuiteInfo;
 import com.utest.webservice.model.v2.UserInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
@@ -134,5 +135,9 @@ public interface TestRunWebService
 	Boolean updateTestRunTeamMemberRoles(UriInfo ui, Integer productId, Integer userId, ArrayList<Integer> roleIds, Integer originalVersionId) throws Exception;
 
 	Boolean approveAllResultsForTestRun(UriInfo ui, Integer testRunId) throws Exception;
+
+	TestRunInfo cloneTestRun(UriInfo ui, Integer testRunId, String cloneAssignments) throws Exception;
+
+	List<TestSuiteInfo> getTestRunTestSuites(UriInfo ui, Integer testRunId) throws Exception;
 
 }

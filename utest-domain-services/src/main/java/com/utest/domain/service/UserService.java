@@ -96,4 +96,6 @@ public interface UserService
 	User closeUserAccount(Integer userId, Integer originalVersionId) throws Exception;
 
 	User confirmUserEmail(Integer userId, Integer originalVersionId) throws Exception;
+
+	boolean isUserInPermission(Integer userId, String permissionCode);
 }

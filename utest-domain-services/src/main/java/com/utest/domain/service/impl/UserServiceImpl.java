@@ -47,6 +47,9 @@ import com.utest.util.EncodeUtil;
 public class UserServiceImpl extends BaseServiceImpl implements UserService
 {
 	private final TypelessDAO	dao;
+	// permission assigned to all users by default
+	// configured in spring context
+	private List<Integer>		defaultPermissions;
 
 	/**
 	 * Default constructor
@@ -296,11 +299,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		role.setSortOrder(0);
 		final Integer roleId = dao.addAndReturnId(role);
 		role = getRequiredEntityById(AccessRole.class, roleId);
+		// add passed permissions
 		for (final Integer permissionId : permissionIds_)
 		{
 			addRolePermission(roleId, permissionId, role.getVersion());
 		}
-		return getRequiredEntityById(AccessRole.class, roleId);
+		return role;
 	}
 
 	@Override
@@ -465,19 +469,23 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		dao.merge(user);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Permission> getRolePermissions(final Integer roleId_)
 	{
 		Search search = new Search(RolePermission.class);
 		search.addField("permissionId");
 		search.addFilterEqual("accessRoleId", roleId_);
-		final List<?> permissionIdList = dao.search(RolePermission.class, search);
+		final List permissionIdList = dao.search(RolePermission.class, search);
+		// add default permissions
+		permissionIdList.addAll(getDefaultPermissions());
 		search = new Search(Permission.class);
 		search.addFilterIn("id", permissionIdList);
 		final List<Permission> list = dao.search(Permission.class, search);
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Permission> getUserPermissions(final Integer userId_)
 	{
@@ -488,7 +496,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		search = new Search(RolePermission.class);
 		search.addField("permissionId");
 		search.addFilterIn("accessRoleId", roleIdList);
-		final List<?> permissionIdList = dao.search(RolePermission.class, search);
+		final List permissionIdList = dao.search(RolePermission.class, search);
+		// add default permissions
+		permissionIdList.addAll(getDefaultPermissions());
 		search = new Search(Permission.class);
 		search.addFilterIn("id", permissionIdList);
 		final List<Permission> list = dao.search(Permission.class, search);
@@ -515,6 +525,20 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		search.addFilterEqual("email", email_);
 		final List<?> list = dao.search(User.class, search);
 		return !list.isEmpty();
+	}
+
+	@Override
+	public boolean isUserInPermission(final Integer userId_, final String permissionCode_)
+	{
+		List<Permission> permissions = getUserPermissions(userId_);
+		for (Permission permission : permissions)
+		{
+			if (permission.getPermissionCode().equals(permissionCode_))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -577,6 +601,16 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	{
 		final AccessRole role = getRequiredEntityById(AccessRole.class, roleId_);
 		return role;
+	}
+
+	public void setDefaultPermissions(List<Integer> defaultPermissions)
+	{
+		this.defaultPermissions = defaultPermissions;
+	}
+
+	public List<Integer> getDefaultPermissions()
+	{
+		return defaultPermissions;
 	}
 
 }

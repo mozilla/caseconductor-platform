@@ -92,6 +92,39 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	}
 
 	@Override
+	public TestCycle cloneTestCycle(final Integer fromTestCycleId_, final boolean cloneAssignments_) throws Exception
+	{
+		final TestCycle fromTestCycle = getRequiredEntityById(TestCycle.class, fromTestCycleId_);
+		// clone test cycle
+		final TestCycle toTestCycle = new TestCycle();
+		toTestCycle.setTestCycleStatusId(TestCycleStatus.PENDING);
+		toTestCycle.setProductId(fromTestCycle.getProductId());
+		toTestCycle.setName("Cloned on " + new Date() + " " + fromTestCycle.getName());
+		toTestCycle.setDescription(fromTestCycle.getDescription());
+		toTestCycle.setStartDate(new Date());
+		toTestCycle.setEndDate(null);
+		toTestCycle.setCommunityAccessAllowed(fromTestCycle.isCommunityAccessAllowed());
+		toTestCycle.setCommunityAuthoringAllowed(fromTestCycle.isCommunityAuthoringAllowed());
+		toTestCycle.setEnvironmentProfileId(fromTestCycle.getEnvironmentProfileId());
+		toTestCycle.setTeamId(fromTestCycle.getTeamId());
+
+		final Integer toTestCycleId = dao.addAndReturnId(toTestCycle);
+		dao.flush();
+
+		// clone test runs
+		List<TestRun> oldTestRuns = getTestRunsForTestCycle(fromTestCycleId_);
+		if (oldTestRuns != null)
+		{
+			for (TestRun oldTestRun : oldTestRuns)
+			{
+				testRunService.cloneTestRun(oldTestRun.getId(), toTestCycleId, cloneAssignments_);
+			}
+		}
+		// return newly created test cycle
+		return getTestCycle(toTestCycleId);
+	}
+
+	@Override
 	public List<User> getTestingTeamForTestCycle(final Integer testCycleId_) throws Exception
 	{
 		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);

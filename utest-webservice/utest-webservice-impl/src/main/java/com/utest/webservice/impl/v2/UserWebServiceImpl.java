@@ -65,6 +65,8 @@ import com.utest.webservice.util.SessionUtil;
 public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebService
 {
 	private final UserService	userService;
+	// comes from maven settings
+	private Integer				loginExpirationSeconds;
 
 	public UserWebServiceImpl(final ObjectBuilderFactory objectBuildFactory, final UserService userService)
 	{
@@ -89,7 +91,10 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 		userService.login(authInfo, sessionId);
 
 		String token = Base64.encodeObject(SecurityContextHolder.getContext().getAuthentication(), Base64.GZIP | Base64.DONT_BREAK_LINES);
-		context.getHttpServletResponse().addCookie(new Cookie(SessionUtil.AUTH_TOKEN, token));
+		Cookie loginCookie = new Cookie(SessionUtil.AUTH_TOKEN, token);
+		// time to live
+		loginCookie.setMaxAge(getLoginExpirationSeconds());
+		context.getHttpServletResponse().addCookie(loginCookie);
 		return Boolean.TRUE;
 	}
 
@@ -443,6 +448,16 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 		final List<PermissionInfo> permissionsInfo = objectBuilderFactory.toInfo(PermissionInfo.class, permissions, ui_.getBaseUriBuilder());
 		return permissionsInfo;
 
+	}
+
+	public void setLoginExpirationSeconds(Integer loginExpirationSeconds)
+	{
+		this.loginExpirationSeconds = loginExpirationSeconds;
+	}
+
+	public Integer getLoginExpirationSeconds()
+	{
+		return loginExpirationSeconds;
 	}
 
 }

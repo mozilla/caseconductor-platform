@@ -63,4 +63,6 @@ public interface TestSuiteWebService
 	IncludedTestCaseInfo updateTestSuiteTestCase(UriInfo ui, Integer includedTestCaseId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, String blocking,
 			Integer originalVersionId) throws Exception;
 
+	TestSuiteInfo cloneTestSuite(UriInfo ui, Integer testSuiteId) throws Exception;
+
 }

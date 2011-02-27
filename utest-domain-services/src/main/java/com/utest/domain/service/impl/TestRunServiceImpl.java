@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.security.access.AccessDeniedException;
+
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.AccessRole;
@@ -30,6 +32,7 @@ import com.utest.domain.ApprovalStatus;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentProfile;
+import com.utest.domain.Permission;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.Team;
@@ -57,6 +60,7 @@ import com.utest.domain.service.TestCaseService;
 import com.utest.domain.service.TestPlanService;
 import com.utest.domain.service.TestRunService;
 import com.utest.domain.service.TestSuiteService;
+import com.utest.domain.service.UserService;
 import com.utest.exception.ActivatingIncompleteEntityException;
 import com.utest.exception.ApprovingIncompleteEntityException;
 import com.utest.exception.AssigningMultileVersionsOfSameEntityException;
@@ -66,6 +70,7 @@ import com.utest.exception.IncludingMultileVersionsOfSameEntityException;
 import com.utest.exception.IncludingNotActivatedEntityException;
 import com.utest.exception.InvalidUserException;
 import com.utest.exception.NoTeamDefinitionException;
+import com.utest.exception.SelfAssignmentException;
 import com.utest.exception.TestCaseExecutionBlockedException;
 import com.utest.exception.TestCaseExecutionWithoutRestartException;
 import com.utest.exception.TestCycleClosedException;
@@ -81,12 +86,13 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	private final TestSuiteService		testSuiteService;
 	private final TestCaseService		testCaseService;
 	private final TeamService			teamService;
+	private final UserService			userService;
 
 	/**
 	 * Default constructor
 	 */
 	public TestRunServiceImpl(final TypelessDAO dao, final TestPlanService testPlanService, final TestSuiteService testSuiteService, final TestCaseService testCaseService,
-			final EnvironmentService environmentService, final TeamService teamService)
+			final EnvironmentService environmentService, final TeamService teamService, final UserService userService)
 	{
 		super(dao);
 		this.dao = dao;
@@ -95,6 +101,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		this.testSuiteService = testSuiteService;
 		this.testCaseService = testCaseService;
 		this.teamService = teamService;
+		this.userService = userService;
 	}
 
 	@Override
@@ -131,11 +138,24 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public TestRun cloneTestRun(final Integer fromTestRunId_, final boolean cloneAssignments_) throws Exception
 	{
+		return cloneTestRun(fromTestRunId_, null, cloneAssignments_);
+	}
+
+	@Override
+	public TestRun cloneTestRun(final Integer fromTestRunId_, final Integer newTestCycleId_, final boolean cloneAssignments_) throws Exception
+	{
 		final TestRun fromTestRun = getRequiredEntityById(TestRun.class, fromTestRunId_);
 		// clone test run
 		final TestRun toTestRun = new TestRun();
 		toTestRun.setTestRunStatusId(TestRunStatus.PENDING);
-		toTestRun.setTestCycleId(fromTestRun.getTestCycleId());
+		if (newTestCycleId_ == null)
+		{
+			toTestRun.setTestCycleId(fromTestRun.getTestCycleId());
+		}
+		else
+		{
+			toTestRun.setTestCycleId(newTestCycleId_);
+		}
 		toTestRun.setProductId(fromTestRun.getProductId());
 		toTestRun.setName("Cloned on " + new Date() + " " + fromTestRun.getName());
 		toTestRun.setDescription(fromTestRun.getDescription());
@@ -561,10 +581,19 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 
 	private TestRunTestCaseAssignment addAssignmentNoResults(final Integer testRunTestCaseId_, final Integer testerId_) throws Exception
 	{
+		// everyone has self assign permission by default, so need to check if
+		// user has permission to assign to others
+		checkAssignmentPermission(testerId_);
+
 		final TestRunTestCase includedTestCase = getRequiredEntityById(TestRunTestCase.class, testRunTestCaseId_);
-		final User tester = getRequiredEntityById(User.class, testerId_);
 		final TestRun testRun = getRequiredEntityById(TestRun.class, includedTestCase.getTestRunId());
+		final User tester = getRequiredEntityById(User.class, testerId_);
 		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
+		// prevent assigning to self if on self-assigned allowed
+		if (getCurrentUserId().equals(testerId_) && !testRun.isSelfAssignAllowed())
+		{
+			throw new SelfAssignmentException(TestCaseVersion.class.getSimpleName() + " : " + includedTestCase.getTestCaseId() + " / Tester: " + testerId_);
+		}
 		// check that users are selected from community users or users from the
 		// matching company
 		List<Integer> userIds = new ArrayList<Integer>();
@@ -573,7 +602,6 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		{
 			throw new UnsupportedTeamSelectionException("Selecting testers from other company.");
 		}
-
 		// prevent if another version of the same test case already included
 		final Search search = new Search(TestRunTestCaseAssignment.class);
 		search.addFilterEqual("testerId", testerId_);
@@ -583,7 +611,6 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		{
 			throw new AssigningMultileVersionsOfSameEntityException(TestCaseVersion.class.getSimpleName() + " : " + includedTestCase.getTestCaseId() + " / Tester: " + testerId_);
 		}
-
 		final TestRunTestCaseAssignment assignment = new TestRunTestCaseAssignment();
 		assignment.setTestRunId(testRun.getId());
 		assignment.setProductId(testRun.getProductId());
@@ -596,6 +623,14 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final Integer id = dao.addAndReturnId(assignment);
 		return getRequiredEntityById(TestRunTestCaseAssignment.class, id);
 
+	}
+
+	private void checkAssignmentPermission(Integer testerId_) throws AccessDeniedException
+	{
+		if (!getCurrentUserId().equals(testerId_) && !userService.isUserInPermission(getCurrentUserId(), Permission.TEST_RUN_TEST_CASE_ASSIGN))
+		{
+			throw new AccessDeniedException("User doesn't have permissions to assign test cases.");
+		}
 	}
 
 	private void addResultsForAssignment(final TestRunTestCaseAssignment assignment_) throws Exception
@@ -742,6 +777,23 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final Search search = new Search(TestRunTestCase.class);
 		search.addFilterEqual("testRunId", testRunId_);
 		return dao.search(TestRunTestCase.class, search);
+	}
+
+	@Override
+	public List<TestSuite> getTestRunTestSuites(final Integer testRunId_) throws Exception
+	{
+		List<TestRunTestCase> includedTestCases = getTestRunTestCases(testRunId_);
+		List<Integer> testSuiteIds = new ArrayList<Integer>();
+		for (TestRunTestCase includedTestCase : includedTestCases)
+		{
+			if (includedTestCase.getTestSuiteId() != null)
+			{
+				testSuiteIds.add(includedTestCase.getTestSuiteId());
+			}
+		}
+		final Search search = new Search(TestSuite.class);
+		search.addFilterIn("id", testSuiteIds);
+		return dao.search(TestSuite.class, search);
 	}
 
 	@Override
@@ -936,6 +988,10 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final TestRunResult result = getRequiredEntityById(TestRunResult.class, testRunResultId_);
 		if (!TestRunResultStatus.INVALIDATED.equals(result.getTestRunResultStatusId()))
 		{
+			if (!TestRunResultStatus.STARTED.equals(result.getTestRunResultStatusId()))
+			{
+				throw new TestCaseExecutionWithoutRestartException();
+			}
 			// make sure user executing the result is the same as assigned
 			if (!getCurrentUserId().equals(result.getTesterId()))
 			{
@@ -967,7 +1023,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final TestRunResult result = getRequiredEntityById(TestRunResult.class, testRunResultId_);
 		if (!TestRunResultStatus.PASSED.equals(result.getTestRunResultStatusId()))
 		{
-			if (!TestRunStatus.ACTIVE.equals(result.getTestRunResultStatusId()))
+			if (!TestRunResultStatus.STARTED.equals(result.getTestRunResultStatusId()))
 			{
 				throw new TestCaseExecutionWithoutRestartException();
 			}

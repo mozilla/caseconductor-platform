@@ -65,4 +65,6 @@ public interface TestSuiteService
 
 	void deleteTestSuite(Integer testSuiteId, Integer originalVersionId) throws Exception;
 
+	TestSuite cloneTestSuite(Integer fromTestSuiteId) throws Exception;
+
 }

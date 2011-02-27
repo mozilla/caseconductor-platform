@@ -30,6 +30,7 @@ import com.utest.domain.TestRun;
 import com.utest.domain.TestRunResult;
 import com.utest.domain.TestRunTestCase;
 import com.utest.domain.TestRunTestCaseAssignment;
+import com.utest.domain.TestSuite;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
@@ -155,4 +156,8 @@ public interface TestRunService
 	void approveAllTestRunResultsForTestRun(Integer testRunId) throws Exception;
 
 	TestRun cloneTestRun(Integer fromTestRunId, boolean cloneAssignments) throws Exception;
+
+	TestRun cloneTestRun(Integer fromTestRunId, Integer newTestCycleId, boolean cloneAssignments) throws Exception;
+
+	List<TestSuite> getTestRunTestSuites(Integer testRunId) throws Exception;
 }

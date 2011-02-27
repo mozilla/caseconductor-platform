@@ -70,4 +70,6 @@ public interface TestCycleService
 	List<AccessRole> getTestingTeamMemberRolesForTestCycle(Integer testCycleId, Integer userId) throws Exception;
 
 	void approveAllTestRunResultsForTestCycle(Integer testCycleId) throws Exception;
+
+	TestCycle cloneTestCycle(Integer fromTestCycleId, boolean cloneAssignments) throws Exception;
 }

@@ -27,6 +27,12 @@
 
 	<bean id="userService" class="com.utest.domain.service.impl.UserServiceImpl">
 		<constructor-arg ref="typelessDao" />
+        <property name="defaultPermissions">
+		     <list value-type="java.lang.Integer">
+		     	<!-- self assign work -->
+                <value>37</value>
+			</list>
+        </property>
 	</bean>
 
 	<bean id="teamService" class="com.utest.domain.service.impl.TeamServiceImpl">
@@ -74,6 +80,7 @@
 		<constructor-arg ref="testSuiteService" />
 		<constructor-arg ref="testCaseService" />
 		<constructor-arg ref="teamService" />
+		<constructor-arg ref="userService" />
 	</bean>
 
 	<bean id="auditService" class="com.utest.domain.service.impl.AuditServiceImpl">

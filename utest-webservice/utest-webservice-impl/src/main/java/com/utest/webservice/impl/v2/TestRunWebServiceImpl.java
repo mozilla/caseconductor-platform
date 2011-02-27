@@ -48,6 +48,7 @@ import com.utest.domain.TestRun;
 import com.utest.domain.TestRunResult;
 import com.utest.domain.TestRunTestCase;
 import com.utest.domain.TestRunTestCaseAssignment;
+import com.utest.domain.TestSuite;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
@@ -66,6 +67,7 @@ import com.utest.webservice.model.v2.TestRunResultSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunTestCaseAssignmentInfo;
 import com.utest.webservice.model.v2.TestRunTestCaseAssignmentSearchResultInfo;
+import com.utest.webservice.model.v2.TestSuiteInfo;
 import com.utest.webservice.model.v2.UserInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
@@ -196,6 +198,19 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 		return objectBuilderFactory.toInfo(TestRunInfo.class, testRun, ui_.getBaseUriBuilder());
 	}
 
+	@POST
+	@Path("/{id}/clone/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_RUN_EDIT })
+	public TestRunInfo cloneTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @FormParam("cloneAssignments") final String cloneAssignments_)
+			throws Exception
+	{
+		final TestRun testRun = testRunService.cloneTestRun(testRunId_, "true".equalsIgnoreCase(cloneAssignments_));
+		return objectBuilderFactory.toInfo(TestRunInfo.class, testRun, ui_.getBaseUriBuilder());
+	}
+
 	@DELETE
 	@Path("/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -248,6 +263,18 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	// /////////// TEST RUN TEST CASES RELATED //////////////
+
+	@GET
+	@Path("/{id}/testsuites/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_RUN_VIEW)
+	public List<TestSuiteInfo> getTestRunTestSuites(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_) throws Exception
+	{
+		final List<TestSuite> includedTestSuites = testRunService.getTestRunTestSuites(testRunId_);
+		return objectBuilderFactory.toInfo(TestSuiteInfo.class, includedTestSuites, ui_.getBaseUriBuilder());
+	}
 
 	@GET
 	@Path("/{id}/includedtestcases/")
@@ -393,7 +420,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_RUN_TEST_CASE_ASSIGN })
+	@Secured( { Permission.TEST_RUN_TEST_CASE_ASSIGN, Permission.TEST_RUN_TEST_CASE_SELF_ASSIGN })
 	public TestRunTestCaseAssignmentInfo createTestRunTestCaseAssignment(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
 			@FormParam("testerId") final Integer testerId_) throws Exception
 	{

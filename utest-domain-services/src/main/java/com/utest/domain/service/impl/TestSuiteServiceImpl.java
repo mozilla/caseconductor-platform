@@ -78,6 +78,32 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
+	public TestSuite cloneTestSuite(final Integer fromTestSuiteId_) throws Exception
+	{
+		final TestSuite fromTestSuite = getRequiredEntityById(TestSuite.class, fromTestSuiteId_);
+		// clone test Suite
+		final TestSuite toTestSuite = new TestSuite();
+		toTestSuite.setUseLatestVersions(fromTestSuite.isUseLatestVersions());
+		toTestSuite.setProductId(fromTestSuite.getProductId());
+		toTestSuite.setName(fromTestSuite.getName());
+		toTestSuite.setDescription(fromTestSuite.getDescription());
+		toTestSuite.setEnvironmentProfileId(fromTestSuite.getEnvironmentProfileId());
+		final Integer toTestSuiteId = dao.addAndReturnId(toTestSuite);
+
+		// clone test cases
+		List<TestSuiteTestCase> oldTestCases = getTestSuiteTestCases(fromTestSuiteId_);
+		if (oldTestCases != null)
+		{
+			for (TestSuiteTestCase oldCase : oldTestCases)
+			{
+				addTestSuiteTestCase(toTestSuiteId, oldCase.getTestCaseVersionId(), oldCase.getPriorityId(), oldCase.getRunOrder(), oldCase.isBlocking());
+			}
+		}
+		// return newly created test suite
+		return getTestSuite(toTestSuiteId);
+	}
+
+	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForTestSuite(final Integer testSuiteId_) throws Exception
 	{
 		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
