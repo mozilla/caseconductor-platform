@@ -35,6 +35,9 @@
                         <build.number.default.revision>dev</build.number.default.revision>
 
 				<!-- System -->
+				<!-- Web Services -->
+				<login.expiration.seconds>3600</login.expiration.seconds>
+
 				<!-- Database -->
 				<jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
 				<jdbc.url>jdbc:mysql://localhost:3306/utest30</jdbc.url>
