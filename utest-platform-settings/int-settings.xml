@@ -40,7 +40,7 @@
 
 				<!-- Database -->
 				<jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
-				<jdbc.url>jdbc:mysql://localhost:3306/utest30</jdbc.url>
+				<jdbc.url>jdbc:mysql://localhost:3306/tcm</jdbc.url>
 				<jdbc.username>root</jdbc.username>
 				<jdbc.password></jdbc.password>
 			</properties>
