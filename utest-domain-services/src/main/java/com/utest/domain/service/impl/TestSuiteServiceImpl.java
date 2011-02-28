@@ -87,6 +87,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 		toTestSuite.setProductId(fromTestSuite.getProductId());
 		toTestSuite.setName(fromTestSuite.getName());
 		toTestSuite.setDescription(fromTestSuite.getDescription());
+		toTestSuite.setTestSuiteStatusId(TestSuiteStatus.PENDING);
 		toTestSuite.setEnvironmentProfileId(fromTestSuite.getEnvironmentProfileId());
 		final Integer toTestSuiteId = dao.addAndReturnId(toTestSuite);
 
