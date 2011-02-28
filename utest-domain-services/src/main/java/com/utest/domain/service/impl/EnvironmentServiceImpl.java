@@ -334,6 +334,45 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		return typedEnvironments;
 	}
 
+	/**
+	 * Intersects matching groups from 2 profiles.
+	 * 
+	 * TODO - may need to apply more advanced logic in the future. Right now
+	 * only compares group ids.
+	 * 
+	 */
+	@Override
+	public EnvironmentProfile intersectEnvironmentProfiles(final Integer profileId1_, final Integer profileId2_) throws Exception
+	{
+		final EnvironmentProfile profile1 = getRequiredEntityById(EnvironmentProfile.class, profileId1_);
+		final EnvironmentProfile profile2 = getRequiredEntityById(EnvironmentProfile.class, profileId2_);
+
+		final List<EnvironmentGroup> groups1 = getEnvironmentGroupsForProfile(profile1.getId());
+		final List<EnvironmentGroup> groups2 = getEnvironmentGroupsForProfile(profile2.getId());
+		final List<Integer> resultGroupIds = new ArrayList<Integer>();
+		// intersect profile groups
+		for (final EnvironmentGroup group1 : groups1)
+		{
+			for (final EnvironmentGroup group2 : groups2)
+			{
+				if (group1.getId().equals(group2.getId()))
+				{
+					resultGroupIds.add(group2.getId());
+				}
+			}
+		}
+		// add intersected profile
+		if (resultGroupIds.isEmpty())
+		{
+			return null;
+		}
+		else
+		{
+			return addEnvironmentProfile(profile1.getCompanyId(), "Intersected profiles: " + profileId1_ + " and " + profileId2_, "Intersected groups: " + groups1.toString()
+					+ " and " + groups2.toString(), resultGroupIds);
+		}
+	}
+
 	@Override
 	public EnvironmentProfile addEnvironmentProfile(final Integer companyId_, final String name_, final String description_, final List<Integer> environmentGroupIds_)
 			throws Exception

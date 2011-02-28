@@ -141,4 +141,6 @@ public interface EnvironmentService
 
 	Tag saveTag(Integer tagId, String tag, Integer originalVersionId) throws Exception;
 
+	EnvironmentProfile intersectEnvironmentProfiles(Integer profileId1, Integer profileId2) throws Exception;
+
 }

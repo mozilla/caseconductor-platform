@@ -472,18 +472,31 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		includedTestCase.setRunOrder(runOrder_);
 		includedTestCase.setBlocking(isBlocking_);
 		includedTestCase.setTestSuiteId(testSuiteId_);
-		// TODO - determine what takes precedence TestCase, TestSuite or
-		// intersection or both
-		if (testRun.getEnvironmentProfileId() != null)
+		if (testRun.getEnvironmentProfileId() != null && testCaseVersion.getEnvironmentProfileId() == null)
 		{
 			includedTestCase.setEnvironmentProfileId(testRun.getEnvironmentProfileId());
 		}
-		else
+		else if (testRun.getEnvironmentProfileId() == null && testCaseVersion.getEnvironmentProfileId() != null)
 		{
 			includedTestCase.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
-
 		}
-
+		else if (testRun.getEnvironmentProfileId() != null && testCaseVersion.getEnvironmentProfileId() != null)
+		{
+			if (testRun.getEnvironmentProfileId().equals(testCaseVersion.getEnvironmentProfileId()))
+			{
+				includedTestCase.setEnvironmentProfileId(testRun.getEnvironmentProfileId());
+			}
+			else
+			{
+				// if no matching groups were found returns null.
+				EnvironmentProfile intersectedProfile = environmentService.intersectEnvironmentProfiles(testRun.getEnvironmentProfileId(), testCaseVersion
+						.getEnvironmentProfileId());
+				if (intersectedProfile != null)
+				{
+					includedTestCase.setEnvironmentProfileId(intersectedProfile.getId());
+				}
+			}
+		}
 		includedTestCase = dao.merge(includedTestCase);
 		//
 		autoAssignTestCaseToTeam(testRun, includedTestCase);

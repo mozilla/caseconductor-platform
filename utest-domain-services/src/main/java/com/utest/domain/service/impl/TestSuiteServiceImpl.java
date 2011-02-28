@@ -190,15 +190,30 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 		includedTestCase.setPriorityId(priorityId_);
 		includedTestCase.setRunOrder(runOrder_);
 		includedTestCase.setBlocking(blocking_);
-		// TODO - how do profiles intersect? test case or test suite takes
-		// precedent? Do we need to take intersection of both groups?
-		if (testSuite.getEnvironmentProfileId() != null)
+		if (testSuite.getEnvironmentProfileId() != null && testCaseVersion.getEnvironmentProfileId() == null)
 		{
 			includedTestCase.setEnvironmentProfileId(testSuite.getEnvironmentProfileId());
 		}
-		else
+		else if (testSuite.getEnvironmentProfileId() == null && testCaseVersion.getEnvironmentProfileId() != null)
 		{
 			includedTestCase.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
+		}
+		else if (testSuite.getEnvironmentProfileId() != null && testCaseVersion.getEnvironmentProfileId() != null)
+		{
+			if (testSuite.getEnvironmentProfileId().equals(testCaseVersion.getEnvironmentProfileId()))
+			{
+				includedTestCase.setEnvironmentProfileId(testSuite.getEnvironmentProfileId());
+			}
+			else
+			{
+				// if no matching groups were found returns null.
+				EnvironmentProfile intersectedProfile = environmentService.intersectEnvironmentProfiles(testSuite.getEnvironmentProfileId(), testCaseVersion
+						.getEnvironmentProfileId());
+				if (intersectedProfile != null)
+				{
+					includedTestCase.setEnvironmentProfileId(intersectedProfile.getId());
+				}
+			}
 		}
 		final Integer id = dao.addAndReturnId(includedTestCase);
 		return getRequiredEntityById(TestSuiteTestCase.class, id);

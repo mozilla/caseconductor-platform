@@ -12,7 +12,11 @@
 		
 	<bean id="genericDao" class="com.utest.dao.GenericHibernateDAOImpl" scope="prototype" />
 	
-	<bean id="typelessDao" class="com.utest.dao.TypelessHibernateDAOImpl" />
+	<bean id="typelessDao" class="com.utest.dao.TypelessHibernateDAOImpl" >
+		<property name="permanentDeletionEnabled">
+			<value type="java.lang.Boolean" >${permanent.deletion.enabled}</value>
+		</property>
+	</bean>
 	
 	<bean id="cachedContextManager" class="com.utest.domain.service.cache.CachedContextManager">
 	</bean>

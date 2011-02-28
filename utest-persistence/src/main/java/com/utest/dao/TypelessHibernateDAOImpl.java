@@ -57,6 +57,7 @@ import com.utest.domain.util.DomainUtil;
  */
 public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements TypelessDAO
 {
+	private Boolean	permanentDeletionEnabled;
 
 	@Autowired
 	@Override
@@ -884,5 +885,15 @@ public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements Typele
 			return " NOT IN ";
 		}
 		return String.valueOf(operator);
+	}
+
+	public void setPermanentDeletionEnabled(Boolean permanentDeletionEnabled)
+	{
+		this.permanentDeletionEnabled = permanentDeletionEnabled;
+	}
+
+	public Boolean getPermanentDeletionEnabled()
+	{
+		return permanentDeletionEnabled;
 	}
 }
