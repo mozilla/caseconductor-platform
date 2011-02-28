@@ -1,0 +1,19 @@
+<settings xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+	  http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+	<!-- This settings.xml file must be placed in the .m2/ folder -->
+	<profiles>
+		<profile>
+			<id>properties-to-inject</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<!-- Web Services -->
+				<login.expiration.seconds>3600</login.expiration.seconds>
+				<permanent.deletion.enabled>true</permanent.deletion.enabled>
+			</properties>
+		</profile>
+	</profiles>
+</settings>
