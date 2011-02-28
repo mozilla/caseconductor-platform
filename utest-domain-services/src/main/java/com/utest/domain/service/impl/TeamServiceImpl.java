@@ -240,7 +240,7 @@ public class TeamServiceImpl extends BaseServiceImpl implements TeamService
 			throw new InvalidTeamMemberException("User: " + userId_ + ", Team: " + teamId_);
 		}
 		final AccessRole role = getRequiredEntityById(AccessRole.class, roleId_);
-		final Search search = new Search(UserRole.class);
+		final Search search = new Search(TeamUserRole.class);
 		search.addFilterEqual("accessRoleId", role.getId());
 		search.addFilterEqual("userId", userId_);
 		search.addFilterEqual("teamId", teamId_);
