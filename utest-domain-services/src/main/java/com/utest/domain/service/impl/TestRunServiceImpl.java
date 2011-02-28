@@ -63,7 +63,6 @@ import com.utest.domain.service.TestSuiteService;
 import com.utest.domain.service.UserService;
 import com.utest.exception.ActivatingIncompleteEntityException;
 import com.utest.exception.ApprovingIncompleteEntityException;
-import com.utest.exception.AssigningMultileVersionsOfSameEntityException;
 import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingActivatedEntityException;
 import com.utest.exception.IncludingMultileVersionsOfSameEntityException;
@@ -620,21 +619,28 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		search.addFilterEqual("testerId", testerId_);
 		search.addFilterEqual("testRunTestCaseId", testRunTestCaseId_);
 		final List<TestRunTestCaseAssignment> foundItems = dao.search(TestRunTestCaseAssignment.class, search);
-		if ((foundItems != null) && !foundItems.isEmpty())
+		if ((foundItems == null) || foundItems.isEmpty())
 		{
-			throw new AssigningMultileVersionsOfSameEntityException(TestCaseVersion.class.getSimpleName() + " : " + includedTestCase.getTestCaseId() + " / Tester: " + testerId_);
+			// throw new
+			// AssigningMultileVersionsOfSameEntityException(TestCaseVersion.class.getSimpleName()
+			// + " : " + includedTestCase.getTestCaseId() + " / Tester: " +
+			// testerId_);
+			final TestRunTestCaseAssignment assignment = new TestRunTestCaseAssignment();
+			assignment.setTestRunId(testRun.getId());
+			assignment.setProductId(testRun.getProductId());
+			assignment.setTestCaseId(includedTestCase.getTestCaseId());
+			assignment.setTestCaseVersionId(includedTestCase.getTestCaseVersionId());
+			assignment.setTestRunTestCaseId(includedTestCase.getId());
+			assignment.setTestSuiteId(includedTestCase.getTestSuiteId());
+			assignment.setTesterId(tester.getId());
+			assignment.setEnvironmentProfileId(includedTestCase.getEnvironmentProfileId());
+			final Integer id = dao.addAndReturnId(assignment);
+			return getRequiredEntityById(TestRunTestCaseAssignment.class, id);
 		}
-		final TestRunTestCaseAssignment assignment = new TestRunTestCaseAssignment();
-		assignment.setTestRunId(testRun.getId());
-		assignment.setProductId(testRun.getProductId());
-		assignment.setTestCaseId(includedTestCase.getTestCaseId());
-		assignment.setTestCaseVersionId(includedTestCase.getTestCaseVersionId());
-		assignment.setTestRunTestCaseId(includedTestCase.getId());
-		assignment.setTestSuiteId(includedTestCase.getTestSuiteId());
-		assignment.setTesterId(tester.getId());
-		assignment.setEnvironmentProfileId(includedTestCase.getEnvironmentProfileId());
-		final Integer id = dao.addAndReturnId(assignment);
-		return getRequiredEntityById(TestRunTestCaseAssignment.class, id);
+		else
+		{
+			return foundItems.get(0);
+		}
 
 	}
 
