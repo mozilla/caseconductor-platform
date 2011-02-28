@@ -24,6 +24,15 @@ something like this to your .bashrc::
 
     export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home"
 
+There are some required Maven settings for a successful build: copy
+``deploy-config/settings.xml`` to ``~/.m2/settings.xml`` (create ``~/.m2/``
+if needed) to get these settings in place (if you already have a
+``~/.m2/settings.xml`` you'll probably want to integrate these settings into
+it rather than overwriting it)::
+
+    $ mkdir ~/.m2
+    $ cp $TCMPLATFORM/deploy-config/settings.xml ~/.m2/
+
 Now build the project::
 
     $ cd $TCMPLATFORM; mvn clean install
