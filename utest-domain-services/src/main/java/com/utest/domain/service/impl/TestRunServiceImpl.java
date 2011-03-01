@@ -39,6 +39,7 @@ import com.utest.domain.Team;
 import com.utest.domain.TestCaseStatus;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.TestCycle;
+import com.utest.domain.TestCycleStatus;
 import com.utest.domain.TestPlan;
 import com.utest.domain.TestPlanStatus;
 import com.utest.domain.TestPlanTestSuite;
@@ -357,13 +358,13 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		{
 			environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run : " + testRunId_, "Included groups: "
 					+ environmentGroupIds_.toString(), environmentGroupIds_);
+			testRun.setEnvironmentProfileId(environmentProfile.getId());
 		}
 		// or update existing profile
 		else
 		{
 			environmentService.saveEnvironmentGroupsForProfile(testRun.getEnvironmentProfileId(), environmentGroupIds_);
 		}
-		testRun.setEnvironmentProfileId(environmentProfile.getId());
 		testRun.setVersion(originalVersionId_);
 		dao.merge(testRun);
 	}
@@ -386,9 +387,20 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		}
 		// update environment profile
 		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
-		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run test case: " + testRunTestCaseId_,
-				"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
-		testRunTestCase.setEnvironmentProfileId(environmentProfile.getId());
+
+		// create new one if still uses parent's profile
+		if ((testRun.getEnvironmentProfileId() != null && testRunTestCase.getEnvironmentProfileId() == testRun.getEnvironmentProfileId())
+				|| testRunTestCase.getEnvironmentProfileId() == null)
+		{
+			final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run test case: " + testRunTestCaseId_,
+					"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
+			testRunTestCase.setEnvironmentProfileId(environmentProfile.getId());
+		}
+		// or update existing profile
+		else
+		{
+			environmentService.saveEnvironmentGroupsForProfile(testRunTestCase.getEnvironmentProfileId(), environmentGroupIds_);
+		}
 		testRunTestCase.setVersion(originalVersionId_);
 		dao.merge(testRunTestCase);
 	}
@@ -412,9 +424,19 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		}
 		// update environment profile
 		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
-		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for assignment: " + assignmentId_,
-				"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
-		assignment.setEnvironmentProfileId(environmentProfile.getId());
+		// create new one if still uses parent's profile
+		if ((testRunTestCase.getEnvironmentProfileId() != null && assignment.getEnvironmentProfileId() == testRunTestCase.getEnvironmentProfileId())
+				|| assignment.getEnvironmentProfileId() == null)
+		{
+			final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for assignment: " + assignmentId_,
+					"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
+			assignment.setEnvironmentProfileId(environmentProfile.getId());
+		}
+		// or update existing profile
+		else
+		{
+			environmentService.saveEnvironmentGroupsForProfile(assignment.getEnvironmentProfileId(), environmentGroupIds_);
+		}
 		assignment.setVersion(originalVersionId_);
 		dao.merge(assignment);
 
@@ -1244,7 +1266,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			{
 				// prevent activating if parent test cycle is not activated
 				final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testRun.getTestCycleId());
-				if (!TestRunStatus.ACTIVE.equals(testCycle.getTestCycleStatusId()))
+				if (!TestCycleStatus.ACTIVE.equals(testCycle.getTestCycleStatusId()))
 				{
 					throw new ActivatingIncompleteEntityException(TestRun.class.getSimpleName() + " : " + testRunId_);
 				}

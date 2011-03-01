@@ -20,7 +20,6 @@
 package com.utest.domain.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -795,7 +794,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	public EnvironmentProfile saveEnvironmentGroupsForProfile(final Integer environmentProfileId_, final List<Integer> environmentGroupIds_) throws Exception
 	{
 		// TODO - do we need to check usage?
-		checkEnvironmentProfileUsage(environmentProfileId_);
+		// checkEnvironmentProfileUsage(environmentProfileId_);
 		// continue if not used anywhere
 		// delete old environment groups for profile
 		final Search search = new Search(EnvironmentProfileEnvironmentGroup.class);
@@ -815,7 +814,6 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		}
 		// update time stamp
 		final EnvironmentProfile profile = getRequiredEntityById(EnvironmentProfile.class, environmentProfileId_);
-		profile.setDescription(profile.getDescription() + " [updated on: " + new Date().toString() + "]");
 		// return updated profile
 		return dao.merge(profile);
 	}
