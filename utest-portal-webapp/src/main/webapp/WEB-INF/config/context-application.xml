@@ -37,7 +37,7 @@
 		</tx:attributes>
 	</tx:advice>
 	
-	<tx:advice id="txAdviceIniit" transaction-manager="transactionManager">
+	<tx:advice id="txAdviceInit" transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="initialize" propagation="REQUIRED" rollback-for="Throwable" read-only="true"/>
 		</tx:attributes>
@@ -53,7 +53,7 @@
 		<aop:advisor pointcut="execution(* com.utest.service.security.AuthenticationSuccessListener.onApplicationEvent(..))"
 			advice-ref="txAdvice" />
 		<aop:advisor pointcut="execution(* com.utest.domain.service.Initializable.*(..))"
-			advice-ref="txAdviceIniit" />
+			advice-ref="txAdviceInit" />
 	</aop:config>
 	
 </beans>

@@ -341,7 +341,7 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 
 			if (String.class.equals(propertyType) && (propertyValue instanceof String))
 			{
-				filter.setValue(propertyValue + "%");
+				filter.setValue(propertyValue);
 				filter.setOperator(UtestFilter.OP_LIKE);
 			}
 			else if (propertyValue instanceof List)
