@@ -31,6 +31,7 @@ public class TestRunResultStatus extends LocalizedEntity
 	public static final Integer	BLOCKED		= new Integer(4);
 	public static final Integer	STARTED		= new Integer(5);
 	public static final Integer	INVALIDATED	= new Integer(6);
+	public static final Integer	SKIPPED		= new Integer(7);
 
 	public TestRunResultStatus()
 	{

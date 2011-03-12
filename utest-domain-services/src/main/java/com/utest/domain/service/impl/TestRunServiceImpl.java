@@ -253,17 +253,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		for (final TestSuiteTestCase testSuiteTestCase : includedTestCases)
 		{
 			lastRunOrder += testSuiteTestCase.getRunOrder();
-			final TestRunTestCase testRunTestCase = addTestRunTestCase(testRunId_, testSuiteTestCase.getTestCaseVersionId(), testSuiteTestCase.getPriorityId(), testSuiteTestCase
-					.getRunOrder(), testSuiteTestCase.isBlocking(), testSuiteId_);
-			// TODO - determine what is needed for the intersection
-			if (testRun.getEnvironmentProfileId() != null)
-			{
-				testRunTestCase.setEnvironmentProfileId(testRun.getEnvironmentProfileId());
-			}
-			else
-			{
-				testRunTestCase.setEnvironmentProfileId(testSuiteTestCase.getEnvironmentProfileId());
-			}
+			final TestRunTestCase testRunTestCase = addTestRunTestCase(testRun.getId(), testSuiteTestCase.getTestCaseVersionId(), testSuiteTestCase.getPriorityId(),
+					testSuiteTestCase.getRunOrder(), testSuiteTestCase.isBlocking(), testSuiteId_);
 			dao.merge(testRunTestCase);
 		}
 		return lastRunOrder;
@@ -1046,6 +1037,42 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			}
 			result.setVersion(originalVersionId_);
 			result.setTestRunResultStatusId(TestRunResultStatus.INVALIDATED);
+			result.setActualTimeInMin(0);
+			result.setActualResult(null);
+			result.setComment(comment_);
+			result.setFailedStepNumber(null);
+			return dao.merge(result);
+		}
+		else
+		{
+			return result;
+		}
+	}
+
+	@Override
+	public TestRunResult finishExecutingAssignedTestCaseWithSkip(final Integer testRunResultId_, final String comment_, final Integer originalVersionId_) throws Exception
+	{
+		final TestRunResult result = getRequiredEntityById(TestRunResult.class, testRunResultId_);
+		if (!TestRunResultStatus.SKIPPED.equals(result.getTestRunResultStatusId()))
+		{
+			// if
+			// (!TestRunResultStatus.STARTED.equals(result.getTestRunResultStatusId()))
+			// {
+			// throw new TestCaseExecutionWithoutRestartException();
+			// }
+			// make sure user executing the result is the same as assigned
+			if (!getCurrentUserId().equals(result.getTesterId()))
+			{
+				throw new InvalidUserException();
+			}
+			// prevent if test run locked
+			final TestRun testRun = getRequiredEntityById(TestRun.class, result.getTestRunId());
+			if (TestRunStatus.LOCKED.equals(testRun.getTestRunStatusId()))
+			{
+				throw new TestCycleClosedException();
+			}
+			result.setVersion(originalVersionId_);
+			result.setTestRunResultStatusId(TestRunResultStatus.SKIPPED);
 			result.setActualTimeInMin(0);
 			result.setActualResult(null);
 			result.setComment(comment_);

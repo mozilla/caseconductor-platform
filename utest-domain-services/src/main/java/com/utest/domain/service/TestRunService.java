@@ -160,4 +160,6 @@ public interface TestRunService
 	TestRun cloneTestRun(Integer fromTestRunId, Integer newTestCycleId, boolean cloneAssignments) throws Exception;
 
 	List<TestSuite> getTestRunTestSuites(Integer testRunId) throws Exception;
+
+	TestRunResult finishExecutingAssignedTestCaseWithSkip(Integer testRunResultId, String comment, Integer originalVersionId) throws Exception;
 }

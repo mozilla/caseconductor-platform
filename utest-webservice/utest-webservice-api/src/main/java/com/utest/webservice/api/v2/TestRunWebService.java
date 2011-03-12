@@ -140,4 +140,6 @@ public interface TestRunWebService
 
 	List<TestSuiteInfo> getTestRunTestSuites(UriInfo ui, Integer testRunId) throws Exception;
 
+	TestRunResultInfo finishSkippedTestRunResultExecution(UriInfo ui, Integer resultId, String comment, Integer originalVersionId) throws Exception;
+
 }

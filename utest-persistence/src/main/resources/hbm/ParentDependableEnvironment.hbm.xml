@@ -11,16 +11,16 @@
  		<property name="companyId" type="java.lang.Integer">
 			<column name="companyId" />
 		</property>
-       <property name="environmentId" type="java.lang.Integer">
-            <column name="environmentId" not-null="false">
-                <comment>States within USA.</comment>
-            </column>
-        </property>
-       <property name="parentEnvironmentId" type="java.lang.Integer">
-            <column name="parentEnvironmentId" not-null="false">
-                <comment>States within USA.</comment>
-            </column>
-        </property>
+	       <property name="environmentId" type="java.lang.Integer">
+		    <column name="environmentId" not-null="false">
+			<comment>States within USA.</comment>
+		    </column>
+		</property>
+	       <property name="parentEnvironmentId" type="java.lang.Integer">
+		    <column name="parentEnvironmentId" not-null="false">
+			<comment>States within USA.</comment>
+		    </column>
+		</property>
  		<property name="createDate" type="timestamp">
 			<column name="createDate" />
 		</property>

@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.Cookie;
 
 import org.apache.cxf.jaxrs.ext.MessageContext;
 import org.apache.cxf.message.Message;
@@ -40,11 +40,11 @@ public class SessionUtil
 	public static String extractSession(MessageContext context, boolean insertToResponze)
 	{
 		HttpServletRequest req = context.getHttpServletRequest();
-		Cookie[] available = req.getCookies();
+		javax.servlet.http.Cookie[] available = req.getCookies();
 		String sessionId = null;
 		if (available != null)
 		{
-			for (Cookie ck : available)
+			for (javax.servlet.http.Cookie ck : available)
 			{
 				if (SESSION_NAME.equalsIgnoreCase(ck.getName()))
 				{
@@ -58,7 +58,7 @@ public class SessionUtil
 			sessionId = session.getId();
 			if (insertToResponze)
 			{
-				Cookie cookie = new Cookie(SESSION_NAME, sessionId);
+				javax.servlet.http.Cookie cookie = new javax.servlet.http.Cookie(SESSION_NAME, sessionId);
 				context.getHttpServletResponse().addCookie(cookie);
 			}
 		}
@@ -66,25 +66,25 @@ public class SessionUtil
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Authentication getAuthenticationTocken(Message message)
+	public static Authentication getAuthenticationToken(Message message)
 	{
 		Map<String, List<String>> headers = (Map<String, List<String>>) message.get(Message.PROTOCOL_HEADERS);
-		String tocken = null;
-		for (javax.ws.rs.core.Cookie c : extractCookies(headers.get("cookie")))
+		String token = null;
+		for (Cookie c : extractCookies(headers.get("cookie")))
 		{
 			if (AUTH_TOKEN.equalsIgnoreCase(c.getName()))
 			{
-				tocken = c.getValue();
+				token = c.getValue();
 				break;
 			}
 		}
-		if (tocken == null)
+		if (token == null)
 		{
 			return null;
 		}
 		try
 		{
-			return (Authentication) Base64.decodeToObject(tocken);
+			return (Authentication) Base64.decodeToObject(token);
 		}
 		catch (Exception e)
 		{
@@ -93,9 +93,9 @@ public class SessionUtil
 
 	}
 
-	private static List<javax.ws.rs.core.Cookie> extractCookies(List<String> cookie)
+	private static List<Cookie> extractCookies(List<String> cookie)
 	{
-		List<javax.ws.rs.core.Cookie> cookies = new ArrayList<javax.ws.rs.core.Cookie>();
+		List<Cookie> cookies = new ArrayList<Cookie>();
 		if (cookie == null)
 			return cookies;
 		for (String one : cookie)
@@ -115,17 +115,17 @@ public class SessionUtil
 		return cookies;
 	}
 
-	private static javax.ws.rs.core.Cookie toCookie(String one)
+	private static Cookie toCookie(String one)
 	{
 		try
 		{
-			javax.ws.rs.core.Cookie c = javax.ws.rs.core.Cookie.valueOf(one);
+			Cookie c = Cookie.valueOf(one);
 			System.out.println("Cookie name=" + c.getName() + "; value=[" + c.getValue() + "]");
 			return c;
 		}
 		catch (Exception c)
 		{
-			return new javax.ws.rs.core.Cookie("", "");
+			return new Cookie("", "");
 		}
 
 	}

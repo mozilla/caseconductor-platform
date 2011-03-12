@@ -36,7 +36,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.utest.util.Base64;
 import com.utest.webservice.util.SessionUtil;
 
 public class BasicAuthAuthorizationInterceptor extends SoapHeaderInterceptor
@@ -54,40 +53,7 @@ public class BasicAuthAuthorizationInterceptor extends SoapHeaderInterceptor
 		try
 		{
 			AuthorizationPolicy policy = message.get(AuthorizationPolicy.class);
-			if (policy == null)
-			{
-				final String path = (String) message.get(Message.PATH_INFO);
-				final String payments = "/payments/";
-				final CharSequence seq = payments.subSequence(0, payments.length());
-				if ((path != null) && path.contains(seq))
-				{
-					final String query = (String) message.get(Message.QUERY_STRING);
-					if (query != null)
-					{
-						final String[] params = query.split("&");
-						String credential = null;
-						for (final String p : params)
-						{
-							if (p.indexOf("ssid=") >= 0)
-							{
-								credential = p.substring("ssid=".length());
-							}
-						}
-						if (credential != null)
-						{
-							credential = new String(Base64.decode(credential.getBytes()));
-							final String[] param = credential.split(":");
-							if (param.length == 2)
-							{
-								policy = new AuthorizationPolicy();
-								policy.setUserName(param[0]);
-								policy.setPassword(param[1]);
-							}
-						}
-					}
-				}
-			}
-			Authentication authentication = SessionUtil.getAuthenticationTocken(message);
+			Authentication authentication = SessionUtil.getAuthenticationToken(message);
 			if (policy == null && authentication == null)
 			{
 				sendErrorResponse(message, HttpURLConnection.HTTP_UNAUTHORIZED);
