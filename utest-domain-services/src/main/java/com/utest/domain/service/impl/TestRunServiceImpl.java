@@ -243,7 +243,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	{
 		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
-		// check if test plan is activated
+		// check if test suite is activated
 		if (!TestSuiteStatus.ACTIVE.equals(testSuite.getTestSuiteStatusId()))
 		{
 			throw new IncludingNotActivatedEntityException(TestSuite.class.getSimpleName() + " : " + testSuiteId_);
@@ -674,10 +674,17 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		List<TestRunResult> results = dao.search(TestRunResult.class, search);
 		dao.delete(results);
 		// insert new results
-		final List<EnvironmentGroup> groups = environmentService.getEnvironmentGroupsForProfile(assignment_.getEnvironmentProfileId());
-		for (final EnvironmentGroup group : groups)
+		if (assignment_.getEnvironmentProfileId() != null)
 		{
-			addResultForEnvironmentGroup(assignment_, group.getId());
+			final List<EnvironmentGroup> groups = environmentService.getEnvironmentGroupsForProfile(assignment_.getEnvironmentProfileId());
+			for (final EnvironmentGroup group : groups)
+			{
+				addResultForEnvironmentGroup(assignment_, group.getId());
+			}
+		}
+		else
+		{
+			addResultForEnvironmentGroup(assignment_, null);
 		}
 	}
 
@@ -1055,11 +1062,6 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final TestRunResult result = getRequiredEntityById(TestRunResult.class, testRunResultId_);
 		if (!TestRunResultStatus.SKIPPED.equals(result.getTestRunResultStatusId()))
 		{
-			// if
-			// (!TestRunResultStatus.STARTED.equals(result.getTestRunResultStatusId()))
-			// {
-			// throw new TestCaseExecutionWithoutRestartException();
-			// }
 			// make sure user executing the result is the same as assigned
 			if (!getCurrentUserId().equals(result.getTesterId()))
 			{

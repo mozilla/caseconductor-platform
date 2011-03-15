@@ -534,6 +534,10 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public void deleteEnvironmentProfile(final Integer environmentProfileId_, final Integer originalVersionId_) throws Exception
 	{
+		if (environmentProfileId_ == null)
+		{
+			throw new IllegalArgumentException("environmentProfileId_ is null in deleteEnvironmentProfile() call.");
+		}
 		final EnvironmentProfile environmentProfile = getRequiredEntityById(EnvironmentProfile.class, environmentProfileId_);
 		checkEnvironmentProfileUsage(environmentProfileId_);
 		// continue if not used anywhere
@@ -611,6 +615,10 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	 */
 	private <T extends EnvironmentDependable> boolean isEnvironmentProfileUsed(final Integer environmentProfileId_, final Class<T> type_)
 	{
+		if (environmentProfileId_ == null)
+		{
+			throw new IllegalArgumentException("environmentProfileId_ is null in isEnvironmentProfileUsed() call.");
+		}
 		final Search search = new Search(type_);
 		search.addFilterEqual("environmentProfileId", environmentProfileId_);
 		final List<?> foundTypes = dao.search(type_, search);
@@ -655,6 +663,10 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForProfile(final Integer environmentProfileId_) throws Exception
 	{
+		if (environmentProfileId_ == null)
+		{
+			throw new IllegalArgumentException("environmentProfileId_ is null in getEnvironmentGroupsForProfile() call.");
+		}
 		Search search = new Search(EnvironmentProfileEnvironmentGroup.class);
 		search.addFilterEqual("environmentProfileId", environmentProfileId_);
 		final List<EnvironmentProfileEnvironmentGroup> foundGroups = dao.search(EnvironmentProfileEnvironmentGroup.class, search);
@@ -793,6 +805,10 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public EnvironmentProfile saveEnvironmentGroupsForProfile(final Integer environmentProfileId_, final List<Integer> environmentGroupIds_) throws Exception
 	{
+		if (environmentProfileId_ == null)
+		{
+			throw new IllegalArgumentException("environmentProfileId_ is null in saveEnvironmentGroupsForProfile() call.");
+		}
 		// TODO - do we need to check usage?
 		// checkEnvironmentProfileUsage(environmentProfileId_);
 		// continue if not used anywhere
