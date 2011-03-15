@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<sql-query cacheable="false" cache-mode="ignore" name="Report_TestRunResultTotalsByStatus">
+		select concat(101, testRunResultStatusId) id, testRunResultStatusId categoryName, count(*) categoryValue
+		from TestRunResult
+		where
+		testRunId = :testRunId
+		group by
+		testRunResultStatusId
+		<return alias="statusTotals" class="com.utest.domain.view.CategoryValue" />
+	</sql-query>
+	<sql-query cacheable="false" cache-mode="ignore" name="Report_TestCycleResultTotalsByStatus">
+		select concat(102, testRunResultStatusId) id, testRunResultStatusId categoryName, count(*) categoryValue
+		from TestRunResult trr
+		join TestRun tr on tr.testRunId = trr.testRunId
+		where
+		tr.testCycleId = :testCycleId
+		group by
+		testRunResultStatusId
+		<return alias="statusTotals" class="com.utest.domain.view.CategoryValue" />
+	</sql-query>
+</hibernate-mapping>

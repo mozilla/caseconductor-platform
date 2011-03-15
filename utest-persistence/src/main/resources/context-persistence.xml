@@ -10,7 +10,7 @@
                   http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
 
 	<!-- Configure a JDBC datasource for Hibernate to connect with -->
-	<jee:jndi-lookup id="dataSource" jndi-name="utestAppDS" />
+	<jee:jndi-lookup id="dataSource" jndi-name="tcmAppDS" />
 	<!-- Configure a Hibernate SessionFactory -->
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">

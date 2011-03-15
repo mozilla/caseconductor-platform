@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Oct 7, 2009 11:18:37 AM by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class  mutable="false" name="com.utest.domain.ApprovalStatusLocale" table="ApprovalStatusLocale" catalog="tcm">
+    <class  mutable="false" name="com.utest.domain.ApprovalStatusLocale" table="ApprovalStatusLocale" >
         <composite-id  name="id" class="com.utest.domain.ApprovalStatusLocaleId">
             <key-property  name="approvalStatusId" type="java.lang.Integer">
                 <column  name="approvalStatusId" />

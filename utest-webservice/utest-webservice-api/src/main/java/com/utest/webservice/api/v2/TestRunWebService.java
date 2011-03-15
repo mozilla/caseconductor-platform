@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
+import com.utest.webservice.model.v2.CategoryValueInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.IncludedTestCaseInfo;
@@ -141,5 +142,7 @@ public interface TestRunWebService
 	List<TestSuiteInfo> getTestRunTestSuites(UriInfo ui, Integer testRunId) throws Exception;
 
 	TestRunResultInfo finishSkippedTestRunResultExecution(UriInfo ui, Integer resultId, String comment, Integer originalVersionId) throws Exception;
+
+	List<CategoryValueInfo> getCoverageByResultStatus(UriInfo ui, Integer testRunId) throws Exception;
 
 }

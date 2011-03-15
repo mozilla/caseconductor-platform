@@ -53,8 +53,10 @@ import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.TestRunService;
+import com.utest.domain.view.CategoryValue;
 import com.utest.webservice.api.v2.TestRunWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
+import com.utest.webservice.model.v2.CategoryValueInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.IncludedTestCaseInfo;
@@ -723,6 +725,18 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	{
 		testRunService.saveTestingTeamMemberRolesForTestRun(productId_, userId_, roleIds_, originalVersionId_);
 		return Boolean.TRUE;
+	}
+
+	@GET
+	@Path("/{id}/reports/coverage/resultstatus")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CYCLE_VIEW)
+	public List<CategoryValueInfo> getCoverageByResultStatus(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_) throws Exception
+	{
+		final List<CategoryValue> results = testRunService.getCoverageByStatus(testRunId_);
+		return objectBuilderFactory.toInfo(CategoryValueInfo.class, results, ui_.getBaseUriBuilder());
 	}
 
 }

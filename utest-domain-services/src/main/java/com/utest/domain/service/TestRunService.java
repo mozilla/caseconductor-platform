@@ -34,6 +34,7 @@ import com.utest.domain.TestSuite;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.view.CategoryValue;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 /**
@@ -162,4 +163,6 @@ public interface TestRunService
 	List<TestSuite> getTestRunTestSuites(Integer testRunId) throws Exception;
 
 	TestRunResult finishExecutingAssignedTestCaseWithSkip(Integer testRunResultId, String comment, Integer originalVersionId) throws Exception;
+
+	List<CategoryValue> getCoverageByStatus(Integer testRunId);
 }

@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Oct 7, 2009 11:18:37 AM by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="com.utest.domain.Product" catalog="tcm" table="Product" >
+    <class name="com.utest.domain.Product"  table="Product" >
         <id name="id" type="java.lang.Integer" unsaved-value="0">
             <column name="productId" />
 			<generator class="identity"/>

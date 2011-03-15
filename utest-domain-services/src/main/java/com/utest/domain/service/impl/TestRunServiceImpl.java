@@ -62,6 +62,7 @@ import com.utest.domain.service.TestPlanService;
 import com.utest.domain.service.TestRunService;
 import com.utest.domain.service.TestSuiteService;
 import com.utest.domain.service.UserService;
+import com.utest.domain.view.CategoryValue;
 import com.utest.exception.ActivatingIncompleteEntityException;
 import com.utest.exception.ApprovingIncompleteEntityException;
 import com.utest.exception.ChangingActivatedEntityException;
@@ -1432,4 +1433,19 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		dao.merge(testRun);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CategoryValue> getCoverageByStatus(final Integer testRunId_)
+	{
+		final int numParams = 1;
+		final String[] paramNames = new String[numParams];
+		final Object[] values = new Object[numParams];
+
+		final String namedQuery = "Report_TestRunResultTotalsByStatus";
+		paramNames[0] = "testRunId";
+		values[0] = testRunId_;
+
+		return (List<CategoryValue>) dao.findByNamedQueryAndNamedParam(namedQuery, paramNames, values, false, false);
+
+	}
 }

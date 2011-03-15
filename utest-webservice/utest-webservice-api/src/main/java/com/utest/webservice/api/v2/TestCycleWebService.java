@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
+import com.utest.webservice.model.v2.CategoryValueInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.RoleInfo;
 import com.utest.webservice.model.v2.TestCycleInfo;
@@ -69,4 +70,6 @@ public interface TestCycleWebService
 	Boolean approveAllResultsForTestCycle(UriInfo ui, Integer testCycleId) throws Exception;
 
 	TestCycleInfo cloneTestCycle(UriInfo ui, Integer testCycleId, String cloneAssignments) throws Exception;
+
+	List<CategoryValueInfo> getCoverageByResultStatus(UriInfo ui, Integer testCycleId) throws Exception;
 }

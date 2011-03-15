@@ -34,16 +34,16 @@ import com.utest.domain.User;
 public class TestCycleServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 {
 	@Autowired
-	private TestCycleService		testCycleService;
+	private TestCycleService	testCycleService;
 	@Autowired
 	private UserService			userService;
 	@Autowired
 	private EnvironmentService	environmentService;
 
 	@Autowired
-	private TypelessDAO				dao;
+	private TypelessDAO			dao;
 
-	//@Test(groups = { "integration" })
+	@Test(groups = { "integration" })
 	public void testAddTestCycle() throws Exception
 	{
 		final User user = userService.getUser(1);
@@ -53,7 +53,7 @@ public class TestCycleServiceIntegrationTest extends BaseDomainServiceIntegratio
 		Assert.assertTrue(testCycle11 != null);
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testSaveTestCycleValidEnvironmentGroups() throws Exception
 	{
 
@@ -69,7 +69,7 @@ public class TestCycleServiceIntegrationTest extends BaseDomainServiceIntegratio
 
 	}
 
-	//@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testActivateTestCycle() throws Exception
 	{
 

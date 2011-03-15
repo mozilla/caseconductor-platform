@@ -17,11 +17,13 @@
  *
  * copyright 2010 by uTest 
  */
-package com.utest.domain;
+package com.utest.domain.view;
 
 // Generated Oct 7, 2009 11:18:35 AM by Hibernate Tools 3.2.4.GA
 
 import java.util.Map;
+
+import com.utest.domain.Entity;
 
 @SuppressWarnings("unchecked")
 public class CategoryValue extends Entity implements Comparable
