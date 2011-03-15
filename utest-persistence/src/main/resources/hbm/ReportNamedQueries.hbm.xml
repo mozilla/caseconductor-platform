@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                                    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-	<sql-query cacheable="false" cache-mode="ignore" name="Report_TestRunResultTotalsByStatus">
+	<sql-query cacheable="false" cache-mode="ignore" name="Report_TestRunResultTotalsByStatus" >
 		select concat(101, testRunResultStatusId) id, testRunResultStatusId categoryName, count(*) categoryValue
 		from TestRunResult
 		where
