@@ -39,6 +39,9 @@
         <jboss.version>5.1.0.GA</jboss.version>
         <context.root>tcm</context.root>
 
+        <login.expiration.seconds>3600</login.expiration.seconds>
+        <permanent.deletion.enabled>true</permanent.deletion.enabled>
+
     </properties>
     <developers>
         <developer>
