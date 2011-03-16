@@ -43,7 +43,7 @@ public class TestCycleServiceIntegrationTest extends BaseDomainServiceIntegratio
 	@Autowired
 	private TypelessDAO			dao;
 
-	@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testAddTestCycle() throws Exception
 	{
 		final User user = userService.getUser(1);
