@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * 
+ *
  * @author Vadim Kisen
  *
- * copyright 2010 by uTest 
+ * copyright 2010 by uTest
  */
 package com.utest.domain.service.impl;
 
@@ -962,6 +962,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		statuses.add(TestRunResultStatus.FAILED);
 		statuses.add(TestRunResultStatus.PASSED);
 		statuses.add(TestRunResultStatus.INVALIDATED);
+		statuses.add(TestRunResultStatus.SKIPPED);
 		usearch.addFilterIn("testRunResultStatusId", statuses);
 		UtestSearchResult uresult = findTestRunResults(usearch);
 		List<TestRunResult> allResults = (List<TestRunResult>) uresult.getResults();
