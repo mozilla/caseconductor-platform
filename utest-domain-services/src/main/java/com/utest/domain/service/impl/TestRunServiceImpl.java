@@ -1323,9 +1323,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			{
 				throw new InvalidUserException();
 			}
-			if ((!TestRunResultStatus.FAILED.equals(result.getTestRunResultStatusId()) && !TestRunResultStatus.INVALIDATED.equals(result.getTestRunResultStatusId()) && !TestRunResultStatus.PASSED
-					.equals(result.getTestRunResultStatusId()))
-					&& ApprovalStatus.APPROVED.equals(approvalStatus_))
+			if (TestRunResultStatus.PENDING.equals(result.getTestRunResultStatusId()))
 			{
 				throw new ApprovingIncompleteEntityException(TestRunResult.class.getSimpleName() + " : " + testRunResultId_);
 			}
