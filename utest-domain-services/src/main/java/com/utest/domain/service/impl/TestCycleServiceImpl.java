@@ -241,13 +241,13 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 		{
 			environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test cycle : " + testCycleId_, "Included groups: "
 					+ environmentGroupIds_.toString(), environmentGroupIds_);
+		testCycle.setEnvironmentProfileId(environmentProfile.getId());
 		}
 		// or update existing profile
 		else
 		{
 			environmentService.saveEnvironmentGroupsForProfile(testCycle.getEnvironmentProfileId(), environmentGroupIds_);
 		}
-		testCycle.setEnvironmentProfileId(environmentProfile.getId());
 		testCycle.setVersion(originalVersionId_);
 		dao.merge(testCycle);
 	}
