@@ -237,11 +237,11 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 		// update environment profile
 		EnvironmentProfile environmentProfile = null;
 		// create new one if still uses parent's profile
-		if ((product.getEnvironmentProfileId() != null && product.getEnvironmentProfileId() == testCycle.getEnvironmentProfileId()) || testCycle.getEnvironmentProfileId() == null)
+		if ((product.getEnvironmentProfileId() != null && product.getEnvironmentProfileId().equals(testCycle.getEnvironmentProfileId())) || testCycle.getEnvironmentProfileId() == null)
 		{
 			environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test cycle : " + testCycleId_, "Included groups: "
 					+ environmentGroupIds_.toString(), environmentGroupIds_);
-		testCycle.setEnvironmentProfileId(environmentProfile.getId());
+                        testCycle.setEnvironmentProfileId(environmentProfile.getId());
 		}
 		// or update existing profile
 		else

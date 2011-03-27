@@ -346,7 +346,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		// update environment profile
 		EnvironmentProfile environmentProfile = null;
 		// create new one if still uses parent's profile
-		if ((testCycle.getEnvironmentProfileId() != null && testRun.getEnvironmentProfileId() == testCycle.getEnvironmentProfileId()) || testRun.getEnvironmentProfileId() == null)
+		if ((testCycle.getEnvironmentProfileId() != null && testRun.getEnvironmentProfileId().equals(testCycle.getEnvironmentProfileId())) || testRun.getEnvironmentProfileId() == null)
 		{
 			environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run : " + testRunId_, "Included groups: "
 					+ environmentGroupIds_.toString(), environmentGroupIds_);
@@ -381,7 +381,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
 
 		// create new one if still uses parent's profile
-		if ((testRun.getEnvironmentProfileId() != null && testRunTestCase.getEnvironmentProfileId() == testRun.getEnvironmentProfileId())
+		if ((testRun.getEnvironmentProfileId() != null && testRunTestCase.getEnvironmentProfileId().equals(testRun.getEnvironmentProfileId()))
 				|| testRunTestCase.getEnvironmentProfileId() == null)
 		{
 			final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run test case: " + testRunTestCaseId_,
