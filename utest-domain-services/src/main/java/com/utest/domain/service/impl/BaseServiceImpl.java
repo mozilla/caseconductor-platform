@@ -27,8 +27,12 @@ import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.Company;
 import com.utest.domain.CompanyDependable;
+import com.utest.domain.Entity;
+import com.utest.domain.EnvironmentDependable;
+import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Named;
 import com.utest.domain.Versioned;
+import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.util.UserUtil;
 import com.utest.exception.DuplicateNameException;
 import com.utest.exception.InvalidParentChildEnvironmentException;
@@ -36,12 +40,39 @@ import com.utest.exception.NotFoundException;
 
 public abstract class BaseServiceImpl
 {
-	private final TypelessDAO	dao;
+	protected final TypelessDAO		dao;
+	protected EnvironmentService	environmentService;
+
+	public BaseServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService)
+	{
+		super();
+		this.dao = dao;
+		this.environmentService = environmentService;
+	}
 
 	public BaseServiceImpl(final TypelessDAO dao)
 	{
 		super();
 		this.dao = dao;
+	}
+
+	protected void adjustParentChildProfiles(final EnvironmentDependable parent_, final EnvironmentDependable child_, final Integer companyId_,
+			final List<Integer> environmentGroupIds_) throws Exception
+	{
+		// update environment profile
+		EnvironmentProfile environmentProfile = null;
+		if (((parent_.getEnvironmentProfileId() != null) && (parent_.getEnvironmentProfileId().equals(child_.getEnvironmentProfileId())))
+				|| (child_.getEnvironmentProfileId() == null))
+		{
+			environmentProfile = environmentService.addEnvironmentProfile(companyId_, "Created for : " + ((Entity) child_).getId(), "Included groups: "
+					+ environmentGroupIds_.toString(), environmentGroupIds_);
+		}
+		// or update existing profile
+		else
+		{
+			environmentService.saveEnvironmentGroupsForProfile(child_.getEnvironmentProfileId(), environmentGroupIds_);
+		}
+		child_.setEnvironmentProfileId(environmentProfile.getId());
 	}
 
 	protected Integer getCurrentUserId()

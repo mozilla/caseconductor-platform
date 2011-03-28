@@ -28,7 +28,6 @@ import com.utest.dao.TypelessDAO;
 import com.utest.domain.ApprovalStatus;
 import com.utest.domain.CompanyDependable;
 import com.utest.domain.EnvironmentGroup;
-import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.Tag;
@@ -56,20 +55,15 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseService
 {
-	private final TypelessDAO			dao;
-	private final EnvironmentService	environmentService;
-
-	private static final Integer		DEFAULT_MAJOR_VERSION	= 0;
-	private static final Integer		DEFAULT_MINOR_VERSION	= 1;
+	private static final Integer	DEFAULT_MAJOR_VERSION	= 0;
+	private static final Integer	DEFAULT_MINOR_VERSION	= 1;
 
 	/**
 	 * Default constructor
 	 */
 	public TestCaseServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService)
 	{
-		super(dao);
-		this.dao = dao;
-		this.environmentService = environmentService;
+		super(dao, environmentService);
 	}
 
 	@Override
@@ -565,9 +559,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			throw new UnsupportedEnvironmentSelectionException();
 		}
 		// update environment profile
-		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test case version: " + testCaseVersionId_,
-				"Included environments: " + environmentGroupIds_.toString(), environmentGroupIds_);
-		testCaseVersion.setEnvironmentProfileId(environmentProfile.getId());
+		adjustParentChildProfiles(product, testCaseVersion, product.getCompanyId(), environmentGroupIds_);
 		testCaseVersion.setVersion(originalVersionId_);
 		dao.merge(testCaseVersion);
 	}

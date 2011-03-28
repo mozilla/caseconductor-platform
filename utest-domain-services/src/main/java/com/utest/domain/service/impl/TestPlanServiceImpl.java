@@ -25,7 +25,6 @@ import java.util.List;
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.EnvironmentGroup;
-import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
 import com.utest.domain.TestPlan;
 import com.utest.domain.TestPlanStatus;
@@ -45,17 +44,12 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanService
 {
-	private final TypelessDAO			dao;
-	private final EnvironmentService	environmentService;
-
 	/**
 	 * Default constructor
 	 */
 	public TestPlanServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService)
 	{
-		super(dao);
-		this.dao = dao;
-		this.environmentService = environmentService;
+		super(dao, environmentService);
 	}
 
 	@Override
@@ -261,9 +255,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 			throw new UnsupportedEnvironmentSelectionException(TestPlan.class.getSimpleName() + " : " + testPlanId_);
 		}
 		// update environment profile
-		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test suite : " + testPlanId_,
-				"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
-		testPlan.setEnvironmentProfileId(environmentProfile.getId());
+		adjustParentChildProfiles(product, testPlan, product.getCompanyId(), environmentGroupIds_);
 		testPlan.setVersion(originalVersionId_);
 		dao.merge(testPlan);
 	}

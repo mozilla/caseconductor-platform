@@ -45,17 +45,13 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteService
 {
-	private final TypelessDAO			dao;
-	private final EnvironmentService	environmentService;
 
 	/**
 	 * Default constructor
 	 */
 	public TestSuiteServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService)
 	{
-		super(dao);
-		this.dao = dao;
-		this.environmentService = environmentService;
+		super(dao, environmentService);
 	}
 
 	@Override
@@ -143,9 +139,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 			throw new UnsupportedEnvironmentSelectionException(TestSuite.class.getSimpleName() + " : " + testSuiteId_);
 		}
 		// update environment profile
-		final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test suite : " + testSuiteId_,
-				"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
-		testSuite.setEnvironmentProfileId(environmentProfile.getId());
+		adjustParentChildProfiles(product, testSuite, product.getCompanyId(), environmentGroupIds_);
 		testSuite.setVersion(originalVersionId_);
 		dao.merge(testSuite);
 	}

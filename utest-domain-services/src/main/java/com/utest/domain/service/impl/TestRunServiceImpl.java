@@ -81,13 +81,11 @@ import com.utest.util.DateUtil;
 
 public class TestRunServiceImpl extends BaseServiceImpl implements TestRunService
 {
-	private final TypelessDAO			dao;
-	private final EnvironmentService	environmentService;
-	private final TestPlanService		testPlanService;
-	private final TestSuiteService		testSuiteService;
-	private final TestCaseService		testCaseService;
-	private final TeamService			teamService;
-	private final UserService			userService;
+	private final TestPlanService	testPlanService;
+	private final TestSuiteService	testSuiteService;
+	private final TestCaseService	testCaseService;
+	private final TeamService		teamService;
+	private final UserService		userService;
 
 	/**
 	 * Default constructor
@@ -95,8 +93,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	public TestRunServiceImpl(final TypelessDAO dao, final TestPlanService testPlanService, final TestSuiteService testSuiteService, final TestCaseService testCaseService,
 			final EnvironmentService environmentService, final TeamService teamService, final UserService userService)
 	{
-		super(dao);
-		this.dao = dao;
+		super(dao, environmentService);
 		this.environmentService = environmentService;
 		this.testPlanService = testPlanService;
 		this.testSuiteService = testSuiteService;
@@ -341,22 +338,9 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		{
 			throw new UnsupportedEnvironmentSelectionException();
 		}
-		// update environment profile
 		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
 		// update environment profile
-		EnvironmentProfile environmentProfile = null;
-		// create new one if still uses parent's profile
-		if ((testCycle.getEnvironmentProfileId() != null && testRun.getEnvironmentProfileId().equals(testCycle.getEnvironmentProfileId())) || testRun.getEnvironmentProfileId() == null)
-		{
-			environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run : " + testRunId_, "Included groups: "
-					+ environmentGroupIds_.toString(), environmentGroupIds_);
-			testRun.setEnvironmentProfileId(environmentProfile.getId());
-		}
-		// or update existing profile
-		else
-		{
-			environmentService.saveEnvironmentGroupsForProfile(testRun.getEnvironmentProfileId(), environmentGroupIds_);
-		}
+		adjustParentChildProfiles(testCycle, testRun, product.getCompanyId(), environmentGroupIds_);
 		testRun.setVersion(originalVersionId_);
 		dao.merge(testRun);
 	}
@@ -379,20 +363,12 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		}
 		// update environment profile
 		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
-
-		// create new one if still uses parent's profile
-		if ((testRun.getEnvironmentProfileId() != null && testRunTestCase.getEnvironmentProfileId().equals(testRun.getEnvironmentProfileId()))
-				|| testRunTestCase.getEnvironmentProfileId() == null)
-		{
-			final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run test case: " + testRunTestCaseId_,
-					"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
-			testRunTestCase.setEnvironmentProfileId(environmentProfile.getId());
-		}
-		// or update existing profile
-		else
-		{
-			environmentService.saveEnvironmentGroupsForProfile(testRunTestCase.getEnvironmentProfileId(), environmentGroupIds_);
-		}
+		// always create new profile instead of calling
+		// adjustParentChildProfiles(), because included test case could have
+		// different parents, not just a Product
+		EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test run test case: " + testRunTestCaseId_,
+				"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
+		testRunTestCase.setEnvironmentProfileId(environmentProfile.getId());
 		testRunTestCase.setVersion(originalVersionId_);
 		dao.merge(testRunTestCase);
 	}
@@ -416,19 +392,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		}
 		// update environment profile
 		final Product product = getRequiredEntityById(Product.class, testRun.getProductId());
-		// create new one if still uses parent's profile
-		if ((testRunTestCase.getEnvironmentProfileId() != null && assignment.getEnvironmentProfileId() == testRunTestCase.getEnvironmentProfileId())
-				|| assignment.getEnvironmentProfileId() == null)
-		{
-			final EnvironmentProfile environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for assignment: " + assignmentId_,
-					"Included groups: " + environmentGroupIds_.toString(), environmentGroupIds_);
-			assignment.setEnvironmentProfileId(environmentProfile.getId());
-		}
-		// or update existing profile
-		else
-		{
-			environmentService.saveEnvironmentGroupsForProfile(assignment.getEnvironmentProfileId(), environmentGroupIds_);
-		}
+		// update environment profile
+		adjustParentChildProfiles(testRunTestCase, assignment, product.getCompanyId(), environmentGroupIds_);
 		assignment.setVersion(originalVersionId_);
 		dao.merge(assignment);
 

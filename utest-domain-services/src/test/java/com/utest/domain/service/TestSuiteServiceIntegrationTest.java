@@ -24,12 +24,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.TestSuite;
 import com.utest.domain.User;
-import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 public class TestSuiteServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 {

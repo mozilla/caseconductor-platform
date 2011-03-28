@@ -27,7 +27,6 @@ import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.AccessRole;
 import com.utest.domain.EnvironmentGroup;
-import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
 import com.utest.domain.Team;
 import com.utest.domain.TestCycle;
@@ -49,19 +48,15 @@ import com.utest.exception.UnsupportedTeamSelectionException;
 
 public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleService
 {
-	private final TypelessDAO			dao;
-	private final EnvironmentService	environmentService;
-	private final TestRunService		testRunService;
-	private final TeamService			teamService;
+	private final TestRunService	testRunService;
+	private final TeamService		teamService;
 
 	/**
 	 * Default constructor
 	 */
 	public TestCycleServiceImpl(final TypelessDAO dao, final TestRunService testRunService, final EnvironmentService environmentService, final TeamService teamService)
 	{
-		super(dao);
-		this.dao = dao;
-		this.environmentService = environmentService;
+		super(dao, environmentService);
 		this.testRunService = testRunService;
 		this.teamService = teamService;
 	}
@@ -235,19 +230,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 			throw new UnsupportedEnvironmentSelectionException();
 		}
 		// update environment profile
-		EnvironmentProfile environmentProfile = null;
-		// create new one if still uses parent's profile
-		if ((product.getEnvironmentProfileId() != null && product.getEnvironmentProfileId().equals(testCycle.getEnvironmentProfileId())) || testCycle.getEnvironmentProfileId() == null)
-		{
-			environmentProfile = environmentService.addEnvironmentProfile(product.getCompanyId(), "Created for test cycle : " + testCycleId_, "Included groups: "
-					+ environmentGroupIds_.toString(), environmentGroupIds_);
-                        testCycle.setEnvironmentProfileId(environmentProfile.getId());
-		}
-		// or update existing profile
-		else
-		{
-			environmentService.saveEnvironmentGroupsForProfile(testCycle.getEnvironmentProfileId(), environmentGroupIds_);
-		}
+		adjustParentChildProfiles(product, testCycle, product.getCompanyId(), environmentGroupIds_);
 		testCycle.setVersion(originalVersionId_);
 		dao.merge(testCycle);
 	}
