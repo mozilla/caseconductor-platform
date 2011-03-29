@@ -80,14 +80,14 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		final Product product = getRequiredEntityById(Product.class, productId_);
 		checkForDuplicateNameWithinParent(TestCase.class, name_, productId_, "productId", null);
 
-		final TestCase testCase = new TestCase(name_, productId_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, testCycleId_);
+		final TestCase testCase = new TestCase(name_, productId_, product.getCompanyId(), maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, testCycleId_);
 		final Integer testCaseId = dao.addAndReturnId(testCase);
 
 		final TestCaseVersion testCaseVersion = new TestCaseVersion();
 		testCaseVersion.setTestCaseId(testCaseId);
 		initializeTestCaseVersion(testCaseVersion, 0, 0, VersionIncrement.INITIAL);
 		testCaseVersion.setProductId(productId_);
-		// testCaseVersion.setName(name_);
+		testCaseVersion.setCompanyId(product.getCompanyId());
 		testCaseVersion.setDescription(description_);
 		// set environment profile from the product by default
 		testCaseVersion.setEnvironmentProfileId(product.getEnvironmentProfileId());

@@ -71,6 +71,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 		final TestCycle testCycle = new TestCycle();
 		testCycle.setTestCycleStatusId(TestCycleStatus.PENDING);
 		testCycle.setProductId(productId_);
+		testCycle.setCompanyId(product.getCompanyId());
 		testCycle.setName(name_);
 		testCycle.setDescription(description_);
 		testCycle.setStartDate(startDate_);

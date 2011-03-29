@@ -28,6 +28,7 @@ public class TestCase extends TimelineEntity implements ProductDependable, Named
 {
 
 	private String			name;
+	private Integer			companyId;
 	private Integer			productId;
 	private Integer			maxAttachmentSizeInMbytes;
 	private Integer			maxNumberOfAttachments;
@@ -50,6 +51,17 @@ public class TestCase extends TimelineEntity implements ProductDependable, Named
 	{
 		this.name = name;
 		this.productId = productId;
+		this.maxAttachmentSizeInMbytes = maxAttachmentSizeInMbytes;
+		this.maxNumberOfAttachments = maxNumberOfAttachments;
+		this.testCycleId = testCycleId;
+	}
+
+	public TestCase(final String name, final Integer productId, final Integer companyId, final Integer maxAttachmentSizeInMbytes, final Integer maxNumberOfAttachments,
+			final Integer testCycleId)
+	{
+		this.name = name;
+		this.productId = productId;
+		this.companyId = companyId;
 		this.maxAttachmentSizeInMbytes = maxAttachmentSizeInMbytes;
 		this.maxNumberOfAttachments = maxNumberOfAttachments;
 		this.testCycleId = testCycleId;
@@ -113,5 +125,15 @@ public class TestCase extends TimelineEntity implements ProductDependable, Named
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	public void setCompanyId(Integer companyId)
+	{
+		this.companyId = companyId;
+	}
+
+	public Integer getCompanyId()
+	{
+		return companyId;
 	}
 }

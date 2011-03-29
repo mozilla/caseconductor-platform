@@ -14,6 +14,9 @@
         <property name="name" type="string">
             <column name="name" not-null="true" />
         </property>
+ 		<property name="companyId" type="java.lang.Integer">
+			<column name="companyId" />
+		</property>
         <property name="productId" type="java.lang.Integer">
             <column name="productId" not-null="true" />
         </property>

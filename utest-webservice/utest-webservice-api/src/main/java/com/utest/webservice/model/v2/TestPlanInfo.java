@@ -47,6 +47,10 @@ public class TestPlanInfo extends BaseInfo
 	@XmlElement(required = true)
 	private String			description;
 	@XmlElement(required = true)
+	private Integer			companyId;
+	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
+	private ResourceLocator	companyLocator;
+	@XmlElement(required = true)
 	private Integer			productId;
 	@XmlElement(type = ResourceLocator.class, name = "productLocator")
 	private ResourceLocator	productLocator;
@@ -78,6 +82,26 @@ public class TestPlanInfo extends BaseInfo
 	public void setProductId(final Integer productId)
 	{
 		this.productId = productId;
+	}
+
+	public Integer getCompanyId()
+	{
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId)
+	{
+		this.companyId = companyId;
+	}
+
+	public ResourceLocator getCompanyLocator()
+	{
+		return companyLocator;
+	}
+
+	public void setCompanyLocator(ResourceLocator companyLocator)
+	{
+		this.companyLocator = companyLocator;
 	}
 
 	@org.apache.cxf.aegis.type.java5.XmlElement(minOccurs = "1", nillable = false)

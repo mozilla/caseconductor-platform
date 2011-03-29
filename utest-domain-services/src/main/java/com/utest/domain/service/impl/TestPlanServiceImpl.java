@@ -60,6 +60,7 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 
 		final TestPlan testPlan = new TestPlan();
 		testPlan.setTestPlanStatusId(TestPlanStatus.PENDING);
+		testPlan.setCompanyId(product.getCompanyId());
 		testPlan.setProductId(product.getId());
 		testPlan.setName(name_);
 		testPlan.setDescription(description_);

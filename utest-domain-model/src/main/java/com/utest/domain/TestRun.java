@@ -34,6 +34,7 @@ public class TestRun extends TimelineEntity implements ProductDependable, Enviro
 	private Integer	testRunStatusId;
 	private Integer	testCycleId;
 	private Integer	productId;
+	private Integer	companyId;
 	private Date	startDate;
 	private Date	endDate;
 	private boolean	useLatestVersions;
@@ -216,6 +217,16 @@ public class TestRun extends TimelineEntity implements ProductDependable, Enviro
 	public boolean isAutoAssignToTeam()
 	{
 		return autoAssignToTeam;
+	}
+
+	public void setCompanyId(Integer companyId)
+	{
+		this.companyId = companyId;
+	}
+
+	public Integer getCompanyId()
+	{
+		return companyId;
 	}
 
 }

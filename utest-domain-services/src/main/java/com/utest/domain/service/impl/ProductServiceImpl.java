@@ -84,6 +84,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 		checkForDuplicateNameWithinParent(ProductComponent.class, name_, productId_, "productId", null);
 
 		final ProductComponent productComponent = new ProductComponent();
+		productComponent.setCompanyId(product.getCompanyId());
 		productComponent.setProductId(product.getId());
 		productComponent.setName(name_);
 		productComponent.setDescription(description_);

@@ -33,6 +33,7 @@ public class TestCycle extends TimelineEntity implements ProductDependable, Envi
 	private String	description;
 	private Integer	testCycleStatusId;
 	private Integer	productId;
+	private Integer	companyId;
 	private Date	startDate;
 	private Date	endDate;
 	private boolean	communityAuthoringAllowed;
@@ -83,6 +84,16 @@ public class TestCycle extends TimelineEntity implements ProductDependable, Envi
 	public void setProductId(final Integer productId)
 	{
 		this.productId = productId;
+	}
+
+	public void setCompanyId(Integer companyId)
+	{
+		this.companyId = companyId;
+	}
+
+	public Integer getCompanyId()
+	{
+		return companyId;
 	}
 
 	public Date getStartDate()

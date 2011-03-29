@@ -116,6 +116,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		testRun.setTestRunStatusId(TestRunStatus.PENDING);
 		testRun.setTestCycleId(testCycleId_);
 		testRun.setProductId(testCycle.getProductId());
+		testRun.setCompanyId(testCycle.getCompanyId());
 		testRun.setName(name_);
 		testRun.setDescription(description_);
 		testRun.setStartDate(startDate_);
@@ -441,6 +442,9 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		}
 		TestRunTestCase includedTestCase = new TestRunTestCase();
 		includedTestCase.setTestRunId(testRunId_);
+		includedTestCase.setTestCycleId(testRun.getTestCycleId());
+		includedTestCase.setProductId(testRun.getProductId());
+		includedTestCase.setCompanyId(testRun.getCompanyId());
 		includedTestCase.setTestCaseId(testCaseVersion.getTestCaseId());
 		includedTestCase.setTestCaseVersionId(testCaseVersion.getId());
 		includedTestCase.setSelfAssignAllowed(testRun.isSelfAssignAllowed());
@@ -607,6 +611,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			final TestRunTestCaseAssignment assignment = new TestRunTestCaseAssignment();
 			assignment.setTestRunId(testRun.getId());
 			assignment.setProductId(testRun.getProductId());
+			assignment.setTestCycleId(testRun.getTestCycleId());
+			assignment.setCompanyId(testRun.getCompanyId());
 			assignment.setTestCaseId(includedTestCase.getTestCaseId());
 			assignment.setTestCaseVersionId(includedTestCase.getTestCaseVersionId());
 			assignment.setTestRunTestCaseId(includedTestCase.getId());
@@ -665,10 +671,12 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 
 		final TestRunResult result = new TestRunResult();
 		result.setApprovalStatusId(ApprovalStatus.PENDING);
-		result.setTestRunResultStatusId(TestRunStatus.PENDING);
+		result.setTestRunResultStatusId(TestRunResultStatus.PENDING);
 		result.setEnvironmentGroupId(environmentGroupId_);
 		result.setProductId(assignment_.getProductId());
 		result.setTestRunId(assignment_.getTestRunId());
+		result.setTestCycleId(assignment_.getTestCycleId());
+		result.setCompanyId(assignment_.getCompanyId());
 		result.setTestSuiteId(assignment_.getTestSuiteId());
 		result.setTestCaseId(assignment_.getTestCaseId());
 		result.setTestCaseVersionId(assignment_.getTestCaseVersionId());

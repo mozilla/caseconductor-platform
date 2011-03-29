@@ -23,6 +23,12 @@
         <property name="testCaseId" type="java.lang.Integer">
             <column name="testCaseId" not-null="true" />
         </property>
+        <property name="testCycleId" type="java.lang.Integer">
+            <column name="testCycleId" not-null="true" />
+        </property>
+        <property name="companyId" type="java.lang.Integer">
+            <column name="companyId" not-null="true" />
+        </property>
         <property name="testCaseVersionId" type="java.lang.Integer">
             <column name="testCaseVersionId" not-null="true" />
         </property>

@@ -47,6 +47,10 @@ public class TestSuiteInfo extends BaseInfo
 	@XmlElement(required = true)
 	private String			description;
 	@XmlElement(required = true)
+	private Integer			companyId;
+	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
+	private ResourceLocator	companyLocator;
+	@XmlElement(required = true)
 	private Integer			productId;
 	@XmlElement(type = ResourceLocator.class, name = "productLocator")
 	private ResourceLocator	productLocator;
@@ -96,6 +100,26 @@ public class TestSuiteInfo extends BaseInfo
 	public void setTestSuiteStatusId(final Integer testSuiteStatusId)
 	{
 		this.testSuiteStatusId = testSuiteStatusId;
+	}
+
+	public Integer getCompanyId()
+	{
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId)
+	{
+		this.companyId = companyId;
+	}
+
+	public ResourceLocator getCompanyLocator()
+	{
+		return companyLocator;
+	}
+
+	public void setCompanyLocator(ResourceLocator companyLocator)
+	{
+		this.companyLocator = companyLocator;
 	}
 
 	public Integer getTestSuiteStatusId()

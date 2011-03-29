@@ -33,6 +33,10 @@ public class ProductComponentInfo extends BaseInfo
 	@XmlElement(required = true)
 	private String			name;
 	@XmlElement(required = true)
+	private Integer			companyId;
+	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
+	private ResourceLocator	companyLocator;
+	@XmlElement(required = true)
 	private Integer			productId;
 	@XmlElement(type = ResourceLocator.class, name = "productLocator")
 	private ResourceLocator	productLocator;
@@ -72,6 +76,26 @@ public class ProductComponentInfo extends BaseInfo
 	public void setProductLocator(ResourceLocator productLocator)
 	{
 		this.productLocator = productLocator;
+	}
+
+	public Integer getCompanyId()
+	{
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId)
+	{
+		this.companyId = companyId;
+	}
+
+	public ResourceLocator getCompanyLocator()
+	{
+		return companyLocator;
+	}
+
+	public void setCompanyLocator(ResourceLocator companyLocator)
+	{
+		this.companyLocator = companyLocator;
 	}
 
 	public ResourceLocator getProductLocator()

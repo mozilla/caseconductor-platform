@@ -11,6 +11,9 @@
         <version name="version" type="java.lang.Integer">
             <column name="version" not-null="true" />
         </version>
+ 		<property name="companyId" type="java.lang.Integer">
+			<column name="companyId" />
+		</property>
         <property name="productId" type="java.lang.Integer">
             <column name="productId" not-null="true" />
         </property>

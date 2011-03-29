@@ -14,8 +14,14 @@
         <property name="testRunTestCaseId" type="java.lang.Integer">
             <column name="testRunTestCaseId" not-null="true" />
         </property>
+        <property name="testCycleId" type="java.lang.Integer">
+            <column name="testCycleId" not-null="true" />
+        </property>
         <property name="productId" type="java.lang.Integer">
             <column name="productId" not-null="true" />
+        </property>
+        <property name="companyId" type="java.lang.Integer">
+            <column name="companyId" not-null="true" />
         </property>
         <property name="testRunId" type="java.lang.Integer">
             <column name="testRunId" not-null="true" />

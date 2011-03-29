@@ -33,7 +33,7 @@ public class TestCaseVersion extends TimelineEntity implements EnvironmentDepend
 	private TestCase			testCase;
 	private Integer				testCaseId;
 	private Integer				productId;
-	// private String name;
+	private Integer				companyId;
 	private Integer				testCaseStatusId;
 	private String				description;
 	private Integer				majorVersion;
@@ -193,6 +193,16 @@ public class TestCaseVersion extends TimelineEntity implements EnvironmentDepend
 	public void setSteps(final List<TestCaseStep> steps)
 	{
 		this.steps = steps;
+	}
+
+	public void setCompanyId(Integer companyId)
+	{
+		this.companyId = companyId;
+	}
+
+	public Integer getCompanyId()
+	{
+		return companyId;
 	}
 
 	public List<TestCaseStep> getSteps()

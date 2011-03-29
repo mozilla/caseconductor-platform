@@ -31,6 +31,14 @@ import javax.xml.bind.annotation.XmlType;
 public class TestRunTestCaseAssignmentInfo extends BaseInfo
 {
 	@XmlElement(required = false)
+	private Integer			testCycleId;
+	@XmlElement(type = ResourceLocator.class, name = "testCycleLocator")
+	private ResourceLocator	testCycleLocator;
+	@XmlElement(required = false)
+	private Integer			companyId;
+	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
+	private ResourceLocator	companyLocator;
+	@XmlElement(required = false)
 	private Integer			testRunId;
 	@XmlElement(type = ResourceLocator.class, name = "testRunLocator")
 	private ResourceLocator	testRunLocator;
@@ -73,6 +81,46 @@ public class TestRunTestCaseAssignmentInfo extends BaseInfo
 	public void setProductLocator(ResourceLocator productLocator)
 	{
 		this.productLocator = productLocator;
+	}
+
+	public Integer getTestCycleId()
+	{
+		return testCycleId;
+	}
+
+	public void setTestCycleId(Integer testCycleId)
+	{
+		this.testCycleId = testCycleId;
+	}
+
+	public ResourceLocator getTestCycleLocator()
+	{
+		return testCycleLocator;
+	}
+
+	public void setTestCycleLocator(ResourceLocator testCycleLocator)
+	{
+		this.testCycleLocator = testCycleLocator;
+	}
+
+	public Integer getCompanyId()
+	{
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId)
+	{
+		this.companyId = companyId;
+	}
+
+	public ResourceLocator getCompanyLocator()
+	{
+		return companyLocator;
+	}
+
+	public void setCompanyLocator(ResourceLocator companyLocator)
+	{
+		this.companyLocator = companyLocator;
 	}
 
 	public Integer getTesterId()

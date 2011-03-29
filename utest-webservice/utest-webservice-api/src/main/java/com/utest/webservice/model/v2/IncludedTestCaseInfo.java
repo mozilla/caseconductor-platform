@@ -31,6 +31,18 @@ import javax.xml.bind.annotation.XmlType;
 public class IncludedTestCaseInfo extends BaseInfo
 {
 	@XmlElement(required = false)
+	private Integer			testCycleId;
+	@XmlElement(type = ResourceLocator.class, name = "testCycleLocator")
+	private ResourceLocator	testCycleLocator;
+	@XmlElement(required = false)
+	private Integer			productId;
+	@XmlElement(type = ResourceLocator.class, name = "productLocator")
+	private ResourceLocator	productLocator;
+	@XmlElement(required = false)
+	private Integer			companyId;
+	@XmlElement(type = ResourceLocator.class, name = "testCaseLocator")
+	private ResourceLocator	companyLocator;
+	@XmlElement(required = false)
 	private Integer			testCaseId;
 	@XmlElement(type = ResourceLocator.class, name = "testCaseLocator")
 	private ResourceLocator	testCaseLocator;
@@ -131,6 +143,66 @@ public class IncludedTestCaseInfo extends BaseInfo
 	public void setTestRunId(Integer testRunId)
 	{
 		this.testRunId = testRunId;
+	}
+
+	public Integer getTestCycleId()
+	{
+		return testCycleId;
+	}
+
+	public void setTestCycleId(Integer testCycleId)
+	{
+		this.testCycleId = testCycleId;
+	}
+
+	public ResourceLocator getTestCycleLocator()
+	{
+		return testCycleLocator;
+	}
+
+	public void setTestCycleLocator(ResourceLocator testCycleLocator)
+	{
+		this.testCycleLocator = testCycleLocator;
+	}
+
+	public Integer getProductId()
+	{
+		return productId;
+	}
+
+	public void setProductId(Integer productId)
+	{
+		this.productId = productId;
+	}
+
+	public ResourceLocator getProductLocator()
+	{
+		return productLocator;
+	}
+
+	public void setProductLocator(ResourceLocator productLocator)
+	{
+		this.productLocator = productLocator;
+	}
+
+	public Integer getCompanyId()
+	{
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId)
+	{
+		this.companyId = companyId;
+	}
+
+	public ResourceLocator getCompanyLocator()
+	{
+		return companyLocator;
+	}
+
+	public void setCompanyLocator(ResourceLocator companyLocator)
+	{
+		this.companyLocator = companyLocator;
 	}
 
 	public ResourceLocator getTestRunLocator()

@@ -32,6 +32,8 @@ public class TestRunResult extends TimelineEntity implements ProductDependable
 	private Integer	testRunAssignmentId;
 	private Integer	testRunId;
 	private Integer	productId;
+	private Integer	testCycleId;
+	private Integer	companyId;
 	private Integer	testCaseId;
 	private Integer	testCaseVersionId;
 	private Integer	testerId;
@@ -96,6 +98,26 @@ public class TestRunResult extends TimelineEntity implements ProductDependable
 	public void setTestRunAssignmentId(final Integer testRunAssignmentId)
 	{
 		this.testRunAssignmentId = testRunAssignmentId;
+	}
+
+	public Integer getTestCycleId()
+	{
+		return testCycleId;
+	}
+
+	public void setTestCycleId(Integer testCycleId)
+	{
+		this.testCycleId = testCycleId;
+	}
+
+	public Integer getCompanyId()
+	{
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId)
+	{
+		this.companyId = companyId;
 	}
 
 	public Integer getTestRunId()

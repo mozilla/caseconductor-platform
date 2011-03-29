@@ -62,6 +62,14 @@ public class TestRunResultInfo extends BaseInfo
 	@XmlElement(type = ResourceLocator.class, name = "productLocator")
 	private ResourceLocator	productLocator;
 	@XmlElement(required = true)
+	private Integer			testCycleId;
+	@XmlElement(type = ResourceLocator.class, name = "testCycleLocator")
+	private ResourceLocator	testCycleLocator;
+	@XmlElement(required = true)
+	private Integer			companyId;
+	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
+	private ResourceLocator	companyLocator;
+	@XmlElement(required = true)
 	private Integer			testerId;
 	@XmlElement(type = ResourceLocator.class, name = "testerLocator")
 	private ResourceLocator	testerLocator;
@@ -126,6 +134,46 @@ public class TestRunResultInfo extends BaseInfo
 	public void setTestCaseId(Integer testCaseId)
 	{
 		this.testCaseId = testCaseId;
+	}
+
+	public Integer getTestCycleId()
+	{
+		return testCycleId;
+	}
+
+	public void setTestCycleId(Integer testCycleId)
+	{
+		this.testCycleId = testCycleId;
+	}
+
+	public ResourceLocator getTestCycleLocator()
+	{
+		return testCycleLocator;
+	}
+
+	public void setTestCycleLocator(ResourceLocator testCycleLocator)
+	{
+		this.testCycleLocator = testCycleLocator;
+	}
+
+	public Integer getCompanyId()
+	{
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId)
+	{
+		this.companyId = companyId;
+	}
+
+	public ResourceLocator getCompanyLocator()
+	{
+		return companyLocator;
+	}
+
+	public void setCompanyLocator(ResourceLocator companyLocator)
+	{
+		this.companyLocator = companyLocator;
 	}
 
 	public ResourceLocator getTestCaseLocator()

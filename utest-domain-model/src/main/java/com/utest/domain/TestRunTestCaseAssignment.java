@@ -28,7 +28,9 @@ public class TestRunTestCaseAssignment extends TimelineEntity implements Product
 {
 
 	private Integer	testRunTestCaseId;
+	private Integer	testCycleId;
 	private Integer	productId;
+	private Integer	companyId;
 	private Integer	testRunId;
 	private Integer	testCaseId;
 	private Integer	testCaseVersionId;
@@ -113,6 +115,26 @@ public class TestRunTestCaseAssignment extends TimelineEntity implements Product
 	public void setTestCaseVersionId(final Integer testCaseVersionId)
 	{
 		this.testCaseVersionId = testCaseVersionId;
+	}
+
+	public Integer getTestCycleId()
+	{
+		return testCycleId;
+	}
+
+	public void setTestCycleId(Integer testCycleId)
+	{
+		this.testCycleId = testCycleId;
+	}
+
+	public Integer getCompanyId()
+	{
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId)
+	{
+		this.companyId = companyId;
 	}
 
 	public Integer getTesterId()
