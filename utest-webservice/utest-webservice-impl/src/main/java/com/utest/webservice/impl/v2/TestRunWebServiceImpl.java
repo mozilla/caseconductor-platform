@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * 
+ *
  * @author Vadim Kisen
  *
- * copyright 2010 by uTest 
+ * copyright 2010 by uTest
  */
 package com.utest.webservice.impl.v2;
 
@@ -636,7 +636,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Secured(Permission.TEST_RUN_VIEW)
 	public IncludedTestCaseSearchResultInfo findTestRunTestCases(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
-		final UtestSearch search = objectBuilderFactory.createSearch(IncludedTestCaseSearchResultInfo.class, request_, ui_);
+		final UtestSearch search = objectBuilderFactory.createSearch(IncludedTestCaseInfo.class, request_, ui_);
 		final UtestSearchResult result = testRunService.findTestRunTestCases(search);
 
 		return (IncludedTestCaseSearchResultInfo) objectBuilderFactory.createResult(IncludedTestCaseInfo.class, TestRunTestCase.class, request_, result, ui_.getBaseUriBuilder());
