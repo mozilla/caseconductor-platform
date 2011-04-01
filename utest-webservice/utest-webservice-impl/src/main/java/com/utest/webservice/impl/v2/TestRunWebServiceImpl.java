@@ -148,7 +148,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@POST
 	@Path("/{id}/retest/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
 	public List<TestRunResultInfo> retestTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
