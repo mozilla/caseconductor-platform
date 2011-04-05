@@ -918,9 +918,15 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	public TestRunResult retestTestRunResult(final Integer testRunResultId_, final Integer testerId_) throws Exception
 	{
 		final TestRunResult result = getRequiredEntityById(TestRunResult.class, testRunResultId_);
+		Integer newTesterId = result.getTesterId();
+		// if testerId was not passed use the original tester
+		if (testerId_ != null)
+		{
+			newTesterId = testerId_;
+		}
 		final TestRunTestCaseAssignment assignment = getRequiredEntityById(TestRunTestCaseAssignment.class, result.getTestRunAssignmentId());
 		// create new assignment for new tester
-		final TestRunTestCaseAssignment newAssignment = addAssignmentNoResults(assignment.getTestRunTestCaseId(), testerId_);
+		final TestRunTestCaseAssignment newAssignment = addAssignmentNoResults(assignment.getTestRunTestCaseId(), newTesterId);
 		// create pending result for new assignment
 		return addResultForEnvironmentGroup(newAssignment, result.getEnvironmentGroupId());
 	}

@@ -148,14 +148,14 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@POST
 	@Path("/{id}/retest/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_RUN_EDIT })
 	public List<TestRunResultInfo> retestTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@FormParam("failedResultsOnly") final boolean failedResultsOnly_) throws Exception
+			@FormParam("failedResultsOnly") final String failedResultsOnly_) throws Exception
 	{
 
-		final List<TestRunResult> results = testRunService.retestTestRun(testRunId_, failedResultsOnly_);
+		final List<TestRunResult> results = testRunService.retestTestRun(testRunId_, "true".equalsIgnoreCase(failedResultsOnly_));
 		return objectBuilderFactory.toInfo(TestRunResultInfo.class, results, ui_.getBaseUriBuilder());
 	}
 

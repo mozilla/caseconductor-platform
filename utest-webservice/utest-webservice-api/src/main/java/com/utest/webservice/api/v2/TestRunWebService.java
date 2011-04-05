@@ -71,8 +71,6 @@ public interface TestRunWebService
 
 	List<ProductComponentInfo> getTestRunComponents(UriInfo ui, Integer testRunId) throws Exception;
 
-	List<TestRunResultInfo> retestTestRun(UriInfo ui, Integer testRunId, boolean failedResultsOnly) throws Exception;
-
 	IncludedTestCaseInfo getTestRunTestCase(UriInfo ui, Integer includedTestCaseId) throws Exception;
 
 	Boolean deleteTestRunTestCase(UriInfo ui, Integer includedTestCaseId, Integer originalVersionId) throws Exception;
@@ -144,5 +142,7 @@ public interface TestRunWebService
 	TestRunResultInfo finishSkippedTestRunResultExecution(UriInfo ui, Integer resultId, String comment, Integer originalVersionId) throws Exception;
 
 	List<CategoryValueInfo> getCoverageByResultStatus(UriInfo ui, Integer testRunId) throws Exception;
+
+	List<TestRunResultInfo> retestTestRun(UriInfo ui, Integer testRunId, String failedResultsOnly) throws Exception;
 
 }
