@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * 
+ *
  * @author Vadim Kisen
  *
- * copyright 2010 by uTest 
+ * copyright 2010 by uTest
  */
 package com.utest.domain.service.impl;
 
@@ -152,7 +152,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 
 	/**
 	 * Sets default settings for new version of a TestCase
-	 * 
+	 *
 	 * @param auth_
 	 * @param testCaseVersion_
 	 * @param versionIncrement_
@@ -625,6 +625,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			// insert new version
 			final TestCaseVersion newTestCaseVersion = new TestCaseVersion();
 			newTestCaseVersion.setProductId(testCaseVersion.getProductId());
+			newTestCaseVersion.setCompanyId(testCaseVersion.getCompanyId());
 			newTestCaseVersion.setTestCaseId(testCaseVersion.getTestCaseId());
 			newTestCaseVersion.setDescription(description_);
 			newTestCaseVersion.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
@@ -667,6 +668,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		clonedTestCaseVersion.setDescription(testCaseVersion.getDescription());
 		clonedTestCaseVersion.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
 		clonedTestCaseVersion.setProductId(testCaseVersion.getProductId());
+		clonedTestCaseVersion.setCompanyId(testCaseVersion.getCompanyId());
 		final Integer clonedVersionId = dao.addAndReturnId(clonedTestCaseVersion);
 		// clone steps
 		List<TestCaseStep> steps = getTestCaseVersionSteps(testCaseVersion.getId());
