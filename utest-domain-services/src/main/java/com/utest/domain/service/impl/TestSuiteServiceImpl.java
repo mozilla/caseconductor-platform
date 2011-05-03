@@ -82,6 +82,7 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 		final TestSuite toTestSuite = new TestSuite();
 		toTestSuite.setUseLatestVersions(fromTestSuite.isUseLatestVersions());
 		toTestSuite.setProductId(fromTestSuite.getProductId());
+		toTestSuite.setCompanyId(fromTestSuite.getCompanyId());
 		toTestSuite.setName(fromTestSuite.getName());
 		toTestSuite.setDescription(fromTestSuite.getDescription());
 		toTestSuite.setTestSuiteStatusId(TestSuiteStatus.PENDING);

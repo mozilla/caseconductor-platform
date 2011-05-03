@@ -96,6 +96,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 		final TestCycle toTestCycle = new TestCycle();
 		toTestCycle.setTestCycleStatusId(TestCycleStatus.PENDING);
 		toTestCycle.setProductId(fromTestCycle.getProductId());
+		toTestCycle.setCompanyId(fromTestCycle.getCompanyId());
 		toTestCycle.setName("Cloned on " + new Date() + " " + fromTestCycle.getName());
 		toTestCycle.setDescription(fromTestCycle.getDescription());
 		toTestCycle.setStartDate(new Date());

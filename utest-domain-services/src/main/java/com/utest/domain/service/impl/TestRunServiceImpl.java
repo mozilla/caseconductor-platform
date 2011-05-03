@@ -156,6 +156,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			toTestRun.setTestCycleId(newTestCycleId_);
 		}
 		toTestRun.setProductId(fromTestRun.getProductId());
+		toTestRun.setCompanyId(fromTestRun.getCompanyId());
 		toTestRun.setName("Cloned on " + new Date() + " " + fromTestRun.getName());
 		toTestRun.setDescription(fromTestRun.getDescription());
 		toTestRun.setStartDate(fromTestRun.getStartDate());
