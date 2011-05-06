@@ -58,7 +58,15 @@ Create your MySQL database schema (if you are using a MySQL user other than
 root, you will probably need to comment out the ``GRANT ALL PRIVILEGES`` line
 near the top of this SQL script)::
 
-    $ mysql < $TCMPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_create_empty_db_script.sql
+    $ mysql -uroot < $TCMPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_create_empty_db_script.sql
+
+You'll need to also execute each database update script in that same directory, in order. For example::
+
+    $ mysql -uroot < $TCMPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_update_db_script_1.sql
+
+The shell script ``reset-mysql.sh`` automates setting up the initial schema and
+running all update scripts. (You may need to modify this script if using a
+database user other than root).
 
 And run the server::
 
