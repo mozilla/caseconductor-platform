@@ -72,10 +72,32 @@ And run the server::
 
     $ jboss-5.1.0.GA/bin/run.sh
 
+Give it a minute or two to start up - when it's ready you'll see a line in its console output that looks like this::
+
+    17:50:59,453 INFO  [ServerImpl] JBoss (Microcontainer) [5.1.0.GA (build: SVNTag=JBoss_5_1_0_GA date=200905221053)] Started in 48s:247ms
+
 Now you should be able to connect to http://localhost:8080/tcm/services/ and
 see the web-service WADL file links listed, and connect to
 e.g. http://localhost:8080/tcm/services/v2/rest/companies/ and see the list of
 companies.
+
+Future Updates
+--------------
+
+If you ``git pull`` future updates to the platform code, you'll need to rebuild it::
+
+    $ cd $TCMPLATFORM; mvn clean install
+
+And copy the built .war file into your jBoss installation::
+
+    $ cp $TCMPLATFORM/utest-portal-webapp/target/tcm.war jboss-5.1.0.GA/server/default/deploy/
+
+If any new database update scripts were included in the platform update, you'll need to run them::
+
+    $ mysql -uroot < $TCMPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_update_db_script_29.sql
+
+Alternatively, you can just run ``reset-mysql.sh`` again, if you don't mind
+losing any data in your local database and starting over with a fresh database.
 
 
 Cheats
