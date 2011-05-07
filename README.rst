@@ -24,6 +24,10 @@ something like this to your .bashrc::
 
     export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home"
 
+Note that if built with Maven 3, the platform will fail to start in the
+supported version of jBoss (5.1.0) due to a bug related to loading of XML
+parsers. Maven 2 must be used instead.
+
 Now build the project::
 
     $ cd $TCMPLATFORM; mvn clean install
@@ -53,6 +57,9 @@ Edit the copied utest-ds.xml file (the one under
 ``jboss-5.1.0.GA/server/default/deploy/utest-ds.xml``) to set the name of your
 MySQL database (default is ``tcm``) and your MySQL user and password (defaults
 to ``root`` with no password).
+
+Note that the platform currently does not support MySQL 5.5 -- some operations
+will fail with foreign key constraint violations. MySQL 5.1 must be used.
 
 Create your MySQL database schema (if you are using a MySQL user other than
 root, you will probably need to comment out the ``GRANT ALL PRIVILEGES`` line
