@@ -448,6 +448,23 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	}
 
 	@GET
+	@Path("/versions/stepsearch/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CASE_VIEW)
+	/**
+	 * Returns versions of test cases based on search parameters
+	 */
+	public TestCaseVersionSearchResultInfo findTestCaseVersionsBySteps(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	{
+		final UtestSearch search = objectBuilderFactory.createSearch(TestCaseStepInfo.class, request_, ui_);
+		final UtestSearchResult result = testCaseService.findTestCaseVersionsBySteps(search);
+
+		return (TestCaseVersionSearchResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersion.class, request_, result, ui_.getBaseUriBuilder());
+	}
+
+	@GET
 	@Path("/latestversions/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

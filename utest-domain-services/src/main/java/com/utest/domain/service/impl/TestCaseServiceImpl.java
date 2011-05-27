@@ -371,6 +371,25 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
+	public UtestSearchResult findTestCaseVersionsBySteps(final UtestSearch search_) throws Exception
+	{
+		UtestSearch testCaseSearch = new UtestSearch();
+		UtestSearchResult stepSearchResult = dao.getBySearch(TestCaseStep.class, search_);
+		List<?> steps = stepSearchResult.getResults();
+		if (steps == null || steps.isEmpty())
+		{
+			return stepSearchResult;
+		}
+		List<Integer> ids = new ArrayList<Integer>();
+		for (Object step : steps)
+		{
+			ids.add(((TestCaseStep) step).getTestCaseVersionId());
+		}
+		testCaseSearch.addFilterIn("id", ids);
+		return dao.getBySearch(TestCaseVersion.class, testCaseSearch);
+	}
+
+	@Override
 	public UtestSearchResult findTestCases(final UtestSearch search_) throws Exception
 	{
 		return dao.getBySearch(TestCase.class, search_);

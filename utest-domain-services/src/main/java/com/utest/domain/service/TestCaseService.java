@@ -107,4 +107,6 @@ public interface TestCaseService
 			UnsupportedEnvironmentSelectionException, Exception;
 
 	void deleteTestCase(Integer testCaseId, Integer originalVersionId) throws Exception;
+
+	UtestSearchResult findTestCaseVersionsBySteps(UtestSearch search) throws Exception;
 }
