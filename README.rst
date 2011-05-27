@@ -24,6 +24,10 @@ something like this to your .bashrc::
 
     export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home"
 
+Note that if built with Maven 3, the platform will fail to start in the
+supported version of jBoss (5.1.0) due to a bug related to loading of XML
+parsers. Maven 2 must be used instead.
+
 Now build the project::
 
     $ cd $TCMPLATFORM; mvn clean install
@@ -54,20 +58,53 @@ Edit the copied utest-ds.xml file (the one under
 MySQL database (default is ``tcm``) and your MySQL user and password (defaults
 to ``root`` with no password).
 
+Note that the platform currently does not support MySQL 5.5 -- some operations
+will fail with foreign key constraint violations. MySQL 5.1 must be used.
+
 Create your MySQL database schema (if you are using a MySQL user other than
 root, you will probably need to comment out the ``GRANT ALL PRIVILEGES`` line
 near the top of this SQL script)::
 
-    $ mysql < $TCMPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_create_empty_db_script.sql
+    $ mysql -uroot < $TCMPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_create_empty_db_script.sql
+
+You'll need to also execute each database update script in that same directory, in order. For example::
+
+    $ mysql -uroot < $TCMPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_update_db_script_1.sql
+
+The shell script ``reset-mysql.sh`` automates setting up the initial schema and
+running all update scripts. (You may need to modify this script if using a
+database user other than root).
 
 And run the server::
 
     $ jboss-5.1.0.GA/bin/run.sh
 
+Give it a minute or two to start up - when it's ready you'll see a line in its console output that looks like this::
+
+    17:50:59,453 INFO  [ServerImpl] JBoss (Microcontainer) [5.1.0.GA (build: SVNTag=JBoss_5_1_0_GA date=200905221053)] Started in 48s:247ms
+
 Now you should be able to connect to http://localhost:8080/tcm/services/ and
 see the web-service WADL file links listed, and connect to
 e.g. http://localhost:8080/tcm/services/v2/rest/companies/ and see the list of
 companies.
+
+Future Updates
+--------------
+
+If you ``git pull`` future updates to the platform code, you'll need to rebuild it::
+
+    $ cd $TCMPLATFORM; mvn clean install
+
+And copy the built .war file into your jBoss installation::
+
+    $ cp $TCMPLATFORM/utest-portal-webapp/target/tcm.war jboss-5.1.0.GA/server/default/deploy/
+
+If any new database update scripts were included in the platform update, you'll need to run them::
+
+    $ mysql -uroot < $TCMPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_update_db_script_29.sql
+
+Alternatively, you can just run ``reset-mysql.sh`` again, if you don't mind
+losing any data in your local database and starting over with a fresh database.
 
 
 Cheats
