@@ -145,4 +145,6 @@ public interface TestRunWebService
 
 	List<TestRunResultInfo> retestTestRun(UriInfo ui, Integer testRunId, String failedResultsOnly) throws Exception;
 
+	TestRunInfo cloneTestRun(UriInfo ui, Integer testRunId, Integer targetTestCycleId, String cloneAssignments) throws Exception;
+
 }

@@ -175,7 +175,12 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		{
 			for (TestRunTestCase oldCase : oldTestCases)
 			{
-				addTestRunTestCase(toTestRunId, oldCase.getTestCaseVersionId(), oldCase.getPriorityId(), oldCase.getRunOrder(), oldCase.isBlocking(), oldCase.getTestSuiteId());
+				// only include activated test cases
+				TestCaseVersion includedVersion = getRequiredEntityById(TestCaseVersion.class, oldCase.getTestCaseVersionId());
+				if (TestCaseStatus.ACTIVE.equals(includedVersion.getTestCaseStatusId()))
+				{
+					addTestRunTestCase(toTestRunId, oldCase.getTestCaseVersionId(), oldCase.getPriorityId(), oldCase.getRunOrder(), oldCase.isBlocking(), oldCase.getTestSuiteId());
+				}
 			}
 		}
 		// clone assignments if requested

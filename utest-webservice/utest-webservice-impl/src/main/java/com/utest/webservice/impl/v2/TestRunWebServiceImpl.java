@@ -213,6 +213,19 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 		return objectBuilderFactory.toInfo(TestRunInfo.class, testRun, ui_.getBaseUriBuilder());
 	}
 
+	@POST
+	@Path("/{id}/clone/{targetTestCycleId}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_RUN_EDIT })
+	public TestRunInfo cloneTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @PathParam("targetTestCycleId") final Integer targetTestCycleId_,
+			@FormParam("cloneAssignments") final String cloneAssignments_) throws Exception
+	{
+		final TestRun testRun = testRunService.cloneTestRun(testRunId_, targetTestCycleId_, "true".equalsIgnoreCase(cloneAssignments_));
+		return objectBuilderFactory.toInfo(TestRunInfo.class, testRun, ui_.getBaseUriBuilder());
+	}
+
 	@DELETE
 	@Path("/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
