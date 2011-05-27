@@ -66,13 +66,13 @@ public abstract class BaseServiceImpl
 		{
 			environmentProfile = environmentService.addEnvironmentProfile(companyId_, "Created for : " + ((Entity) child_).getId(), "Included groups: "
 					+ environmentGroupIds_.toString(), environmentGroupIds_);
+			child_.setEnvironmentProfileId(environmentProfile.getId());
 		}
 		// or update existing profile
 		else
 		{
 			environmentService.saveEnvironmentGroupsForProfile(child_.getEnvironmentProfileId(), environmentGroupIds_);
 		}
-		child_.setEnvironmentProfileId(environmentProfile.getId());
 	}
 
 	protected Integer getCurrentUserId()
