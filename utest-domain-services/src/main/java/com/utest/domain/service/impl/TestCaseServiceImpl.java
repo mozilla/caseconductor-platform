@@ -22,6 +22,7 @@ package com.utest.domain.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Arrays;
 
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
@@ -38,6 +39,7 @@ import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseTag;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.VersionIncrement;
+import com.utest.domain.search.UtestFilter;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
@@ -55,8 +57,10 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseService
 {
-	private static final Integer	DEFAULT_MAJOR_VERSION	= 0;
-	private static final Integer	DEFAULT_MINOR_VERSION	= 1;
+	private static final Integer		DEFAULT_MAJOR_VERSION	= 0;
+	private static final Integer		DEFAULT_MINOR_VERSION	= 1;
+
+	private static final List<String>	TEST_CASE_FIELDS		= Arrays.asList("maxAttachmentSizeInMBytes", "maxNumberOfAttachments", "testCycleId", "name");
 
 	/**
 	 * Default constructor
@@ -152,7 +156,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 
 	/**
 	 * Sets default settings for new version of a TestCase
-	 *
+	 * 
 	 * @param auth_
 	 * @param testCaseVersion_
 	 * @param versionIncrement_
@@ -340,6 +344,29 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public UtestSearchResult findTestCaseVersions(final UtestSearch search_) throws Exception
 	{
+		List<UtestFilter> filters = search_.getFilters();
+		UtestSearch testCaseSearch = new UtestSearch();
+		boolean found = false;
+		for (UtestFilter filter : filters)
+		{
+			if (TEST_CASE_FIELDS.contains(filter.getProperty()))
+			{
+				found = true;
+				testCaseSearch.addFilter(filter);
+				search_.removeFilter(filter);
+			}
+		}
+		if (found)
+		{
+			UtestSearchResult testCaseSearchResult = dao.getBySearch(TestCase.class, testCaseSearch);
+			List<?> testCases = testCaseSearchResult.getResults();
+			if (testCases == null || testCases.isEmpty())
+			{
+				return testCaseSearchResult;
+			}
+			List<Integer> ids = DomainUtil.extractEntityIds(testCases);
+			search_.addFilterIn("testCaseId", ids);
+		}
 		return dao.getBySearch(TestCaseVersion.class, search_);
 	}
 
