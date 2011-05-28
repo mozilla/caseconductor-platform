@@ -30,6 +30,7 @@ import com.utest.domain.TestCaseVersion;
 import com.utest.domain.VersionIncrement;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.view.TestCaseVersionView;
 import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
@@ -109,4 +110,12 @@ public interface TestCaseService
 	void deleteTestCase(Integer testCaseId, Integer originalVersionId) throws Exception;
 
 	UtestSearchResult findTestCaseVersionsBySteps(UtestSearch search) throws Exception;
+
+	TestCaseVersionView getLatestTestCaseVersionView(Integer testCaseId) throws Exception;
+
+	TestCaseVersionView getTestCaseVersionView(Integer testCaseVersionId) throws Exception;
+
+	List<TestCaseVersionView> getTestCaseVersionViews(Integer testCaseId) throws Exception;
+
+	TestCaseVersionView getLastApprovedTestCaseVersionView(Integer testCaseId) throws Exception;
 }

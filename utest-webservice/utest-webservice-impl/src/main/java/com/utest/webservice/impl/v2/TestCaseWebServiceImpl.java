@@ -49,6 +49,7 @@ import com.utest.domain.VersionIncrement;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.TestCaseService;
+import com.utest.domain.view.TestCaseVersionView;
 import com.utest.webservice.api.v2.TestCaseWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
@@ -444,7 +445,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 		final UtestSearch search = objectBuilderFactory.createSearch(TestCaseVersionInfo.class, request_, ui_);
 		final UtestSearchResult result = testCaseService.findTestCaseVersions(search);
 
-		return (TestCaseVersionSearchResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersion.class, request_, result, ui_.getBaseUriBuilder());
+		return (TestCaseVersionSearchResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersionView.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -461,7 +462,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 		final UtestSearch search = objectBuilderFactory.createSearch(TestCaseStepInfo.class, request_, ui_);
 		final UtestSearchResult result = testCaseService.findTestCaseVersionsBySteps(search);
 
-		return (TestCaseVersionSearchResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersion.class, request_, result, ui_.getBaseUriBuilder());
+		return (TestCaseVersionSearchResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersionView.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET
@@ -478,7 +479,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 		final UtestSearch search = objectBuilderFactory.createSearch(TestCaseVersionInfo.class, request_, ui_);
 		final UtestSearchResult result = testCaseService.findLatestTestCaseVersions(search);
 
-		return (TestCaseVersionSearchResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersion.class, request_, result, ui_.getBaseUriBuilder());
+		return (TestCaseVersionSearchResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersionView.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 	@GET

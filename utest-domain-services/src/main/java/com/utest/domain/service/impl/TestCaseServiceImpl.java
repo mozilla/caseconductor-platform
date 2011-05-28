@@ -20,9 +20,9 @@
 package com.utest.domain.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Arrays;
 
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
@@ -39,12 +39,12 @@ import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseTag;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.VersionIncrement;
-import com.utest.domain.search.UtestFilter;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.TestCaseService;
 import com.utest.domain.util.DomainUtil;
+import com.utest.domain.view.TestCaseVersionView;
 import com.utest.exception.ActivatingIncompleteEntityException;
 import com.utest.exception.ActivatingNotApprovedEntityException;
 import com.utest.exception.ApprovingIncompleteEntityException;
@@ -60,7 +60,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	private static final Integer		DEFAULT_MAJOR_VERSION	= 0;
 	private static final Integer		DEFAULT_MINOR_VERSION	= 1;
 
-	private static final List<String>	TEST_CASE_FIELDS		= Arrays.asList("maxAttachmentSizeInMBytes", "maxNumberOfAttachments", "testCycleId", "name");
+	public static final List<String>	TEST_CASE_FIELDS		= Arrays.asList("maxAttachmentSizeInMBytes", "maxNumberOfAttachments", "testCycleId", "name");
 
 	/**
 	 * Default constructor
@@ -344,30 +344,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public UtestSearchResult findTestCaseVersions(final UtestSearch search_) throws Exception
 	{
-		List<UtestFilter> filters = search_.getFilters();
-		UtestSearch testCaseSearch = new UtestSearch();
-		boolean found = false;
-		for (UtestFilter filter : filters)
-		{
-			if (TEST_CASE_FIELDS.contains(filter.getProperty()))
-			{
-				found = true;
-				testCaseSearch.addFilter(filter);
-				search_.removeFilter(filter);
-			}
-		}
-		if (found)
-		{
-			UtestSearchResult testCaseSearchResult = dao.getBySearch(TestCase.class, testCaseSearch);
-			List<?> testCases = testCaseSearchResult.getResults();
-			if (testCases == null || testCases.isEmpty())
-			{
-				return testCaseSearchResult;
-			}
-			List<Integer> ids = DomainUtil.extractEntityIds(testCases);
-			search_.addFilterIn("testCaseId", ids);
-		}
-		return dao.getBySearch(TestCaseVersion.class, search_);
+		return dao.getBySearch(TestCaseVersionView.class, search_);
 	}
 
 	@Override
@@ -386,7 +363,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			ids.add(((TestCaseStep) step).getTestCaseVersionId());
 		}
 		testCaseSearch.addFilterIn("id", ids);
-		return dao.getBySearch(TestCaseVersion.class, testCaseSearch);
+		return dao.getBySearch(TestCaseVersionView.class, testCaseSearch);
 	}
 
 	@Override
@@ -399,8 +376,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public UtestSearchResult findLatestTestCaseVersions() throws Exception
 	{
 		final UtestSearch search = new UtestSearch();
-		search.addFilterEqual("latestVersion", true);
-		return dao.getBySearch(TestCaseVersion.class, search);
+		return findLatestTestCaseVersions(search);
 	}
 
 	@Override
@@ -503,6 +479,14 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
+	public List<TestCaseVersionView> getTestCaseVersionViews(final Integer testCaseId_) throws Exception
+	{
+		final Search search = new Search(TestCaseVersionView.class);
+		search.addFilterEqual("testCaseId", testCaseId_);
+		return dao.search(TestCaseVersionView.class, search);
+	}
+
+	@Override
 	public List<Tag> getTestCaseTags(final Integer testCaseId_) throws Exception
 	{
 		Search search = new Search(TestCaseTag.class);
@@ -530,6 +514,16 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
+	public TestCaseVersionView getLatestTestCaseVersionView(final Integer testCaseId_) throws Exception
+	{
+		final Search search = new Search(TestCaseVersion.class);
+		search.addFilterEqual("testCaseId", testCaseId_);
+		search.addFilterEqual("latestVersion", true);
+		final TestCaseVersionView testCaseVersion = (TestCaseVersionView) dao.searchUnique(TestCaseVersionView.class, search);
+		return testCaseVersion;
+	}
+
+	@Override
 	public TestCaseVersion getLastApprovedTestCaseVersion(final Integer testCaseId_) throws Exception
 	{
 		final Search search = new Search(TestCaseVersion.class);
@@ -537,6 +531,24 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		search.addFilterEqual("approvalStatusId", ApprovalStatus.APPROVED);
 		search.addSortDesc("id");
 		final List<TestCaseVersion> foundEntities = dao.search(TestCaseVersion.class, search);
+		if ((foundEntities != null) && !foundEntities.isEmpty())
+		{
+			return foundEntities.get(0);
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	@Override
+	public TestCaseVersionView getLastApprovedTestCaseVersionView(final Integer testCaseId_) throws Exception
+	{
+		final Search search = new Search(TestCaseVersionView.class);
+		search.addFilterEqual("testCaseId", testCaseId_);
+		search.addFilterEqual("approvalStatusId", ApprovalStatus.APPROVED);
+		search.addSortDesc("id");
+		final List<TestCaseVersionView> foundEntities = dao.search(TestCaseVersionView.class, search);
 		if ((foundEntities != null) && !foundEntities.isEmpty())
 		{
 			return foundEntities.get(0);
@@ -558,6 +570,13 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			TestCase testCase = getTestCase(testCaseVersion.getTestCaseId());
 			testCaseVersion.setTestCase(testCase);
 		}
+		return testCaseVersion;
+	}
+
+	@Override
+	public TestCaseVersionView getTestCaseVersionView(final Integer testCaseVersionId_) throws Exception
+	{
+		final TestCaseVersionView testCaseVersion = getRequiredEntityById(TestCaseVersionView.class, testCaseVersionId_);
 		return testCaseVersion;
 	}
 

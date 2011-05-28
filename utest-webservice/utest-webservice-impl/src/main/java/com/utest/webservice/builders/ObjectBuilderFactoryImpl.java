@@ -43,7 +43,6 @@ import com.utest.domain.Team;
 import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseContainerDependable;
 import com.utest.domain.TestCaseStep;
-import com.utest.domain.TestCaseVersion;
 import com.utest.domain.TestCycle;
 import com.utest.domain.TestPlan;
 import com.utest.domain.TestRun;
@@ -56,6 +55,7 @@ import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.search.UtestSort;
 import com.utest.domain.service.Initializable;
+import com.utest.domain.view.TestCaseVersionView;
 import com.utest.webservice.model.v2.CompanyInfo;
 import com.utest.webservice.model.v2.CompanySearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
@@ -136,8 +136,7 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 		builders.put(ProductComponentInfo.class, new Builder<ProductComponentInfo, ProductComponent>(this, ProductComponentInfo.class, ProductComponentSearchResultInfo.class));
 		builders.put(TestCaseStepInfo.class, new Builder<TestCaseStepInfo, TestCaseStep>(this, TestCaseStepInfo.class, TestCaseStepSearchResultInfo.class));
 		builders.put(TestCaseInfo.class, new Builder<TestCaseInfo, TestCase>(this, TestCaseInfo.class, TestCaseSearchResultInfo.class));
-		builders.put(TestCaseVersionInfo.class, new TestCaseVersionBuilder<TestCaseVersionInfo, TestCaseVersion>(this, TestCaseVersionInfo.class,
-				TestCaseVersionSearchResultInfo.class));
+		builders.put(TestCaseVersionInfo.class, new Builder<TestCaseVersionInfo, TestCaseVersionView>(this, TestCaseVersionInfo.class, TestCaseVersionSearchResultInfo.class));
 		builders.put(IncludedTestCaseInfo.class, new Builder<IncludedTestCaseInfo, TestCaseContainerDependable>(this, IncludedTestCaseInfo.class,
 				IncludedTestCaseSearchResultInfo.class));
 		builders.put(TestSuiteInfo.class, new Builder<TestSuiteInfo, TestSuite>(this, TestSuiteInfo.class, TestSuiteSearchResultInfo.class));
