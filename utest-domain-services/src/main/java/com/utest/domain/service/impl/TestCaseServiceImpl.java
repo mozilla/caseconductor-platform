@@ -407,7 +407,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public UtestSearchResult findLatestTestCaseVersions(final UtestSearch search_) throws Exception
 	{
 		search_.addFilterEqual("latestVersion", true);
-		return dao.getBySearch(TestCaseVersion.class, search_);
+		return findTestCaseVersions(search_);
 	}
 
 	@Override
