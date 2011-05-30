@@ -46,6 +46,7 @@ import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.VersionIncrement;
+import com.utest.domain.search.UtestFilter;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.TestCaseService;
@@ -442,26 +443,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	 */
 	public TestCaseVersionSearchResultInfo findTestCaseVersions(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
-		final UtestSearch search = objectBuilderFactory.createSearch(TestCaseVersionInfo.class, request_, ui_);
-		final UtestSearchResult result = testCaseService.findTestCaseVersions(search);
-
-		return (TestCaseVersionSearchResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersionView.class, request_, result, ui_.getBaseUriBuilder());
-	}
-
-	@GET
-	@Path("/versions/stepsearch/")
-	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	@Override
-	@Secured(Permission.TEST_CASE_VIEW)
-	/**
-	 * Returns versions of test cases based on search parameters
-	 */
-	public TestCaseVersionSearchResultInfo findTestCaseVersionsBySteps(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
-	{
-		final UtestSearch search = objectBuilderFactory.createSearch(TestCaseStepInfo.class, request_, ui_);
-		final UtestSearchResult result = testCaseService.findTestCaseVersionsBySteps(search);
-
+		final UtestSearchResult result = testCaseService.findTestCaseVersions(constructCompleteTestCaseVersionSearch(request_, ui_));
 		return (TestCaseVersionSearchResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersionView.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
@@ -476,10 +458,23 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	 */
 	public TestCaseVersionSearchResultInfo findLatestTestCaseVersions(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
-		final UtestSearch search = objectBuilderFactory.createSearch(TestCaseVersionInfo.class, request_, ui_);
-		final UtestSearchResult result = testCaseService.findLatestTestCaseVersions(search);
-
+		final UtestSearchResult result = testCaseService.findLatestTestCaseVersions(constructCompleteTestCaseVersionSearch(request_, ui_));
 		return (TestCaseVersionSearchResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersionView.class, request_, result, ui_.getBaseUriBuilder());
+	}
+
+	private UtestSearch constructCompleteTestCaseVersionSearch(UtestSearchRequest request_, UriInfo ui_) throws Exception
+	{
+		final UtestSearch stepSearch = objectBuilderFactory.createSearch(TestCaseStepInfo.class, request_, ui_);
+		final UtestSearch search = objectBuilderFactory.createSearch(TestCaseVersionInfo.class, request_, ui_);
+		List<UtestFilter> stepFilters = stepSearch.getFilters();
+		if (stepFilters != null && !stepFilters.isEmpty())
+		{
+			for (UtestFilter stepFilter : stepFilters)
+			{
+				search.addFilter(stepFilter);
+			}
+		}
+		return search;
 	}
 
 	@GET

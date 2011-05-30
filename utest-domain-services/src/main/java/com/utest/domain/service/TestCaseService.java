@@ -109,8 +109,6 @@ public interface TestCaseService
 
 	void deleteTestCase(Integer testCaseId, Integer originalVersionId) throws Exception;
 
-	UtestSearchResult findTestCaseVersionsBySteps(UtestSearch search) throws Exception;
-
 	TestCaseVersionView getLatestTestCaseVersionView(Integer testCaseId) throws Exception;
 
 	TestCaseVersionView getTestCaseVersionView(Integer testCaseVersionId) throws Exception;

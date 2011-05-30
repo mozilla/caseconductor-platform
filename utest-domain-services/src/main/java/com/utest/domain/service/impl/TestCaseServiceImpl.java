@@ -39,6 +39,7 @@ import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseTag;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.VersionIncrement;
+import com.utest.domain.search.UtestFilter;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
@@ -60,7 +61,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	private static final Integer		DEFAULT_MAJOR_VERSION	= 0;
 	private static final Integer		DEFAULT_MINOR_VERSION	= 1;
 
-	public static final List<String>	TEST_CASE_FIELDS		= Arrays.asList("maxAttachmentSizeInMBytes", "maxNumberOfAttachments", "testCycleId", "name");
+	private static final List<String>	TEST_CASE_STEP_FIELDS	= Arrays.asList("instruction", "expectedResult");
 
 	/**
 	 * Default constructor
@@ -344,25 +345,37 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public UtestSearchResult findTestCaseVersions(final UtestSearch search_) throws Exception
 	{
-		return dao.getBySearch(TestCaseVersionView.class, search_);
-	}
-
-	@Override
-	public UtestSearchResult findTestCaseVersionsBySteps(final UtestSearch search_) throws Exception
-	{
+		List<UtestFilter> filters = search_.getFilters();
+		UtestSearch testCaseStepSearch = new UtestSearch();
 		UtestSearch testCaseSearch = new UtestSearch();
-		UtestSearchResult stepSearchResult = dao.getBySearch(TestCaseStep.class, search_);
-		List<?> steps = stepSearchResult.getResults();
-		if (steps == null || steps.isEmpty())
+		boolean found = false;
+		for (UtestFilter filter : filters)
 		{
-			return stepSearchResult;
+			if (TEST_CASE_STEP_FIELDS.contains(filter.getProperty()))
+			{
+				found = true;
+				testCaseStepSearch.addFilter(filter);
+			}
+			else
+			{
+				testCaseSearch.addFilter(filter);
+			}
 		}
-		List<Integer> ids = new ArrayList<Integer>();
-		for (Object step : steps)
+		if (found)
 		{
-			ids.add(((TestCaseStep) step).getTestCaseVersionId());
+			UtestSearchResult testCaseStepSearchResult = dao.getBySearch(TestCaseStep.class, testCaseStepSearch);
+			List<?> testCaseSteps = testCaseStepSearchResult.getResults();
+			if (testCaseSteps == null || testCaseSteps.isEmpty())
+			{
+				return testCaseStepSearchResult;
+			}
+			List<Integer> ids = new ArrayList<Integer>();
+			for (Object testCaseStep : testCaseSteps)
+			{
+				ids.add(((TestCaseStep) testCaseStep).getTestCaseVersionId());
+			}
+			testCaseSearch.addFilterIn("id", ids);
 		}
-		testCaseSearch.addFilterIn("id", ids);
 		return dao.getBySearch(TestCaseVersionView.class, testCaseSearch);
 	}
 

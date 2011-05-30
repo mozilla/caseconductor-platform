@@ -99,6 +99,4 @@ public interface TestCaseWebService
 
 	List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseVersionId) throws Exception;
 
-	TestCaseVersionSearchResultInfo findTestCaseVersionsBySteps(UriInfo ui, UtestSearchRequest request) throws Exception;
-
 }
