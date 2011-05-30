@@ -55,6 +55,7 @@
                 <entry key="tag" value="/tags/{id}"/>
                 <entry key="testcase" value="/testcases/{id}"/>
                 <entry key="testcaseversion" value="/testcases/versions/{id}"/>
+                <entry key="testcaseversionview" value="/testcases/versions/{id}"/>
                 <entry key="testcasestep" value="/testcases/steps/{id}"/>
                 <entry key="testsuite" value="/testsuites/{id}"/>
                 <entry key="testsuitetestcase" value="/testsuites/includedtestcases/{id}"/>
