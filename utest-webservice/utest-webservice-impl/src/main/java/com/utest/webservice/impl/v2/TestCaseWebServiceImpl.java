@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * 
+ *
  * @author Vadim Kisen
  *
- * copyright 2010 by uTest 
+ * copyright 2010 by uTest
  */
 package com.utest.webservice.impl.v2;
 
@@ -87,7 +87,8 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 
 		final TestCaseVersion testCaseVersion = testCaseService.saveTestCaseVersion(testCaseVersionId_, description_, originalVersionId_, VersionIncrement
 				.valueOf(versionIncrement_));
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder());
+		final TestCaseVersionView testCaseVersionView = testCaseService.getTestCaseVersionView(testCaseVersion.getId());
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersionView, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
@@ -101,7 +102,8 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	{
 
 		final TestCaseVersion testCaseVersion = testCaseService.saveTestCaseVersion(testCaseVersionId_, description_, originalVersionId_, VersionIncrement.NONE);
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder());
+		final TestCaseVersionView testCaseVersionView = testCaseService.getTestCaseVersionView(testCaseVersion.getId());
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersionView, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
@@ -115,7 +117,8 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	{
 
 		final TestCaseVersion testCaseVersion = testCaseService.approveTestCaseVersion(testCaseVersionId_, originalVersionId_);
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder());
+		final TestCaseVersionView testCaseVersionView = testCaseService.getTestCaseVersionView(testCaseVersion.getId());
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersionView, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
@@ -129,7 +132,8 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	{
 
 		final TestCaseVersion testCaseVersion = testCaseService.rejectTestCaseVersion(testCaseVersionId_, originalVersionId_);
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder());
+		final TestCaseVersionView testCaseVersionView = testCaseService.getTestCaseVersionView(testCaseVersion.getId());
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersionView, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
@@ -143,7 +147,8 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	{
 
 		final TestCaseVersion testCaseVersion = testCaseService.activateTestCaseVersion(testCaseVersionId_, originalVersionId_);
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder());
+		final TestCaseVersionView testCaseVersionView = testCaseService.getTestCaseVersionView(testCaseVersion.getId());
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersionView, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
@@ -157,7 +162,8 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	{
 
 		final TestCaseVersion testCaseVersion = testCaseService.lockTestCaseVersion(testCaseVersionId_, originalVersionId_);
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersion, ui_.getBaseUriBuilder());
+		final TestCaseVersionView testCaseVersionView = testCaseService.getTestCaseVersionView(testCaseVersion.getId());
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersionView, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
