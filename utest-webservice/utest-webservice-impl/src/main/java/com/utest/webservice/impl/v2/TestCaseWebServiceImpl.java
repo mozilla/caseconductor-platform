@@ -189,8 +189,8 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	public TestCaseVersionInfo cloneTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
 	{
 		final TestCase testCase = testCaseService.cloneTestCase(testCaseId_);
-
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCase.getLatestVersion(), ui_.getBaseUriBuilder());
+		final TestCaseVersionView testCaseVersionView = testCaseService.getTestCaseVersionView(testCase.getLatestVersion().getId());
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersionView, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
@@ -284,8 +284,8 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 			@FormParam("name") final String name_, @FormParam("description") final String description_) throws Exception
 	{
 		final TestCase testCase = testCaseService.addTestCase(productId_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, name_, description_);
-
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCase.getLatestVersion(), ui_.getBaseUriBuilder());
+		final TestCaseVersionView testCaseVersionView = testCaseService.getTestCaseVersionView(testCase.getLatestVersion().getId());
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersionView, ui_.getBaseUriBuilder());
 	}
 
 	@DELETE
@@ -373,7 +373,8 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	public TestCaseVersionInfo getLatestTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
 	{
 		final TestCase testCase = testCaseService.getTestCase(testCaseId_);
-		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCase.getLatestVersion(), ui_.getBaseUriBuilder());
+		final TestCaseVersionView testCaseVersionView = testCaseService.getTestCaseVersionView(testCase.getLatestVersion().getId());
+		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersionView, ui_.getBaseUriBuilder());
 	}
 
 	@GET
