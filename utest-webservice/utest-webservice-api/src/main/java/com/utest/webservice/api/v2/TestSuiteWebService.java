@@ -25,7 +25,7 @@ import java.util.List;
 import javax.ws.rs.core.UriInfo;
 
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
-import com.utest.webservice.model.v2.IncludedTestCaseInfo;
+import com.utest.webservice.model.v2.TestSuiteTestCaseInfo;
 import com.utest.webservice.model.v2.TestSuiteInfo;
 import com.utest.webservice.model.v2.TestSuiteSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
@@ -41,7 +41,7 @@ public interface TestSuiteWebService
 
 	TestSuiteSearchResultInfo findTestSuites(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	List<IncludedTestCaseInfo> getTestSuiteTestCases(UriInfo ui, Integer testSuiteId) throws Exception;
+	List<TestSuiteTestCaseInfo> getTestSuiteTestCases(UriInfo ui, Integer testSuiteId) throws Exception;
 
 	TestSuiteInfo activateTestSuite(UriInfo ui, Integer testSuiteId, Integer originalVesionId) throws Exception;
 
@@ -51,16 +51,16 @@ public interface TestSuiteWebService
 
 	Boolean deleteTestSuiteTestCase(UriInfo ui, Integer includedTestCaseId, Integer originalVesionId) throws Exception;
 
-	IncludedTestCaseInfo getTestSuiteTestCase(UriInfo ui, Integer includedTestCaseId) throws Exception;
+	TestSuiteTestCaseInfo getTestSuiteTestCase(UriInfo ui, Integer includedTestCaseId) throws Exception;
 
 	TestSuiteInfo createTestSuite(UriInfo ui, Integer productId, String useLatestVersions, String name, String description) throws Exception;
 
 	TestSuiteInfo updateTestSuite(UriInfo ui, Integer testSuiteId, String name, String description, Integer originalVersionId) throws Exception;
 
-	IncludedTestCaseInfo createTestSuiteTestCase(UriInfo ui, Integer testSuiteId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, String blocking)
+	TestSuiteTestCaseInfo createTestSuiteTestCase(UriInfo ui, Integer testSuiteId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, String blocking)
 			throws Exception;
 
-	IncludedTestCaseInfo updateTestSuiteTestCase(UriInfo ui, Integer includedTestCaseId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, String blocking,
+	TestSuiteTestCaseInfo updateTestSuiteTestCase(UriInfo ui, Integer includedTestCaseId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, String blocking,
 			Integer originalVersionId) throws Exception;
 
 	TestSuiteInfo cloneTestSuite(UriInfo ui, Integer testSuiteId) throws Exception;

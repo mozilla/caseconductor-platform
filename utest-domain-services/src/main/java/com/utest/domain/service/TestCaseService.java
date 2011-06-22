@@ -94,8 +94,6 @@ public interface TestCaseService
 
 	TestCase saveTestCase(Integer testCaseId, String name, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, Integer originalVersionId_) throws Exception;
 
-	TestCaseVersion saveTestCaseVersion(Integer testCaseVersionId, String description, Integer originalVersionId_, VersionIncrement versionIncrement) throws Exception;
-
 	UtestSearchResult findTestCases(UtestSearch search) throws Exception;
 
 	void deleteTestCaseTag(Integer testCaseId, Integer tagId);
@@ -116,4 +114,10 @@ public interface TestCaseService
 	List<TestCaseVersionView> getTestCaseVersionViews(Integer testCaseId) throws Exception;
 
 	TestCaseVersionView getLastApprovedTestCaseVersionView(Integer testCaseId) throws Exception;
+
+	TestCase addTestCase(Integer productId, Integer testCycleId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, String description,
+			boolean automated, String automationUri) throws Exception;
+
+	TestCaseVersion saveTestCaseVersion(Integer testCaseVersionId, String description, boolean automated, String automationUri, Integer originalVersion,
+			VersionIncrement versionIncrement) throws Exception;
 }

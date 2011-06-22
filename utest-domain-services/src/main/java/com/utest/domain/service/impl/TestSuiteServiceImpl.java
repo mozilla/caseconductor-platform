@@ -36,6 +36,7 @@ import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.TestSuiteService;
+import com.utest.domain.view.TestSuiteTestCaseView;
 import com.utest.exception.ActivatingIncompleteEntityException;
 import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingActivatedEntityException;
@@ -161,6 +162,8 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	{
 		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
 		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
+		// check if products match
+		checkProductMatch(testSuite, testCaseVersion);
 		// prevent adding to activated test suite
 		if (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
 		{
@@ -253,6 +256,12 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
+	public UtestSearchResult findTestSuiteTestCases(final UtestSearch search_) throws Exception
+	{
+		return dao.getBySearch(TestSuiteTestCaseView.class, search_);
+	}
+
+	@Override
 	public TestSuite getTestSuite(final Integer testSuiteId_) throws Exception
 	{
 		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
@@ -269,12 +278,29 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
+	public TestSuiteTestCaseView getTestSuiteTestCaseView(final Integer testSuiteTestCaseId_) throws Exception
+	{
+		final TestSuiteTestCaseView testSuiteTestCase = getRequiredEntityById(TestSuiteTestCaseView.class, testSuiteTestCaseId_);
+		return testSuiteTestCase;
+
+	}
+
+	@Override
 	public List<TestSuiteTestCase> getTestSuiteTestCases(final Integer testSuiteId_) throws Exception
 	{
 		final Search search = new Search(TestSuiteTestCase.class);
 		search.addFilterEqual("testSuiteId", testSuiteId_);
 		search.addSortAsc("runOrder");
 		return dao.search(TestSuiteTestCase.class, search);
+	}
+
+	@Override
+	public List<TestSuiteTestCaseView> getTestSuiteTestCasesViews(final Integer testSuiteId_) throws Exception
+	{
+		final Search search = new Search(TestSuiteTestCaseView.class);
+		search.addFilterEqual("testSuiteId", testSuiteId_);
+		search.addSortAsc("runOrder");
+		return dao.search(TestSuiteTestCaseView.class, search);
 	}
 
 	@Override

@@ -81,6 +81,8 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	{
 		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);
 		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
+		// check if products match
+		checkProductMatch(testSuite, testPlan);
 		// prevent if test suite not activated
 		if (!TestSuiteStatus.ACTIVE.equals(testSuite.getTestSuiteStatusId()))
 		{

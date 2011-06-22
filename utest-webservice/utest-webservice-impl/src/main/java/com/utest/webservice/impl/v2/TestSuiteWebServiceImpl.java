@@ -45,10 +45,11 @@ import com.utest.domain.TestSuiteTestCase;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.TestSuiteService;
+import com.utest.domain.view.TestSuiteTestCaseView;
 import com.utest.webservice.api.v2.TestSuiteWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
-import com.utest.webservice.model.v2.IncludedTestCaseInfo;
+import com.utest.webservice.model.v2.TestSuiteTestCaseInfo;
 import com.utest.webservice.model.v2.TestSuiteInfo;
 import com.utest.webservice.model.v2.TestSuiteSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
@@ -136,10 +137,10 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_SUITE_VIEW)
-	public List<IncludedTestCaseInfo> getTestSuiteTestCases(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_) throws Exception
+	public List<TestSuiteTestCaseInfo> getTestSuiteTestCases(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_) throws Exception
 	{
-		final List<TestSuiteTestCase> includedTestCases = testSuiteService.getTestSuiteTestCases(testSuiteId_);
-		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCases, ui_.getBaseUriBuilder());
+		final List<TestSuiteTestCaseView> includedTestCases = testSuiteService.getTestSuiteTestCasesViews(testSuiteId_);
+		return objectBuilderFactory.toInfo(TestSuiteTestCaseInfo.class, includedTestCases, ui_.getBaseUriBuilder());
 	}
 
 	@POST
@@ -148,14 +149,14 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_SUITE_EDIT })
-	public IncludedTestCaseInfo createTestSuiteTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_,
+	public TestSuiteTestCaseInfo createTestSuiteTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_,
 			@FormParam("testCaseVersionId") final Integer testCaseVersionId_, @FormParam("priorityId") final Integer priorityId_, @FormParam("runOrder") final Integer runOrder_,
 			@FormParam("blocking") final String blocking_) throws Exception
 	{
 
 		final TestSuiteTestCase includedTestCase = testSuiteService.addTestSuiteTestCase(testSuiteId_, testCaseVersionId_, priorityId_, runOrder_, "true"
 				.equalsIgnoreCase(blocking_));
-		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
+		return objectBuilderFactory.toInfo(TestSuiteTestCaseInfo.class, testSuiteService.getTestSuiteTestCaseView(includedTestCase.getId()), ui_.getBaseUriBuilder());
 	}
 
 	@DELETE
@@ -178,11 +179,11 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
-	public IncludedTestCaseInfo getTestSuiteTestCase(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_) throws Exception
+	public TestSuiteTestCaseInfo getTestSuiteTestCase(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_) throws Exception
 	{
 
-		final TestSuiteTestCase includedTestCase = testSuiteService.getTestSuiteTestCase(includedTestCaseId_);
-		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
+		final TestSuiteTestCaseView includedTestCase = testSuiteService.getTestSuiteTestCaseView(includedTestCaseId_);
+		return objectBuilderFactory.toInfo(TestSuiteTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
@@ -191,14 +192,14 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
-	public IncludedTestCaseInfo updateTestSuiteTestCase(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
+	public TestSuiteTestCaseInfo updateTestSuiteTestCase(@Context final UriInfo ui_, @PathParam("includedTestCaseId") final Integer includedTestCaseId_,
 			@FormParam("testCaseVersionId") final Integer testCaseVersionId_, @FormParam("priorityId") final Integer priorityId_, @FormParam("runOrder") final Integer runOrder_,
 			@FormParam("blocking") final String blocking_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 
 		final TestSuiteTestCase includedTestCase = testSuiteService.saveTestSuiteTestCase(includedTestCaseId_, priorityId_, runOrder_, "true".equalsIgnoreCase(blocking_),
 				originalVersionId_);
-		return objectBuilderFactory.toInfo(IncludedTestCaseInfo.class, includedTestCase, ui_.getBaseUriBuilder());
+		return objectBuilderFactory.toInfo(TestSuiteTestCaseInfo.class, testSuiteService.getTestSuiteTestCaseView(includedTestCase.getId()), ui_.getBaseUriBuilder());
 	}
 
 	@POST

@@ -31,11 +31,13 @@ import com.utest.domain.Entity;
 import com.utest.domain.EnvironmentDependable;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Named;
+import com.utest.domain.ProductDependable;
 import com.utest.domain.Versioned;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.util.UserUtil;
 import com.utest.exception.DuplicateNameException;
 import com.utest.exception.InvalidParentChildEnvironmentException;
+import com.utest.exception.NoProductMatchException;
 import com.utest.exception.NotFoundException;
 
 public abstract class BaseServiceImpl
@@ -116,6 +118,14 @@ public abstract class BaseServiceImpl
 					}
 				}
 			}
+		}
+	}
+
+	protected void checkProductMatch(ProductDependable entity1_, ProductDependable entity2_) throws DuplicateNameException
+	{
+		if (entity1_.getProductId().equals(entity2_.getProductId()))
+		{
+			throw new NoProductMatchException();
 		}
 	}
 

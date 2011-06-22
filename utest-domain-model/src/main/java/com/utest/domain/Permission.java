@@ -37,6 +37,7 @@ public class Permission extends Entity implements Named
 	public static final String	PRODUCT_VIEW					= "PERMISSION_PRODUCT_VIEW";
 	public static final String	PRODUCT_EDIT					= "PERMISSION_PRODUCT_EDIT";
 	public static final String	TEST_CASE_VIEW					= "PERMISSION_TEST_CASE_VIEW";
+	public static final String	TEST_CASE_ADD					= "PERMISSION_TEST_CASE_ADD";
 	public static final String	TEST_CASE_EDIT					= "PERMISSION_TEST_CASE_EDIT";
 	public static final String	TEST_CASE_APPROVE				= "PERMISSION_TEST_CASE_APPROVE";
 	public static final String	TEST_CASE_ACTIVATE				= "PERMISSION_TEST_CASE_ACTIVATE";

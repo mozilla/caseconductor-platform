@@ -81,9 +81,6 @@ public interface TestCaseWebService
 
 	TestCaseVersionInfo approveTestCaseVersion(UriInfo ui, Integer testCaseVersionId, Integer originalVersionId) throws Exception;
 
-	TestCaseVersionInfo createTestCase(UriInfo ui, Integer productId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, String description)
-			throws Exception;
-
 	TestCaseInfo updateTestCase(UriInfo ui, Integer testCaseId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, Integer originalVersionId)
 			throws Exception;
 
@@ -93,10 +90,15 @@ public interface TestCaseWebService
 	TestCaseStepInfo updateTestCaseStep(UriInfo ui, Integer testCaseStepId, Integer stepNumber, String name, String instruction, String expectedResult, Integer estimatedTimeInMin,
 			Integer originalVersionId) throws Exception;
 
-	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String versionIncrement, String description, Integer originalVersionId) throws Exception;
-
-	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String description, Integer originalVersionId) throws Exception;
-
 	List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseVersionId) throws Exception;
+
+	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String versionIncrement, String description, Integer originalVersionId, String automated,
+			String automationUri) throws Exception;
+
+	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String description, Integer originalVersionId, String automated, String automationUri)
+			throws Exception;
+
+	TestCaseVersionInfo createTestCase(UriInfo ui, Integer productId, Integer testCycleId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name,
+			String description, String automated, String automationUri) throws Exception;
 
 }
