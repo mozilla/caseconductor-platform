@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-	<!-- Generated Oct 7, 2009 11:18:37 AM by Hibernate Tools 3.2.4.GA -->
+<!-- Generated Sep 3, 2010 1:57:11 PM by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-	<class name="com.utest.domain.view.TestCaseVersionView" mutable="false" table="TestCaseVersionView">
+    <class name="com.utest.domain.view.TestSuiteTestCaseView" table="TestSuiteTestCaseView" >
         <id name="id" type="java.lang.Integer">
-            <column name="testCaseVersionId" />
+            <column name="testSuiteTestCaseId" />
             <generator class="identity" />
         </id>
         <version name="version" type="java.lang.Integer">
@@ -14,33 +14,13 @@
         <property name="name" type="string">
             <column name="name" not-null="true" />
         </property>
-        <property name="maxAttachmentSizeInMbytes" type="java.lang.Integer">
-            <column name="maxAttachmentSizeInMBytes" not-null="true" />
+        <property name="description" type="string">
+            <column name="description" length="65535" not-null="true" />
         </property>
-        <property name="maxNumberOfAttachments" type="java.lang.Integer">
-            <column name="maxNumberOfAttachments" not-null="true" />
-        </property>
-        <property name="testCycleId" type="java.lang.Integer">
-            <column name="testCycleId">
-                <comment>created during specific Test Cycle.</comment>
-            </column>
-        </property>
-         <property name="testCaseId" type="java.lang.Integer">
-            <column name="testCaseId" not-null="true" />
-        </property>
-        <property name="productId" type="java.lang.Integer">
-            <column name="productId" not-null="true" />
-        </property>
- 		<property name="companyId" type="java.lang.Integer">
-			<column name="companyId" />
-		</property>
         <property name="testCaseStatusId" type="java.lang.Integer">
             <column name="testCaseStatusId" not-null="true">
                 <comment>active, pending, etc.</comment>
             </column>
-        </property>
-        <property name="description" type="string">
-            <column name="description" length="65535" not-null="true" />
         </property>
         <property name="majorVersion" type="java.lang.Integer">
             <column name="majorVersion" not-null="true" />
@@ -64,16 +44,52 @@
         <property name="approveDate" type="timestamp">
             <column name="approveDate" length="19" />
         </property>
-        <property name="environmentProfileId" type="java.lang.Integer">
-            <column name="environmentProfileId">
-                <comment>Optional association to a set of Environments.</comment>
-            </column>
-        </property>
-        <property name="automated" type="boolean">
+         <property name="automated" type="boolean">
             <column name="automated" not-null="true" />
         </property>
         <property name="automationUri" type="string">
             <column name="automationUri" length="65535" not-null="true" />
+        </property>
+        <property name="testCaseVersionId" type="java.lang.Integer">
+            <column name="testCaseVersionId" not-null="true" />
+        </property>
+        <property name="testCycleId" type="java.lang.Integer">
+            <column name="testCycleId" not-null="true">
+                <comment>TestCycleId for wich this Test Run was created.</comment>
+            </column>
+        </property>
+        <property name="companyId" type="java.lang.Integer">
+            <column name="companyId" not-null="true" />
+        </property>
+        <property name="productId" type="java.lang.Integer">
+            <column name="productId" not-null="true" />
+        </property>
+        <property name="testCaseId" type="java.lang.Integer">
+            <column name="testCaseId" not-null="true" />
+        </property>
+        <property name="priorityId" type="java.lang.Integer">
+            <column name="priorityId" not-null="true" />
+        </property>
+        <property name="runOrder" type="java.lang.Integer">
+            <column name="runOrder" not-null="true" />
+        </property>
+        <property name="blocking" type="boolean">
+            <column name="blocking" not-null="true" />
+        </property>
+        <property name="selfAssignAllowed" type="boolean">
+            <column name="selfAssignAllowed" not-null="true" />
+        </property>
+        <property name="selfAssignLimit" type="java.lang.Integer">
+            <column name="selfAssignLimit" not-null="true" />
+        </property>
+        <property name="selfAssignPerEnvironment" type="boolean">
+            <column name="selfAssignPerEnvironment" not-null="true" />
+        </property>
+        <property name="environmentProfileId" type="java.lang.Integer">
+            <column name="environmentProfileId" />
+        </property>
+        <property name="testSuiteId" type="java.lang.Integer">
+            <column name="testSuiteId"/>
         </property>
         <property name="createdBy" type="java.lang.Integer">
             <column name="createdBy" not-null="true" />
@@ -87,5 +103,5 @@
         <property name="lastChangeDate" type="timestamp">
             <column name="lastChangeDate" length="19" not-null="true" />
         </property>
-	</class>
+    </class>
 </hibernate-mapping>

@@ -63,6 +63,7 @@ import com.utest.domain.service.TestRunService;
 import com.utest.domain.service.TestSuiteService;
 import com.utest.domain.service.UserService;
 import com.utest.domain.view.CategoryValue;
+import com.utest.domain.view.TestRunTestCaseView;
 import com.utest.exception.ActivatingIncompleteEntityException;
 import com.utest.exception.ApprovingIncompleteEntityException;
 import com.utest.exception.ChangingActivatedEntityException;
@@ -248,6 +249,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	{
 		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
+		// check if products match
+		checkProductMatch(testRun, testSuite);
 		// check if test suite is activated
 		if (!TestSuiteStatus.ACTIVE.equals(testSuite.getTestSuiteStatusId()))
 		{
@@ -258,9 +261,16 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		for (final TestSuiteTestCase testSuiteTestCase : includedTestCases)
 		{
 			lastRunOrder += testSuiteTestCase.getRunOrder();
-			final TestRunTestCase testRunTestCase = addTestRunTestCase(testRun.getId(), testSuiteTestCase.getTestCaseVersionId(), testSuiteTestCase.getPriorityId(),
-					testSuiteTestCase.getRunOrder(), testSuiteTestCase.isBlocking(), testSuiteId_);
-			dao.merge(testRunTestCase);
+			try
+			{
+				final TestRunTestCase testRunTestCase = addTestRunTestCase(testRun.getId(), testSuiteTestCase.getTestCaseVersionId(), testSuiteTestCase.getPriorityId(),
+						testSuiteTestCase.getRunOrder(), testSuiteTestCase.isBlocking(), testSuiteId_);
+				dao.merge(testRunTestCase);
+			}
+			catch (IncludingMultileVersionsOfSameEntityException e)
+			{
+				// do nothing and continue with other test cases in the suite
+			}
 		}
 		return lastRunOrder;
 	}
@@ -759,7 +769,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	@Override
 	public UtestSearchResult findTestRunTestCases(final UtestSearch search_) throws Exception
 	{
-		return dao.getBySearch(TestRunTestCase.class, search_);
+		return dao.getBySearch(TestRunTestCaseView.class, search_);
 	}
 
 	@Override
@@ -791,11 +801,27 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
+	public TestRunTestCaseView getTestRunTestCaseView(final Integer testRunTestCaseId_) throws Exception
+	{
+		final TestRunTestCaseView testRunTestCase = getRequiredEntityById(TestRunTestCaseView.class, testRunTestCaseId_);
+		return testRunTestCase;
+
+	}
+
+	@Override
 	public List<TestRunTestCase> getTestRunTestCases(final Integer testRunId_) throws Exception
 	{
 		final Search search = new Search(TestRunTestCase.class);
 		search.addFilterEqual("testRunId", testRunId_);
 		return dao.search(TestRunTestCase.class, search);
+	}
+
+	@Override
+	public List<TestRunTestCaseView> getTestRunTestCasesViews(final Integer testRunId_) throws Exception
+	{
+		final Search search = new Search(TestRunTestCaseView.class);
+		search.addFilterEqual("testRunId", testRunId_);
+		return dao.search(TestRunTestCaseView.class, search);
 	}
 
 	@Override
@@ -952,6 +978,41 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		UtestSearchResult uresult = findTestRunResults(usearch);
 		List<TestRunResult> allResults = (List<TestRunResult>) uresult.getResults();
 		for (TestRunResult result : allResults)
+		{
+			updateApprovalStatus(result.getId(), null, ApprovalStatus.APPROVED, result.getVersion());
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void approveAllTestRunResultsForTestRunTestCase(final Integer testRunId_, final Integer testCaseId_) throws Exception
+	{
+		UtestSearch usearch = new UtestSearch();
+		usearch.addFilterEqual("testRunId", testRunId_);
+		usearch.addFilterEqual("testCaseId", testCaseId_);
+		List<Integer> statuses = new ArrayList<Integer>();
+		statuses.add(TestRunResultStatus.FAILED);
+		statuses.add(TestRunResultStatus.PASSED);
+		statuses.add(TestRunResultStatus.INVALIDATED);
+		statuses.add(TestRunResultStatus.SKIPPED);
+		usearch.addFilterIn("testRunResultStatusId", statuses);
+		UtestSearchResult uresult = findTestRunResults(usearch);
+		List<TestRunResult> allResults = (List<TestRunResult>) uresult.getResults();
+		for (TestRunResult result : allResults)
+		{
+			updateApprovalStatus(result.getId(), null, ApprovalStatus.APPROVED, result.getVersion());
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void approveTestRunResults(final List<Integer> testRunResultId_) throws Exception
+	{
+		final UtestSearch usearch = new UtestSearch();
+		usearch.addFilterIn("id", testRunResultId_);
+		final UtestSearchResult uresult = findTestRunResults(usearch);
+		final List<TestRunResult> allResults = (List<TestRunResult>) uresult.getResults();
+		for (final TestRunResult result : allResults)
 		{
 			updateApprovalStatus(result.getId(), null, ApprovalStatus.APPROVED, result.getVersion());
 		}

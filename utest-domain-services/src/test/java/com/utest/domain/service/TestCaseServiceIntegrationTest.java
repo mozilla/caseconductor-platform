@@ -25,12 +25,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.User;
 import com.utest.domain.VersionIncrement;
+import com.utest.domain.search.UtestSearch;
+import com.utest.domain.search.UtestSearchResult;
 
 public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegrationTest
 {
@@ -109,6 +112,23 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 
 	}
 
+	@Test(groups = { "integration" })
+	public void testFindTestCaseVersionsByTestCaseName() throws Exception
+	{
+
+		final User user = userService.getUser(1);
+		loginUser(user);
+		// UtestSearchResult findTestCaseVersions(final UtestSearch search_)
+		UtestSearch search = new UtestSearch();
+		// test case field
+		search.addFilterEqual("name", "test case 2");
+		// test case version field
+		search.addFilterEqual("description", "test case 2");
+		UtestSearchResult result = testCaseService.findTestCaseVersions(search);
+		Assert.assertTrue(result.getResults() != null);
+
+	}
+
 	// @Test(groups = { "integration" })
 	public void testSaveTestCaseValidEnvironmentGroups() throws Exception
 	{
@@ -116,9 +136,9 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		final User user = userService.getUser(1);
 		loginUser(user);
 		final List<Integer> environmentGroupsIds = new ArrayList<Integer>();
-		environmentGroupsIds.add(51);
-		environmentGroupsIds.add(52);
-		final TestCaseVersion testCaseVersion = testCaseService.getTestCaseVersion(60);// testCase11.getLatestVersion().getId()
+		environmentGroupsIds.add(1);
+		environmentGroupsIds.add(2);
+		final TestCaseVersion testCaseVersion = testCaseService.getTestCaseVersion(7);// testCase11.getLatestVersion().getId()
 		testCaseService.saveEnvironmentGroupsForTestCaseVersion(testCaseVersion.getId(), environmentGroupsIds, testCaseVersion.getVersion());
 		Assert.assertTrue(true);
 
@@ -181,8 +201,8 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		loginUser(user);
 		final Integer testCaseId = 3;
 		final TestCaseVersion testCaseVersion = testCaseService.getTestCaseVersion(testCaseId);
-		final TestCaseVersion clonedTestCase = testCaseService.saveTestCaseVersion(testCaseVersion.getId(), testCaseVersion.getDescription(), testCaseVersion.getVersion(),
-				VersionIncrement.BOTH);
+		final TestCaseVersion clonedTestCase = testCaseService.saveTestCaseVersion(testCaseVersion.getId(), testCaseVersion.getDescription(), false, null, testCaseVersion
+				.getVersion(), VersionIncrement.BOTH);
 		Assert.assertTrue(clonedTestCase != null);
 	}
 

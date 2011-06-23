@@ -28,8 +28,8 @@ import javax.ws.rs.core.UriInfo;
 import com.utest.webservice.model.v2.CategoryValueInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
-import com.utest.webservice.model.v2.IncludedTestCaseInfo;
-import com.utest.webservice.model.v2.IncludedTestCaseSearchResultInfo;
+import com.utest.webservice.model.v2.TestRunTestCaseInfo;
+import com.utest.webservice.model.v2.TestRunTestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.RoleInfo;
 import com.utest.webservice.model.v2.TestRunInfo;
@@ -53,7 +53,7 @@ public interface TestRunWebService
 
 	TestRunSearchResultInfo findTestRuns(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	List<IncludedTestCaseInfo> getTestRunTestCases(UriInfo ui, Integer testRunId) throws Exception;
+	List<TestRunTestCaseInfo> getTestRunTestCases(UriInfo ui, Integer testRunId) throws Exception;
 
 	TestRunInfo activateTestRun(UriInfo ui, Integer testRunId, Integer originalVesionId) throws Exception;
 
@@ -61,9 +61,9 @@ public interface TestRunWebService
 
 	Boolean deleteTestRun(UriInfo ui, Integer testRunId, Integer originalVesionId) throws Exception;
 
-	List<IncludedTestCaseInfo> createTestCasesFromTestPlan(UriInfo ui, Integer testRunId, Integer testPlanId) throws Exception;
+	List<TestRunTestCaseInfo> createTestCasesFromTestPlan(UriInfo ui, Integer testRunId, Integer testPlanId) throws Exception;
 
-	List<IncludedTestCaseInfo> createTestCasesFromTestSuite(UriInfo ui, Integer testRunId, Integer testSuiteId) throws Exception;
+	List<TestRunTestCaseInfo> createTestCasesFromTestSuite(UriInfo ui, Integer testRunId, Integer testSuiteId) throws Exception;
 
 	TestRunTestCaseAssignmentSearchResultInfo findTestRunAssignments(UriInfo ui, UtestSearchRequest request) throws Exception;
 
@@ -71,7 +71,7 @@ public interface TestRunWebService
 
 	List<ProductComponentInfo> getTestRunComponents(UriInfo ui, Integer testRunId) throws Exception;
 
-	IncludedTestCaseInfo getTestRunTestCase(UriInfo ui, Integer includedTestCaseId) throws Exception;
+	TestRunTestCaseInfo getTestRunTestCase(UriInfo ui, Integer includedTestCaseId) throws Exception;
 
 	Boolean deleteTestRunTestCase(UriInfo ui, Integer includedTestCaseId, Integer originalVersionId) throws Exception;
 
@@ -103,11 +103,11 @@ public interface TestRunWebService
 
 	List<EnvironmentInfo> getTestRunResultEnvironments(UriInfo ui, Integer resultId) throws Exception;
 
-	IncludedTestCaseSearchResultInfo findTestRunTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
+	TestRunTestCaseSearchResultInfo findTestRunTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	IncludedTestCaseInfo createTestRunTestCase(UriInfo ui, Integer testRunId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, String blocking) throws Exception;
+	TestRunTestCaseInfo createTestRunTestCase(UriInfo ui, Integer testRunId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, String blocking) throws Exception;
 
-	IncludedTestCaseInfo updateTestRunTestCase(UriInfo ui, Integer includedTestCaseId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, String blocking,
+	TestRunTestCaseInfo updateTestRunTestCase(UriInfo ui, Integer includedTestCaseId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, String blocking,
 			Integer originalVersionId) throws Exception;
 
 	TestRunTestCaseAssignmentInfo createTestRunTestCaseAssignment(UriInfo ui, Integer includedTestCaseId, Integer testerId) throws Exception;
@@ -146,5 +146,7 @@ public interface TestRunWebService
 	List<TestRunResultInfo> retestTestRun(UriInfo ui, Integer testRunId, String failedResultsOnly) throws Exception;
 
 	TestRunInfo cloneTestRun(UriInfo ui, Integer testRunId, Integer targetTestCycleId, String cloneAssignments) throws Exception;
+
+	Boolean approveAllResultsForTestRunTestCase(UriInfo ui, Integer testRunId, Integer testCaseId) throws Exception;
 
 }

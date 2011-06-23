@@ -82,11 +82,12 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Secured( { Permission.TEST_CASE_EDIT })
 	public TestCaseVersionInfo updateTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
 			@PathParam("increment") final String versionIncrement_, @FormParam("description") final String description_,
-			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+			@FormParam("originalVersionId") final Integer originalVersionId_, @FormParam("automated") final String automated_,
+			@FormParam("automationUri") final String automationUri_) throws Exception
 	{
 
-		final TestCaseVersion testCaseVersion = testCaseService.saveTestCaseVersion(testCaseVersionId_, description_, originalVersionId_, VersionIncrement
-				.valueOf(versionIncrement_));
+		final TestCaseVersion testCaseVersion = testCaseService.saveTestCaseVersion(testCaseVersionId_, description_, "TRUE".equalsIgnoreCase(automated_), automationUri_,
+				originalVersionId_, VersionIncrement.valueOf(versionIncrement_));
 		final TestCaseVersionView testCaseVersionView = testCaseService.getTestCaseVersionView(testCaseVersion.getId());
 		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersionView, ui_.getBaseUriBuilder());
 	}
@@ -98,10 +99,12 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Override
 	@Secured( { Permission.TEST_CASE_EDIT })
 	public TestCaseVersionInfo updateTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
-			@FormParam("description") final String description_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+			@FormParam("description") final String description_, @FormParam("originalVersionId") final Integer originalVersionId_, @FormParam("automated") final String automated_,
+			@FormParam("automationUri") final String automationUri_) throws Exception
 	{
 
-		final TestCaseVersion testCaseVersion = testCaseService.saveTestCaseVersion(testCaseVersionId_, description_, originalVersionId_, VersionIncrement.NONE);
+		final TestCaseVersion testCaseVersion = testCaseService.saveTestCaseVersion(testCaseVersionId_, description_, "TRUE".equalsIgnoreCase(automated_), automationUri_,
+				originalVersionId_, VersionIncrement.NONE);
 		final TestCaseVersionView testCaseVersionView = testCaseService.getTestCaseVersionView(testCaseVersion.getId());
 		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersionView, ui_.getBaseUriBuilder());
 	}
@@ -278,12 +281,14 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
-	public TestCaseVersionInfo createTestCase(@Context final UriInfo ui_, @FormParam("productId") final Integer productId_,
+	@Secured( { Permission.TEST_CASE_ADD })
+	public TestCaseVersionInfo createTestCase(@Context final UriInfo ui_, @FormParam("productId") final Integer productId_, @FormParam("testCycleId") final Integer testCycleId_,
 			@FormParam("maxAttachmentSizeInMbytes") final Integer maxAttachmentSizeInMbytes_, @FormParam("maxNumberOfAttachments") final Integer maxNumberOfAttachments_,
-			@FormParam("name") final String name_, @FormParam("description") final String description_) throws Exception
+			@FormParam("name") final String name_, @FormParam("description") final String description_, @FormParam("automated") final String automated_,
+			@FormParam("automationUri") final String automationUri_) throws Exception
 	{
-		final TestCase testCase = testCaseService.addTestCase(productId_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, name_, description_);
+		final TestCase testCase = testCaseService.addTestCase(productId_, testCycleId_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, name_, description_, "TRUE"
+				.equalsIgnoreCase(automated_), automationUri_);
 		final TestCaseVersionView testCaseVersionView = testCaseService.getTestCaseVersionView(testCase.getLatestVersion().getId());
 		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersionView, ui_.getBaseUriBuilder());
 	}

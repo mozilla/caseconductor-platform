@@ -82,6 +82,13 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public TestCase addTestCase(final Integer productId_, final Integer testCycleId_, final Integer maxAttachmentSizeInMbytes_, final Integer maxNumberOfAttachments_,
 			final String name_, final String description_) throws Exception
 	{
+		return addTestCase(productId_, testCycleId_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, name_, description_, false, null);
+	}
+
+	@Override
+	public TestCase addTestCase(final Integer productId_, final Integer testCycleId_, final Integer maxAttachmentSizeInMbytes_, final Integer maxNumberOfAttachments_,
+			final String name_, final String description_, final boolean automated_, final String automationUri_) throws Exception
+	{
 		final Product product = getRequiredEntityById(Product.class, productId_);
 		checkForDuplicateNameWithinParent(TestCase.class, name_, productId_, "productId", null);
 
@@ -94,6 +101,8 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		testCaseVersion.setProductId(productId_);
 		testCaseVersion.setCompanyId(product.getCompanyId());
 		testCaseVersion.setDescription(description_);
+		testCaseVersion.setAutomated(automated_);
+		testCaseVersion.setAutomationUri(automationUri_);
 		// set environment profile from the product by default
 		testCaseVersion.setEnvironmentProfileId(product.getEnvironmentProfileId());
 
@@ -529,7 +538,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public TestCaseVersionView getLatestTestCaseVersionView(final Integer testCaseId_) throws Exception
 	{
-		final Search search = new Search(TestCaseVersion.class);
+		final Search search = new Search(TestCaseVersionView.class);
 		search.addFilterEqual("testCaseId", testCaseId_);
 		search.addFilterEqual("latestVersion", true);
 		final TestCaseVersionView testCaseVersion = (TestCaseVersionView) dao.searchUnique(TestCaseVersionView.class, search);
@@ -681,13 +690,15 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public TestCaseVersion saveTestCaseVersion(final Integer testCaseVersionId_, final String description_, final Integer originalVersion_, final VersionIncrement versionIncrement_)
-			throws Exception
+	public TestCaseVersion saveTestCaseVersion(final Integer testCaseVersionId_, final String description_, final boolean automated_, final String automationUri_,
+			final Integer originalVersion_, final VersionIncrement versionIncrement_) throws Exception
 	{
 		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		if (versionIncrement_.equals(VersionIncrement.NONE))
 		{
 			testCaseVersion.setDescription(description_);
+			testCaseVersion.setAutomated(automated_);
+			testCaseVersion.setAutomationUri(automationUri_);
 			testCaseVersion.setVersion(originalVersion_);
 			return dao.merge(testCaseVersion);
 		}
@@ -706,6 +717,8 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			newTestCaseVersion.setCompanyId(testCaseVersion.getCompanyId());
 			newTestCaseVersion.setTestCaseId(testCaseVersion.getTestCaseId());
 			newTestCaseVersion.setDescription(description_);
+			newTestCaseVersion.setAutomated(automated_);
+			newTestCaseVersion.setAutomationUri(automationUri_);
 			newTestCaseVersion.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
 			initializeTestCaseVersion(newTestCaseVersion, testCaseVersion.getMajorVersion(), testCaseVersion.getMinorVersion(), versionIncrement_);
 			final Integer newVersionid = dao.addAndReturnId(newTestCaseVersion);
@@ -747,6 +760,8 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		clonedTestCaseVersion.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
 		clonedTestCaseVersion.setProductId(testCaseVersion.getProductId());
 		clonedTestCaseVersion.setCompanyId(testCaseVersion.getCompanyId());
+		clonedTestCaseVersion.setAutomated(testCaseVersion.isAutomated());
+		clonedTestCaseVersion.setAutomationUri(testCaseVersion.getAutomationUri());
 		final Integer clonedVersionId = dao.addAndReturnId(clonedTestCaseVersion);
 		// clone steps
 		List<TestCaseStep> steps = getTestCaseVersionSteps(testCaseVersion.getId());

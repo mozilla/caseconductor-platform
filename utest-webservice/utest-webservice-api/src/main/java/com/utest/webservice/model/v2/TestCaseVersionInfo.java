@@ -70,6 +70,10 @@ public class TestCaseVersionInfo extends BaseInfo
 	private ResourceLocator	approvedByLocator;
 	@XmlElement(required = false)
 	private Date			approveDate;
+	@XmlElement(required = false)
+	private boolean			automated;
+	@XmlElement(required = false)
+	private String			automationUri;
 
 	public Integer getTestCaseId()
 	{
@@ -119,6 +123,26 @@ public class TestCaseVersionInfo extends BaseInfo
 	public void setTestCycleId(Integer testCycleId)
 	{
 		this.testCycleId = testCycleId;
+	}
+
+	public boolean isAutomated()
+	{
+		return automated;
+	}
+
+	public void setAutomated(boolean automated)
+	{
+		this.automated = automated;
+	}
+
+	public String getAutomationUri()
+	{
+		return automationUri;
+	}
+
+	public void setAutomationUri(String automationUri)
+	{
+		this.automationUri = automationUri;
 	}
 
 	public Integer getTestCaseStatusId()

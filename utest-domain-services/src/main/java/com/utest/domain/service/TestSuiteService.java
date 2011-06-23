@@ -26,6 +26,7 @@ import com.utest.domain.TestSuite;
 import com.utest.domain.TestSuiteTestCase;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.view.TestSuiteTestCaseView;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 /**
@@ -66,5 +67,11 @@ public interface TestSuiteService
 	void deleteTestSuite(Integer testSuiteId, Integer originalVersionId) throws Exception;
 
 	TestSuite cloneTestSuite(Integer fromTestSuiteId) throws Exception;
+
+	UtestSearchResult findTestSuiteTestCases(UtestSearch search) throws Exception;
+
+	List<TestSuiteTestCaseView> getTestSuiteTestCasesViews(Integer testSuiteId) throws Exception;
+
+	TestSuiteTestCaseView getTestSuiteTestCaseView(Integer testSuiteTestCaseId) throws Exception;
 
 }

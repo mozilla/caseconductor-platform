@@ -38,6 +38,12 @@
         <property name="latestVersion" type="boolean">
             <column name="latestVersion" not-null="true" />
         </property>
+        <property name="automated" type="boolean">
+            <column name="automated" not-null="true" />
+        </property>
+        <property name="automationUri" type="string">
+            <column name="automationUri" length="65535" not-null="true" />
+        </property>
         <property name="approvalStatusId" type="java.lang.Integer">
             <column name="approvalStatusId" not-null="true">
                 <comment>Pending/Approved/Rejected</comment>

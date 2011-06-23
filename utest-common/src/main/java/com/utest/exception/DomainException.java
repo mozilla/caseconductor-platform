@@ -45,10 +45,10 @@ public class DomainException extends RuntimeException
 				"changing.used.entity"), activatingNotApprovedEntity("activating.not.approved.entity"), includingMultipleTestCaseVersions("including.multiple.testcase.versions"), selfAssignmentNotAllowed(
 				"self.assignment.not.allowed"), assigningSameTestCaseVersionsToTester("assigning.same.testcase.versions.to.tester"), testCaseExecutionBlockedException(
 				"testcase.execution.blocked"), testCaseExecutionWithoutRestartException("testcase.execution.without.restart"), includingNotActiveEntity(
-				"including.not.activated.entity"), entityNotFound("entity.not.found"), unsupportedEnvironmentSelection("unsupported.environment.selection"), unsupportedTeamSelection(
-				"unsupported.team.selection"), teamNotDefined("team.not.defined"), teamMemberNotDefined("team.member.not.defined"), testCycleStepsLimitException(
-				"steps.limit.reached"), duplicateStepNumberException("testcase.duplicate.step.number"), invalidParentChildRelationship("invalid.parent.child"), approvingIncompleteEntity(
-				"approving.incomplete.entity");
+				"including.not.activated.entity"), entityNotFound("entity.not.found"), noProductMatch("products.dont.match"), unsupportedEnvironmentSelection(
+				"unsupported.environment.selection"), unsupportedTeamSelection("unsupported.team.selection"), teamNotDefined("team.not.defined"), teamMemberNotDefined(
+				"team.member.not.defined"), testCycleStepsLimitException("steps.limit.reached"), duplicateStepNumberException("testcase.duplicate.step.number"), invalidParentChildRelationship(
+				"invalid.parent.child"), approvingIncompleteEntity("approving.incomplete.entity");
 
 		private String	messageKey;
 

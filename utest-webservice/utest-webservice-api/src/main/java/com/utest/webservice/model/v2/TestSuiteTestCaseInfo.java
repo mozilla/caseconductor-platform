@@ -19,6 +19,8 @@
  */
 package com.utest.webservice.model.v2;
 
+import java.util.Date;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -28,8 +30,30 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement()
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "includedtestcase")
-public class IncludedTestCaseInfo extends BaseInfo
+public class TestSuiteTestCaseInfo extends BaseInfo
 {
+	@XmlElement(required = false)
+	private String			name;
+	@XmlElement(required = false)
+	private Integer			testCaseStatusId;
+	@XmlElement(required = false)
+	private String			description;
+	@XmlElement(required = false)
+	private Integer			majorVersion;
+	@XmlElement(required = false)
+	private Integer			minorVersion;
+	@XmlElement(required = false)
+	private boolean			latestVersion;
+	@XmlElement(required = false)
+	private Integer			approvalStatusId;
+	@XmlElement(required = false)
+	private Integer			approvedBy;
+	@XmlElement(required = false)
+	private Date			approveDate;
+	@XmlElement(required = false)
+	private boolean			automated;
+	@XmlElement(required = false)
+	private String			automationUri;
 	@XmlElement(required = false)
 	private Integer			testCycleId;
 	@XmlElement(type = ResourceLocator.class, name = "testCycleLocator")
@@ -56,10 +80,6 @@ public class IncludedTestCaseInfo extends BaseInfo
 	private Integer			runOrder	= 0;
 	@XmlElement(required = false)
 	private String			blocking	= "false";
-	@XmlElement(required = false)
-	private Integer			testRunId;
-	@XmlElement(type = ResourceLocator.class, name = "testRunLocator")
-	private ResourceLocator	testRunLocator;
 	@XmlElement(required = false)
 	private Integer			testSuiteId;
 	@XmlElement(type = ResourceLocator.class, name = "testSuiteLocator")
@@ -115,6 +135,116 @@ public class IncludedTestCaseInfo extends BaseInfo
 		this.testCaseVersionId = testCaseVersionId;
 	}
 
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public Integer getTestCaseStatusId()
+	{
+		return testCaseStatusId;
+	}
+
+	public void setTestCaseStatusId(Integer testCaseStatusId)
+	{
+		this.testCaseStatusId = testCaseStatusId;
+	}
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+	public Integer getMajorVersion()
+	{
+		return majorVersion;
+	}
+
+	public void setMajorVersion(Integer majorVersion)
+	{
+		this.majorVersion = majorVersion;
+	}
+
+	public Integer getMinorVersion()
+	{
+		return minorVersion;
+	}
+
+	public void setMinorVersion(Integer minorVersion)
+	{
+		this.minorVersion = minorVersion;
+	}
+
+	public boolean isLatestVersion()
+	{
+		return latestVersion;
+	}
+
+	public void setLatestVersion(boolean latestVersion)
+	{
+		this.latestVersion = latestVersion;
+	}
+
+	public Integer getApprovalStatusId()
+	{
+		return approvalStatusId;
+	}
+
+	public void setApprovalStatusId(Integer approvalStatusId)
+	{
+		this.approvalStatusId = approvalStatusId;
+	}
+
+	public Integer getApprovedBy()
+	{
+		return approvedBy;
+	}
+
+	public void setApprovedBy(Integer approvedBy)
+	{
+		this.approvedBy = approvedBy;
+	}
+
+	public Date getApproveDate()
+	{
+		return approveDate;
+	}
+
+	public void setApproveDate(Date approveDate)
+	{
+		this.approveDate = approveDate;
+	}
+
+	public boolean isAutomated()
+	{
+		return automated;
+	}
+
+	public void setAutomated(boolean automated)
+	{
+		this.automated = automated;
+	}
+
+	public String getAutomationUri()
+	{
+		return automationUri;
+	}
+
+	public void setAutomationUri(String automationUri)
+	{
+		this.automationUri = automationUri;
+	}
+
 	public void setTestCaseLocator(ResourceLocator testCaseLocator)
 	{
 		this.testCaseLocator = testCaseLocator;
@@ -133,16 +263,6 @@ public class IncludedTestCaseInfo extends BaseInfo
 	public ResourceLocator getTestCaseVersionLocator()
 	{
 		return testCaseVersionLocator;
-	}
-
-	public Integer getTestRunId()
-	{
-		return testRunId;
-	}
-
-	public void setTestRunId(Integer testRunId)
-	{
-		this.testRunId = testRunId;
 	}
 
 	public Integer getTestCycleId()
@@ -203,16 +323,6 @@ public class IncludedTestCaseInfo extends BaseInfo
 	public void setCompanyLocator(ResourceLocator companyLocator)
 	{
 		this.companyLocator = companyLocator;
-	}
-
-	public ResourceLocator getTestRunLocator()
-	{
-		return testRunLocator;
-	}
-
-	public void setTestRunLocator(ResourceLocator testRunLocator)
-	{
-		this.testRunLocator = testRunLocator;
 	}
 
 	public Integer getTestSuiteId()
