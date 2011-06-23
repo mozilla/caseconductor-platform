@@ -112,7 +112,7 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 
 	}
 
-	@Test(groups = { "integration" })
+	// @Test(groups = { "integration" })
 	public void testFindTestCaseVersionsByTestCaseName() throws Exception
 	{
 

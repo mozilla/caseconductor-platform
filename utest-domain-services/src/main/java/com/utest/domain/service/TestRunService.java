@@ -150,9 +150,6 @@ public interface TestRunService
 	TestRun addTestRun(Integer testCycleId, boolean useLatestVersions, String name, String description, Date startDate, Date endDate, boolean selfAssignAllowed,
 			boolean selfAssignPerEnvironment, Integer selfAssignLimit, boolean autoAssignToTeam) throws Exception;
 
-	TestRun saveTestRun(Integer testRunId, String name, String description, Date startDate, Date endDate, boolean selfAssignAllowed, boolean selfAssignPerEnvironment,
-			Integer selfAssignLimit, Integer originalVersionId, boolean autoAssignToTeam) throws Exception;
-
 	List<AccessRole> getTestingTeamMemberRolesForTestRun(Integer testRunId, Integer userId) throws Exception;
 
 	void approveAllTestRunResultsForTestRun(Integer testRunId) throws Exception;
@@ -174,4 +171,7 @@ public interface TestRunService
 	TestRunTestCaseView getTestRunTestCaseView(Integer testRunTestCaseId) throws Exception;
 
 	List<TestRunTestCaseView> getTestRunTestCasesViews(Integer testRunId) throws Exception;
+
+	TestRun saveTestRun(Integer testRunId, boolean useLatestVersions, String name, String description, Date startDate, Date endDate, boolean selfAssignAllowed,
+			boolean selfAssignPerEnvironment, Integer selfAssignLimit, Integer originalVersionId, boolean autoAssignToTeam) throws Exception;
 }

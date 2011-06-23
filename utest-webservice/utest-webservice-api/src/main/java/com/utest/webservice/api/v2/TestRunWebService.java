@@ -122,9 +122,6 @@ public interface TestRunWebService
 	TestRunInfo createTestRun(UriInfo ui, Integer testCycleId, String name, String description, String selfAssignAllowed, String selfAssignPerEnvironment, Integer selfAssignLimit,
 			Date startDate, Date endDate, String useLatestVersions, String autoAssignToTeam) throws Exception;
 
-	TestRunInfo updateTestRun(UriInfo ui, Integer testRunId, String name, String description, String selfAssignAllowed, String selfAssignPerEnvironment, Integer selfAssignLimit,
-			Date startDate, Date endDate, Integer originalVersionId, String autoAssignToTeam) throws Exception;
-
 	List<UserInfo> getTestRunTeamMembers(UriInfo ui, Integer testCycleId) throws Exception;
 
 	Boolean updateTestRunTeamMembers(UriInfo ui, Integer productId, ArrayList<Integer> userIds, Integer originalVersionId) throws Exception;
@@ -148,5 +145,8 @@ public interface TestRunWebService
 	TestRunInfo cloneTestRun(UriInfo ui, Integer testRunId, Integer targetTestCycleId, String cloneAssignments) throws Exception;
 
 	Boolean approveAllResultsForTestRunTestCase(UriInfo ui, Integer testRunId, Integer testCaseId) throws Exception;
+
+	TestRunInfo updateTestRun(UriInfo ui, Integer testRunId, String name, String description, String useLatestVersions, String selfAssignAllowed, String selfAssignPerEnvironment,
+			Integer selfAssignLimit, Date startDate, Date endDate, Integer originalVersionId, String autoAssignToTeam) throws Exception;
 
 }

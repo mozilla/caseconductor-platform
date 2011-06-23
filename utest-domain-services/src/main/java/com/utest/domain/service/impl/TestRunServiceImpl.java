@@ -119,6 +119,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		testRun.setProductId(testCycle.getProductId());
 		testRun.setCompanyId(testCycle.getCompanyId());
 		testRun.setName(name_);
+		testRun.setUseLatestVersions(useLatestVersions_);
 		testRun.setDescription(description_);
 		testRun.setStartDate(startDate_);
 		testRun.setEndDate(endDate_);
@@ -261,16 +262,9 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		for (final TestSuiteTestCase testSuiteTestCase : includedTestCases)
 		{
 			lastRunOrder += testSuiteTestCase.getRunOrder();
-			try
-			{
-				final TestRunTestCase testRunTestCase = addTestRunTestCase(testRun.getId(), testSuiteTestCase.getTestCaseVersionId(), testSuiteTestCase.getPriorityId(),
-						testSuiteTestCase.getRunOrder(), testSuiteTestCase.isBlocking(), testSuiteId_);
-				dao.merge(testRunTestCase);
-			}
-			catch (IncludingMultileVersionsOfSameEntityException e)
-			{
-				// do nothing and continue with other test cases in the suite
-			}
+			final TestRunTestCase testRunTestCase = addTestRunTestCase(testRun.getId(), testSuiteTestCase.getTestCaseVersionId(), testSuiteTestCase.getPriorityId(),
+					testSuiteTestCase.getRunOrder(), testSuiteTestCase.isBlocking(), testSuiteId_);
+			dao.merge(testRunTestCase);
 		}
 		return lastRunOrder;
 	}
@@ -454,7 +448,29 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final List<TestRunTestCase> foundItems = dao.search(TestRunTestCase.class, search);
 		if ((foundItems != null) && !foundItems.isEmpty())
 		{
-			throw new IncludingMultileVersionsOfSameEntityException(TestCaseVersion.class.getSimpleName() + " : " + testCaseVersionId_);
+			TestRunTestCase priorTestRunTestCase = foundItems.get(0);
+			if (priorTestRunTestCase.getTestCaseVersionId().equals(testCaseVersionId_))
+			{
+				// do nothing
+				return priorTestRunTestCase;
+			}
+			else if (testRun.isUseLatestVersions())
+			{
+				if (priorTestRunTestCase.getTestCaseVersionId() > (testCaseVersionId_))
+				{
+					// do nothing
+					return priorTestRunTestCase;
+				}
+				else
+				{
+					// delete prior test case before adding the latest version
+					deleteTestRunTestCase(priorTestRunTestCase.getId(), priorTestRunTestCase.getVersion());
+				}
+			}
+			else
+			{
+				throw new IncludingMultileVersionsOfSameEntityException(TestCaseVersion.class.getSimpleName() + " : " + testCaseVersionId_);
+			}
 		}
 		TestRunTestCase includedTestCase = new TestRunTestCase();
 		includedTestCase.setTestRunId(testRunId_);
@@ -1274,8 +1290,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public TestRun saveTestRun(final Integer testRunId_, final String name_, final String description_, final Date startDate_, final Date endDate_,
-			final boolean selfAssignAllowed_, final boolean selfAssignPerEnvironment_, final Integer selfAssignLimit_, final Integer originalVersionId_,
+	public TestRun saveTestRun(final Integer testRunId_, final boolean useLatestVersions_, final String name_, final String description_, final Date startDate_,
+			final Date endDate_, final boolean selfAssignAllowed_, final boolean selfAssignPerEnvironment_, final Integer selfAssignLimit_, final Integer originalVersionId_,
 			final boolean autoAssignToTeam_) throws Exception
 	{
 		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
@@ -1283,6 +1299,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 
 		testRun.setName(name_);
 		testRun.setDescription(description_);
+		testRun.setUseLatestVersions(useLatestVersions_);
 		testRun.setStartDate(startDate_);
 		testRun.setEndDate(endDate_);
 		testRun.setSelfAssignAllowed(selfAssignAllowed_);
