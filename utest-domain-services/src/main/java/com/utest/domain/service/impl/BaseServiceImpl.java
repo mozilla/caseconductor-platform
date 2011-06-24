@@ -123,7 +123,7 @@ public abstract class BaseServiceImpl
 
 	protected void checkProductMatch(ProductDependable entity1_, ProductDependable entity2_) throws DuplicateNameException
 	{
-		if (entity1_.getProductId().equals(entity2_.getProductId()))
+		if (!entity1_.getProductId().equals(entity2_.getProductId()))
 		{
 			throw new NoProductMatchException();
 		}
