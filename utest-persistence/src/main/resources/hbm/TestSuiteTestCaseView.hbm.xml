@@ -53,11 +53,6 @@
         <property name="testCaseVersionId" type="java.lang.Integer">
             <column name="testCaseVersionId" not-null="true" />
         </property>
-        <property name="testCycleId" type="java.lang.Integer">
-            <column name="testCycleId" not-null="true">
-                <comment>TestCycleId for wich this Test Run was created.</comment>
-            </column>
-        </property>
         <property name="companyId" type="java.lang.Integer">
             <column name="companyId" not-null="true" />
         </property>
@@ -75,15 +70,6 @@
         </property>
         <property name="blocking" type="boolean">
             <column name="blocking" not-null="true" />
-        </property>
-        <property name="selfAssignAllowed" type="boolean">
-            <column name="selfAssignAllowed" not-null="true" />
-        </property>
-        <property name="selfAssignLimit" type="java.lang.Integer">
-            <column name="selfAssignLimit" not-null="true" />
-        </property>
-        <property name="selfAssignPerEnvironment" type="boolean">
-            <column name="selfAssignPerEnvironment" not-null="true" />
         </property>
         <property name="environmentProfileId" type="java.lang.Integer">
             <column name="environmentProfileId" />

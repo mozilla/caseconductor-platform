@@ -20,35 +20,6 @@
 USE  tcm;
 set foreign_key_checks = 0;
 
-ALTER TABLE
-    TestCaseVersion ADD (automated TINYINT(1) DEFAULT '0' NOT NULL);
-ALTER TABLE
-    TestCaseVersion ADD (automationUri VARCHAR(100));
-
--- create separate permission for adding test cases
-insert into Permission (permissionId, permissionCode, name, assignable) values (38, 'PERMISSION_TEST_CASE_ADD', '', '1');
-
--- view to join test run included test case with test case and test case version
-drop view if exists TestRunTestCaseView;
-create view  TestRunTestCaseView
-as
-select 
-t.name
-, v.description
-, v.majorVersion
-, v.minorVersion
-, v.latestVersion
-, v.testCaseStatusId
-, v.approvalStatusId
-, v.approvedBy
-, v.approveDate
-, v.automated
-, v.automationUri
-, trtc.*
-from TestCase t
-join TestCaseVersion v on v.testCaseId = t.testCaseId
-join TestRunTestCase trtc on v.testCaseVersionId = trtc.testCaseVersionId;
-
 -- view to join test suite included test case with test case and test case version
 drop view if exists TestSuiteTestCaseView;
 create view  TestSuiteTestCaseView
@@ -71,6 +42,3 @@ t.name
 from TestCase t
 join TestCaseVersion v on v.testCaseId = t.testCaseId
 join TestSuiteTestCase trtc on v.testCaseVersionId = trtc.testCaseVersionId;
-
-
-

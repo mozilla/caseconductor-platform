@@ -31,7 +31,6 @@ import com.utest.domain.Versioned;
 
 public class TestSuiteTestCaseView extends TimelineEntity implements ProductDependable, CompanyDependable, EnvironmentDependable, Versioned
 {
-	private Integer	testCycleId;
 	private Integer	testCaseId;
 	private Integer	productId;
 	private Integer	companyId;
@@ -51,9 +50,6 @@ public class TestSuiteTestCaseView extends TimelineEntity implements ProductDepe
 	private Integer	priorityId;
 	private Integer	runOrder;
 	private boolean	blocking;
-	private boolean	selfAssignAllowed;
-	private Integer	selfAssignLimit;
-	private boolean	selfAssignPerEnvironment;
 	private Integer	testSuiteId;
 
 	public TestSuiteTestCaseView()
@@ -140,36 +136,6 @@ public class TestSuiteTestCaseView extends TimelineEntity implements ProductDepe
 		this.blocking = blocking;
 	}
 
-	public boolean isSelfAssignAllowed()
-	{
-		return selfAssignAllowed;
-	}
-
-	public void setSelfAssignAllowed(boolean selfAssignAllowed)
-	{
-		this.selfAssignAllowed = selfAssignAllowed;
-	}
-
-	public Integer getSelfAssignLimit()
-	{
-		return selfAssignLimit;
-	}
-
-	public void setSelfAssignLimit(Integer selfAssignLimit)
-	{
-		this.selfAssignLimit = selfAssignLimit;
-	}
-
-	public boolean isSelfAssignPerEnvironment()
-	{
-		return selfAssignPerEnvironment;
-	}
-
-	public void setSelfAssignPerEnvironment(boolean selfAssignPerEnvironment)
-	{
-		this.selfAssignPerEnvironment = selfAssignPerEnvironment;
-	}
-
 	public Integer getTestSuiteId()
 	{
 		return testSuiteId;
@@ -208,16 +174,6 @@ public class TestSuiteTestCaseView extends TimelineEntity implements ProductDepe
 	public void setAutomationUri(String automationUri)
 	{
 		this.automationUri = automationUri;
-	}
-
-	public Integer getTestCycleId()
-	{
-		return testCycleId;
-	}
-
-	public void setTestCycleId(Integer testCycleId)
-	{
-		this.testCycleId = testCycleId;
 	}
 
 	public Integer getMinorVersion()
