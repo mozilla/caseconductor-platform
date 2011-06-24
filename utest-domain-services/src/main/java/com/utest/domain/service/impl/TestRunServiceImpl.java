@@ -431,6 +431,8 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	{
 		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
+		// check if products match
+		checkProductMatch(testRun, testCaseVersion);
 		// prevent if already activated
 		if (!TestRunStatus.PENDING.equals(testRun.getTestRunStatusId()))
 		{
