@@ -59,11 +59,13 @@
                 <entry key="testcasestep" value="/testcases/steps/{id}"/>
                 <entry key="testsuite" value="/testsuites/{id}"/>
                 <entry key="testsuitetestcase" value="/testsuites/includedtestcases/{id}"/>
+                <entry key="testsuitetestcaseview" value="/testsuites/includedtestcases/{id}"/>
                 <entry key="testplan" value="/testplans/{id}"/>
                	<entry key="testplantestsuite" value="/testplans/includedtestsuites/{id}"/>
                 <entry key="testcycle" value="/testcycles/{id}"/>
                 <entry key="testrun" value="/testruns/{id}"/>
                 <entry key="testruntestcase" value="/testruns/includedtestcases/{id}"/>
+                <entry key="testruntestcaseview" value="/testruns/includedtestcases/{id}"/>
                 <entry key="testruntestcaseassignment" value="/testruns/assignments/{id}"/>
                <entry key="testrunresult" value="/testruns/results/{id}"/>
             </map>
