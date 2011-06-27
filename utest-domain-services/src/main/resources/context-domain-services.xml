@@ -58,6 +58,7 @@
 	<bean id="testCaseService" class="com.utest.domain.service.impl.TestCaseServiceImpl">
 		<constructor-arg ref="typelessDao" />
 		<constructor-arg ref="environmentService" />
+		<constructor-arg ref="userService" />
 	</bean>
 
 	<bean id="testSuiteService" class="com.utest.domain.service.impl.TestSuiteServiceImpl">

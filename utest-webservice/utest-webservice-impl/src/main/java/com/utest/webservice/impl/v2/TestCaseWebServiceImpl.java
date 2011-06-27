@@ -79,7 +79,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
 	public TestCaseVersionInfo updateTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
 			@PathParam("increment") final String versionIncrement_, @FormParam("description") final String description_,
 			@FormParam("originalVersionId") final Integer originalVersionId_, @FormParam("automated") final String automated_,
@@ -97,7 +97,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
 	public TestCaseVersionInfo updateTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
 			@FormParam("description") final String description_, @FormParam("originalVersionId") final Integer originalVersionId_, @FormParam("automated") final String automated_,
 			@FormParam("automationUri") final String automationUri_) throws Exception
@@ -174,7 +174,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
 	public TestCaseInfo updateTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_,
 			@FormParam("maxAttachmentSizeInMbytes") final Integer maxAttachmentSizeInMbytes_, @FormParam("maxNumberOfAttachments") final Integer maxNumberOfAttachments_,
 			@FormParam("name") final String name_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
@@ -281,7 +281,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_ADD })
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
 	public TestCaseVersionInfo createTestCase(@Context final UriInfo ui_, @FormParam("productId") final Integer productId_, @FormParam("testCycleId") final Integer testCycleId_,
 			@FormParam("maxAttachmentSizeInMbytes") final Integer maxAttachmentSizeInMbytes_, @FormParam("maxNumberOfAttachments") final Integer maxNumberOfAttachments_,
 			@FormParam("name") final String name_, @FormParam("description") final String description_, @FormParam("automated") final String automated_,
@@ -298,7 +298,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.TEST_CASE_EDIT)
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
 	public Boolean deleteTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
 			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
@@ -312,7 +312,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
 	public TestCaseStepInfo createTestCaseStep(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_, @FormParam("stepNumber") final Integer stepNumber_,
 			@FormParam("name") final String name_, @FormParam("instruction") final String instruction_, @FormParam("expectedResult") final String expectedResult_,
 			@FormParam("estimatedTimeInMin") final Integer estimatedTimeInMin_) throws Exception
@@ -327,7 +327,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.TEST_CASE_EDIT)
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
 	public Boolean deleteTestCaseStep(@Context final UriInfo ui_, @PathParam("stepId") final Integer testCaseStepId_,
 			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
@@ -341,7 +341,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
 	public TestCaseStepInfo updateTestCaseStep(@Context final UriInfo ui_, @PathParam("stepId") final Integer testCaseStepId_, @FormParam("stepNumber") final Integer stepNumber_,
 			@FormParam("name") final String name_, @FormParam("instruction") final String instruction_, @FormParam("expectedResult") final String expectedResult_,
 			@FormParam("estimatedTimeInMin") final Integer estimatedTimeInMin_, @FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
@@ -357,7 +357,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.TEST_CASE_EDIT)
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
 	public Boolean deleteTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_, @FormParam("originalVersionId") final Integer originalVesionId_)
 			throws Exception
 	{

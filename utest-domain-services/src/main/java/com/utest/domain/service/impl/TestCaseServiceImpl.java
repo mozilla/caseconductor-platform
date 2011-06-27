@@ -24,11 +24,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.security.access.AccessDeniedException;
+
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.ApprovalStatus;
 import com.utest.domain.CompanyDependable;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.Permission;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.Tag;
@@ -44,6 +47,7 @@ import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.TestCaseService;
+import com.utest.domain.service.UserService;
 import com.utest.domain.util.DomainUtil;
 import com.utest.domain.view.TestCaseVersionView;
 import com.utest.exception.ActivatingIncompleteEntityException;
@@ -62,13 +66,15 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	private static final Integer		DEFAULT_MINOR_VERSION	= 1;
 
 	private static final List<String>	TEST_CASE_STEP_FIELDS	= Arrays.asList("instruction", "expectedResult");
+	private final UserService			userService;
 
 	/**
 	 * Default constructor
 	 */
-	public TestCaseServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService)
+	public TestCaseServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService, final UserService userService)
 	{
 		super(dao, environmentService);
+		this.userService = userService;
 	}
 
 	@Override
@@ -211,6 +217,10 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public void deleteTestCase(final Integer testCaseId_, final Integer originalVersionId_) throws Exception
 	{
 		TestCase testCase = getRequiredEntityById(TestCase.class, testCaseId_);
+		// everyone has add test case permission by default, so need to check if
+		// user has permission to edit others test cases
+		checkEditPermission(testCase.getCreatedBy());
+
 		final Search search = new Search(TestCaseVersion.class);
 		search.addFilterEqual("testCaseId", testCaseId_);
 		final List<TestCaseVersion> foundEntities = dao.search(TestCaseVersion.class, search);
@@ -232,6 +242,9 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	{
 		final TestCaseStep testCaseStep = getRequiredEntityById(TestCaseStep.class, testCaseStepId_);
 		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseStep.getTestCaseVersionId());
+		// everyone has add test case permission by default, so need to check if
+		// user has permission to edit others test cases
+		checkEditPermission(testCaseVersion.getCreatedBy());
 		// cannot delete if not DRAFT
 		if (!TestCaseStatus.PENDING.equals(testCaseVersion.getTestCaseStatusId()))
 		{
@@ -340,6 +353,9 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public void deleteTestCaseVersion(final Integer testCaseVersionId_, final Integer originalVersionId_) throws Exception
 	{
 		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
+		// everyone has add test case permission by default, so need to check if
+		// user has permission to edit others test cases
+		checkEditPermission(testCaseVersion.getCreatedBy());
 		if (!TestCaseStatus.PENDING.equals(testCaseVersion.getTestCaseStatusId()))
 		{
 			throw new DeletingActivatedEntityException(TestCaseVersion.class.getSimpleName());
@@ -656,6 +672,9 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			final Integer originalVersionId_) throws Exception
 	{
 		final TestCase testCase = getRequiredEntityById(TestCase.class, testCaseId_);
+		// everyone has add test case permission by default, so need to check if
+		// user has permission to edit others test cases
+		checkEditPermission(testCase.getCreatedBy());
 		checkForDuplicateNameWithinParent(TestCase.class, name_, testCase.getProductId(), "productId", testCaseId_);
 
 		testCase.setName(name_);
@@ -671,6 +690,9 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			final Integer estimatedTimeInMin_, final Integer originalVersionId_) throws Exception
 	{
 		final TestCaseStep step = getRequiredEntityById(TestCaseStep.class, testCaseStepId_);
+		// everyone has add test case permission by default, so need to check if
+		// user has permission to edit others test cases
+		checkEditPermission(step.getCreatedBy());
 		checkForDuplicateNameWithinParent(TestCaseStep.class, name_, step.getTestCaseVersionId(), "testCaseVersionId", testCaseStepId_);
 
 		// cannot change after activation
@@ -694,6 +716,9 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			final Integer originalVersion_, final VersionIncrement versionIncrement_) throws Exception
 	{
 		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
+		// everyone has add test case permission by default, so need to check if
+		// user has permission to edit others test cases
+		checkEditPermission(testCaseVersion.getCreatedBy());
 		if (versionIncrement_.equals(VersionIncrement.NONE))
 		{
 			testCaseVersion.setDescription(description_);
@@ -787,5 +812,13 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		}
 
 		return getTestCase(clonedTestCaseId);
+	}
+
+	private void checkEditPermission(Integer testerId_) throws AccessDeniedException
+	{
+		if (!getCurrentUserId().equals(testerId_) && !userService.isUserInPermission(getCurrentUserId(), Permission.TEST_CASE_EDIT))
+		{
+			throw new AccessDeniedException("User doesn't have permissions to edit test cases, created by someone else.");
+		}
 	}
 }
