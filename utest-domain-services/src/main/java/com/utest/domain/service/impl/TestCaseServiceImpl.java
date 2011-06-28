@@ -783,6 +783,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		// clone test case
 		final TestCase clonedTestCase = new TestCase("Cloned [" + new Date() + "] " + testCase.getName(), testCase.getProductId(), testCase.getMaxAttachmentSizeInMbytes(),
 				testCase.getMaxNumberOfAttachments());
+		clonedTestCase.setCompanyId(testCase.getCompanyId());
 		final Integer clonedTestCaseId = dao.addAndReturnId(clonedTestCase);
 		// clone latest version
 		final TestCaseVersion clonedTestCaseVersion = new TestCaseVersion();
