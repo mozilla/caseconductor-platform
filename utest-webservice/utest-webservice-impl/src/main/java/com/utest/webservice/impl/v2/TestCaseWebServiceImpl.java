@@ -188,7 +188,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
 	public TestCaseVersionInfo cloneTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
 	{
 		final TestCase testCase = testCaseService.cloneTestCase(testCaseId_);
@@ -244,7 +244,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
 	public Boolean updateTestCaseTags(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_, @FormParam("tagIds") final ArrayList<Integer> tagIds_)
 			throws Exception
 	{
@@ -257,7 +257,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
 	public Boolean updateTestCaseEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
 			@FormParam("environmentGroupIds") final ArrayList<Integer> environmentGroupIds_, @FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{

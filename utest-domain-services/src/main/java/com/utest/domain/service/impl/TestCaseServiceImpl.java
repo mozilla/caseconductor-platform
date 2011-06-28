@@ -628,6 +628,10 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public void saveTagsForTestCase(final Integer testCaseId_, final List<Integer> tagIds_, final Integer originalVersionId_) throws Exception
 	{
+		final TestCase testCase = getRequiredEntityById(TestCase.class, testCaseId_);
+		// everyone has add test case permission by default, so need to check if
+		// user has permission to edit others test cases
+		checkEditPermission(testCase.getCreatedBy());
 		// delete old tags before inserting new ones
 		Search search = new Search(TestCaseTag.class);
 		search.addFilterEqual("testCaseId", testCaseId_);
@@ -648,6 +652,9 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			throws ChangingActivatedEntityException, UnsupportedEnvironmentSelectionException, Exception
 	{
 		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
+		// everyone has add test case permission by default, so need to$
+		// user has permission to edit others test cases
+		checkEditPermission(testCaseVersion.getCreatedBy());
 		// cannot change after activation
 		if (!TestCaseStatus.PENDING.equals(testCaseVersion.getTestCaseStatusId()))
 		{
