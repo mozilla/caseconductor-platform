@@ -730,12 +730,19 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		else
 		{
 			// undo latest version flag for existing version
-			// TODO - change to be able to edit older version and still mark the
-			// prior latest version as not latest anymore
+			TestCaseVersion latestVersion = null;
+			if (testCaseVersion.isLatestVersion())
+			{
+				latestVersion = testCaseVersion;
+			}
+			else
+			{
+				latestVersion = getLatestTestCaseVersion(testCaseVersion.getTestCaseId());
+			}
+			latestVersion.setLatestVersion(false);
+			latestVersion.setVersion(originalVersion_);
+			dao.merge(latestVersion);
 
-			testCaseVersion.setLatestVersion(false);
-			testCaseVersion.setVersion(originalVersion_);
-			dao.merge(testCaseVersion);
 			// insert new version
 			final TestCaseVersion newTestCaseVersion = new TestCaseVersion();
 			newTestCaseVersion.setProductId(testCaseVersion.getProductId());
@@ -745,7 +752,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			newTestCaseVersion.setAutomated(automated_);
 			newTestCaseVersion.setAutomationUri(automationUri_);
 			newTestCaseVersion.setEnvironmentProfileId(testCaseVersion.getEnvironmentProfileId());
-			initializeTestCaseVersion(newTestCaseVersion, testCaseVersion.getMajorVersion(), testCaseVersion.getMinorVersion(), versionIncrement_);
+			initializeTestCaseVersion(newTestCaseVersion, latestVersion.getMajorVersion(), latestVersion.getMinorVersion(), versionIncrement_);
 			final Integer newVersionid = dao.addAndReturnId(newTestCaseVersion);
 			// copy steps from last version
 			// clone steps
