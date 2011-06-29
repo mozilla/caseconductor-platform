@@ -451,6 +451,9 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public void saveProductComponentsForTestCase(final Integer testCaseId_, final List<Integer> productComponentIds_, final Integer originalVersionId_) throws Exception
 	{
 		final TestCase testCase = getRequiredEntityById(TestCase.class, testCaseId_);
+		// everyone has add test case permission by default, so need to$
+		// user has permission to edit others test cases
+		checkEditPermission(testCase.getCreatedBy());
 		// delete old components for test case
 		final Search search = new Search(TestCaseProductComponent.class);
 		search.addFilterEqual("testCaseId", testCaseId_);

@@ -201,7 +201,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_CASE_EDIT })
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
 	public Boolean updateTestCaseComponents(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_,
 			@FormParam("productComponentIds") final ArrayList<Integer> productComponentIds_) throws Exception
 	{
