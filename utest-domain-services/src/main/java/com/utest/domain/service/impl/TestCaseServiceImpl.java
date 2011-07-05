@@ -744,13 +744,13 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			if (testCaseVersion.isLatestVersion())
 			{
 				latestVersion = testCaseVersion;
+				latestVersion.setVersion(originalVersion_);
 			}
 			else
 			{
 				latestVersion = getLatestTestCaseVersion(testCaseVersion.getTestCaseId());
 			}
 			latestVersion.setLatestVersion(false);
-			latestVersion.setVersion(originalVersion_);
 			dao.merge(latestVersion);
 
 			// insert new version

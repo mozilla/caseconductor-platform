@@ -199,8 +199,8 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		// testCaseVersion_, final VersionIncrement versionIncrement_)
 		final User user = userService.getUser(1);
 		loginUser(user);
-		final Integer testCaseId = 3;
-		final TestCaseVersion testCaseVersion = testCaseService.getTestCaseVersion(testCaseId);
+		final Integer testCaseVersionId = 1;
+		final TestCaseVersion testCaseVersion = testCaseService.getTestCaseVersion(testCaseVersionId);
 		final TestCaseVersion clonedTestCase = testCaseService.saveTestCaseVersion(testCaseVersion.getId(), testCaseVersion.getDescription(), false, null, testCaseVersion
 				.getVersion(), VersionIncrement.BOTH);
 		Assert.assertTrue(clonedTestCase != null);

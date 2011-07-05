@@ -39,10 +39,10 @@
             <column name="latestVersion" not-null="true" />
         </property>
         <property name="automated" type="boolean">
-            <column name="automated" not-null="true" />
+            <column name="automated" />
         </property>
         <property name="automationUri" type="string">
-            <column name="automationUri" length="65535" not-null="true" />
+            <column name="automationUri" length="65535" />
         </property>
         <property name="approvalStatusId" type="java.lang.Integer">
             <column name="approvalStatusId" not-null="true">
