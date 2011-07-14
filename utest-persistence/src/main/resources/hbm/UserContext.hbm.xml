@@ -11,20 +11,11 @@
         <version name="version" type="java.lang.Integer">
             <column name="version" not-null="true" />
         </version>
-        <property name="showInfo" type="boolean">
-            <column name="showInfo" not-null="true" />
-        </property>
-        <property name="showDemoData" type="boolean">
-            <column name="showDemoData" not-null="true" />
-        </property>
         <property name="showWelcomeScreen" type="boolean">
             <column name="showWelcomeScreen" not-null="true" />
         </property>
         <property name="localeCode" type="string">
             <column name="localeCode" length="10" not-null="true" />
-        </property>
-        <property name="navigateToNextBug" type="boolean">
-            <column name="navigateToNextBug" not-null="true" />
         </property>
     </class>
 </hibernate-mapping>

@@ -30,9 +30,11 @@ import com.utest.domain.CompanyDependable;
 import com.utest.domain.Entity;
 import com.utest.domain.EnvironmentDependable;
 import com.utest.domain.EnvironmentProfile;
+import com.utest.domain.Locale;
 import com.utest.domain.Named;
 import com.utest.domain.ProductDependable;
 import com.utest.domain.Versioned;
+import com.utest.domain.search.UtestSearch;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.util.UserUtil;
 import com.utest.exception.DuplicateNameException;
@@ -56,6 +58,13 @@ public abstract class BaseServiceImpl
 	{
 		super();
 		this.dao = dao;
+	}
+
+	protected UtestSearch applyLocalization(final UtestSearch search_)
+	{
+		// TODO - for localization implement user specific locale
+		search_.addFilterEqual("localeCode", Locale.DEFAULT_LOCALE);
+		return search_;
 	}
 
 	protected void adjustParentChildProfiles(final EnvironmentDependable parent_, final EnvironmentDependable child_, final Integer companyId_,

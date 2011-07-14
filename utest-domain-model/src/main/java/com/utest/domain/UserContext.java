@@ -28,21 +28,11 @@ public class UserContext extends Entity
 {
 
 	private Integer	version;
-	private boolean	showInfo;
-	private boolean	showDemoData;
 	private boolean	showWelcomeScreen;
 	private String	localeCode;
-	private boolean	navigateToNextBug;
 
 	public UserContext()
 	{
-	}
-
-	public UserContext(final boolean showInfo, final boolean showDemoData, final String localeCode)
-	{
-		this.showInfo = showInfo;
-		this.showDemoData = showDemoData;
-		this.localeCode = localeCode;
 	}
 
 	public Integer getVersion()
@@ -53,26 +43,6 @@ public class UserContext extends Entity
 	public void setVersion(final Integer version)
 	{
 		this.version = version;
-	}
-
-	public boolean isShowInfo()
-	{
-		return this.showInfo;
-	}
-
-	public void setShowInfo(final boolean showInfo)
-	{
-		this.showInfo = showInfo;
-	}
-
-	public boolean isShowDemoData()
-	{
-		return this.showDemoData;
-	}
-
-	public void setShowDemoData(final boolean showDemoData)
-	{
-		this.showDemoData = showDemoData;
 	}
 
 	public void setShowWelcomeScreen(final boolean showWelcomeScreen)
@@ -94,15 +64,4 @@ public class UserContext extends Entity
 	{
 		this.localeCode = localeCode;
 	}
-
-	public boolean isNavigateToNextBug()
-	{
-		return navigateToNextBug;
-	}
-
-	public void setNavigateToNextBug(final boolean navigateToNextBug)
-	{
-		this.navigateToNextBug = navigateToNextBug;
-	}
-
 }

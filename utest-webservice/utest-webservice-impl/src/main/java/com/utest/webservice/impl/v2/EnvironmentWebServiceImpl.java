@@ -46,14 +46,18 @@ import com.utest.domain.Tag;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
+import com.utest.domain.view.EnvironmentTypeView;
+import com.utest.domain.view.EnvironmentView;
 import com.utest.webservice.api.v2.EnvironmentWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
-import com.utest.webservice.model.v2.EnvironmentSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeInfo;
-import com.utest.webservice.model.v2.EnvironmentTypeSearchResultInfo;
+import com.utest.webservice.model.v2.EnvironmentTypeViewInfo;
+import com.utest.webservice.model.v2.EnvironmentTypeViewSearchResultInfo;
+import com.utest.webservice.model.v2.EnvironmentViewInfo;
+import com.utest.webservice.model.v2.EnvironmentViewSearchResultInfo;
 import com.utest.webservice.model.v2.TagInfo;
 import com.utest.webservice.model.v2.TagSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
@@ -131,12 +135,13 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
-	public EnvironmentTypeSearchResultInfo findEnvironmentTypes(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public EnvironmentTypeViewSearchResultInfo findEnvironmentTypes(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(EnvironmentTypeInfo.class, request_, ui_);
-		final UtestSearchResult result = environmentService.findEnvironmentTypes(search);
+		final UtestSearchResult result = environmentService.findEnvironmentTypesViews(search);
 
-		return (EnvironmentTypeSearchResultInfo) objectBuilderFactory.createResult(EnvironmentTypeInfo.class, EnvironmentType.class, request_, result, ui_.getBaseUriBuilder());
+		return (EnvironmentTypeViewSearchResultInfo) objectBuilderFactory.createResult(EnvironmentTypeViewInfo.class, EnvironmentTypeView.class, request_, result, ui_
+				.getBaseUriBuilder());
 	}
 
 	@GET
@@ -225,12 +230,12 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
-	public EnvironmentSearchResultInfo findEnvironments(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public EnvironmentViewSearchResultInfo findEnvironments(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(EnvironmentInfo.class, request_, ui_);
-		final UtestSearchResult result = environmentService.findEnvironments(search);
+		final UtestSearchResult result = environmentService.findEnvironmentsViews(search);
 
-		return (EnvironmentSearchResultInfo) objectBuilderFactory.createResult(EnvironmentInfo.class, Environment.class, request_, result, ui_.getBaseUriBuilder());
+		return (EnvironmentViewSearchResultInfo) objectBuilderFactory.createResult(EnvironmentViewInfo.class, EnvironmentView.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
 	@POST

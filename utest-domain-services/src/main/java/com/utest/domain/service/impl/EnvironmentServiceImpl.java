@@ -53,6 +53,8 @@ import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.util.DomainUtil;
+import com.utest.domain.view.EnvironmentTypeView;
+import com.utest.domain.view.EnvironmentView;
 import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingUsedEntityException;
 import com.utest.exception.DuplicateNameException;
@@ -725,9 +727,21 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	}
 
 	@Override
+	public UtestSearchResult findEnvironmentTypesViews(final UtestSearch search_) throws Exception
+	{
+		return dao.getBySearch(EnvironmentTypeView.class, applyLocalization(search_));
+	}
+
+	@Override
 	public UtestSearchResult findEnvironments(final UtestSearch search_) throws Exception
 	{
 		return dao.getByLocalizedSearch(Environment.class, EnvironmentLocale.class, search_);
+	}
+
+	@Override
+	public UtestSearchResult findEnvironmentsViews(final UtestSearch search_) throws Exception
+	{
+		return dao.getBySearch(EnvironmentView.class, applyLocalization(search_));
 	}
 
 	@Override

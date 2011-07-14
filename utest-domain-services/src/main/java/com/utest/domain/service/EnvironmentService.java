@@ -143,4 +143,8 @@ public interface EnvironmentService
 
 	EnvironmentProfile intersectEnvironmentProfiles(Integer profileId1, Integer profileId2) throws Exception;
 
+	UtestSearchResult findEnvironmentTypesViews(UtestSearch search) throws Exception;
+
+	UtestSearchResult findEnvironmentsViews(UtestSearch search) throws Exception;
+
 }
