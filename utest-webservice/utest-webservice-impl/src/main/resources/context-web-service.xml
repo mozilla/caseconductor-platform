@@ -42,8 +42,10 @@
             <map>
                	<entry key="team" value="/teams/{id}"/>
                	<entry key="environment" value="/environments/{id}"/>
+               	<entry key="environmentview" value="/environments/{id}"/>
                	<entry key="environmentgroup" value="/environmentgroups/{id}"/>
                 <entry key="environmenttype" value="/environmenttypes/{id}"/>
+                <entry key="environmenttypeview" value="/environmenttypes/{id}"/>
                 <entry key="parentenvironmenttype" value="/environmenttypes/{id}"/>
                 <entry key="company" value="/companies/{id}"/>
                 <entry key="user" value="/users/{id}"/>
