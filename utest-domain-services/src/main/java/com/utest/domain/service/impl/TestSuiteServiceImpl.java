@@ -242,12 +242,15 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	public void deleteTestSuiteTestCase(final Integer testSuiteTestCaseId_, final Integer originalVersionId_) throws Exception
 	{
 		final TestSuiteTestCase includedTestCase = getRequiredEntityById(TestSuiteTestCase.class, testSuiteTestCaseId_);
-		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, includedTestCase.getTestSuiteId());
+		// final TestSuite testSuite = getRequiredEntityById(TestSuite.class,
+		// includedTestCase.getTestSuiteId());
 		// prevent if already activated
-		if (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
-		{
-			throw new ChangingActivatedEntityException(TestSuiteTestCase.class.getSimpleName());
-		}
+		// if
+		// (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
+		// {
+		// throw new
+		// ChangingActivatedEntityException(TestSuiteTestCase.class.getSimpleName());
+		// }
 		includedTestCase.setVersion(originalVersionId_);
 		dao.delete(includedTestCase);
 	}
