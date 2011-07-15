@@ -165,10 +165,13 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 		// check if products match
 		checkProductMatch(testSuite, testCaseVersion);
 		// prevent adding to activated test suite
-		if (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
-		{
-			throw new ChangingActivatedEntityException(TestSuite.class.getSimpleName() + " : " + testSuiteId_);
-		}
+		// if
+		// (!TestSuiteStatus.PENDING.equals(testSuite.getTestSuiteStatusId()))
+		// {
+		// throw new
+		// ChangingActivatedEntityException(TestSuite.class.getSimpleName() +
+		// " : " + testSuiteId_);
+		// }
 		// prevent if test case not activated
 		if (!TestCaseStatus.ACTIVE.equals(testCaseVersion.getTestCaseStatusId()))
 		{

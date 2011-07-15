@@ -230,11 +230,25 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		}
 		final List<TestPlanTestSuite> includedTestSuites = testPlanService.getTestPlanTestSuites(testPlanId_);
 		Integer startingRunOrder = 0;
+		boolean added = false;
 		for (final TestPlanTestSuite testPlanTestSuite : includedTestSuites)
 		{
 			// increment by 1 before adding new test suite cases
 			startingRunOrder++;
-			startingRunOrder = addTestCasesFromTestSuite(testRunId_, testPlanTestSuite.getTestSuiteId(), startingRunOrder);
+			try
+			{
+				startingRunOrder = addTestCasesFromTestSuite(testRunId_, testPlanTestSuite.getTestSuiteId(), startingRunOrder);
+				added = true;
+			}
+			catch (IncludingNotActivatedEntityException e)
+			{
+				// do nothing now only throw if none of the test cases were
+				// added
+			}
+		}
+		if (!added)
+		{
+			throw new IncludingNotActivatedEntityException("None of the test cases from test plan were active: " + testPlanId_);
 		}
 		return getTestRunTestCases(testRunId_);
 	}
@@ -259,12 +273,25 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		}
 		final List<TestSuiteTestCase> includedTestCases = testSuiteService.getTestSuiteTestCases(testSuiteId_);
 		Integer lastRunOrder = startingRunOrder_;
+		boolean added = false;
 		for (final TestSuiteTestCase testSuiteTestCase : includedTestCases)
 		{
 			lastRunOrder += testSuiteTestCase.getRunOrder();
-			final TestRunTestCase testRunTestCase = addTestRunTestCase(testRun.getId(), testSuiteTestCase.getTestCaseVersionId(), testSuiteTestCase.getPriorityId(),
-					testSuiteTestCase.getRunOrder(), testSuiteTestCase.isBlocking(), testSuiteId_);
-			dao.merge(testRunTestCase);
+			try
+			{
+				addTestRunTestCase(testRun.getId(), testSuiteTestCase.getTestCaseVersionId(), testSuiteTestCase.getPriorityId(), testSuiteTestCase.getRunOrder(), testSuiteTestCase
+						.isBlocking(), testSuiteId_);
+				added = true;
+			}
+			catch (IncludingNotActivatedEntityException e)
+			{
+				// do nothing now, only throw if none of the test cases were
+				// added
+			}
+		}
+		if (!added)
+		{
+			throw new IncludingNotActivatedEntityException("None of the test cases from test suite were active: " + testSuiteId_);
 		}
 		return lastRunOrder;
 	}

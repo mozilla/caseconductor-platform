@@ -19,6 +19,7 @@
  */
 package com.utest.domain.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	private final TypelessDAO	dao;
 	// permission assigned to all users by default
 	// configured in spring context
-	private List<Integer>		defaultPermissions;
+	private List<Integer>		defaultPermissions	= new ArrayList<Integer>();
 
 	/**
 	 * Default constructor
