@@ -173,10 +173,13 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 		// " : " + testSuiteId_);
 		// }
 		// prevent if test case not activated
-		if (!TestCaseStatus.ACTIVE.equals(testCaseVersion.getTestCaseStatusId()))
-		{
-			throw new IncludingNotActivatedEntityException(TestCaseVersion.class.getSimpleName() + " : " + testCaseVersionId_);
-		}
+		// if
+		// (!TestCaseStatus.ACTIVE.equals(testCaseVersion.getTestCaseStatusId()))
+		// {
+		// throw new
+		// IncludingNotActivatedEntityException(TestCaseVersion.class.getSimpleName()
+		// + " : " + testCaseVersionId_);
+		// }
 		// prevent if another version of the same test case already included
 		final Search search = new Search(TestSuiteTestCase.class);
 		search.addFilterEqual("testSuiteId", testSuiteId_);
