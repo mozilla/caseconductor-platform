@@ -20,10 +20,11 @@
 package com.utest.domain.view;
 
 import com.utest.domain.CompanyDependable;
+import com.utest.domain.Named;
 import com.utest.domain.ParentDependable;
 import com.utest.domain.TimelineEntity;
 
-public class EnvironmentView extends TimelineEntity implements ParentDependable, CompanyDependable
+public class EnvironmentView extends TimelineEntity implements Named, ParentDependable, CompanyDependable
 {
 	private Integer	environmentTypeId;
 	private Integer	companyId;

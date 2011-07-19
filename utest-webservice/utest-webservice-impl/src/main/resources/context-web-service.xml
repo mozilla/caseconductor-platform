@@ -72,6 +72,39 @@
                <entry key="testrunresult" value="/testruns/results/{id}"/>
             </map>
         </property>
+        <property name="resourceNamedClasses">
+            <map>
+               	<entry key="team" value="com.utest.domain.Team"/>
+               	<entry key="environment" value="com.utest.domain.view.EnvironmentView"/>
+               	<entry key="environmentview" value="com.utest.domain.view.EnvironmentView"/>
+               	<entry key="environmentgroup" value="com.utest.domain.EnvironmentGroup"/>
+                <entry key="environmenttype" value="com.utest.domain.view.EnvironmentTypeView"/>
+                <entry key="environmenttypeview" value="com.utest.domain.view.EnvironmentTypeView"/>
+                <entry key="parentenvironmenttype" value="com.utest.domain.view.EnvironmentTypeView"/>
+                <entry key="company" value="com.utest.domain.Company"/>
+                <entry key="user" value="com.utest.domain.User"/>
+                <entry key="tester" value="com.utest.domain.User"/>
+                <entry key="createdBy" value="com.utest.domain.User"/>
+                <entry key="lastChangedBy" value="com.utest.domain.User"/>
+                <entry key="accessrole" value="com.utest.domain.AccessRole"/>
+                <entry key="permission" value="com.utest.domain.Permission"/>
+                <entry key="product" value="com.utest.domain.Product"/>
+                <entry key="productcomponent" value="com.utest.domain.ProductComponent"/>
+                <entry key="tag" value="com.utest.domain.Tag"/>
+                <entry key="testcase" value="com.utest.domain.TestCase"/>
+                <entry key="testcaseversion" value="com.utest.domain.view.TestCaseVersionView"/>
+                <entry key="testcaseversionview" value="com.utest.domain.view.TestCaseVersionView"/>
+                <entry key="testcasestep" value="com.utest.domain.TestCaseStep"/>
+                <entry key="testsuite" value="com.utest.domain.TestSuite"/>
+                <entry key="testsuitetestcase" value="com.utest.domain.view.TestSuiteTestCaseView"/>
+                <entry key="testsuitetestcaseview" value="com.utest.domain.view.TestSuiteTestCaseView"/>
+                <entry key="testplan" value="com.utest.domain.TestPlan"/>
+                 <entry key="testcycle" value="com.utest.domain.TestCycle"/>
+                <entry key="testrun" value="com.utest.domain.TestRun"/>
+                <entry key="testruntestcase" value="com.utest.domain.view.TestRunTestCaseView"/>
+                <entry key="testruntestcaseview" value="com.utest.domain.view.TestRunTestCaseView"/>
+            </map>
+        </property>
     </bean>
 	
 	<bean id="companyWebService" class="com.utest.webservice.impl.v2.CompanyWebServiceImpl">
@@ -133,6 +166,7 @@
 	</bean>
 
 	<bean id="objectBuilderFactory" class="com.utest.webservice.builders.ObjectBuilderFactoryImpl">
+		<constructor-arg ref="staticDataService" />
 	</bean>
 
 	<!-- Security -->

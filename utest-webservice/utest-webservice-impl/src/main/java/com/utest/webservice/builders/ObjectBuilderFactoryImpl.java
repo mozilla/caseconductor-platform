@@ -54,6 +54,7 @@ import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.search.UtestSort;
 import com.utest.domain.service.Initializable;
+import com.utest.domain.service.StaticDataService;
 import com.utest.domain.view.EnvironmentTypeView;
 import com.utest.domain.view.EnvironmentView;
 import com.utest.domain.view.TestCaseVersionView;
@@ -122,11 +123,14 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 	private static final String			CREATE_USER_ID	= "createdBy";
 	private static final String			CHANGE_USER_ID	= "lastChangedBy";
 
+	private final StaticDataService		staticDataService;
+
 	@SuppressWarnings("unchecked")
 	private static Map<Class, Builder>	builders		= new HashMap<Class, Builder>();
 
-	ObjectBuilderFactoryImpl()
+	ObjectBuilderFactoryImpl(final StaticDataService staticDataService)
 	{
+		this.staticDataService = staticDataService;
 	}
 
 	@Override
@@ -394,6 +398,12 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 	{
 		final Builder<Ti, To> builder = getBuilder(clazz, clazz1);
 		return builder.createResult(request, result, ub);
+	}
+
+	@Override
+	public StaticDataService getStaticDataService()
+	{
+		return staticDataService;
 	}
 
 }

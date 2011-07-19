@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.service.StaticDataService;
 import com.utest.webservice.model.v2.SearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
@@ -40,5 +41,7 @@ public interface ObjectBuilderFactory
 	<Ti, To> SearchResultInfo<Ti> createResult(Class<Ti> clazz, Class<To> clazz1, UtestSearchRequest request, UtestSearchResult result, UriBuilder ub) throws Exception;
 
 	<Ti, T extends UtestSearchRequest> UtestSearch createSearch(Class<Ti> objectClass, T request, UriInfo ui) throws Exception;
+
+	StaticDataService getStaticDataService();
 
 }

@@ -25,11 +25,12 @@ import java.util.Date;
 
 import com.utest.domain.CompanyDependable;
 import com.utest.domain.EnvironmentDependable;
+import com.utest.domain.Named;
 import com.utest.domain.ProductDependable;
 import com.utest.domain.TimelineEntity;
 import com.utest.domain.Versioned;
 
-public class TestSuiteTestCaseView extends TimelineEntity implements ProductDependable, CompanyDependable, EnvironmentDependable, Versioned
+public class TestSuiteTestCaseView extends TimelineEntity implements Named, ProductDependable, CompanyDependable, EnvironmentDependable, Versioned
 {
 	private Integer	testCaseId;
 	private Integer	productId;

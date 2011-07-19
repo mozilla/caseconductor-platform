@@ -37,6 +37,7 @@ import com.utest.domain.Entity;
 import com.utest.domain.Locale;
 import com.utest.domain.LocaleDescriptable;
 import com.utest.domain.LocalizedEntity;
+import com.utest.domain.Named;
 import com.utest.domain.TimelineVersionable;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
@@ -163,7 +164,26 @@ public class Builder<Ti, To>
 				}
 				if (resourcePath != null)
 				{
-					ResourceLocator resourceLocator = new ResourceLocator(resourceId, ub.clone().path(resourcePath).build(resourceId).toString());
+					String className = getResourceNamedClass(resourceName.toLowerCase());
+					String name = "";
+					if (className != null)
+					{
+						try
+						{
+							Class<?> clazz = Class.forName(className);
+							Object namedEntity = factory.getStaticDataService().getEntity(clazz, resourceId);
+							if (namedEntity != null && namedEntity instanceof Named)
+							{
+								name = ((Named) namedEntity).getName();
+							}
+						}
+						catch (ClassNotFoundException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					ResourceLocator resourceLocator = new ResourceLocator(resourceId, ub.clone().path(resourcePath).build(resourceId).toString(), name);
 					PropertyUtils.setProperty(result, (String) property, resourceLocator);
 				}
 			}
@@ -272,5 +292,10 @@ public class Builder<Ti, To>
 	private String getResourcePath(String resourceKey_)
 	{
 		return ResourceManager.getResourcePath(resourceKey_);
+	}
+
+	private String getResourceNamedClass(String resourceKey_)
+	{
+		return ResourceManager.getResourceNamedClass(resourceKey_);
 	}
 }

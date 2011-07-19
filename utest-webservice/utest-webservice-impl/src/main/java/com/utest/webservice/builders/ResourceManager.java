@@ -24,6 +24,7 @@ import java.util.Map;
 public class ResourceManager
 {
 	private static Map<String, String>	resourceUrls;
+	private static Map<String, String>	resourceNamedClasses;
 
 	ResourceManager()
 	{
@@ -34,9 +35,19 @@ public class ResourceManager
 		return resourceUrls.get(resourceKey_);
 	}
 
+	public static String getResourceNamedClass(String resourceKey_)
+	{
+		return resourceNamedClasses.get(resourceKey_);
+	}
+
 	public void setResourceUrls(Map<String, String> resourceUrls)
 	{
 		ResourceManager.resourceUrls = resourceUrls;
+	}
+
+	public void setResourceNamedClasses(Map<String, String> resourceNamedClasses)
+	{
+		ResourceManager.resourceNamedClasses = resourceNamedClasses;
 	}
 
 }

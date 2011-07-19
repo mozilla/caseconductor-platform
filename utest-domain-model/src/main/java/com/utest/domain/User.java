@@ -24,7 +24,7 @@ package com.utest.domain;
 import java.util.Date;
 import java.util.List;
 
-public class User extends TimelineEntity implements CompanyDependable
+public class User extends TimelineEntity implements CompanyDependable, Named
 {
 	public static String		EXTERANAL_PASSWORD	= "__EXTERNAL_PASSWORD__";
 
@@ -241,6 +241,19 @@ public class User extends TimelineEntity implements CompanyDependable
 	public String getScreenName()
 	{
 		return screenName;
+	}
+
+	@Override
+	public String getName()
+	{
+		return screenName;
+	}
+
+	@Override
+	public void setName(String name)
+	{
+		screenName = name;
+
 	}
 
 }

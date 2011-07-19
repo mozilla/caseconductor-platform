@@ -25,12 +25,20 @@ public class ResourceLocator
 {
 	private final Integer	id;
 	private final String	url;
+	private final String	name;
 
-	public ResourceLocator(Integer id, String url)
+	public ResourceLocator(Integer id, String url, String name)
 	{
 		super();
 		this.id = id;
 		this.url = url;
+		this.name = name;
+	}
+
+	@XmlAttribute(name = "name")
+	public String getName()
+	{
+		return name;
 	}
 
 	@XmlAttribute(name = "url")
