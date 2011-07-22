@@ -23,8 +23,10 @@ import java.util.List;
 
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.EnvironmentLocale;
 import com.utest.domain.EnvironmentProfile;
+import com.utest.domain.EnvironmentProfileExploded;
 import com.utest.domain.EnvironmentType;
 import com.utest.domain.EnvironmentTypeLocale;
 import com.utest.domain.Tag;
@@ -146,5 +148,15 @@ public interface EnvironmentService
 	UtestSearchResult findEnvironmentTypesViews(UtestSearch search) throws Exception;
 
 	UtestSearchResult findEnvironmentsViews(UtestSearch search) throws Exception;
+
+	EnvironmentGroupExploded getEnvironmentGroupExploded(Integer environmentGroupId) throws Exception;
+
+	UtestSearchResult findEnvironmentGroupsExploded(UtestSearch search) throws Exception;
+
+	EnvironmentProfileExploded getEnvironmentProfileExploded(Integer environmentProfileId) throws Exception;
+
+	List<Environment> getEnvironmentsForProfile(Integer environmentProfileId) throws Exception;
+
+	List<EnvironmentGroupExploded> getEnvironmentGroupsForProfileExploded(Integer environmentProfileId) throws Exception;
 
 }

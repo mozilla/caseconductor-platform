@@ -29,8 +29,11 @@ import org.springframework.security.access.AccessDeniedException;
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.ApprovalStatus;
+import com.utest.domain.Attachment;
 import com.utest.domain.CompanyDependable;
+import com.utest.domain.EntityType;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.Permission;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
@@ -45,6 +48,7 @@ import com.utest.domain.VersionIncrement;
 import com.utest.domain.search.UtestFilter;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.service.AttachmentService;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.TestCaseService;
 import com.utest.domain.service.UserService;
@@ -67,14 +71,16 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 
 	private static final List<String>	TEST_CASE_STEP_FIELDS	= Arrays.asList("instruction", "expectedResult");
 	private final UserService			userService;
+	private final AttachmentService		attachmentService;
 
 	/**
 	 * Default constructor
 	 */
-	public TestCaseServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService, final UserService userService)
+	public TestCaseServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService, final UserService userService, final AttachmentService attachmentService)
 	{
 		super(dao, environmentService);
 		this.userService = userService;
+		this.attachmentService = attachmentService;
 	}
 
 	@Override
@@ -493,6 +499,20 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCaseVersion(final Integer testCaseVersionId_) throws Exception
+	{
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
+		if (testCaseVersion.getEnvironmentProfileId() != null)
+		{
+			return environmentService.getEnvironmentGroupsForProfileExploded(testCaseVersion.getEnvironmentProfileId());
+		}
+		else
+		{
+			return new ArrayList<EnvironmentGroupExploded>();
+		}
+	}
+
+	@Override
 	public TestCase getTestCase(final Integer testCaseId_) throws Exception
 	{
 		final TestCase testCase = getRequiredEntityById(TestCase.class, testCaseId_);
@@ -501,6 +521,19 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		latestVersion.setTestCase(testCase);
 		testCase.setLatestVersion(latestVersion);
 		return testCase;
+	}
+
+	@Override
+	public Attachment addAttachmentForTestCase(final String name, final String description, final String url, final Double size, final Integer testCaseId,
+			final Integer attachmentTypeId) throws Exception
+	{
+		return attachmentService.addAttachment(name, description, url, size, EntityType.TEST_CASE, testCaseId, attachmentTypeId);
+	}
+
+	@Override
+	public List<Attachment> getAttachmentsForTestCase(final Integer testCaseId_) throws Exception
+	{
+		return attachmentService.getAttachmentsForEntity(testCaseId_, EntityType.TEST_CASE);
 	}
 
 	@Override

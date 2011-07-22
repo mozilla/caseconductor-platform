@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 3, 2010 1:57:11 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.utest.domain.EnvironmentGroupExploded" mutable="false" table="EnvironmentGroup" >
+        <id name="id" type="java.lang.Integer">
+            <column name="environmentGroupId" />
+            <generator class="identity" />
+        </id>
+        <version name="version" type="java.lang.Integer">
+            <column name="version" not-null="true" />
+        </version>
+        <property name="environmentTypeId" type="java.lang.Integer">
+            <column name="environmentTypeId" not-null="false">
+                <comment>group types: mobile phone, computer, etc.</comment>
+            </column>
+        </property>
+        <property name="externalIdentifier" type="string">
+            <column name="externalIdentifier" not-null="false">
+                <comment>could be mobile device UDID, license info, etc.</comment>
+            </column>
+        </property>
+        <property name="name" type="string">
+            <column name="name" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="65535" />
+        </property>
+ 		<property name="companyId" type="java.lang.Integer">
+			<column name="companyId" />
+		</property>
+        <property name="deprecated" type="boolean">
+            <column name="deprecated"/>
+        </property>
+        <property name="executed" type="boolean">
+            <column name="executed"/>
+        </property>
+        <property name="createdBy" type="java.lang.Integer">
+            <column name="createdBy" not-null="true" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="createDate" length="19" not-null="true" />
+        </property>
+        <property name="lastChangedBy" type="java.lang.Integer">
+            <column name="lastChangedBy" not-null="true" />
+        </property>
+        <property name="lastChangeDate" type="timestamp">
+            <column name="lastChangeDate" length="19" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

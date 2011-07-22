@@ -31,9 +31,12 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.utest.domain.AccessRole;
+import com.utest.domain.Attachment;
 import com.utest.domain.Company;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
+import com.utest.domain.EnvironmentProfileExploded;
 import com.utest.domain.EnvironmentType;
 import com.utest.domain.Permission;
 import com.utest.domain.Product;
@@ -60,11 +63,17 @@ import com.utest.domain.view.EnvironmentView;
 import com.utest.domain.view.TestCaseVersionView;
 import com.utest.domain.view.TestRunTestCaseView;
 import com.utest.domain.view.TestSuiteTestCaseView;
+import com.utest.webservice.model.v2.AttachmentInfo;
+import com.utest.webservice.model.v2.AttachmentSearchResultInfo;
 import com.utest.webservice.model.v2.CompanyInfo;
 import com.utest.webservice.model.v2.CompanySearchResultInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
+import com.utest.webservice.model.v2.EnvironmentProfileExplodedInfo;
+import com.utest.webservice.model.v2.EnvironmentProfileExplodedSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeSearchResultInfo;
@@ -136,18 +145,21 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 	@Override
 	public void initialize()
 	{
+		builders.put(AttachmentInfo.class, new Builder<AttachmentInfo, Attachment>(this, AttachmentInfo.class, AttachmentSearchResultInfo.class));
 		builders.put(TeamInfo.class, new Builder<TeamInfo, Team>(this, TeamInfo.class, TeamSearchResultInfo.class));
 		builders.put(UserInfo.class, new Builder<UserInfo, User>(this, UserInfo.class, UserSearchResultInfo.class));
 		builders.put(RoleInfo.class, new Builder<RoleInfo, AccessRole>(this, RoleInfo.class, RoleSearchResultInfo.class));
 		builders.put(PermissionInfo.class, new Builder<PermissionInfo, Permission>(this, PermissionInfo.class, PermissionSearchResultInfo.class));
 		builders.put(EnvironmentViewInfo.class, new Builder<EnvironmentViewInfo, EnvironmentView>(this, EnvironmentViewInfo.class, EnvironmentViewSearchResultInfo.class));
-
 		builders.put(EnvironmentTypeViewInfo.class, new Builder<EnvironmentTypeViewInfo, EnvironmentTypeView>(this, EnvironmentTypeViewInfo.class,
 				EnvironmentTypeViewSearchResultInfo.class));
-
 		builders.put(EnvironmentInfo.class, new Builder<EnvironmentInfo, Environment>(this, EnvironmentInfo.class, EnvironmentSearchResultInfo.class));
 		builders.put(EnvironmentTypeInfo.class, new Builder<EnvironmentTypeInfo, EnvironmentType>(this, EnvironmentTypeInfo.class, EnvironmentTypeSearchResultInfo.class));
 		builders.put(EnvironmentGroupInfo.class, new Builder<EnvironmentGroupInfo, EnvironmentGroup>(this, EnvironmentGroupInfo.class, EnvironmentGroupSearchResultInfo.class));
+		builders.put(EnvironmentGroupExplodedInfo.class, new EnvironmentGroupExplodedBuilder<EnvironmentGroupExplodedInfo, EnvironmentGroupExploded>(this,
+				EnvironmentGroupExplodedInfo.class, EnvironmentGroupExplodedSearchResultInfo.class));
+		builders.put(EnvironmentProfileExplodedInfo.class, new EnvironmentProfileExplodedBuilder<EnvironmentProfileExplodedInfo, EnvironmentProfileExploded>(this,
+				EnvironmentProfileExplodedInfo.class, EnvironmentProfileExplodedSearchResultInfo.class));
 		builders.put(TagInfo.class, new Builder<TagInfo, Tag>(this, TagInfo.class, TagSearchResultInfo.class));
 		builders.put(CompanyInfo.class, new Builder<CompanyInfo, Company>(this, CompanyInfo.class, CompanySearchResultInfo.class));
 		builders.put(ProductInfo.class, new Builder<ProductInfo, Product>(this, ProductInfo.class, ProductSearchResultInfo.class));

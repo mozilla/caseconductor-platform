@@ -24,6 +24,8 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
+import com.utest.webservice.model.v2.AttachmentInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.ProductComponentSearchResultInfo;
@@ -74,5 +76,11 @@ public interface ProductWebService
 	List<RoleInfo> getProductTeamMemberRoles(UriInfo ui, Integer productId, Integer userId) throws Exception;
 
 	Boolean updateProductTeamMemberRoles(UriInfo ui, Integer productId, Integer userId, ArrayList<Integer> roleIds, Integer originalVersionId) throws Exception;
+
+	List<EnvironmentGroupExplodedInfo> getProductEnvironmentGroupsExploded(UriInfo ui, Integer productId) throws Exception;
+
+	List<AttachmentInfo> getProductAttachments(UriInfo ui, Integer productId) throws Exception;
+
+	AttachmentInfo createAttachment(UriInfo ui, Integer productId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 
 }

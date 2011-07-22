@@ -40,6 +40,8 @@ import org.springframework.security.access.annotation.Secured;
 
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
+import com.utest.domain.EnvironmentProfileExploded;
 import com.utest.domain.EnvironmentType;
 import com.utest.domain.Permission;
 import com.utest.domain.Tag;
@@ -50,9 +52,12 @@ import com.utest.domain.view.EnvironmentTypeView;
 import com.utest.domain.view.EnvironmentView;
 import com.utest.webservice.api.v2.EnvironmentWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
+import com.utest.webservice.model.v2.EnvironmentProfileExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeViewInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeViewSearchResultInfo;
@@ -332,6 +337,21 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 		return (EnvironmentGroupSearchResultInfo) objectBuilderFactory.createResult(EnvironmentGroupInfo.class, EnvironmentGroup.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
+	@GET
+	@Path("/environmentgroups/exploded/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.ENVIRONMENT_VIEW)
+	public EnvironmentGroupExplodedSearchResultInfo findEnvironmentGroupsExploded(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	{
+		final UtestSearch search = objectBuilderFactory.createSearch(EnvironmentGroupInfo.class, request_, ui_);
+		final UtestSearchResult result = environmentService.findEnvironmentGroupsExploded(search);
+
+		return (EnvironmentGroupExplodedSearchResultInfo) objectBuilderFactory.createResult(EnvironmentGroupExplodedInfo.class, EnvironmentGroupExploded.class, request_, result,
+				ui_.getBaseUriBuilder());
+	}
+
 	@PUT
 	@Path("/environmentgroups/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -385,6 +405,32 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 		final EnvironmentGroup environmentGroup = environmentService.getEnvironmentGroup(environmentGroupId_);
 
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, environmentGroup, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/environmentgroups/exploded/{id}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.ENVIRONMENT_VIEW)
+	public EnvironmentGroupExplodedInfo getEnvironmentGroupExploded(@Context final UriInfo ui_, @PathParam("id") final Integer environmentGroupId_) throws Exception
+	{
+		final EnvironmentGroupExploded environmentGroup = environmentService.getEnvironmentGroupExploded(environmentGroupId_);
+
+		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, environmentGroup, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/environmentprofiles/exploded/{id}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.ENVIRONMENT_VIEW)
+	public EnvironmentProfileExplodedInfo getEnvironmentProfileExploded(@Context final UriInfo ui_, @PathParam("id") final Integer environmentProfileId_) throws Exception
+	{
+		final EnvironmentProfileExploded environmentProfile = environmentService.getEnvironmentProfileExploded(environmentProfileId_);
+
+		return objectBuilderFactory.toInfo(EnvironmentProfileExplodedInfo.class, environmentProfile, ui_.getBaseUriBuilder());
 	}
 
 }

@@ -24,6 +24,8 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
+import com.utest.webservice.model.v2.AttachmentInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.IncludedTestSuiteInfo;
 import com.utest.webservice.model.v2.TestPlanInfo;
@@ -60,5 +62,11 @@ public interface TestPlanWebService
 	IncludedTestSuiteInfo createTestPlanTestSuite(UriInfo ui, Integer testPlanId, Integer testSuiteId, Integer runOrder) throws Exception;
 
 	TestPlanInfo updateTestPlan(UriInfo ui, Integer testPlanId, String name, String description, Integer originalVesionId) throws Exception;
+
+	List<EnvironmentGroupExplodedInfo> getTestPlanEnvironmentGroupsExploded(UriInfo ui, Integer productId) throws Exception;
+
+	List<AttachmentInfo> getTestPlanAttachments(UriInfo ui, Integer testPlanId) throws Exception;
+
+	AttachmentInfo createAttachment(UriInfo ui, Integer testPlanId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 
 }

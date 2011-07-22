@@ -21,7 +21,9 @@ package com.utest.domain.service;
 
 import java.util.List;
 
+import com.utest.domain.Attachment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.Tag;
 import com.utest.domain.TestCase;
@@ -120,4 +122,10 @@ public interface TestCaseService
 
 	TestCaseVersion saveTestCaseVersion(Integer testCaseVersionId, String description, boolean automated, String automationUri, Integer originalVersion,
 			VersionIncrement versionIncrement) throws Exception;
+
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCaseVersion(Integer testCaseVersionId) throws Exception;
+
+	List<Attachment> getAttachmentsForTestCase(Integer testCaseId) throws Exception;
+
+	Attachment addAttachmentForTestCase(String name, String description, String url, Double size, Integer testCaseId, Integer attachmentTypeId) throws Exception;
 }

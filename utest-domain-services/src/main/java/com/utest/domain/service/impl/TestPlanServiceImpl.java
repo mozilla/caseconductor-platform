@@ -24,7 +24,10 @@ import java.util.List;
 
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
+import com.utest.domain.Attachment;
+import com.utest.domain.EntityType;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.Product;
 import com.utest.domain.TestPlan;
 import com.utest.domain.TestPlanStatus;
@@ -33,6 +36,7 @@ import com.utest.domain.TestSuite;
 import com.utest.domain.TestSuiteStatus;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.service.AttachmentService;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.TestPlanService;
 import com.utest.exception.ActivatingIncompleteEntityException;
@@ -44,12 +48,15 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanService
 {
+	private final AttachmentService	attachmentService;
+
 	/**
 	 * Default constructor
 	 */
-	public TestPlanServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService)
+	public TestPlanServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService, final AttachmentService attachmentService)
 	{
 		super(dao, environmentService);
+		this.attachmentService = attachmentService;
 	}
 
 	@Override
@@ -277,4 +284,30 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 		}
 	}
 
+	@Override
+	public List<Attachment> getAttachmentsForTestPlan(final Integer testPlanId_) throws Exception
+	{
+		return attachmentService.getAttachmentsForEntity(testPlanId_, EntityType.TEST_PLAN);
+	}
+
+	@Override
+	public Attachment addAttachmentForTestPlan(final String name, final String description, final String url, final Double size, final Integer testPlanId,
+			final Integer attachmentTypeId) throws Exception
+	{
+		return attachmentService.addAttachment(name, description, url, size, EntityType.TEST_PLAN, testPlanId, attachmentTypeId);
+	}
+
+	@Override
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestPlan(final Integer testPlanId_) throws Exception
+	{
+		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);
+		if (testPlan.getEnvironmentProfileId() != null)
+		{
+			return environmentService.getEnvironmentGroupsForProfileExploded(testPlan.getEnvironmentProfileId());
+		}
+		else
+		{
+			return new ArrayList<EnvironmentGroupExploded>();
+		}
+	}
 }

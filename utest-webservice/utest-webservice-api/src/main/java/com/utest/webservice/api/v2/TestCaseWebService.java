@@ -24,6 +24,8 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
+import com.utest.webservice.model.v2.AttachmentInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.TagInfo;
@@ -100,5 +102,11 @@ public interface TestCaseWebService
 
 	TestCaseVersionInfo createTestCase(UriInfo ui, Integer productId, Integer testCycleId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name,
 			String description, String automated, String automationUri) throws Exception;
+
+	List<EnvironmentGroupExplodedInfo> getTestCaseEnvironmentGroupsExploded(UriInfo ui, Integer productId) throws Exception;
+
+	List<AttachmentInfo> getTestCaseAttachments(UriInfo ui, Integer testCaseId) throws Exception;
+
+	AttachmentInfo createAttachment(UriInfo ui, Integer testCaseId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 
 }

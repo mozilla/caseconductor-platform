@@ -25,8 +25,11 @@ import java.util.List;
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.AccessRole;
+import com.utest.domain.Attachment;
 import com.utest.domain.Company;
+import com.utest.domain.EntityType;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
@@ -36,6 +39,7 @@ import com.utest.domain.TestCaseProductComponent;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.service.AttachmentService;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.ProductService;
 import com.utest.domain.service.TeamService;
@@ -50,16 +54,18 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	private final TypelessDAO			dao;
 	private final EnvironmentService	environmentService;
 	private final TeamService			teamService;
+	private final AttachmentService		attachmentService;
 
 	/**
 	 * Default constructor
 	 */
-	public ProductServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService, final TeamService teamService)
+	public ProductServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService, final TeamService teamService, final AttachmentService attachmentService)
 	{
 		super(dao);
 		this.dao = dao;
 		this.environmentService = environmentService;
 		this.teamService = teamService;
+		this.attachmentService = attachmentService;
 	}
 
 	@Override
@@ -108,6 +114,19 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 		final List<EnvironmentGroup> groups = environmentService.addGeneratedEnvironmentGroups(product.getCompanyId(), environmentTypeId_, environmentIds_);
 		saveEnvironmentGroupsForProduct(productId_, DomainUtil.extractEntityIds(groups), originalVersionId_);
 		return groups;
+	}
+
+	@Override
+	public List<Attachment> getAttachmentsForProduct(final Integer productId_) throws Exception
+	{
+		return attachmentService.getAttachmentsForEntity(productId_, EntityType.PRODUCT);
+	}
+
+	@Override
+	public Attachment addAttachmentForProduct(final String name, final String description, final String url, final Double size, final Integer productId,
+			final Integer attachmentTypeId) throws Exception
+	{
+		return attachmentService.addAttachment(name, description, url, size, EntityType.PRODUCT, productId, attachmentTypeId);
 	}
 
 	@Override
@@ -197,6 +216,20 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 		else
 		{
 			return new ArrayList<EnvironmentGroup>();
+		}
+	}
+
+	@Override
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForProduct(final Integer productId_) throws Exception
+	{
+		final Product product = getRequiredEntityById(Product.class, productId_);
+		if (product.getEnvironmentProfileId() != null)
+		{
+			return environmentService.getEnvironmentGroupsForProfileExploded(product.getEnvironmentProfileId());
+		}
+		else
+		{
+			return new ArrayList<EnvironmentGroupExploded>();
 		}
 	}
 

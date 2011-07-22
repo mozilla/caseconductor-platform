@@ -19,25 +19,22 @@
  */
 package com.utest.domain.service;
 
-import java.io.File;
 import java.util.List;
 
 import com.utest.domain.Attachment;
-import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 
 public interface AttachmentService
 {
-	// Attachment related methods
-	Attachment uploadAttachment(User auth_, String localPath_, Integer entityId_, Integer entityTypeId_) throws Exception;
+	Attachment addAttachment(final String name, final String description, final String url, final Double size, final Integer entityTypeId, final Integer entityId,
+			final Integer attachmentTypeId) throws Exception;
 
-	List<File> downloadAttachments(Integer entityId, Integer entityTypeId, Integer attachmentTypeId) throws Exception;
+	Attachment getAttachment(Integer attachmentId) throws Exception;
 
-	Attachment getAttachment(User auth_, Integer attachmentId_) throws Exception;
+	UtestSearchResult findAttachments(UtestSearch search) throws Exception;
 
-	List<Attachment> getAttachments(Integer entityId, Integer entityTypeId, Integer attachmentTypeId) throws Exception;
+	void deleteAttachment(Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	UtestSearchResult findAttachments(User auth_, UtestSearch search_) throws Exception;
-
+	List<Attachment> getAttachmentsForEntity(Integer entityId, Integer entityTypeId) throws Exception;
 }

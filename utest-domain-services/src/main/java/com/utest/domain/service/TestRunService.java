@@ -23,8 +23,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.utest.domain.AccessRole;
+import com.utest.domain.Attachment;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.TestRun;
 import com.utest.domain.TestRunResult;
@@ -174,4 +176,18 @@ public interface TestRunService
 
 	TestRun saveTestRun(Integer testRunId, boolean useLatestVersions, String name, String description, Date startDate, Date endDate, boolean selfAssignAllowed,
 			boolean selfAssignPerEnvironment, Integer selfAssignLimit, Integer originalVersionId, boolean autoAssignToTeam) throws Exception;
+
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForAssignment(Integer assignmentId) throws Exception;
+
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRun(Integer testRunId) throws Exception;
+
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRunTestCase(Integer testRunTestCaseId) throws Exception;
+
+	List<Attachment> getAttachmentsForTestRun(Integer testRunId) throws Exception;
+
+	List<Attachment> getAttachmentsForTestRunResult(Integer testRunResultId) throws Exception;
+
+	Attachment addAttachmentForTestRunResult(String name, String description, String url, Double size, Integer testRunResultId, Integer attachmentTypeId) throws Exception;
+
+	Attachment addAttachmentForTestRun(String name, String description, String url, Double size, Integer testRunId, Integer attachmentTypeId) throws Exception;
 }

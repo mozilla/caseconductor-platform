@@ -31,9 +31,12 @@ import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentDependable;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentGroupEnvironment;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.EnvironmentLocale;
 import com.utest.domain.EnvironmentProfile;
+import com.utest.domain.EnvironmentProfileEnvironment;
 import com.utest.domain.EnvironmentProfileEnvironmentGroup;
+import com.utest.domain.EnvironmentProfileExploded;
 import com.utest.domain.EnvironmentType;
 import com.utest.domain.EnvironmentTypeLocale;
 import com.utest.domain.Locale;
@@ -662,6 +665,20 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		return dao.getBySearch(EnvironmentGroup.class, search_);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public UtestSearchResult findEnvironmentGroupsExploded(final UtestSearch search_) throws Exception
+	{
+		UtestSearchResult result = dao.getBySearch(EnvironmentGroupExploded.class, search_);
+		List<EnvironmentGroupExploded> groups = (List<EnvironmentGroupExploded>) result.getResults();
+		for (EnvironmentGroupExploded group : groups)
+		{
+			group.setEnvironments(getEnvironmentsForGroup(group.getId()));
+		}
+
+		return result;
+	}
+
 	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForProfile(final Integer environmentProfileId_) throws Exception
 	{
@@ -687,6 +704,32 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		else
 		{
 			return new ArrayList<EnvironmentGroup>();
+		}
+	}
+
+	@Override
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsForProfileExploded(final Integer environmentProfileId_) throws Exception
+	{
+
+		if (environmentProfileId_ == null)
+		{
+			throw new IllegalArgumentException("environmentProfileId_ is null in getEnvironmentGroupsForProfile() call.");
+		}
+		Search search = new Search(EnvironmentProfileEnvironmentGroup.class);
+		search.addFilterEqual("environmentProfileId", environmentProfileId_);
+		final List<EnvironmentProfileEnvironmentGroup> foundGroups = dao.search(EnvironmentProfileEnvironmentGroup.class, search);
+		if ((foundGroups != null) && !foundGroups.isEmpty())
+		{
+			final List<EnvironmentGroupExploded> groups = new ArrayList<EnvironmentGroupExploded>();
+			for (final EnvironmentProfileEnvironmentGroup idHolder : foundGroups)
+			{
+				groups.add(getEnvironmentGroupExploded(idHolder.getEnvironmentGroupId()));
+			}
+			return groups;
+		}
+		else
+		{
+			return new ArrayList<EnvironmentGroupExploded>();
 		}
 	}
 
@@ -751,6 +794,29 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	}
 
 	@Override
+	public List<Environment> getEnvironmentsForProfile(final Integer environmentProfileId_) throws Exception
+	{
+		Search search = new Search(EnvironmentProfileEnvironment.class);
+		search.addFilterEqual("environmentProfileId", environmentProfileId_);
+		final List<EnvironmentProfileEnvironment> foundGroups = dao.search(EnvironmentProfileEnvironment.class, search);
+		if ((foundGroups != null) && !foundGroups.isEmpty())
+		{
+			final List<Integer> ids = new ArrayList<Integer>();
+			for (final EnvironmentProfileEnvironment idHolder : foundGroups)
+			{
+				ids.add(idHolder.getEnvironmentId());
+			}
+			search = new Search(Environment.class);
+			search.addFilterIn("id", ids);
+			return dao.search(Environment.class, search);
+		}
+		else
+		{
+			return new ArrayList<Environment>();
+		}
+	}
+
+	@Override
 	public List<Environment> getEnvironmentsForGroup(final Integer environmentGroupId_) throws Exception
 	{
 		Search search = new Search(EnvironmentGroupEnvironment.class);
@@ -803,10 +869,27 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	}
 
 	@Override
+	public EnvironmentGroupExploded getEnvironmentGroupExploded(final Integer environmentGroupId_) throws Exception
+	{
+		final EnvironmentGroupExploded environmentGroup = getRequiredEntityById(EnvironmentGroupExploded.class, environmentGroupId_);
+		environmentGroup.setEnvironments(getEnvironmentsForGroup(environmentGroup.getId()));
+		return environmentGroup;
+	}
+
+	@Override
 	public EnvironmentProfile getEnvironmentProfile(final Integer environmentProfileId_) throws Exception
 	{
 		final EnvironmentProfile environment = getRequiredEntityById(EnvironmentProfile.class, environmentProfileId_);
 		return environment;
+	}
+
+	@Override
+	public EnvironmentProfileExploded getEnvironmentProfileExploded(final Integer environmentProfileId_) throws Exception
+	{
+		final EnvironmentProfileExploded environmentProfile = getRequiredEntityById(EnvironmentProfileExploded.class, environmentProfileId_);
+		environmentProfile.setEnvironments(getEnvironmentsForProfile(environmentProfile.getId()));
+		environmentProfile.setEnvironmentGroups(getEnvironmentGroupsForProfileExploded(environmentProfile.getId()));
+		return environmentProfile;
 	}
 
 	@Override

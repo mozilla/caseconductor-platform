@@ -38,6 +38,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.springframework.security.access.annotation.Secured;
 
+import com.utest.domain.Attachment;
 import com.utest.domain.Company;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
@@ -49,6 +50,7 @@ import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.UserService;
 import com.utest.webservice.api.v2.CompanyWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
+import com.utest.webservice.model.v2.AttachmentInfo;
 import com.utest.webservice.model.v2.CompanyInfo;
 import com.utest.webservice.model.v2.CompanySearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
@@ -138,6 +140,33 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 		final Company company = companyService.getCompany(companyId);
 
 		return objectBuilderFactory.toInfo(CompanyInfo.class, company, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.COMPANY_INFO_VIEW)
+	public List<AttachmentInfo> getCompanyAttachments(@Context UriInfo ui_, @PathParam("id") final Integer companyId) throws Exception
+	{
+		final List<Attachment> attachments = companyService.getAttachmentsForCompany(companyId);
+		final List<AttachmentInfo> attachmentsInfo = objectBuilderFactory.toInfo(AttachmentInfo.class, attachments, ui_.getBaseUriBuilder());
+		return attachmentsInfo;
+	}
+
+	@POST
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.COMPANY_INFO_EDIT })
+	public AttachmentInfo createAttachment(@Context UriInfo ui, @PathParam("id") final Integer companyId, @FormParam("name") String name,
+			@FormParam("description") String description, @FormParam("url") String url, @FormParam("size") Double size, @FormParam("attachmentTypeId") Integer attachmentTypeId)
+			throws Exception
+	{
+		Attachment attachment = companyService.addAttachmentForCompany(name, description, url, size, companyId, attachmentTypeId);
+		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
 	}
 
 	@PUT

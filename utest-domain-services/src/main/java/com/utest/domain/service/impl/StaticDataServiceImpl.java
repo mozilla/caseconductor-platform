@@ -37,9 +37,11 @@ import com.trg.search.Search;
 import com.utest.annotations.ParentDependableType;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.ApprovalStatus;
+import com.utest.domain.AttachmentType;
 import com.utest.domain.CodeValueEntity;
 import com.utest.domain.Country;
 import com.utest.domain.Descriptable;
+import com.utest.domain.EntityType;
 import com.utest.domain.Locale;
 import com.utest.domain.LocaleDescriptable;
 import com.utest.domain.LocalizedEntity;
@@ -96,6 +98,8 @@ public class StaticDataServiceImpl implements StaticDataService
 		_localizedData.add(TestCycleStatus.class);
 		_localizedData.add(UserStatus.class);
 		_localizedData.add(ApprovalStatus.class);
+		_localizedData.add(EntityType.class);
+		_localizedData.add(AttachmentType.class);
 
 		_nonTranslatableData.add(Locale.class);
 	}

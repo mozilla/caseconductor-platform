@@ -25,7 +25,9 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
+import com.utest.webservice.model.v2.AttachmentInfo;
 import com.utest.webservice.model.v2.CategoryValueInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.RoleInfo;
 import com.utest.webservice.model.v2.TestCycleInfo;
@@ -72,4 +74,10 @@ public interface TestCycleWebService
 	TestCycleInfo cloneTestCycle(UriInfo ui, Integer testCycleId, String cloneAssignments) throws Exception;
 
 	List<CategoryValueInfo> getCoverageByResultStatus(UriInfo ui, Integer testCycleId) throws Exception;
+
+	List<EnvironmentGroupExplodedInfo> getTestCycleEnvironmentGroupsExploded(UriInfo ui, Integer productId) throws Exception;
+
+	List<AttachmentInfo> getTestCycleAttachments(UriInfo ui, Integer testCycleId) throws Exception;
+
+	AttachmentInfo createAttachment(UriInfo ui, Integer testCycleId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 }

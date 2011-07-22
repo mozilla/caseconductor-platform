@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.cxf.jaxrs.ext.MessageContext;
 
+import com.utest.webservice.model.v2.AttachmentInfo;
 import com.utest.webservice.model.v2.PermissionInfo;
 import com.utest.webservice.model.v2.PermissionSearchResultInfo;
 import com.utest.webservice.model.v2.RoleInfo;
@@ -89,5 +90,9 @@ public interface UserWebService
 	UserInfo createUser(UriInfo ui, Integer companyId, String firstName, String lastName, String email, String password, String screenName) throws Exception;
 
 	RoleInfo createRole(UriInfo ui, Integer companyId, String name) throws Exception;
+
+	List<AttachmentInfo> getUserAttachments(UriInfo ui, Integer userId) throws Exception;
+
+	AttachmentInfo createAttachment(UriInfo ui, Integer userId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 
 }

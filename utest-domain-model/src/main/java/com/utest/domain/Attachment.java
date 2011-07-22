@@ -19,39 +19,72 @@
  */
 package com.utest.domain;
 
-import java.util.Date;
-
-public class Attachment extends Entity
+public class Attachment extends TimelineEntity
 {
-	private String	fileName;
-	private String	storageUrl;
-	private Double	fileSize;
-	private String	fileType;
+	private String	name;
+	private String	description;
+	private String	url;
+	private Double	size;
 	private Integer	entityTypeId;
 	private Integer	entityId;
 	private Integer	attachmentTypeId;
-	private String	bucketName;
-	private String	objectKey;
-	private Date	createDate;
 
-	public String getFileName()
+	public Attachment()
 	{
-		return fileName;
+		super();
 	}
 
-	public void setFileName(final String fileName)
+	public Attachment(final String name, final String description, final String url, final Double size, final Integer entityTypeId, final Integer entityId,
+			final Integer attachmentTypeId)
 	{
-		this.fileName = fileName;
+		super();
+		this.name = name;
+		this.description = description;
+		this.url = url;
+		this.size = size;
+		this.entityId = entityId;
+		this.entityTypeId = entityTypeId;
+		this.attachmentTypeId = attachmentTypeId;
 	}
 
-	public String getFileType()
+	public String getName()
 	{
-		return fileType;
+		return name;
 	}
 
-	public void setFileType(final String fileType)
+	public void setName(String name)
 	{
-		this.fileType = fileType;
+		this.name = name;
+	}
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+	public String getUrl()
+	{
+		return url;
+	}
+
+	public void setUrl(String url)
+	{
+		this.url = url;
+	}
+
+	public Double getSize()
+	{
+		return size;
+	}
+
+	public void setSize(Double size)
+	{
+		this.size = size;
 	}
 
 	public Integer getEntityTypeId()
@@ -59,19 +92,9 @@ public class Attachment extends Entity
 		return entityTypeId;
 	}
 
-	public void setEntityTypeId(final Integer entityTypeId)
+	public void setEntityTypeId(Integer entityTypeId)
 	{
 		this.entityTypeId = entityTypeId;
-	}
-
-	public Integer getAttachmentTypeId()
-	{
-		return attachmentTypeId;
-	}
-
-	public void setAttachmentTypeId(final Integer attachmentTypeId)
-	{
-		this.attachmentTypeId = attachmentTypeId;
 	}
 
 	public Integer getEntityId()
@@ -79,59 +102,19 @@ public class Attachment extends Entity
 		return entityId;
 	}
 
-	public void setEntityId(final Integer entityId)
+	public void setEntityId(Integer entityId)
 	{
 		this.entityId = entityId;
 	}
 
-	public String getStorageUrl()
+	public Integer getAttachmentTypeId()
 	{
-		return storageUrl;
+		return attachmentTypeId;
 	}
 
-	public void setStorageUrl(final String storageUrl)
+	public void setAttachmentTypeId(Integer attachmentTypeId)
 	{
-		this.storageUrl = storageUrl;
-	}
-
-	public Double getFileSize()
-	{
-		return fileSize;
-	}
-
-	public void setFileSize(final Double fileSize)
-	{
-		this.fileSize = fileSize;
-	}
-
-	public Date getCreateDate()
-	{
-		return createDate;
-	}
-
-	public void setCreateDate(final Date createDate)
-	{
-		this.createDate = createDate;
-	}
-
-	public String getBucketName()
-	{
-		return bucketName;
-	}
-
-	public void setBucketName(final String bucketName)
-	{
-		this.bucketName = bucketName;
-	}
-
-	public String getObjectKey()
-	{
-		return objectKey;
-	}
-
-	public void setObjectKey(final String objectKey)
-	{
-		this.objectKey = objectKey;
+		this.attachmentTypeId = attachmentTypeId;
 	}
 
 }

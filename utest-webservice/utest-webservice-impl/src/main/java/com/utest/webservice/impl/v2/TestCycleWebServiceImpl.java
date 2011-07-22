@@ -40,7 +40,9 @@ import javax.ws.rs.core.UriInfo;
 import org.springframework.security.access.annotation.Secured;
 
 import com.utest.domain.AccessRole;
+import com.utest.domain.Attachment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.Permission;
 import com.utest.domain.TestCycle;
 import com.utest.domain.TestRun;
@@ -51,7 +53,9 @@ import com.utest.domain.service.TestCycleService;
 import com.utest.domain.view.CategoryValue;
 import com.utest.webservice.api.v2.TestCycleWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
+import com.utest.webservice.model.v2.AttachmentInfo;
 import com.utest.webservice.model.v2.CategoryValueInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.RoleInfo;
 import com.utest.webservice.model.v2.TestCycleInfo;
@@ -157,6 +161,33 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	}
 
 	@GET
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CYCLE_VIEW)
+	public List<AttachmentInfo> getTestCycleAttachments(@Context UriInfo ui_, @PathParam("id") final Integer testCycleId) throws Exception
+	{
+		final List<Attachment> attachments = testCycleService.getAttachmentsForTestCycle(testCycleId);
+		final List<AttachmentInfo> attachmentsInfo = objectBuilderFactory.toInfo(AttachmentInfo.class, attachments, ui_.getBaseUriBuilder());
+		return attachmentsInfo;
+	}
+
+	@POST
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_CYCLE_EDIT })
+	public AttachmentInfo createAttachment(@Context UriInfo ui, @PathParam("id") final Integer testCycleId, @FormParam("name") String name,
+			@FormParam("description") String description, @FormParam("url") String url, @FormParam("size") Double size, @FormParam("attachmentTypeId") Integer attachmentTypeId)
+			throws Exception
+	{
+		Attachment attachment = testCycleService.addAttachmentForTestCycle(name, description, url, size, testCycleId, attachmentTypeId);
+		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
+	}
+
+	@GET
 	@Path("/{id}/environmentgroups/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -166,6 +197,21 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	{
 		final List<EnvironmentGroup> groups = testCycleService.getEnvironmentGroupsForTestCycle(testCycleId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/{id}/environmentgroups/exploded/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CYCLE_VIEW)
+	/**
+	 * Returns all versions of a test case
+	 */
+	public List<EnvironmentGroupExplodedInfo> getTestCycleEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
+	{
+		final List<EnvironmentGroupExploded> groups = testCycleService.getEnvironmentGroupsExplodedForTestCycle(productId_);
+		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 
 	@GET

@@ -24,16 +24,19 @@ import java.util.List;
 
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
+import com.utest.domain.Attachment;
+import com.utest.domain.EntityType;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
-import com.utest.domain.TestCaseStatus;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.TestSuite;
 import com.utest.domain.TestSuiteStatus;
 import com.utest.domain.TestSuiteTestCase;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.service.AttachmentService;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.TestSuiteService;
 import com.utest.domain.view.TestSuiteTestCaseView;
@@ -41,18 +44,19 @@ import com.utest.exception.ActivatingIncompleteEntityException;
 import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingActivatedEntityException;
 import com.utest.exception.IncludingMultileVersionsOfSameEntityException;
-import com.utest.exception.IncludingNotActivatedEntityException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteService
 {
+	private final AttachmentService	attachmentService;
 
 	/**
 	 * Default constructor
 	 */
-	public TestSuiteServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService)
+	public TestSuiteServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService, final AttachmentService attachmentService)
 	{
 		super(dao, environmentService);
+		this.attachmentService = attachmentService;
 	}
 
 	@Override
@@ -104,6 +108,19 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
+	public List<Attachment> getAttachmentsForTestSuite(final Integer testSuiteId_) throws Exception
+	{
+		return attachmentService.getAttachmentsForEntity(testSuiteId_, EntityType.TEST_SUITE);
+	}
+
+	@Override
+	public Attachment addAttachmentForTestSuite(final String name, final String description, final String url, final Double size, final Integer testSuiteId_,
+			final Integer attachmentTypeId) throws Exception
+	{
+		return attachmentService.addAttachment(name, description, url, size, EntityType.TEST_SUITE, testSuiteId_, attachmentTypeId);
+	}
+
+	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForTestSuite(final Integer testSuiteId_) throws Exception
 	{
 		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
@@ -114,6 +131,20 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 		else
 		{
 			return new ArrayList<EnvironmentGroup>();
+		}
+	}
+
+	@Override
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestSuite(final Integer testSuiteId_) throws Exception
+	{
+		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
+		if (testSuite.getEnvironmentProfileId() != null)
+		{
+			return environmentService.getEnvironmentGroupsForProfileExploded(testSuite.getEnvironmentProfileId());
+		}
+		else
+		{
+			return new ArrayList<EnvironmentGroupExploded>();
 		}
 	}
 

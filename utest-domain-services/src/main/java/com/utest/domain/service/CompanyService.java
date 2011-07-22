@@ -21,6 +21,7 @@ package com.utest.domain.service;
 
 import java.util.List;
 
+import com.utest.domain.Attachment;
 import com.utest.domain.Company;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.search.UtestSearch;
@@ -49,4 +50,8 @@ public interface CompanyService
 
 	List<EnvironmentGroup> addGeneratedEnvironmentGroupsForCompany(Integer companyId, Integer environmentTypeId, List<Integer> environmentIds, Integer originalVersionId)
 			throws Exception;
+
+	List<Attachment> getAttachmentsForCompany(Integer companyId) throws Exception;
+
+	Attachment addAttachmentForCompany(String name, String description, String url, Double size, Integer companyId, Integer attachmentTypeId) throws Exception;
 }

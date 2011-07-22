@@ -26,7 +26,10 @@ import java.util.List;
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.AccessRole;
+import com.utest.domain.Attachment;
+import com.utest.domain.EntityType;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.Product;
 import com.utest.domain.Team;
 import com.utest.domain.TestCycle;
@@ -35,6 +38,7 @@ import com.utest.domain.TestRun;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.service.AttachmentService;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.TeamService;
 import com.utest.domain.service.TestCycleService;
@@ -48,17 +52,20 @@ import com.utest.exception.UnsupportedTeamSelectionException;
 
 public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleService
 {
+	private final AttachmentService	attachmentService;
 	private final TestRunService	testRunService;
 	private final TeamService		teamService;
 
 	/**
 	 * Default constructor
 	 */
-	public TestCycleServiceImpl(final TypelessDAO dao, final TestRunService testRunService, final EnvironmentService environmentService, final TeamService teamService)
+	public TestCycleServiceImpl(final TypelessDAO dao, final TestRunService testRunService, final EnvironmentService environmentService, final TeamService teamService,
+			final AttachmentService attachmentService)
 	{
 		super(dao, environmentService);
 		this.testRunService = testRunService;
 		this.teamService = teamService;
+		this.attachmentService = attachmentService;
 	}
 
 	@Override
@@ -216,6 +223,20 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	}
 
 	@Override
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCycle(final Integer testCycleId_) throws Exception
+	{
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
+		if (testCycle.getEnvironmentProfileId() != null)
+		{
+			return environmentService.getEnvironmentGroupsForProfileExploded(testCycle.getEnvironmentProfileId());
+		}
+		else
+		{
+			return new ArrayList<EnvironmentGroupExploded>();
+		}
+	}
+
+	@Override
 	public void saveEnvironmentGroupsForTestCycle(final Integer testCycleId_, final List<Integer> environmentGroupIds_, final Integer originalVersionId_)
 			throws UnsupportedEnvironmentSelectionException, Exception
 	{
@@ -352,4 +373,18 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 		return (List<CategoryValue>) dao.findByNamedQueryAndNamedParam(namedQuery, paramNames, values, false, false);
 
 	}
+
+	@Override
+	public Attachment addAttachmentForTestCycle(final String name, final String description, final String url, final Double size, final Integer testCycleId,
+			final Integer attachmentTypeId) throws Exception
+	{
+		return attachmentService.addAttachment(name, description, url, size, EntityType.TEST_CYCLE, testCycleId, attachmentTypeId);
+	}
+
+	@Override
+	public List<Attachment> getAttachmentsForTestCycle(final Integer testCycleId_) throws Exception
+	{
+		return attachmentService.getAttachmentsForEntity(testCycleId_, EntityType.TEST_CYCLE);
+	}
+
 }

@@ -21,7 +21,9 @@ package com.utest.domain.service;
 
 import java.util.List;
 
+import com.utest.domain.Attachment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.TestPlan;
 import com.utest.domain.TestPlanTestSuite;
 import com.utest.domain.search.UtestSearch;
@@ -64,5 +66,11 @@ public interface TestPlanService
 	void deleteTestPlan(Integer testPlanId, Integer originalVersionId) throws Exception;
 
 	TestPlanTestSuite getTestPlanTestSuite(Integer testPlanTestSuiteId) throws Exception;
+
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestPlan(Integer testPlanId) throws Exception;
+
+	List<Attachment> getAttachmentsForTestPlan(Integer testPlanId) throws Exception;
+
+	Attachment addAttachmentForTestPlan(String name, String description, String url, Double size, Integer testPlanId, Integer attachmentTypeId) throws Exception;
 
 }

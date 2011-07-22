@@ -41,11 +41,14 @@
         <property name="resourceUrls">
             <map>
                	<entry key="team" value="/teams/{id}"/>
+               	<entry key="attachment" value="/attachments/{id}"/>
                	<entry key="environment" value="/environments/{id}"/>
                	<entry key="environmentview" value="/environments/{id}"/>
                	<entry key="environmentgroup" value="/environmentgroups/{id}"/>
                 <entry key="environmenttype" value="/environmenttypes/{id}"/>
                 <entry key="environmenttypeview" value="/environmenttypes/{id}"/>
+               	<entry key="environmentgroupexploded" value="/environmentgroups/exploded/{id}"/>
+               	<entry key="environmentprofileexploded" value="/environmentprofiles/exploded/{id}"/>
                 <entry key="parentenvironmenttype" value="/environmenttypes/{id}"/>
                 <entry key="company" value="/companies/{id}"/>
                 <entry key="user" value="/users/{id}"/>
@@ -112,6 +115,11 @@
 		<constructor-arg ref="companyService" />
 		<constructor-arg ref="userService" />
 		<constructor-arg ref="environmentService" />
+	</bean>
+
+	<bean id="attachmentWebService" class="com.utest.webservice.impl.v2.AttachmentWebServiceImpl">
+		<constructor-arg ref="objectBuilderFactory" />
+		<constructor-arg ref="attachmentService" />
 	</bean>
 
 	<bean id="productWebService" class="com.utest.webservice.impl.v2.ProductWebServiceImpl">
@@ -203,6 +211,7 @@
 	<!-- SECURED SERVICE ENDPOINT -->
 	<jaxrs:server id="rest2" address="/v2/rest">
 		<jaxrs:serviceBeans>
+			<ref bean="attachmentWebService" />
 			<ref bean="companyWebService" />
 			<ref bean="productWebService" />
 			<ref bean="userWebService" />

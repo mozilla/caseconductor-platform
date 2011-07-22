@@ -23,7 +23,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.utest.domain.AccessRole;
+import com.utest.domain.Attachment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.TestCycle;
 import com.utest.domain.TestRun;
 import com.utest.domain.User;
@@ -75,4 +77,10 @@ public interface TestCycleService
 	TestCycle cloneTestCycle(Integer fromTestCycleId, boolean cloneAssignments) throws Exception;
 
 	List<CategoryValue> getCoverageByStatus(Integer testCycleId);
+
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCycle(Integer testCycleId) throws Exception;
+
+	List<Attachment> getAttachmentsForTestCycle(Integer testCycleId) throws Exception;
+
+	Attachment addAttachmentForTestCycle(String name, String description, String url, Double size, Integer testCycleId, Integer attachmentTypeId) throws Exception;
 }

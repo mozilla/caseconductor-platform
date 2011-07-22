@@ -21,7 +21,9 @@ package com.utest.domain.service;
 
 import java.util.List;
 
+import com.utest.domain.Attachment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.TestSuite;
 import com.utest.domain.TestSuiteTestCase;
 import com.utest.domain.search.UtestSearch;
@@ -73,5 +75,11 @@ public interface TestSuiteService
 	List<TestSuiteTestCaseView> getTestSuiteTestCasesViews(Integer testSuiteId) throws Exception;
 
 	TestSuiteTestCaseView getTestSuiteTestCaseView(Integer testSuiteTestCaseId) throws Exception;
+
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestSuite(Integer testSuiteId) throws Exception;
+
+	List<Attachment> getAttachmentsForTestSuite(Integer testSuiteId) throws Exception;
+
+	Attachment addAttachmentForTestSuite(String name, String description, String url, Double size, Integer testSuiteId, Integer attachmentTypeId) throws Exception;
 
 }

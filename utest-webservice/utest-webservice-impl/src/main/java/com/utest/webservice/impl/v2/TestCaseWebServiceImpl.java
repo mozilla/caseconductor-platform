@@ -38,7 +38,9 @@ import javax.ws.rs.core.UriInfo;
 
 import org.springframework.security.access.annotation.Secured;
 
+import com.utest.domain.Attachment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.Permission;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.Tag;
@@ -53,6 +55,8 @@ import com.utest.domain.service.TestCaseService;
 import com.utest.domain.view.TestCaseVersionView;
 import com.utest.webservice.api.v2.TestCaseWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
+import com.utest.webservice.model.v2.AttachmentInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.TagInfo;
@@ -225,6 +229,33 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	}
 
 	@GET
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CASE_VIEW)
+	public List<AttachmentInfo> getTestCaseAttachments(@Context UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
+	{
+		final List<Attachment> attachments = testCaseService.getAttachmentsForTestCase(testCaseId_);
+		final List<AttachmentInfo> attachmentsInfo = objectBuilderFactory.toInfo(AttachmentInfo.class, attachments, ui_.getBaseUriBuilder());
+		return attachmentsInfo;
+	}
+
+	@POST
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_CASE_EDIT, Permission.TEST_CASE_ADD })
+	public AttachmentInfo createAttachment(@Context UriInfo ui, @PathParam("id") final Integer testCaseId, @FormParam("name") String name,
+			@FormParam("description") String description, @FormParam("url") String url, @FormParam("size") Double size, @FormParam("attachmentTypeId") Integer attachmentTypeId)
+			throws Exception
+	{
+		Attachment attachment = testCaseService.addAttachmentForTestCase(name, description, url, size, testCaseId, attachmentTypeId);
+		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
+	}
+
+	@GET
 	@Path("/{id}/tags/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -275,6 +306,21 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	{
 		final List<EnvironmentGroup> groups = testCaseService.getEnvironmentGroupsForTestCaseVersion(testCaseVersionId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/versions/{id}/environmentgroups/exploded/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CASE_VIEW)
+	/**
+	 * Returns all versions of a test case
+	 */
+	public List<EnvironmentGroupExplodedInfo> getTestCaseEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
+	{
+		final List<EnvironmentGroupExploded> groups = testCaseService.getEnvironmentGroupsExplodedForTestCaseVersion(productId_);
+		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 
 	@POST

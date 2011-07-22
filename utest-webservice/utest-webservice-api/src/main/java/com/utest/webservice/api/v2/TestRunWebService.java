@@ -25,7 +25,9 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
+import com.utest.webservice.model.v2.AttachmentInfo;
 import com.utest.webservice.model.v2.CategoryValueInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.TestRunTestCaseInfo;
@@ -148,5 +150,20 @@ public interface TestRunWebService
 
 	TestRunInfo updateTestRun(UriInfo ui, Integer testRunId, String name, String description, String useLatestVersions, String selfAssignAllowed, String selfAssignPerEnvironment,
 			Integer selfAssignLimit, Date startDate, Date endDate, Integer originalVersionId, String autoAssignToTeam) throws Exception;
+
+	List<EnvironmentGroupExplodedInfo> getTestRunEnvironmentGroupsExploded(UriInfo ui, Integer testRunId) throws Exception;
+
+	List<EnvironmentGroupExplodedInfo> getTestRunTestCaseEnvironmentGroupsExploded(UriInfo ui, Integer includedTestCaseId) throws Exception;
+
+	List<EnvironmentGroupExplodedInfo> getTestRunTestCaseAssignmentEnvironmentGroupsExploded(UriInfo ui, Integer assignmentId) throws Exception;
+
+	List<AttachmentInfo> getTestRunAttachments(UriInfo ui, Integer testRunId) throws Exception;
+
+	List<AttachmentInfo> getTestRunResultAttachments(UriInfo ui, Integer testRunResultId) throws Exception;
+
+	AttachmentInfo createAttachment(UriInfo ui, Integer testRunId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
+
+	AttachmentInfo createAttachmentForTestRunResult(UriInfo ui, Integer testRunResultId, String name, String description, String url, Double size, Integer attachmentTypeId)
+			throws Exception;
 
 }

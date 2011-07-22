@@ -39,7 +39,9 @@ import javax.ws.rs.core.UriInfo;
 import org.springframework.security.access.annotation.Secured;
 
 import com.utest.domain.AccessRole;
+import com.utest.domain.Attachment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.Permission;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
@@ -49,6 +51,8 @@ import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.ProductService;
 import com.utest.webservice.api.v2.ProductWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
+import com.utest.webservice.model.v2.AttachmentInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.ProductComponentSearchResultInfo;
@@ -225,6 +229,48 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	{
 		final List<EnvironmentGroup> groups = productService.getEnvironmentGroupsForProduct(productId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.PRODUCT_VIEW)
+	public List<AttachmentInfo> getProductAttachments(@Context UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
+	{
+		final List<Attachment> attachments = productService.getAttachmentsForProduct(productId_);
+		final List<AttachmentInfo> attachmentsInfo = objectBuilderFactory.toInfo(AttachmentInfo.class, attachments, ui_.getBaseUriBuilder());
+		return attachmentsInfo;
+	}
+
+	@POST
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.PRODUCT_EDIT })
+	public AttachmentInfo createAttachment(@Context UriInfo ui, @PathParam("id") final Integer productId, @FormParam("name") String name,
+			@FormParam("description") String description, @FormParam("url") String url, @FormParam("size") Double size, @FormParam("attachmentTypeId") Integer attachmentTypeId)
+			throws Exception
+	{
+		Attachment attachment = productService.addAttachmentForProduct(name, description, url, size, productId, attachmentTypeId);
+		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/{id}/environmentgroups/exploded/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.PRODUCT_VIEW)
+	/**
+	 * Returns all versions of a test case
+	 */
+	public List<EnvironmentGroupExplodedInfo> getProductEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
+	{
+		final List<EnvironmentGroupExploded> groups = productService.getEnvironmentGroupsExplodedForProduct(productId_);
+		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 
 	@GET

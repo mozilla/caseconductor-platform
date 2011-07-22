@@ -43,6 +43,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.utest.domain.AccessRole;
+import com.utest.domain.Attachment;
 import com.utest.domain.AuthenticatedUserInfo;
 import com.utest.domain.Permission;
 import com.utest.domain.User;
@@ -52,6 +53,7 @@ import com.utest.domain.service.UserService;
 import com.utest.domain.service.util.UserUtil;
 import com.utest.webservice.api.v2.UserWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
+import com.utest.webservice.model.v2.AttachmentInfo;
 import com.utest.webservice.model.v2.PermissionInfo;
 import com.utest.webservice.model.v2.PermissionSearchResultInfo;
 import com.utest.webservice.model.v2.RoleInfo;
@@ -274,6 +276,33 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 		final Permission permission = userService.getPermission(permissionId_);
 
 		return objectBuilderFactory.toInfo(PermissionInfo.class, permission, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.USER_ACCOUNT_VIEW)
+	public List<AttachmentInfo> getUserAttachments(@Context UriInfo ui_, @PathParam("id") final Integer userId_) throws Exception
+	{
+		final List<Attachment> attachments = userService.getAttachmentsForUser(userId_);
+		final List<AttachmentInfo> attachmentsInfo = objectBuilderFactory.toInfo(AttachmentInfo.class, attachments, ui_.getBaseUriBuilder());
+		return attachmentsInfo;
+	}
+
+	@POST
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_SUITE_EDIT })
+	public AttachmentInfo createAttachment(@Context UriInfo ui, @PathParam("id") final Integer userId, @FormParam("name") String name,
+			@FormParam("description") String description, @FormParam("url") String url, @FormParam("size") Double size, @FormParam("attachmentTypeId") Integer attachmentTypeId)
+			throws Exception
+	{
+		Attachment attachment = userService.addAttachmentForUser(name, description, url, size, userId, attachmentTypeId);
+		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
 	}
 
 	@GET

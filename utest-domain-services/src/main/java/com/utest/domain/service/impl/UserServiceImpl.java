@@ -26,8 +26,10 @@ import java.util.List;
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.AccessRole;
+import com.utest.domain.Attachment;
 import com.utest.domain.AuthenticatedUserInfo;
 import com.utest.domain.Company;
+import com.utest.domain.EntityType;
 import com.utest.domain.Permission;
 import com.utest.domain.RolePermission;
 import com.utest.domain.SignInFact;
@@ -36,6 +38,7 @@ import com.utest.domain.UserRole;
 import com.utest.domain.UserStatus;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.service.AttachmentService;
 import com.utest.domain.service.UserService;
 import com.utest.domain.service.cache.LoginUserContextHolder;
 import com.utest.exception.DuplicateNameException;
@@ -47,18 +50,20 @@ import com.utest.util.EncodeUtil;
 
 public class UserServiceImpl extends BaseServiceImpl implements UserService
 {
-	private final TypelessDAO	dao;
+	private final AttachmentService	attachmentService;
+	private final TypelessDAO		dao;
 	// permission assigned to all users by default
 	// configured in spring context
-	private List<Integer>		defaultPermissions	= new ArrayList<Integer>();
+	private List<Integer>			defaultPermissions	= new ArrayList<Integer>();
 
 	/**
 	 * Default constructor
 	 */
-	public UserServiceImpl(final TypelessDAO dao)
+	public UserServiceImpl(final TypelessDAO dao, final AttachmentService attachmentService)
 	{
 		super(dao);
 		this.dao = dao;
+		this.attachmentService = attachmentService;
 	}
 
 	@Override
@@ -517,6 +522,19 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 		search.addFilterIn("id", roleIdList);
 		final List<AccessRole> list = dao.search(AccessRole.class, search);
 		return list;
+	}
+
+	@Override
+	public List<Attachment> getAttachmentsForUser(final Integer userId_) throws Exception
+	{
+		return attachmentService.getAttachmentsForEntity(userId_, EntityType.USER);
+	}
+
+	@Override
+	public Attachment addAttachmentForUser(final String name, final String description, final String url, final Double size, final Integer userId_, final Integer attachmentTypeId)
+			throws Exception
+	{
+		return attachmentService.addAttachment(name, description, url, size, EntityType.USER, userId_, attachmentTypeId);
 	}
 
 	@Override

@@ -31,6 +31,7 @@
 
 	<bean id="userService" class="com.utest.domain.service.impl.UserServiceImpl">
 		<constructor-arg ref="typelessDao" />
+		<constructor-arg ref="attachmentService" />
         <property name="defaultPermissions">
 		     <list value-type="java.lang.Integer">
 		     	<!-- self assign work -->
@@ -47,28 +48,37 @@
 	<bean id="companyService" class="com.utest.domain.service.impl.CompanyServiceImpl">
 		<constructor-arg ref="typelessDao" />
 		<constructor-arg ref="environmentService" />
+		<constructor-arg ref="attachmentService" />
+	</bean>
+
+	<bean id="attachmentService" class="com.utest.domain.service.impl.AttachmentServiceImpl">
+		<constructor-arg ref="typelessDao" />
 	</bean>
 	
 	<bean id="productService" class="com.utest.domain.service.impl.ProductServiceImpl">
 		<constructor-arg ref="typelessDao" />
 		<constructor-arg ref="environmentService" />
 		<constructor-arg ref="teamService" />
+		<constructor-arg ref="attachmentService" />
 	</bean>
 
 	<bean id="testCaseService" class="com.utest.domain.service.impl.TestCaseServiceImpl">
 		<constructor-arg ref="typelessDao" />
 		<constructor-arg ref="environmentService" />
 		<constructor-arg ref="userService" />
+		<constructor-arg ref="attachmentService" />
 	</bean>
 
 	<bean id="testSuiteService" class="com.utest.domain.service.impl.TestSuiteServiceImpl">
 		<constructor-arg ref="typelessDao" />
 		<constructor-arg ref="environmentService" />
+		<constructor-arg ref="attachmentService" />
 	</bean>
 
 	<bean id="testPlanService" class="com.utest.domain.service.impl.TestPlanServiceImpl">
 		<constructor-arg ref="typelessDao" />
 		<constructor-arg ref="environmentService" />
+		<constructor-arg ref="attachmentService" />
 	</bean>
 
 	<bean id="testCycleService" class="com.utest.domain.service.impl.TestCycleServiceImpl">
@@ -76,6 +86,7 @@
 		<constructor-arg ref="environmentService" />
 		<constructor-arg ref="testRunService" />
 		<constructor-arg ref="teamService" />
+		<constructor-arg ref="attachmentService" />
 	</bean>
 
 	<bean id="testRunService" class="com.utest.domain.service.impl.TestRunServiceImpl">
@@ -86,6 +97,7 @@
 		<constructor-arg ref="testCaseService" />
 		<constructor-arg ref="teamService" />
 		<constructor-arg ref="userService" />
+		<constructor-arg ref="attachmentService" />
 	</bean>
 
 	<bean id="auditService" class="com.utest.domain.service.impl.AuditServiceImpl">

@@ -8,18 +8,18 @@
             <column name="attachmentId" />
             <generator class="identity" />
         </id>
-        <property name="fileName" type="string">
-            <column name="fileName" not-null="true" />
+        <property name="name" type="string">
+            <column name="name" not-null="true" />
         </property>
-        <property name="storageUrl" type="string">
-            <column name="storageUrl"/>
+        <property name="description" type="string">
+            <column name="description" not-null="true" />
         </property>
-        <property name="fileSize" type="java.lang.Double">
-            <column name="fileSize"/>
+        <property name="url" type="string">
+            <column name="url"/>
         </property>
-         <property name="fileType" type="string">
-            <column name="fileType"/>
-        </property> 
+        <property name="size" type="java.lang.Double">
+            <column name="size"/>
+        </property>
          <property name="entityTypeId" type="java.lang.Integer">
             <column name="entityTypeId"/>
         </property>   
@@ -29,14 +29,17 @@
          <property name="attachmentTypeId" type="java.lang.Integer">
             <column name="attachmentTypeId"/>
         </property>  
-        <property name="createDate" type="timestamp">
+		<property name="createDate" type="timestamp">
 			<column name="createDate" />
-		</property>   
-		 <property name="bucketName" type="string">
-			<column name="bucketName" />
-		</property>   
-		<property name="objectKey" type="string">
-			<column name="objectKey" />
-		</property> 
+		</property>
+		<property name="createdBy" type="java.lang.Integer">
+			<column name="createdBy" />
+		</property>
+		<property name="lastChangeDate" type="timestamp">
+			<column name="lastChangeDate" />
+		</property>
+		<property name="lastChangedBy" type="java.lang.Integer">
+			<column name="lastChangedBy" />
+		</property>
     </class>
 </hibernate-mapping>

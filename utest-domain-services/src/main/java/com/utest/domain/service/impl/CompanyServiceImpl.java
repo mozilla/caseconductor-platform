@@ -23,30 +23,31 @@ import java.util.List;
 
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
+import com.utest.domain.Attachment;
 import com.utest.domain.Company;
 import com.utest.domain.Country;
+import com.utest.domain.EntityType;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.Product;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.service.AttachmentService;
 import com.utest.domain.service.CompanyService;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.exception.DeletingUsedEntityException;
 
 public class CompanyServiceImpl extends BaseServiceImpl implements CompanyService
 {
-	private final TypelessDAO			dao;
-	private final EnvironmentService	environmentService;
+	private final AttachmentService	attachmentService;
 
 	/**
 	 * Default constructor
 	 */
-	public CompanyServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService)
+	public CompanyServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService, final AttachmentService attachmentService)
 	{
-		super(dao);
-		this.dao = dao;
-		this.environmentService = environmentService;
+		super(dao, environmentService);
+		this.attachmentService = attachmentService;
 	}
 
 	@Override
@@ -140,6 +141,19 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 		getRequiredEntityById(Company.class, companyId_);
 		final List<EnvironmentGroup> groups = environmentService.addGeneratedEnvironmentGroups(companyId_, environmentTypeId_, environmentIds_);
 		return groups;
+	}
+
+	@Override
+	public Attachment addAttachmentForCompany(final String name, final String description, final String url, final Double size, final Integer companyId,
+			final Integer attachmentTypeId) throws Exception
+	{
+		return attachmentService.addAttachment(name, description, url, size, EntityType.COMPANY, companyId, attachmentTypeId);
+	}
+
+	@Override
+	public List<Attachment> getAttachmentsForCompany(final Integer companyId_) throws Exception
+	{
+		return attachmentService.getAttachmentsForEntity(companyId_, EntityType.COMPANY);
 	}
 
 }

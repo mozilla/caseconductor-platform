@@ -24,9 +24,12 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
+import com.utest.webservice.model.v2.EnvironmentProfileExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeInfo;
 import com.utest.webservice.model.v2.EnvironmentTypeViewSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentViewSearchResultInfo;
@@ -83,4 +86,10 @@ public interface EnvironmentWebService
 	EnvironmentGroupInfo updateEnvironmentGroup(UriInfo ui, Integer environmentGroupId, String name, String description, Integer originalVersionId) throws Exception;
 
 	EnvironmentGroupInfo createEnvironmentGroup(UriInfo ui, Integer companyId, Integer environmentTypeId, String name, String description) throws Exception;
+
+	EnvironmentGroupExplodedSearchResultInfo findEnvironmentGroupsExploded(UriInfo ui, UtestSearchRequest request) throws Exception;
+
+	EnvironmentGroupExplodedInfo getEnvironmentGroupExploded(UriInfo ui, Integer environmentGroupId) throws Exception;
+
+	EnvironmentProfileExplodedInfo getEnvironmentProfileExploded(UriInfo ui, Integer environmentProfileId) throws Exception;
 }

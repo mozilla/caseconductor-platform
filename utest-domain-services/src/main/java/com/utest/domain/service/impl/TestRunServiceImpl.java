@@ -29,8 +29,11 @@ import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.AccessRole;
 import com.utest.domain.ApprovalStatus;
+import com.utest.domain.Attachment;
+import com.utest.domain.EntityType;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Permission;
 import com.utest.domain.Product;
@@ -55,6 +58,7 @@ import com.utest.domain.TestSuiteTestCase;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.service.AttachmentService;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.TeamService;
 import com.utest.domain.service.TestCaseService;
@@ -87,12 +91,13 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	private final TestCaseService	testCaseService;
 	private final TeamService		teamService;
 	private final UserService		userService;
+	private final AttachmentService	attachmentService;
 
 	/**
 	 * Default constructor
 	 */
 	public TestRunServiceImpl(final TypelessDAO dao, final TestPlanService testPlanService, final TestSuiteService testSuiteService, final TestCaseService testCaseService,
-			final EnvironmentService environmentService, final TeamService teamService, final UserService userService)
+			final EnvironmentService environmentService, final TeamService teamService, final UserService userService, final AttachmentService attachmentService)
 	{
 		super(dao, environmentService);
 		this.environmentService = environmentService;
@@ -101,6 +106,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		this.testCaseService = testCaseService;
 		this.teamService = teamService;
 		this.userService = userService;
+		this.attachmentService = attachmentService;
 	}
 
 	@Override
@@ -311,6 +317,20 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRun(final Integer testRunId_) throws Exception
+	{
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
+		if (testRun.getEnvironmentProfileId() != null)
+		{
+			return environmentService.getEnvironmentGroupsForProfileExploded(testRun.getEnvironmentProfileId());
+		}
+		else
+		{
+			return new ArrayList<EnvironmentGroupExploded>();
+		}
+	}
+
+	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForTestRunTestCase(final Integer testRunTestCaseId_) throws Exception
 	{
 		final TestRunTestCase testRunTestCase = getRequiredEntityById(TestRunTestCase.class, testRunTestCaseId_);
@@ -321,6 +341,20 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		else
 		{
 			return new ArrayList<EnvironmentGroup>();
+		}
+	}
+
+	@Override
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRunTestCase(final Integer testRunTestCaseId_) throws Exception
+	{
+		final TestRunTestCase testRunTestCase = getRequiredEntityById(TestRunTestCase.class, testRunTestCaseId_);
+		if (testRunTestCase.getEnvironmentProfileId() != null)
+		{
+			return environmentService.getEnvironmentGroupsForProfileExploded(testRunTestCase.getEnvironmentProfileId());
+		}
+		else
+		{
+			return new ArrayList<EnvironmentGroupExploded>();
 		}
 	}
 
@@ -349,6 +383,20 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		else
 		{
 			return new ArrayList<EnvironmentGroup>();
+		}
+	}
+
+	@Override
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForAssignment(final Integer assignmentId_) throws Exception
+	{
+		final TestRunTestCaseAssignment assignment = getRequiredEntityById(TestRunTestCaseAssignment.class, assignmentId_);
+		if (assignment.getEnvironmentProfileId() != null)
+		{
+			return environmentService.getEnvironmentGroupsForProfileExploded(assignment.getEnvironmentProfileId());
+		}
+		else
+		{
+			return new ArrayList<EnvironmentGroupExploded>();
 		}
 	}
 
@@ -1539,4 +1587,31 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		return (List<CategoryValue>) dao.findByNamedQueryAndNamedParam(namedQuery, paramNames, values, false, false);
 
 	}
+
+	@Override
+	public Attachment addAttachmentForTestRun(final String name, final String description, final String url, final Double size, final Integer testRunId,
+			final Integer attachmentTypeId) throws Exception
+	{
+		return attachmentService.addAttachment(name, description, url, size, EntityType.TEST_RUN, testRunId, attachmentTypeId);
+	}
+
+	@Override
+	public List<Attachment> getAttachmentsForTestRun(final Integer testRunId_) throws Exception
+	{
+		return attachmentService.getAttachmentsForEntity(testRunId_, EntityType.TEST_RUN);
+	}
+
+	@Override
+	public Attachment addAttachmentForTestRunResult(final String name, final String description, final String url, final Double size, final Integer testRunResultId,
+			final Integer attachmentTypeId) throws Exception
+	{
+		return attachmentService.addAttachment(name, description, url, size, EntityType.TEST_RESULT, testRunResultId, attachmentTypeId);
+	}
+
+	@Override
+	public List<Attachment> getAttachmentsForTestRunResult(final Integer testRunResultId_) throws Exception
+	{
+		return attachmentService.getAttachmentsForEntity(testRunResultId_, EntityType.TEST_RESULT);
+	}
+
 }

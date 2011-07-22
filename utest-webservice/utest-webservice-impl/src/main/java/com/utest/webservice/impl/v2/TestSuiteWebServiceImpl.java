@@ -38,7 +38,9 @@ import javax.ws.rs.core.UriInfo;
 
 import org.springframework.security.access.annotation.Secured;
 
+import com.utest.domain.Attachment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.Permission;
 import com.utest.domain.TestSuite;
 import com.utest.domain.TestSuiteTestCase;
@@ -48,6 +50,8 @@ import com.utest.domain.service.TestSuiteService;
 import com.utest.domain.view.TestSuiteTestCaseView;
 import com.utest.webservice.api.v2.TestSuiteWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
+import com.utest.webservice.model.v2.AttachmentInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.TestSuiteTestCaseInfo;
 import com.utest.webservice.model.v2.TestSuiteInfo;
@@ -120,6 +124,33 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	}
 
 	@GET
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_SUITE_VIEW)
+	public List<AttachmentInfo> getTestSuiteAttachments(@Context UriInfo ui_, @PathParam("id") final Integer testSuiteId) throws Exception
+	{
+		final List<Attachment> attachments = testSuiteService.getAttachmentsForTestSuite(testSuiteId);
+		final List<AttachmentInfo> attachmentsInfo = objectBuilderFactory.toInfo(AttachmentInfo.class, attachments, ui_.getBaseUriBuilder());
+		return attachmentsInfo;
+	}
+
+	@POST
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_SUITE_EDIT })
+	public AttachmentInfo createAttachment(@Context UriInfo ui, @PathParam("id") final Integer testSuiteId, @FormParam("name") String name,
+			@FormParam("description") String description, @FormParam("url") String url, @FormParam("size") Double size, @FormParam("attachmentTypeId") Integer attachmentTypeId)
+			throws Exception
+	{
+		Attachment attachment = testSuiteService.addAttachmentForTestSuite(name, description, url, size, testSuiteId, attachmentTypeId);
+		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
+	}
+
+	@GET
 	@Path("/{id}/environmentgroups/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -129,6 +160,21 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	{
 		final List<EnvironmentGroup> groups = testSuiteService.getEnvironmentGroupsForTestSuite(testSuiteId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/{id}/environmentgroups/exploded/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_SUITE_VIEW)
+	/**
+	 * Returns all versions of a test case
+	 */
+	public List<EnvironmentGroupExplodedInfo> getTestSuiteEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
+	{
+		final List<EnvironmentGroupExploded> groups = testSuiteService.getEnvironmentGroupsExplodedForTestSuite(productId_);
+		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 
 	@GET

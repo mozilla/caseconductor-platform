@@ -40,8 +40,10 @@ import javax.ws.rs.core.UriInfo;
 import org.springframework.security.access.annotation.Secured;
 
 import com.utest.domain.AccessRole;
+import com.utest.domain.Attachment;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.Permission;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.TestRun;
@@ -57,7 +59,9 @@ import com.utest.domain.view.CategoryValue;
 import com.utest.domain.view.TestRunTestCaseView;
 import com.utest.webservice.api.v2.TestRunWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
+import com.utest.webservice.model.v2.AttachmentInfo;
 import com.utest.webservice.model.v2.CategoryValueInfo;
+import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
 import com.utest.webservice.model.v2.TestRunTestCaseInfo;
@@ -188,6 +192,33 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@GET
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_RUN_VIEW)
+	public List<AttachmentInfo> getTestRunAttachments(@Context UriInfo ui_, @PathParam("id") final Integer testRunId_) throws Exception
+	{
+		final List<Attachment> attachments = testRunService.getAttachmentsForTestRun(testRunId_);
+		final List<AttachmentInfo> attachmentsInfo = objectBuilderFactory.toInfo(AttachmentInfo.class, attachments, ui_.getBaseUriBuilder());
+		return attachmentsInfo;
+	}
+
+	@POST
+	@Path("/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_CASE_EDIT, Permission.TEST_CASE_ADD })
+	public AttachmentInfo createAttachment(@Context UriInfo ui, @PathParam("id") final Integer testRunId, @FormParam("name") String name,
+			@FormParam("description") String description, @FormParam("url") String url, @FormParam("size") Double size, @FormParam("attachmentTypeId") Integer attachmentTypeId)
+			throws Exception
+	{
+		Attachment attachment = testRunService.addAttachmentForTestRun(name, description, url, size, testRunId, attachmentTypeId);
+		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
+	}
+
+	@GET
 	@Path("/{id}/environmentgroups/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -197,6 +228,18 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	{
 		final List<EnvironmentGroup> groups = testRunService.getEnvironmentGroupsForTestRun(testRunId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/{id}/environmentgroups/exploded/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_RUN_VIEW)
+	public List<EnvironmentGroupExplodedInfo> getTestRunEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_) throws Exception
+	{
+		final List<EnvironmentGroupExploded> groups = testRunService.getEnvironmentGroupsExplodedForTestRun(testRunId_);
+		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 
 	@POST
@@ -429,6 +472,19 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 
+	@GET
+	@Path("/includedtestcases/{includedTestCaseId}/environmentgroups/exploded/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_RUN_VIEW)
+	public List<EnvironmentGroupExplodedInfo> getTestRunTestCaseEnvironmentGroupsExploded(@Context final UriInfo ui_,
+			@PathParam("includedTestCaseId") final Integer includedTestCaseId_) throws Exception
+	{
+		final List<EnvironmentGroupExploded> groups = testRunService.getEnvironmentGroupsExplodedForTestRunTestCase(includedTestCaseId_);
+		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
+	}
+
 	// /////////// TEST CASES ASSIGNMENTS RELATED //////////////
 
 	@GET
@@ -507,6 +563,19 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	{
 		final List<EnvironmentGroup> groups = testRunService.getEnvironmentGroupsForAssignment(assignmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/assignments/{assignmentId}/environmentgroups/exploded/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_RUN_VIEW)
+	public List<EnvironmentGroupExplodedInfo> getTestRunTestCaseAssignmentEnvironmentGroupsExploded(@Context final UriInfo ui_,
+			@PathParam("assignmentId") final Integer assignmentId_) throws Exception
+	{
+		final List<EnvironmentGroupExploded> groups = testRunService.getEnvironmentGroupsExplodedForAssignment(assignmentId_);
+		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 
 	// /////////// TEST CASES ASSIGNMENT RESULTS RELATED //////////////
@@ -639,6 +708,33 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	{
 		testRunService.rejectTestRunResult(resultId_, comment_, originalVersionId_);
 		return getTestRunResult(ui_, resultId_);
+	}
+
+	@GET
+	@Path("/results/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_RUN_VIEW)
+	public List<AttachmentInfo> getTestRunResultAttachments(@Context UriInfo ui_, @PathParam("id") final Integer testRunResultId) throws Exception
+	{
+		final List<Attachment> attachments = testRunService.getAttachmentsForTestRunResult(testRunResultId);
+		final List<AttachmentInfo> attachmentsInfo = objectBuilderFactory.toInfo(AttachmentInfo.class, attachments, ui_.getBaseUriBuilder());
+		return attachmentsInfo;
+	}
+
+	@POST
+	@Path("/results/{id}/attachments/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_RUN_EDIT })
+	public AttachmentInfo createAttachmentForTestRunResult(@Context UriInfo ui, @PathParam("id") final Integer testRunResultId, @FormParam("name") String name,
+			@FormParam("description") String description, @FormParam("url") String url, @FormParam("size") Double size, @FormParam("attachmentTypeId") Integer attachmentTypeId)
+			throws Exception
+	{
+		Attachment attachment = testRunService.addAttachmentForTestRunResult(name, description, url, size, testRunResultId, attachmentTypeId);
+		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
 	}
 
 	@GET

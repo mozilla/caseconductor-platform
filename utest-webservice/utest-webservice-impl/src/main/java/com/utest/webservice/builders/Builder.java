@@ -130,7 +130,7 @@ public class Builder<Ti, To>
 		return result;
 	}
 
-	protected void populateExtendedProperties(Ti result, To object, UriBuilder ub, Object[] uriBuilderArgs)
+	protected void populateExtendedProperties(Ti result, To object, UriBuilder ub, Object[] uriBuilderArgs) throws Exception
 	{
 		// do nothing.this method could be overitten by descendants
 	}

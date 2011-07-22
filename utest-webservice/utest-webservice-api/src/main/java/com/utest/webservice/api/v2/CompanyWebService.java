@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
+import com.utest.webservice.model.v2.AttachmentInfo;
 import com.utest.webservice.model.v2.CompanyInfo;
 import com.utest.webservice.model.v2.CompanySearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
@@ -52,4 +53,8 @@ public interface CompanyWebService
 
 	CompanyInfo updateCompany(UriInfo ui, Integer companyId, Integer countryId, String name, String address, String city, String zip, String url, String phone,
 			Integer originalVersionId) throws Exception;
+
+	List<AttachmentInfo> getCompanyAttachments(UriInfo ui, Integer companyId) throws Exception;
+
+	AttachmentInfo createAttachment(UriInfo ui, Integer companyId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 }

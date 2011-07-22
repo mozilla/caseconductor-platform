@@ -22,7 +22,9 @@ package com.utest.domain.service;
 import java.util.List;
 
 import com.utest.domain.AccessRole;
+import com.utest.domain.Attachment;
 import com.utest.domain.EnvironmentGroup;
+import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.User;
@@ -74,4 +76,10 @@ public interface ProductService
 			Exception;
 
 	List<AccessRole> getTestingTeamMemberRolesForProduct(Integer productId, Integer userId) throws Exception;
+
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForProduct(Integer productId) throws Exception;
+
+	List<Attachment> getAttachmentsForProduct(Integer productId) throws Exception;
+
+	Attachment addAttachmentForProduct(String name, String description, String url, Double size, Integer productId, Integer attachmentTypeId) throws Exception;
 }
