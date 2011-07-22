@@ -156,4 +156,9 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 		return attachmentService.getAttachmentsForEntity(companyId_, EntityType.COMPANY);
 	}
 
+	@Override
+	public void deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
+	{
+		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.COMPANY);
+	}
 }

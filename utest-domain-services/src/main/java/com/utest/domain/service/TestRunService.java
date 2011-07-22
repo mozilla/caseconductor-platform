@@ -190,4 +190,8 @@ public interface TestRunService
 	Attachment addAttachmentForTestRunResult(String name, String description, String url, Double size, Integer testRunResultId, Integer attachmentTypeId) throws Exception;
 
 	Attachment addAttachmentForTestRun(String name, String description, String url, Double size, Integer testRunId, Integer attachmentTypeId) throws Exception;
+
+	void deleteAttachmentForTestRun(Integer attachmentId, Integer entityId) throws Exception;
+
+	void deleteAttachmentForTestRunResult(Integer attachmentId, Integer entityId) throws Exception;
 }

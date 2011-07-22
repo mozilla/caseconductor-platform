@@ -69,4 +69,6 @@ public interface TestPlanWebService
 
 	AttachmentInfo createAttachment(UriInfo ui, Integer testPlanId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 
+	Boolean deleteAttachment(UriInfo ui, Integer testPlanId, Integer attachmentId, Integer originalVersionId) throws Exception;
+
 }

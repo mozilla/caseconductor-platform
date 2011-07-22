@@ -82,4 +82,6 @@ public interface ProductService
 	List<Attachment> getAttachmentsForProduct(Integer productId) throws Exception;
 
 	Attachment addAttachmentForProduct(String name, String description, String url, Double size, Integer productId, Integer attachmentTypeId) throws Exception;
+
+	void deleteAttachment(Integer attachmentId, Integer originalVersionId) throws Exception;
 }

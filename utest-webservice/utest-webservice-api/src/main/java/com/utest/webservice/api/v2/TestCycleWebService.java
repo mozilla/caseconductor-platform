@@ -80,4 +80,6 @@ public interface TestCycleWebService
 	List<AttachmentInfo> getTestCycleAttachments(UriInfo ui, Integer testCycleId) throws Exception;
 
 	AttachmentInfo createAttachment(UriInfo ui, Integer testCycleId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
+
+	Boolean deleteAttachment(UriInfo ui, Integer testCycleId, Integer attachmentId, Integer originalVersionId) throws Exception;
 }

@@ -166,4 +166,8 @@ public interface TestRunWebService
 	AttachmentInfo createAttachmentForTestRunResult(UriInfo ui, Integer testRunResultId, String name, String description, String url, Double size, Integer attachmentTypeId)
 			throws Exception;
 
+	Boolean deleteAttachment(UriInfo ui, Integer testRunId, Integer attachmentId, Integer originalVersionId) throws Exception;
+
+	Boolean deleteAttachmentForTestRunResult(UriInfo ui, Integer testRunResultId, Integer attachmentId, Integer originalVersionId) throws Exception;
+
 }

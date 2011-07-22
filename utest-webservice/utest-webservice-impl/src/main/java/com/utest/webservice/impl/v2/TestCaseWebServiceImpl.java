@@ -255,6 +255,19 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
 	}
 
+	@DELETE
+	@Path("/{id}/attachments/{attachmentId}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
+	public Boolean deleteAttachment(@Context UriInfo ui, @PathParam("id") final Integer testCaseId, @PathParam("attachmentId") final Integer attachmentId,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		testCaseService.deleteAttachment(attachmentId, testCaseId);
+		return Boolean.TRUE;
+	}
+
 	@GET
 	@Path("/{id}/tags/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

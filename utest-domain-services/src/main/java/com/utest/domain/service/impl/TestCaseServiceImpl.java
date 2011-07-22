@@ -524,6 +524,16 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
+	public void deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
+	{
+		final TestCase testCase = getRequiredEntityById(TestCase.class, entityId_);
+		// everyone has add test case permission by default, so need to check if
+		// user has permission to edit others test cases
+		checkEditPermission(testCase.getCreatedBy());
+		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_CASE);
+	}
+
+	@Override
 	public Attachment addAttachmentForTestCase(final String name, final String description, final String url, final Double size, final Integer testCaseId,
 			final Integer attachmentTypeId) throws Exception
 	{

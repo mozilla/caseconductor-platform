@@ -218,6 +218,19 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
 	}
 
+	@DELETE
+	@Path("/{id}/attachments/{attachmentId}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_RUN_EDIT })
+	public Boolean deleteAttachment(@Context UriInfo ui, @PathParam("id") final Integer testRunId, @PathParam("attachmentId") final Integer attachmentId,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		testRunService.deleteAttachmentForTestRun(attachmentId, testRunId);
+		return Boolean.TRUE;
+	}
+
 	@GET
 	@Path("/{id}/environmentgroups/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -735,6 +748,19 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	{
 		Attachment attachment = testRunService.addAttachmentForTestRunResult(name, description, url, size, testRunResultId, attachmentTypeId);
 		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
+	}
+
+	@DELETE
+	@Path("/results/{id}/attachments/{attachmentId}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_RUN_EDIT })
+	public Boolean deleteAttachmentForTestRunResult(@Context UriInfo ui, @PathParam("id") final Integer testRunResultId, @PathParam("attachmentId") final Integer attachmentId,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		testRunService.deleteAttachmentForTestRunResult(attachmentId, testRunResultId);
+		return Boolean.TRUE;
 	}
 
 	@GET

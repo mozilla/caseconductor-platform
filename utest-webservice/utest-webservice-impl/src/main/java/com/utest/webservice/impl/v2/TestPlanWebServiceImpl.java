@@ -150,6 +150,19 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
 	}
 
+	@DELETE
+	@Path("/{id}/attachments/{attachmentId}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_PLAN_EDIT })
+	public Boolean deleteAttachment(@Context UriInfo ui, @PathParam("id") final Integer testPlanId, @PathParam("attachmentId") final Integer attachmentId,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		testPlanService.deleteAttachment(attachmentId, testPlanId);
+		return Boolean.TRUE;
+	}
+
 	@GET
 	@Path("/{id}/environmentgroups/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

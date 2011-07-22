@@ -37,7 +37,7 @@ public class ResourceIdentity
 	@XmlElement(required = true)
 	private String	url;
 	@XmlElement(required = true)
-	private Integer	version;
+	private Integer	version	= 0;
 
 	@XmlAttribute(name = "id")
 	public Integer getId()

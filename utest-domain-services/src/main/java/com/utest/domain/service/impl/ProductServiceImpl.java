@@ -117,6 +117,12 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	}
 
 	@Override
+	public void deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
+	{
+		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.PRODUCT);
+	}
+
+	@Override
 	public List<Attachment> getAttachmentsForProduct(final Integer productId_) throws Exception
 	{
 		return attachmentService.getAttachmentsForEntity(productId_, EntityType.PRODUCT);

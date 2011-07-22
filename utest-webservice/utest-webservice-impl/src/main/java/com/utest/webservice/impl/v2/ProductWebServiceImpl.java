@@ -258,6 +258,19 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
 	}
 
+	@DELETE
+	@Path("/{id}/attachments/{attachmentId}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.PRODUCT_EDIT })
+	public Boolean deleteAttachment(@Context UriInfo ui, @PathParam("id") final Integer productId, @PathParam("attachmentId") final Integer attachmentId,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		productService.deleteAttachment(attachmentId, productId);
+		return Boolean.TRUE;
+	}
+
 	@GET
 	@Path("/{id}/environmentgroups/exploded/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

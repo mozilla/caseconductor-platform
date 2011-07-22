@@ -54,4 +54,6 @@ public interface CompanyService
 	List<Attachment> getAttachmentsForCompany(Integer companyId) throws Exception;
 
 	Attachment addAttachmentForCompany(String name, String description, String url, Double size, Integer companyId, Integer attachmentTypeId) throws Exception;
+
+	void deleteAttachment(Integer attachmentId, Integer entityId) throws Exception;
 }

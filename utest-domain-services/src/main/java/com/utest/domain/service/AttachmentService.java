@@ -34,7 +34,7 @@ public interface AttachmentService
 
 	UtestSearchResult findAttachments(UtestSearch search) throws Exception;
 
-	void deleteAttachment(Integer attachmentId, Integer originalVersionId) throws Exception;
+	void deleteAttachment(Integer attachmentId, Integer entityId, Integer entityTypeId) throws Exception;
 
 	List<Attachment> getAttachmentsForEntity(Integer entityId, Integer entityTypeId) throws Exception;
 }

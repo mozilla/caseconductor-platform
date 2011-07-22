@@ -538,6 +538,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	}
 
 	@Override
+	public void deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
+	{
+		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.USER);
+	}
+
+	@Override
 	public boolean isUserExists(final String email_)
 	{
 		final Search search = new Search(User.class);

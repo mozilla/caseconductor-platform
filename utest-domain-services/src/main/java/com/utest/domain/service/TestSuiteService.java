@@ -82,4 +82,6 @@ public interface TestSuiteService
 
 	Attachment addAttachmentForTestSuite(String name, String description, String url, Double size, Integer testSuiteId, Integer attachmentTypeId) throws Exception;
 
+	void deleteAttachment(Integer attachmentId, Integer originalVersionId) throws Exception;
+
 }

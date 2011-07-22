@@ -30,8 +30,8 @@ public interface AttachmentWebService
 
 	AttachmentInfo getAttachment(UriInfo ui, Integer attachmentId) throws Exception;
 
-	Boolean deleteAttachment(UriInfo ui, Integer attachmentId, Integer originalVersionId) throws Exception;
-
 	AttachmentInfo createAttachment(UriInfo ui, String name, String description, String url, Double size, Integer entityTypeId, Integer entityId, Integer attachmentTypeId)
 			throws Exception;
+
+	Boolean deleteAttachment(UriInfo ui, Integer attachmentId, Integer entityId, Integer entityTypeId) throws Exception;
 }

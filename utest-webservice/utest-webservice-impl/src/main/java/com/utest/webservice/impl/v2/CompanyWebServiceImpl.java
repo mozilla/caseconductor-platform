@@ -169,6 +169,19 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
 	}
 
+	@DELETE
+	@Path("/{id}/attachments/{attachmentId}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.COMPANY_INFO_EDIT })
+	public Boolean deleteAttachment(@Context UriInfo ui, @PathParam("id") final Integer companyId, @PathParam("attachmentId") final Integer attachmentId,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		companyService.deleteAttachment(attachmentId, companyId);
+		return Boolean.TRUE;
+	}
+
 	@PUT
 	@Path("/{id}/environmentgroups/autogenerate/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

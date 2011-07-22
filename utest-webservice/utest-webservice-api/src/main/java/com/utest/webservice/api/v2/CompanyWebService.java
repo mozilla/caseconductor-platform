@@ -57,4 +57,6 @@ public interface CompanyWebService
 	List<AttachmentInfo> getCompanyAttachments(UriInfo ui, Integer companyId) throws Exception;
 
 	AttachmentInfo createAttachment(UriInfo ui, Integer companyId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
+
+	Boolean deleteAttachment(UriInfo ui, Integer companyId, Integer attachmentId, Integer originalVersionId) throws Exception;
 }

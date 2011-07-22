@@ -121,6 +121,12 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
+	public void deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
+	{
+		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_SUITE);
+	}
+
+	@Override
 	public List<EnvironmentGroup> getEnvironmentGroupsForTestSuite(final Integer testSuiteId_) throws Exception
 	{
 		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);

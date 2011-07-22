@@ -1589,6 +1589,12 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
+	public void deleteAttachmentForTestRun(final Integer attachmentId_, final Integer entityId_) throws Exception
+	{
+		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_RUN);
+	}
+
+	@Override
 	public Attachment addAttachmentForTestRun(final String name, final String description, final String url, final Double size, final Integer testRunId,
 			final Integer attachmentTypeId) throws Exception
 	{
@@ -1606,6 +1612,12 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			final Integer attachmentTypeId) throws Exception
 	{
 		return attachmentService.addAttachment(name, description, url, size, EntityType.TEST_RESULT, testRunResultId, attachmentTypeId);
+	}
+
+	@Override
+	public void deleteAttachmentForTestRunResult(final Integer attachmentId_, final Integer entityId_) throws Exception
+	{
+		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_RESULT);
 	}
 
 	@Override

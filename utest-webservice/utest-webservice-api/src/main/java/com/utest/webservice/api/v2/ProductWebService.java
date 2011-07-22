@@ -83,4 +83,6 @@ public interface ProductWebService
 
 	AttachmentInfo createAttachment(UriInfo ui, Integer productId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 
+	Boolean deleteAttachment(UriInfo ui, Integer productId, Integer attachmentId, Integer originalVersionId) throws Exception;
+
 }

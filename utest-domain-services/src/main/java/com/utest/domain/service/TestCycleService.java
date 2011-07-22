@@ -83,4 +83,6 @@ public interface TestCycleService
 	List<Attachment> getAttachmentsForTestCycle(Integer testCycleId) throws Exception;
 
 	Attachment addAttachmentForTestCycle(String name, String description, String url, Double size, Integer testCycleId, Integer attachmentTypeId) throws Exception;
+
+	void deleteAttachment(Integer attachmentId, Integer originalVersionId) throws Exception;
 }

@@ -387,4 +387,9 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 		return attachmentService.getAttachmentsForEntity(testCycleId_, EntityType.TEST_CYCLE);
 	}
 
+	@Override
+	public void deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
+	{
+		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_CYCLE);
+	}
 }

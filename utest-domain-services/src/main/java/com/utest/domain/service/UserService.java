@@ -103,4 +103,6 @@ public interface UserService
 	List<Attachment> getAttachmentsForUser(Integer userId) throws Exception;
 
 	Attachment addAttachmentForUser(String name, String description, String url, Double size, Integer userId, Integer attachmentTypeId) throws Exception;
+
+	void deleteAttachment(Integer attachmentId, Integer entityId) throws Exception;
 }

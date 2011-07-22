@@ -298,6 +298,12 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	}
 
 	@Override
+	public void deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
+	{
+		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_PLAN);
+	}
+
+	@Override
 	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestPlan(final Integer testPlanId_) throws Exception
 	{
 		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);

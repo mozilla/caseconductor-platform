@@ -62,10 +62,10 @@ public class AttachmentWebServiceImpl extends BaseWebServiceImpl implements Atta
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.ATTACHMENT_EDIT })
-	public Boolean deleteAttachment(@Context final UriInfo ui_, @PathParam("id") final Integer attachmentId_, @FormParam("originalVersionId") final Integer originalVersionId_)
-			throws Exception
+	public Boolean deleteAttachment(@Context final UriInfo ui_, @PathParam("id") final Integer attachmentId_, @FormParam("entityId") final Integer entityId_,
+			@FormParam("entityTypeId") final Integer entityTypeId_) throws Exception
 	{
-		attachmentService.deleteAttachment(attachmentId_, originalVersionId_);
+		attachmentService.deleteAttachment(attachmentId_, entityId_, entityTypeId_);
 
 		return Boolean.TRUE;
 	}
