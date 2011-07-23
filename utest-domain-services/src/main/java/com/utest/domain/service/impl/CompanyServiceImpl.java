@@ -157,8 +157,8 @@ public class CompanyServiceImpl extends BaseServiceImpl implements CompanyServic
 	}
 
 	@Override
-	public void deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
+	public boolean deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
 	{
-		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.COMPANY);
+		return attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.COMPANY);
 	}
 }

@@ -1589,9 +1589,9 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public void deleteAttachmentForTestRun(final Integer attachmentId_, final Integer entityId_) throws Exception
+	public boolean deleteAttachmentForTestRun(final Integer attachmentId_, final Integer entityId_) throws Exception
 	{
-		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_RUN);
+		return attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_RUN);
 	}
 
 	@Override
@@ -1615,9 +1615,9 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public void deleteAttachmentForTestRunResult(final Integer attachmentId_, final Integer entityId_) throws Exception
+	public boolean deleteAttachmentForTestRunResult(final Integer attachmentId_, final Integer entityId_) throws Exception
 	{
-		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_RESULT);
+		return attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_RESULT);
 	}
 
 	@Override

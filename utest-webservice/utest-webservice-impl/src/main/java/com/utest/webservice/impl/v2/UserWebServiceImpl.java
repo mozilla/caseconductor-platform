@@ -296,13 +296,25 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.TEST_SUITE_EDIT })
+	@Secured( { Permission.USER_ACCOUNT_EDIT })
 	public AttachmentInfo createAttachment(@Context UriInfo ui, @PathParam("id") final Integer userId, @FormParam("name") String name,
 			@FormParam("description") String description, @FormParam("url") String url, @FormParam("size") Double size, @FormParam("attachmentTypeId") Integer attachmentTypeId)
 			throws Exception
 	{
 		Attachment attachment = userService.addAttachmentForUser(name, description, url, size, userId, attachmentTypeId);
 		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
+	}
+
+	@DELETE
+	@Path("/{id}/attachments/{attachmentId}/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.USER_ACCOUNT_EDIT })
+	public Boolean deleteAttachment(@Context UriInfo ui, @PathParam("id") final Integer userId, @PathParam("attachmentId") final Integer attachmentId,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+		return userService.deleteAttachment(attachmentId, userId);
 	}
 
 	@GET

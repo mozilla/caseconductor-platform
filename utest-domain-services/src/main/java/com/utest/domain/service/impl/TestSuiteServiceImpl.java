@@ -121,9 +121,9 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
-	public void deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
+	public boolean deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
 	{
-		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_SUITE);
+		return attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_SUITE);
 	}
 
 	@Override

@@ -191,7 +191,7 @@ public interface TestRunService
 
 	Attachment addAttachmentForTestRun(String name, String description, String url, Double size, Integer testRunId, Integer attachmentTypeId) throws Exception;
 
-	void deleteAttachmentForTestRun(Integer attachmentId, Integer entityId) throws Exception;
+	boolean deleteAttachmentForTestRun(Integer attachmentId, Integer entityId) throws Exception;
 
-	void deleteAttachmentForTestRunResult(Integer attachmentId, Integer entityId) throws Exception;
+	boolean deleteAttachmentForTestRunResult(Integer attachmentId, Integer entityId) throws Exception;
 }

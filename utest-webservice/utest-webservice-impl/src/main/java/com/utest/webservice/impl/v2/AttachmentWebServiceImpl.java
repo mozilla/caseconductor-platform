@@ -65,9 +65,7 @@ public class AttachmentWebServiceImpl extends BaseWebServiceImpl implements Atta
 	public Boolean deleteAttachment(@Context final UriInfo ui_, @PathParam("id") final Integer attachmentId_, @FormParam("entityId") final Integer entityId_,
 			@FormParam("entityTypeId") final Integer entityTypeId_) throws Exception
 	{
-		attachmentService.deleteAttachment(attachmentId_, entityId_, entityTypeId_);
-
-		return Boolean.TRUE;
+		return attachmentService.deleteAttachment(attachmentId_, entityId_, entityTypeId_);
 	}
 
 	@GET

@@ -159,8 +159,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	public Boolean deleteAttachment(@Context UriInfo ui, @PathParam("id") final Integer testSuiteId, @PathParam("attachmentId") final Integer attachmentId,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		testSuiteService.deleteAttachment(attachmentId, testSuiteId);
-		return Boolean.TRUE;
+		return testSuiteService.deleteAttachment(attachmentId, testSuiteId);
 	}
 
 	@GET

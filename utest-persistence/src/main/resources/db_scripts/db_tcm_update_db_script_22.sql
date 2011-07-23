@@ -16,6 +16,7 @@ CREATE TABLE `Attachment` (
   `createDate` datetime NOT NULL,
   `lastChangedBy` int(11) NOT NULL,
   `lastChangeDate` datetime NOT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`attachmentId`),
   KEY `IDX_TypeAttachements` (`entityTypeId`,`entityId`,`attachmentTypeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

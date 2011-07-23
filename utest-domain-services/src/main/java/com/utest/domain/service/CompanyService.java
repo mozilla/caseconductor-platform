@@ -55,5 +55,5 @@ public interface CompanyService
 
 	Attachment addAttachmentForCompany(String name, String description, String url, Double size, Integer companyId, Integer attachmentTypeId) throws Exception;
 
-	void deleteAttachment(Integer attachmentId, Integer entityId) throws Exception;
+	boolean deleteAttachment(Integer attachmentId, Integer entityId) throws Exception;
 }

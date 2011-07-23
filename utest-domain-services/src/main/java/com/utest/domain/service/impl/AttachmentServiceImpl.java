@@ -52,14 +52,16 @@ public class AttachmentServiceImpl extends BaseServiceImpl implements Attachment
 	}
 
 	@Override
-	public void deleteAttachment(final Integer attachmentId_, final Integer entityId_, Integer entityTypeId_) throws Exception
+	public boolean deleteAttachment(final Integer attachmentId_, final Integer entityId_, Integer entityTypeId_) throws Exception
 	{
 		Attachment attachment = getRequiredEntityById(Attachment.class, attachmentId_);
 		// make sure entity id and type matches before deleting
 		if (attachment.getEntityId().equals(entityId_) && attachment.getEntityTypeId().equals(entityTypeId_))
 		{
 			dao.delete(attachment);
+			return true;
 		}
+		return false;
 	}
 
 	@Override

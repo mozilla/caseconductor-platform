@@ -196,8 +196,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	public Boolean deleteAttachment(@Context UriInfo ui, @PathParam("id") final Integer testCycleId, @PathParam("attachmentId") final Integer attachmentId,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		testCycleService.deleteAttachment(attachmentId, testCycleId);
-		return Boolean.TRUE;
+		return testCycleService.deleteAttachment(attachmentId, testCycleId);
 	}
 
 	@GET

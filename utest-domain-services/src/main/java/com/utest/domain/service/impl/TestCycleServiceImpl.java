@@ -388,8 +388,8 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	}
 
 	@Override
-	public void deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
+	public boolean deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
 	{
-		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_CYCLE);
+		return attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_CYCLE);
 	}
 }

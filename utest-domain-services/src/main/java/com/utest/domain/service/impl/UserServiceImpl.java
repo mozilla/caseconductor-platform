@@ -538,9 +538,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService
 	}
 
 	@Override
-	public void deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
+	public boolean deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
 	{
-		attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.USER);
+		return attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.USER);
 	}
 
 	@Override

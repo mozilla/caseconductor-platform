@@ -264,8 +264,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	public Boolean deleteAttachment(@Context UriInfo ui, @PathParam("id") final Integer testCaseId, @PathParam("attachmentId") final Integer attachmentId,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		testCaseService.deleteAttachment(attachmentId, testCaseId);
-		return Boolean.TRUE;
+		return testCaseService.deleteAttachment(attachmentId, testCaseId);
 	}
 
 	@GET

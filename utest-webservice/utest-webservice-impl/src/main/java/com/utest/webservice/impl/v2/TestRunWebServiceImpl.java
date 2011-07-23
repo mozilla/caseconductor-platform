@@ -227,8 +227,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	public Boolean deleteAttachment(@Context UriInfo ui, @PathParam("id") final Integer testRunId, @PathParam("attachmentId") final Integer attachmentId,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		testRunService.deleteAttachmentForTestRun(attachmentId, testRunId);
-		return Boolean.TRUE;
+		return testRunService.deleteAttachmentForTestRun(attachmentId, testRunId);
 	}
 
 	@GET
@@ -759,8 +758,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	public Boolean deleteAttachmentForTestRunResult(@Context UriInfo ui, @PathParam("id") final Integer testRunResultId, @PathParam("attachmentId") final Integer attachmentId,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		testRunService.deleteAttachmentForTestRunResult(attachmentId, testRunResultId);
-		return Boolean.TRUE;
+		return testRunService.deleteAttachmentForTestRunResult(attachmentId, testRunResultId);
 	}
 
 	@GET

@@ -178,8 +178,7 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 	public Boolean deleteAttachment(@Context UriInfo ui, @PathParam("id") final Integer companyId, @PathParam("attachmentId") final Integer attachmentId,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		companyService.deleteAttachment(attachmentId, companyId);
-		return Boolean.TRUE;
+		return companyService.deleteAttachment(attachmentId, companyId);
 	}
 
 	@PUT

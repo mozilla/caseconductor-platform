@@ -267,8 +267,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	public Boolean deleteAttachment(@Context UriInfo ui, @PathParam("id") final Integer productId, @PathParam("attachmentId") final Integer attachmentId,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
-		productService.deleteAttachment(attachmentId, productId);
-		return Boolean.TRUE;
+		return productService.deleteAttachment(attachmentId, productId);
 	}
 
 	@GET
