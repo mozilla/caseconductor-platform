@@ -53,9 +53,10 @@ import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.AttachmentInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
-import com.utest.webservice.model.v2.TestSuiteTestCaseInfo;
 import com.utest.webservice.model.v2.TestSuiteInfo;
 import com.utest.webservice.model.v2.TestSuiteSearchResultInfo;
+import com.utest.webservice.model.v2.TestSuiteTestCaseInfo;
+import com.utest.webservice.model.v2.TestSuiteTestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 @Path("/testsuites/")
@@ -187,6 +188,21 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	{
 		final List<EnvironmentGroupExploded> groups = testSuiteService.getEnvironmentGroupsExplodedForTestSuite(productId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/includedtestcases/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_RUN_VIEW)
+	public TestSuiteTestCaseSearchResultInfo findTestSuiteTestCases(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	{
+		final UtestSearch search = objectBuilderFactory.createSearch(TestSuiteTestCaseInfo.class, request_, ui_);
+		final UtestSearchResult result = testSuiteService.findTestSuiteTestCases(search);
+
+		return (TestSuiteTestCaseSearchResultInfo) objectBuilderFactory.createResult(TestSuiteTestCaseInfo.class, TestSuiteTestCase.class, request_, result, ui_
+				.getBaseUriBuilder());
 	}
 
 	@GET

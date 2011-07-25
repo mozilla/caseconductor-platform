@@ -30,6 +30,7 @@ import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.TestSuiteTestCaseInfo;
 import com.utest.webservice.model.v2.TestSuiteInfo;
 import com.utest.webservice.model.v2.TestSuiteSearchResultInfo;
+import com.utest.webservice.model.v2.TestSuiteTestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
 
 public interface TestSuiteWebService
@@ -74,5 +75,7 @@ public interface TestSuiteWebService
 	AttachmentInfo createAttachment(UriInfo ui, Integer testSuiteId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 
 	Boolean deleteAttachment(UriInfo ui, Integer testSuiteId, Integer attachmentId, Integer originalVersionId) throws Exception;
+
+	TestSuiteTestCaseSearchResultInfo findTestSuiteTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 }
