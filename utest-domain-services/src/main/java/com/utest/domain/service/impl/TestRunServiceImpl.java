@@ -887,7 +887,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			{
 				search.addFilterEqual("testCaseId", includedTestCaseId_);
 			}
-			if (includedTestSuiteId_ != null)
+			if (includedTestCaseVersionId_ != null)
 			{
 				search.addFilterEqual("testCaseVersionId", includedTestCaseVersionId_);
 			}
