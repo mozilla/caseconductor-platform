@@ -511,9 +511,10 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	/**
 	 * Returns versions of test cases based on search parameters
 	 */
-	public TestCaseVersionSearchResultInfo findTestCaseVersions(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestCaseVersionSearchResultInfo findTestCaseVersions(@Context final UriInfo ui_, @QueryParam("includedInTestSuiteId") final Integer includedInTestSuiteId_,
+			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
-		final UtestSearchResult result = testCaseService.findTestCaseVersions(constructCompleteTestCaseVersionSearch(request_, ui_));
+		final UtestSearchResult result = testCaseService.findTestCaseVersions(constructCompleteTestCaseVersionSearch(request_, ui_), includedInTestSuiteId_);
 		return (TestCaseVersionSearchResultInfo) objectBuilderFactory.createResult(TestCaseVersionInfo.class, TestCaseVersionView.class, request_, result, ui_.getBaseUriBuilder());
 	}
 

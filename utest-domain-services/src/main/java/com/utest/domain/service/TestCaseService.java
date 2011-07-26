@@ -55,7 +55,7 @@ public interface TestCaseService
 
 	TestCaseVersion getTestCaseVersion(Integer testCaseVersionId_) throws Exception;
 
-	UtestSearchResult findTestCaseVersions(UtestSearch search_) throws Exception;
+	UtestSearchResult findTestCaseVersions(UtestSearch search_, Integer includedInTestSuiteId_) throws Exception;
 
 	List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId_) throws Exception;
 

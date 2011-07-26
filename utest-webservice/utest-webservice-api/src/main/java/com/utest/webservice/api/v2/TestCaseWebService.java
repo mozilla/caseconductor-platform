@@ -59,8 +59,6 @@ public interface TestCaseWebService
 
 	Boolean updateTestCaseTags(UriInfo ui, Integer testCaseId, ArrayList<Integer> tagIds) throws Exception;
 
-	TestCaseVersionSearchResultInfo findTestCaseVersions(UriInfo ui, UtestSearchRequest request) throws Exception;
-
 	TestCaseVersionInfo getTestCaseVersion(UriInfo ui, Integer testCaseVersionId) throws Exception;
 
 	List<TestCaseStepInfo> getTestCaseVersionSteps(UriInfo ui, Integer testCaseVersionId) throws Exception;
@@ -110,5 +108,7 @@ public interface TestCaseWebService
 	AttachmentInfo createAttachment(UriInfo ui, Integer testCaseId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 
 	Boolean deleteAttachment(UriInfo ui, Integer testCaseId, Integer attachmentId, Integer originalVersionId) throws Exception;
+
+	TestCaseVersionSearchResultInfo findTestCaseVersions(UriInfo ui, Integer includedInTestSuiteId, UtestSearchRequest request) throws Exception;
 
 }

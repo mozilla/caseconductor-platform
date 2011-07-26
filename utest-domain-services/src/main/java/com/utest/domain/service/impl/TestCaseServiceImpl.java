@@ -44,6 +44,7 @@ import com.utest.domain.TestCaseStatus;
 import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseTag;
 import com.utest.domain.TestCaseVersion;
+import com.utest.domain.TestSuiteTestCase;
 import com.utest.domain.VersionIncrement;
 import com.utest.domain.search.UtestFilter;
 import com.utest.domain.search.UtestSearch;
@@ -374,7 +375,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public UtestSearchResult findTestCaseVersions(final UtestSearch search_) throws Exception
+	public UtestSearchResult findTestCaseVersions(final UtestSearch search_, Integer includedInTestSuiteId_) throws Exception
 	{
 		List<UtestFilter> filters = search_.getFilters();
 		UtestSearch testCaseStepSearch = new UtestSearch();
@@ -407,6 +408,18 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			}
 			testCaseSearch.addFilterIn("id", ids);
 		}
+		if (includedInTestSuiteId_ != null)
+		{
+			Search search = new Search(TestSuiteTestCase.class);
+			search.addField("testCaseVersionId");
+			search.addFilterEqual("testSuiteId", includedInTestSuiteId_);
+			final List<?> testCaseIdList = dao.search(TestSuiteTestCase.class, search);
+			if (testCaseIdList != null && !testCaseIdList.isEmpty())
+			{
+				testCaseSearch.addFilterIn("id", testCaseIdList);
+			}
+		}
+
 		return dao.getBySearch(TestCaseVersionView.class, testCaseSearch);
 	}
 
@@ -427,7 +440,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public UtestSearchResult findLatestTestCaseVersions(final UtestSearch search_) throws Exception
 	{
 		search_.addFilterEqual("latestVersion", true);
-		return findTestCaseVersions(search_);
+		return findTestCaseVersions(search_, null);
 	}
 
 	@Override
