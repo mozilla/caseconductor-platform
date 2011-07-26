@@ -87,8 +87,9 @@
                 <entry key="company" value="com.utest.domain.Company"/>
                 <entry key="user" value="com.utest.domain.User"/>
                 <entry key="tester" value="com.utest.domain.User"/>
-                <entry key="createdBy" value="com.utest.domain.User"/>
-                <entry key="lastChangedBy" value="com.utest.domain.User"/>
+                <entry key="createdby" value="com.utest.domain.User"/>
+                <entry key="approvedby" value="com.utest.domain.User"/>
+                <entry key="lastchangedby" value="com.utest.domain.User"/>
                 <entry key="accessrole" value="com.utest.domain.AccessRole"/>
                 <entry key="permission" value="com.utest.domain.Permission"/>
                 <entry key="product" value="com.utest.domain.Product"/>
