@@ -54,7 +54,7 @@ public interface TestRunService
 
 	void deleteTestRunTestCase(Integer testRunTestCaseId, final Integer originalVersionId_) throws Exception;
 
-	UtestSearchResult findTestRuns(UtestSearch search) throws Exception;
+	UtestSearchResult findTestRuns(UtestSearch search, Integer includedTestSuiteId_, Integer includedTestCaseId_, Integer includedTestCaseVersionId_) throws Exception;
 
 	TestRun getTestRun(Integer testRunId) throws Exception;
 

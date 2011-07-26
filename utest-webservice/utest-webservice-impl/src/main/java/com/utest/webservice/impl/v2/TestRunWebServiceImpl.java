@@ -327,10 +327,12 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public TestRunSearchResultInfo findTestRuns(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestRunSearchResultInfo findTestRuns(@Context final UriInfo ui_, @QueryParam("includedTestSuiteId") final Integer includedTestSuiteId_,
+			@QueryParam("includedTestCaseId") final Integer includedTestCaseId_, @QueryParam("includedTestCaseVersionId") final Integer includedTestCaseVesionId_,
+			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestRunInfo.class, request_, ui_);
-		final UtestSearchResult result = testRunService.findTestRuns(search);
+		final UtestSearchResult result = testRunService.findTestRuns(search, includedTestSuiteId_, includedTestCaseId_, includedTestCaseVesionId_);
 
 		return (TestRunSearchResultInfo) objectBuilderFactory.createResult(TestRunInfo.class, TestRun.class, request_, result, ui_.getBaseUriBuilder());
 	}

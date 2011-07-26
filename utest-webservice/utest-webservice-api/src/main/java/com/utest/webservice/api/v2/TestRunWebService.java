@@ -53,8 +53,6 @@ public interface TestRunWebService
 
 	TestRunInfo getTestRun(UriInfo ui, Integer testRunId) throws Exception;
 
-	TestRunSearchResultInfo findTestRuns(UriInfo ui, UtestSearchRequest request) throws Exception;
-
 	List<TestRunTestCaseInfo> getTestRunTestCases(UriInfo ui, Integer testRunId) throws Exception;
 
 	TestRunInfo activateTestRun(UriInfo ui, Integer testRunId, Integer originalVesionId) throws Exception;
@@ -169,5 +167,8 @@ public interface TestRunWebService
 	Boolean deleteAttachment(UriInfo ui, Integer testRunId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
 	Boolean deleteAttachmentForTestRunResult(UriInfo ui, Integer testRunResultId, Integer attachmentId, Integer originalVersionId) throws Exception;
+
+	TestRunSearchResultInfo findTestRuns(UriInfo ui, Integer includedTestSuiteId, Integer includedTestCaseId, Integer includedTestCaseVesionId, UtestSearchRequest request)
+			throws Exception;
 
 }

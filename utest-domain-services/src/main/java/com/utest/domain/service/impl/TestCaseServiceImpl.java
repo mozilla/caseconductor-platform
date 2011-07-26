@@ -418,8 +418,11 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			{
 				testCaseSearch.addFilterIn("id", testCaseIdList);
 			}
+			else
+			{
+				return new UtestSearchResult();
+			}
 		}
-
 		return dao.getBySearch(TestCaseVersionView.class, testCaseSearch);
 	}
 

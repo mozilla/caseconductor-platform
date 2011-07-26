@@ -872,8 +872,36 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public UtestSearchResult findTestRuns(final UtestSearch search_) throws Exception
+	public UtestSearchResult findTestRuns(final UtestSearch search_, Integer includedTestSuiteId_, Integer includedTestCaseId_, Integer includedTestCaseVersionId_)
+			throws Exception
 	{
+		if (includedTestSuiteId_ != null || includedTestCaseId_ != null || includedTestCaseVersionId_ != null)
+		{
+			Search search = new Search(TestRunTestCase.class);
+			search.addField("testRunId");
+			if (includedTestSuiteId_ != null)
+			{
+				search.addFilterEqual("testSuiteId", includedTestSuiteId_);
+			}
+			if (includedTestCaseId_ != null)
+			{
+				search.addFilterEqual("testCaseId", includedTestCaseId_);
+			}
+			if (includedTestSuiteId_ != null)
+			{
+				search.addFilterEqual("testCaseVersionId", includedTestCaseVersionId_);
+			}
+			final List<?> testRunIdList = dao.search(TestRunTestCase.class, search);
+			if (testRunIdList != null && !testRunIdList.isEmpty())
+			{
+				search_.addFilterIn("id", testRunIdList);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
+
 		return dao.getBySearch(TestRun.class, search_);
 	}
 

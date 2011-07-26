@@ -309,6 +309,10 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 			{
 				search_.addFilterIn("id", testSuiteIdList);
 			}
+			else
+			{
+				return new UtestSearchResult();
+			}
 		}
 		return dao.getBySearch(TestSuite.class, search_);
 	}
