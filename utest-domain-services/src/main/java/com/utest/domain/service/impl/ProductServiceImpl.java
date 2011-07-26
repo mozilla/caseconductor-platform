@@ -34,6 +34,7 @@ import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.Team;
+import com.utest.domain.TeamUser;
 import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseProductComponent;
 import com.utest.domain.User;
@@ -302,8 +303,23 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	}
 
 	@Override
-	public UtestSearchResult findProducts(final UtestSearch search_) throws Exception
+	public UtestSearchResult findProducts(final UtestSearch search_, Integer teamMemberId_) throws Exception
 	{
+		if (teamMemberId_ != null)
+		{
+			Search search = new Search(TeamUser.class);
+			search.addField("teamId");
+			search.addFilterEqual("userId", teamMemberId_);
+			final List<?> teamIdList = dao.search(TeamUser.class, search);
+			if (teamIdList != null && !teamIdList.isEmpty())
+			{
+				search_.addFilterIn("teamId", teamIdList);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
 		return dao.getBySearch(Product.class, search_);
 	}
 

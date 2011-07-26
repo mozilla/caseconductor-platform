@@ -47,7 +47,7 @@ public interface TestCycleService
 
 	List<TestRun> getTestRunsForTestCycle(Integer testCycleId) throws Exception;
 
-	UtestSearchResult findTestCycles(UtestSearch search) throws Exception;
+	UtestSearchResult findTestCycles(UtestSearch search, Integer teamMemberId_) throws Exception;
 
 	TestCycle getTestCycle(Integer testCycleId) throws Exception;
 

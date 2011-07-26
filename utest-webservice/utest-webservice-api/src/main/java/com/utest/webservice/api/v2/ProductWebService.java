@@ -39,8 +39,6 @@ public interface ProductWebService
 {
 	ProductInfo getProduct(UriInfo ui, Integer productId) throws Exception;
 
-	ProductSearchResultInfo findProducts(UriInfo ui, UtestSearchRequest request) throws Exception;
-
 	ProductComponentInfo getProductComponent(UriInfo ui, Integer productComponentId) throws Exception;
 
 	ProductComponentSearchResultInfo findProductComponents(UriInfo ui, UtestSearchRequest request) throws Exception;
@@ -84,5 +82,7 @@ public interface ProductWebService
 	AttachmentInfo createAttachment(UriInfo ui, Integer productId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 
 	Boolean deleteAttachment(UriInfo ui, Integer productId, Integer attachmentId, Integer originalVersionId) throws Exception;
+
+	ProductSearchResultInfo findProducts(UriInfo ui, Integer teamMemberId, UtestSearchRequest request) throws Exception;
 
 }

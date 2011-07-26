@@ -43,7 +43,7 @@ public interface ProductService
 
 	List<ProductComponent> getComponentsForProduct(Integer productId) throws Exception;
 
-	UtestSearchResult findProducts(UtestSearch search) throws Exception;
+	UtestSearchResult findProducts(UtestSearch search, Integer teamMemberId) throws Exception;
 
 	UtestSearchResult findProductComponents(UtestSearch search) throws Exception;
 

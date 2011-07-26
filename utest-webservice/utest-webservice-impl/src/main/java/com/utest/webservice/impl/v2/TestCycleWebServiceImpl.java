@@ -285,10 +285,11 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CYCLE_VIEW)
-	public TestCycleSearchResultInfo findTestCycles(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestCycleSearchResultInfo findTestCycles(@Context final UriInfo ui_, @QueryParam("teamMemberId") final Integer teamMemberId_,
+			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestCycleInfo.class, request_, ui_);
-		final UtestSearchResult result = testCycleService.findTestCycles(search);
+		final UtestSearchResult result = testCycleService.findTestCycles(search, teamMemberId_);
 
 		return (TestCycleSearchResultInfo) objectBuilderFactory.createResult(TestCycleInfo.class, TestCycle.class, request_, result, ui_.getBaseUriBuilder());
 	}

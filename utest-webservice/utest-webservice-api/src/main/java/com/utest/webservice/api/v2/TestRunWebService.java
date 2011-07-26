@@ -168,7 +168,7 @@ public interface TestRunWebService
 
 	Boolean deleteAttachmentForTestRunResult(UriInfo ui, Integer testRunResultId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	TestRunSearchResultInfo findTestRuns(UriInfo ui, Integer includedTestSuiteId, Integer includedTestCaseId, Integer includedTestCaseVesionId, UtestSearchRequest request)
-			throws Exception;
+	TestRunSearchResultInfo findTestRuns(UriInfo ui, Integer includedTestSuiteId, Integer includedTestCaseId, Integer includedTestCaseVesionId, Integer teamMemberId,
+			UtestSearchRequest request) throws Exception;
 
 }

@@ -45,8 +45,6 @@ public interface TestCycleWebService
 
 	TestCycleInfo getTestCycle(UriInfo ui, Integer testCycleId) throws Exception;
 
-	TestCycleSearchResultInfo findTestCycles(UriInfo ui, UtestSearchRequest request) throws Exception;
-
 	List<TestRunInfo> getTestCycleTestRuns(UriInfo ui, Integer testCycleId) throws Exception;
 
 	Boolean deleteTestCycle(UriInfo ui, Integer testCycleId, Integer originalVesionId) throws Exception;
@@ -82,4 +80,6 @@ public interface TestCycleWebService
 	AttachmentInfo createAttachment(UriInfo ui, Integer testCycleId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 
 	Boolean deleteAttachment(UriInfo ui, Integer testCycleId, Integer attachmentId, Integer originalVersionId) throws Exception;
+
+	TestCycleSearchResultInfo findTestCycles(UriInfo ui, Integer teamMemberId, UtestSearchRequest request) throws Exception;
 }

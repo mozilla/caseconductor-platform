@@ -39,6 +39,7 @@ import com.utest.domain.Permission;
 import com.utest.domain.Product;
 import com.utest.domain.ProductComponent;
 import com.utest.domain.Team;
+import com.utest.domain.TeamUser;
 import com.utest.domain.TestCaseStatus;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.TestCycle;
@@ -872,9 +873,24 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public UtestSearchResult findTestRuns(final UtestSearch search_, Integer includedTestSuiteId_, Integer includedTestCaseId_, Integer includedTestCaseVersionId_)
-			throws Exception
+	public UtestSearchResult findTestRuns(final UtestSearch search_, Integer includedTestSuiteId_, Integer includedTestCaseId_, Integer includedTestCaseVersionId_,
+			Integer teamMemberId_) throws Exception
 	{
+		if (teamMemberId_ != null)
+		{
+			Search search = new Search(TeamUser.class);
+			search.addField("teamId");
+			search.addFilterEqual("userId", teamMemberId_);
+			final List<?> teamIdList = dao.search(TeamUser.class, search);
+			if (teamIdList != null && !teamIdList.isEmpty())
+			{
+				search_.addFilterIn("teamId", teamIdList);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
 		if (includedTestSuiteId_ != null || includedTestCaseId_ != null || includedTestCaseVersionId_ != null)
 		{
 			Search search = new Search(TestRunTestCase.class);
