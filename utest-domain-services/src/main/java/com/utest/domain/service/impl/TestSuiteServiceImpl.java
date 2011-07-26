@@ -31,6 +31,7 @@ import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Product;
 import com.utest.domain.TestCaseVersion;
+import com.utest.domain.TestRunTestCase;
 import com.utest.domain.TestSuite;
 import com.utest.domain.TestSuiteStatus;
 import com.utest.domain.TestSuiteTestCase;
@@ -296,8 +297,19 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
-	public UtestSearchResult findTestSuites(final UtestSearch search_) throws Exception
+	public UtestSearchResult findTestSuites(final UtestSearch search_, Integer includedInTestRunId_) throws Exception
 	{
+		if (includedInTestRunId_ != null)
+		{
+			Search search = new Search(TestRunTestCase.class);
+			search.addField("testSuiteId");
+			search.addFilterEqual("testRunId", includedInTestRunId_);
+			final List<?> testSuiteIdList = dao.search(TestRunTestCase.class, search);
+			if (testSuiteIdList != null && !testSuiteIdList.isEmpty())
+			{
+				search_.addFilterIn("id", testSuiteIdList);
+			}
+		}
 		return dao.getBySearch(TestSuite.class, search_);
 	}
 
