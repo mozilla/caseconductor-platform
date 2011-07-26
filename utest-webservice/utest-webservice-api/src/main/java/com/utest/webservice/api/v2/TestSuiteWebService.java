@@ -76,6 +76,7 @@ public interface TestSuiteWebService
 
 	TestSuiteTestCaseSearchResultInfo findTestSuiteTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	TestSuiteSearchResultInfo findTestSuites(UriInfo ui, Integer includedInTestRunId, UtestSearchRequest request) throws Exception;
+	TestSuiteSearchResultInfo findTestSuites(UriInfo ui, Integer hasTestCasesInTestRunId, Integer includedTestCaseId, Integer includedTestCaseVesionId, UtestSearchRequest request)
+			throws Exception;
 
 }

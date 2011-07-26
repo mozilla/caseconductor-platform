@@ -338,11 +338,12 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	/**
 	 * Returns latest versions of test cases by default
 	 */
-	public TestSuiteSearchResultInfo findTestSuites(@Context final UriInfo ui_, @QueryParam("hasTestCasesInTestRunId") final Integer includedInTestRunId_,
+	public TestSuiteSearchResultInfo findTestSuites(@Context final UriInfo ui_, @QueryParam("hasTestCasesInTestRunId") final Integer hasTestCasesInTestRunId_,
+			@QueryParam("includedTestCaseId") final Integer includedTestCaseId_, @QueryParam("includedTestCaseVersionId") final Integer includedTestCaseVesionId_,
 			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestSuiteInfo.class, request_, ui_);
-		final UtestSearchResult result = testSuiteService.findTestSuites(search, includedInTestRunId_);
+		final UtestSearchResult result = testSuiteService.findTestSuites(search, hasTestCasesInTestRunId_, includedTestCaseId_, includedTestCaseVesionId_);
 
 		return (TestSuiteSearchResultInfo) objectBuilderFactory.createResult(TestSuiteInfo.class, TestSuite.class, request_, result, ui_.getBaseUriBuilder());
 	}

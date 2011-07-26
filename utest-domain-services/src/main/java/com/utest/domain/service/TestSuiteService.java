@@ -41,7 +41,7 @@ public interface TestSuiteService
 
 	TestSuite getTestSuite(Integer testSuiteId_) throws Exception;
 
-	UtestSearchResult findTestSuites(UtestSearch search_, Integer includedInTestRunId_) throws Exception;
+	UtestSearchResult findTestSuites(UtestSearch search_, Integer includedInTestRunId_, Integer includedTestCaseId, Integer includedTestCaseVersionId) throws Exception;
 
 	void deleteTestSuiteTestCase(Integer testSuiteTestCaseId_, Integer originalVersionId) throws Exception;
 

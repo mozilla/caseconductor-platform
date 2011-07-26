@@ -297,14 +297,42 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
-	public UtestSearchResult findTestSuites(final UtestSearch search_, Integer includedInTestRunId_) throws Exception
+	public UtestSearchResult findTestSuites(final UtestSearch search_, Integer hasTestCasesInTestRunId_, Integer includedTestCaseId, Integer includedTestCaseVersionId)
+			throws Exception
 	{
-		if (includedInTestRunId_ != null)
+		// search in target test runs
+		if (hasTestCasesInTestRunId_ != null)
 		{
 			Search search = new Search(TestRunTestCase.class);
 			search.addField("testSuiteId");
-			search.addFilterEqual("testRunId", includedInTestRunId_);
+			if (hasTestCasesInTestRunId_ != null)
+			{
+				search.addFilterEqual("testRunId", hasTestCasesInTestRunId_);
+			}
 			final List<?> testSuiteIdList = dao.search(TestRunTestCase.class, search);
+			if (testSuiteIdList != null && !testSuiteIdList.isEmpty())
+			{
+				search_.addFilterIn("id", testSuiteIdList);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
+		// search in contained test cases
+		if (includedTestCaseId != null || includedTestCaseVersionId != null)
+		{
+			Search search = new Search(TestSuiteTestCase.class);
+			search.addField("testSuiteId");
+			if (includedTestCaseId != null)
+			{
+				search.addFilterEqual("testCaseId", includedTestCaseId);
+			}
+			if (includedTestCaseVersionId != null)
+			{
+				search.addFilterEqual("testCaseVersionId", includedTestCaseVersionId);
+			}
+			final List<?> testSuiteIdList = dao.search(TestSuiteTestCase.class, search);
 			if (testSuiteIdList != null && !testSuiteIdList.isEmpty())
 			{
 				search_.addFilterIn("id", testSuiteIdList);
