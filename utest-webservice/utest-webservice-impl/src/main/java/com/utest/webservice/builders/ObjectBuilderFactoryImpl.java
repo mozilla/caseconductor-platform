@@ -33,6 +33,7 @@ import javax.ws.rs.core.UriInfo;
 import com.utest.domain.AccessRole;
 import com.utest.domain.Attachment;
 import com.utest.domain.Company;
+import com.utest.domain.EntityExternalBug;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentGroupExploded;
@@ -67,6 +68,8 @@ import com.utest.webservice.model.v2.AttachmentInfo;
 import com.utest.webservice.model.v2.AttachmentSearchResultInfo;
 import com.utest.webservice.model.v2.CompanyInfo;
 import com.utest.webservice.model.v2.CompanySearchResultInfo;
+import com.utest.webservice.model.v2.EntityExternalBugInfo;
+import com.utest.webservice.model.v2.EntityExternalBugSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupExplodedSearchResultInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
@@ -145,6 +148,8 @@ public class ObjectBuilderFactoryImpl implements ObjectBuilderFactory, Initializ
 	@Override
 	public void initialize()
 	{
+		builders
+				.put(EntityExternalBugInfo.class, new Builder<EntityExternalBugInfo, EntityExternalBug>(this, EntityExternalBugInfo.class, EntityExternalBugSearchResultInfo.class));
 		builders.put(AttachmentInfo.class, new Builder<AttachmentInfo, Attachment>(this, AttachmentInfo.class, AttachmentSearchResultInfo.class));
 		builders.put(TeamInfo.class, new Builder<TeamInfo, Team>(this, TeamInfo.class, TeamSearchResultInfo.class));
 		builders.put(UserInfo.class, new Builder<UserInfo, User>(this, UserInfo.class, UserSearchResultInfo.class));

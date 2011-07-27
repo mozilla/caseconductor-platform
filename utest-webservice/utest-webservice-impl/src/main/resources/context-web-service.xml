@@ -218,6 +218,7 @@
 	<!-- SECURED SERVICE ENDPOINT -->
 	<jaxrs:server id="rest2" address="/v2/rest">
 		<jaxrs:serviceBeans>
+			<ref bean="externalBugWebService" />
 			<ref bean="attachmentWebService" />
 			<ref bean="companyWebService" />
 			<ref bean="productWebService" />

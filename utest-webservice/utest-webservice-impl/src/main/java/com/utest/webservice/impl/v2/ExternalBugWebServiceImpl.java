@@ -61,7 +61,7 @@ public class ExternalBugWebServiceImpl extends BaseWebServiceImpl implements Ext
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.ATTACHMENT_EDIT })
+	@Secured( { Permission.EXTERNAL_BUG_EDIT })
 	public Boolean deleteExternalBug(@Context final UriInfo ui_, @PathParam("id") final Integer externalBugId_, @FormParam("entityId") final Integer entityId_,
 			@FormParam("entityTypeId") final Integer entityTypeId_) throws Exception
 	{
@@ -72,7 +72,7 @@ public class ExternalBugWebServiceImpl extends BaseWebServiceImpl implements Ext
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.ATTACHMENT_VIEW)
+	@Secured(Permission.EXTERNAL_BUG_VIEW)
 	public EntityExternalBugSearchResultInfo findExternalBugs(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(EntityExternalBugInfo.class, request, ui_);
@@ -87,7 +87,7 @@ public class ExternalBugWebServiceImpl extends BaseWebServiceImpl implements Ext
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured(Permission.ATTACHMENT_VIEW)
+	@Secured(Permission.EXTERNAL_BUG_VIEW)
 	public EntityExternalBugInfo getExternalBug(@Context final UriInfo ui_, @PathParam("id") final Integer externalBugId) throws Exception
 	{
 		final EntityExternalBug attachment = externalBugService.getEntityExternalBug(externalBugId);
@@ -99,7 +99,7 @@ public class ExternalBugWebServiceImpl extends BaseWebServiceImpl implements Ext
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.ATTACHMENT_EDIT })
+	@Secured( { Permission.EXTERNAL_BUG_EDIT })
 	public EntityExternalBugInfo createExternalBug(@Context UriInfo ui, @FormParam("externalIdentifier") String externalIdentifier, @FormParam("url") String url,
 			@FormParam("entityTypeId") Integer entityTypeId, @FormParam("entityId") Integer entityId) throws Exception
 	{
