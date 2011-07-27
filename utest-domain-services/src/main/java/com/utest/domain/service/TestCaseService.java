@@ -22,6 +22,7 @@ package com.utest.domain.service;
 import java.util.List;
 
 import com.utest.domain.Attachment;
+import com.utest.domain.EntityExternalBug;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.ProductComponent;
@@ -130,4 +131,6 @@ public interface TestCaseService
 	UtestSearchResult findLatestTestCaseVersions(UtestSearch search, Integer includedInTestSuiteId, Integer includedEnvironmentId) throws Exception;
 
 	UtestSearchResult findLatestTestCaseVersions(Integer includedInTestSuiteId, Integer includedEnvironmentId) throws Exception;
+
+	List<EntityExternalBug> getExternalBugsForTestCase(Integer testCaseId) throws Exception;
 }

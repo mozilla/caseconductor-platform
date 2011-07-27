@@ -41,6 +41,7 @@ import org.springframework.security.access.annotation.Secured;
 
 import com.utest.domain.AccessRole;
 import com.utest.domain.Attachment;
+import com.utest.domain.EntityExternalBug;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentGroupExploded;
@@ -61,6 +62,7 @@ import com.utest.webservice.api.v2.TestRunWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.AttachmentInfo;
 import com.utest.webservice.model.v2.CategoryValueInfo;
+import com.utest.webservice.model.v2.EntityExternalBugInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
@@ -144,7 +146,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
-	@Secured( { Permission.FEATURED_LIST_EDIT })
+	@Secured( { Permission.TEST_RUN_ACTIVATE })
 	public TestRunInfo unfeatureTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @FormParam("originalVersionId") final Integer originalVersionId_)
 			throws Exception
 	{
@@ -752,6 +754,32 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	{
 		testRunService.rejectTestRunResult(resultId_, comment_, originalVersionId_);
 		return getTestRunResult(ui_, resultId_);
+	}
+
+	@GET
+	@Path("/results/{id}/relatedbugs/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_RUN_VIEW)
+	public List<EntityExternalBugInfo> getTestRunResultBugs(@Context UriInfo ui_, @PathParam("id") final Integer testRunResultId_) throws Exception
+	{
+		final List<EntityExternalBug> bugs = testRunService.getExternalBugsForTestRunResult(testRunResultId_);
+		final List<EntityExternalBugInfo> bugsInfo = objectBuilderFactory.toInfo(EntityExternalBugInfo.class, bugs, ui_.getBaseUriBuilder());
+		return bugsInfo;
+	}
+
+	@POST
+	@Path("/results/{id}/relatedbugs/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_RUN_EDIT })
+	public EntityExternalBugInfo createExternalBugForTestRunResult(@Context UriInfo ui, @PathParam("id") final Integer testRunResultId,
+			@FormParam("externalIdentifier") String externalIdentifier, @FormParam("url") String url) throws Exception
+	{
+		EntityExternalBug bug = testRunService.addExternalBugForTestRunResult(externalIdentifier, url, testRunResultId);
+		return objectBuilderFactory.toInfo(EntityExternalBugInfo.class, bug, ui.getBaseUriBuilder());
 	}
 
 	@GET

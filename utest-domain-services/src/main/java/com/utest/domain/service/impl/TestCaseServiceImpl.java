@@ -31,6 +31,7 @@ import com.utest.dao.TypelessDAO;
 import com.utest.domain.ApprovalStatus;
 import com.utest.domain.Attachment;
 import com.utest.domain.CompanyDependable;
+import com.utest.domain.EntityExternalBug;
 import com.utest.domain.EntityType;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentGroupExploded;
@@ -44,6 +45,7 @@ import com.utest.domain.TestCaseStatus;
 import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseTag;
 import com.utest.domain.TestCaseVersion;
+import com.utest.domain.TestRunResult;
 import com.utest.domain.TestSuiteTestCase;
 import com.utest.domain.VersionIncrement;
 import com.utest.domain.search.UtestFilter;
@@ -51,6 +53,7 @@ import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.AttachmentService;
 import com.utest.domain.service.EnvironmentService;
+import com.utest.domain.service.ExternalBugService;
 import com.utest.domain.service.TestCaseService;
 import com.utest.domain.service.UserService;
 import com.utest.domain.util.DomainUtil;
@@ -73,15 +76,18 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	private static final List<String>	TEST_CASE_STEP_FIELDS	= Arrays.asList("instruction", "expectedResult");
 	private final UserService			userService;
 	private final AttachmentService		attachmentService;
+	private final ExternalBugService	externalBugService;
 
 	/**
 	 * Default constructor
 	 */
-	public TestCaseServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService, final UserService userService, final AttachmentService attachmentService)
+	public TestCaseServiceImpl(final TypelessDAO dao, final EnvironmentService environmentService, final UserService userService, final AttachmentService attachmentService,
+			final ExternalBugService externalBugService)
 	{
 		super(dao, environmentService);
 		this.userService = userService;
 		this.attachmentService = attachmentService;
+		this.externalBugService = externalBugService;
 	}
 
 	@Override
@@ -572,6 +578,25 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public List<Attachment> getAttachmentsForTestCase(final Integer testCaseId_) throws Exception
 	{
 		return attachmentService.getAttachmentsForEntity(testCaseId_, EntityType.TEST_CASE);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<EntityExternalBug> getExternalBugsForTestCase(final Integer testCaseId_) throws Exception
+	{
+		Search search = new Search(TestRunResult.class);
+		search.addField("id");
+		search.addFilterEqual("testCaseId", testCaseId_);
+		List<?> resultIds = dao.search(TestRunResult.class, search);
+		if (resultIds == null || resultIds.isEmpty())
+		{
+			return new ArrayList<EntityExternalBug>();
+		}
+
+		UtestSearch bugSearch = new UtestSearch();
+		bugSearch.addFilterIn("entityId", resultIds);
+		bugSearch.addFilterEqual("entityTypeId", EntityType.TEST_RESULT);
+		return (List<EntityExternalBug>) externalBugService.findEntityExternalBugs(bugSearch).getResults();
 	}
 
 	@Override

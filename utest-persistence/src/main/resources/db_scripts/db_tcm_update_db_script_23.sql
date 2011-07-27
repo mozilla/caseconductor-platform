@@ -8,6 +8,9 @@ ALTER TABLE
 ALTER TABLE
     TestRun ADD (featured TINYINT(1) DEFAULT '0' NOT NULL);
 
+DROP TABLE
+    `TestRunExternalBug`;
+    
 DROP TABLE IF EXISTS EntityExternalBug;
 CREATE TABLE `EntityExternalBug` (
   `entityExternalBugId` int(11) NOT NULL AUTO_INCREMENT,

@@ -24,6 +24,7 @@ import java.util.List;
 
 import com.utest.domain.AccessRole;
 import com.utest.domain.Attachment;
+import com.utest.domain.EntityExternalBug;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentGroupExploded;
@@ -199,4 +200,10 @@ public interface TestRunService
 	TestRun featureTestRun(Integer testRunId, Integer originalVersionId) throws Exception;
 
 	TestRun unfeatureTestRun(Integer testRunId, Integer originalVersionId) throws Exception;
+
+	EntityExternalBug addExternalBugForTestRunResult(String externalIdentifier, String url, Integer testRunResultId) throws Exception;
+
+	boolean deleteExternalBugForTestRunResult(Integer attachmentId, Integer entityId) throws Exception;
+
+	List<EntityExternalBug> getExternalBugsForTestRunResult(Integer testRunResultId) throws Exception;
 }

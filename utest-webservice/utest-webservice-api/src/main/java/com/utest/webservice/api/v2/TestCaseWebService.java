@@ -25,6 +25,7 @@ import java.util.List;
 import javax.ws.rs.core.UriInfo;
 
 import com.utest.webservice.model.v2.AttachmentInfo;
+import com.utest.webservice.model.v2.EntityExternalBugInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
@@ -111,5 +112,7 @@ public interface TestCaseWebService
 
 	TestCaseVersionSearchResultInfo findLatestTestCaseVersions(UriInfo ui, Integer includedEnvironmentId, Integer includedInTestSuiteId, UtestSearchRequest request)
 			throws Exception;
+
+	List<EntityExternalBugInfo> getTestCaseBugs(UriInfo ui, Integer testCaseId) throws Exception;
 
 }

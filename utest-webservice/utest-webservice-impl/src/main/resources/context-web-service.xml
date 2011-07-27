@@ -41,6 +41,7 @@
         <property name="resourceUrls">
             <map>
                	<entry key="team" value="/teams/{id}"/>
+               	<entry key="entityexternalbug" value="/externalbugs/{id}"/>
                	<entry key="attachment" value="/attachments/{id}"/>
                	<entry key="environment" value="/environments/{id}"/>
                	<entry key="environmentview" value="/environments/{id}"/>
@@ -121,6 +122,11 @@
 	<bean id="attachmentWebService" class="com.utest.webservice.impl.v2.AttachmentWebServiceImpl">
 		<constructor-arg ref="objectBuilderFactory" />
 		<constructor-arg ref="attachmentService" />
+	</bean>
+
+	<bean id="externalBugWebService" class="com.utest.webservice.impl.v2.ExternalBugWebServiceImpl">
+		<constructor-arg ref="objectBuilderFactory" />
+		<constructor-arg ref="externalBugService" />
 	</bean>
 
 	<bean id="productWebService" class="com.utest.webservice.impl.v2.ProductWebServiceImpl">

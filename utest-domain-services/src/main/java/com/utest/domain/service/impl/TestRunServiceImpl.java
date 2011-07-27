@@ -30,6 +30,7 @@ import com.utest.dao.TypelessDAO;
 import com.utest.domain.AccessRole;
 import com.utest.domain.ApprovalStatus;
 import com.utest.domain.Attachment;
+import com.utest.domain.EntityExternalBug;
 import com.utest.domain.EntityType;
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
@@ -61,6 +62,7 @@ import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.AttachmentService;
 import com.utest.domain.service.EnvironmentService;
+import com.utest.domain.service.ExternalBugService;
 import com.utest.domain.service.TeamService;
 import com.utest.domain.service.TestCaseService;
 import com.utest.domain.service.TestPlanService;
@@ -87,18 +89,20 @@ import com.utest.util.DateUtil;
 
 public class TestRunServiceImpl extends BaseServiceImpl implements TestRunService
 {
-	private final TestPlanService	testPlanService;
-	private final TestSuiteService	testSuiteService;
-	private final TestCaseService	testCaseService;
-	private final TeamService		teamService;
-	private final UserService		userService;
-	private final AttachmentService	attachmentService;
+	private final TestPlanService		testPlanService;
+	private final TestSuiteService		testSuiteService;
+	private final TestCaseService		testCaseService;
+	private final TeamService			teamService;
+	private final UserService			userService;
+	private final AttachmentService		attachmentService;
+	private final ExternalBugService	externalBugService;
 
 	/**
 	 * Default constructor
 	 */
 	public TestRunServiceImpl(final TypelessDAO dao, final TestPlanService testPlanService, final TestSuiteService testSuiteService, final TestCaseService testCaseService,
-			final EnvironmentService environmentService, final TeamService teamService, final UserService userService, final AttachmentService attachmentService)
+			final EnvironmentService environmentService, final TeamService teamService, final UserService userService, final AttachmentService attachmentService,
+			final ExternalBugService externalBugService)
 	{
 		super(dao, environmentService);
 		this.environmentService = environmentService;
@@ -108,6 +112,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		this.teamService = teamService;
 		this.userService = userService;
 		this.attachmentService = attachmentService;
+		this.externalBugService = externalBugService;
 	}
 
 	@Override
@@ -1743,6 +1748,24 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	public List<Attachment> getAttachmentsForTestRunResult(final Integer testRunResultId_) throws Exception
 	{
 		return attachmentService.getAttachmentsForEntity(testRunResultId_, EntityType.TEST_RESULT);
+	}
+
+	@Override
+	public EntityExternalBug addExternalBugForTestRunResult(final String externalIdentifier, final String url, final Integer testRunResultId) throws Exception
+	{
+		return externalBugService.addEntityExternalBug(externalIdentifier, url, EntityType.TEST_RESULT, testRunResultId);
+	}
+
+	@Override
+	public boolean deleteExternalBugForTestRunResult(final Integer attachmentId_, final Integer entityId_) throws Exception
+	{
+		return externalBugService.deleteEntityExternalBug(attachmentId_, entityId_, EntityType.TEST_RESULT);
+	}
+
+	@Override
+	public List<EntityExternalBug> getExternalBugsForTestRunResult(final Integer testRunResultId_) throws Exception
+	{
+		return externalBugService.getEntityExternalBugsForEntity(testRunResultId_, EntityType.TEST_RESULT);
 	}
 
 }

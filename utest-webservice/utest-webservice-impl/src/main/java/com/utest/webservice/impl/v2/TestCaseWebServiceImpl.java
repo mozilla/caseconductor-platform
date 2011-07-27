@@ -39,6 +39,7 @@ import javax.ws.rs.core.UriInfo;
 import org.springframework.security.access.annotation.Secured;
 
 import com.utest.domain.Attachment;
+import com.utest.domain.EntityExternalBug;
 import com.utest.domain.EnvironmentGroup;
 import com.utest.domain.EnvironmentGroupExploded;
 import com.utest.domain.Permission;
@@ -56,6 +57,7 @@ import com.utest.domain.view.TestCaseVersionView;
 import com.utest.webservice.api.v2.TestCaseWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.AttachmentInfo;
+import com.utest.webservice.model.v2.EntityExternalBugInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
@@ -226,6 +228,19 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	{
 		final List<ProductComponent> components = testCaseService.getComponentsForTestCase(testCaseId_);
 		return objectBuilderFactory.toInfo(ProductComponentInfo.class, components, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/{id}/relatedbugs/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CASE_VIEW)
+	public List<EntityExternalBugInfo> getTestCaseBugs(@Context UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
+	{
+		final List<EntityExternalBug> bugs = testCaseService.getExternalBugsForTestCase(testCaseId_);
+		final List<EntityExternalBugInfo> bugsInfo = objectBuilderFactory.toInfo(EntityExternalBugInfo.class, bugs, ui_.getBaseUriBuilder());
+		return bugsInfo;
 	}
 
 	@GET
