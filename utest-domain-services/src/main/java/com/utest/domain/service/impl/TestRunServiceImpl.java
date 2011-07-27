@@ -855,27 +855,75 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public UtestSearchResult findTestRunAssignments(final UtestSearch search_) throws Exception
+	public UtestSearchResult findTestRunAssignments(final UtestSearch search_, Integer includedEnvironmentId_) throws Exception
 	{
+		if (includedEnvironmentId_ != null)
+		{
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironment(includedEnvironmentId_);
+			if (profileIds != null && !profileIds.isEmpty())
+			{
+				search_.addFilterIn("environmentProfileId", profileIds);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
 		return dao.getBySearch(TestRunTestCaseAssignment.class, search_);
 	}
 
 	@Override
-	public UtestSearchResult findTestRunTestCases(final UtestSearch search_) throws Exception
+	public UtestSearchResult findTestRunTestCases(final UtestSearch search_, Integer includedEnvironmentId_) throws Exception
 	{
+		if (includedEnvironmentId_ != null)
+		{
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironment(includedEnvironmentId_);
+			if (profileIds != null && !profileIds.isEmpty())
+			{
+				search_.addFilterIn("environmentProfileId", profileIds);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
 		return dao.getBySearch(TestRunTestCaseView.class, search_);
 	}
 
 	@Override
-	public UtestSearchResult findTestRunResults(final UtestSearch search_) throws Exception
+	public UtestSearchResult findTestRunResults(final UtestSearch search_, Integer includedEnvironmentId_) throws Exception
 	{
+		if (includedEnvironmentId_ != null)
+		{
+			List<Integer> profileIds = environmentService.getGroupsContainingEnvironment(includedEnvironmentId_);
+			if (profileIds != null && !profileIds.isEmpty())
+			{
+				search_.addFilterIn("environmentGroupId", profileIds);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
 		return dao.getBySearch(TestRunResult.class, search_);
 	}
 
 	@Override
 	public UtestSearchResult findTestRuns(final UtestSearch search_, Integer includedTestSuiteId_, Integer includedTestCaseId_, Integer includedTestCaseVersionId_,
-			Integer teamMemberId_) throws Exception
+			Integer teamMemberId_, Integer includedEnvironmentId_) throws Exception
 	{
+		if (includedEnvironmentId_ != null)
+		{
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironment(includedEnvironmentId_);
+			if (profileIds != null && !profileIds.isEmpty())
+			{
+				search_.addFilterIn("environmentProfileId", profileIds);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
 		if (teamMemberId_ != null)
 		{
 			Search search = new Search(TeamUser.class);
@@ -1112,7 +1160,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		statuses.add(TestRunResultStatus.INVALIDATED);
 		statuses.add(TestRunResultStatus.SKIPPED);
 		usearch.addFilterIn("testRunResultStatusId", statuses);
-		UtestSearchResult uresult = findTestRunResults(usearch);
+		UtestSearchResult uresult = findTestRunResults(usearch, null);
 		List<TestRunResult> allResults = (List<TestRunResult>) uresult.getResults();
 		for (TestRunResult result : allResults)
 		{
@@ -1133,7 +1181,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		statuses.add(TestRunResultStatus.INVALIDATED);
 		statuses.add(TestRunResultStatus.SKIPPED);
 		usearch.addFilterIn("testRunResultStatusId", statuses);
-		UtestSearchResult uresult = findTestRunResults(usearch);
+		UtestSearchResult uresult = findTestRunResults(usearch, null);
 		List<TestRunResult> allResults = (List<TestRunResult>) uresult.getResults();
 		for (TestRunResult result : allResults)
 		{
@@ -1147,7 +1195,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	{
 		final UtestSearch usearch = new UtestSearch();
 		usearch.addFilterIn("id", testRunResultId_);
-		final UtestSearchResult uresult = findTestRunResults(usearch);
+		final UtestSearchResult uresult = findTestRunResults(usearch, null);
 		final List<TestRunResult> allResults = (List<TestRunResult>) uresult.getResults();
 		for (final TestRunResult result : allResults)
 		{

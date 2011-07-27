@@ -196,10 +196,11 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public TestSuiteTestCaseSearchResultInfo findTestSuiteTestCases(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestSuiteTestCaseSearchResultInfo findTestSuiteTestCases(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestSuiteTestCaseInfo.class, request_, ui_);
-		final UtestSearchResult result = testSuiteService.findTestSuiteTestCases(search);
+		final UtestSearchResult result = testSuiteService.findTestSuiteTestCases(search, includedEnvironmentId_);
 
 		return (TestSuiteTestCaseSearchResultInfo) objectBuilderFactory.createResult(TestSuiteTestCaseInfo.class, TestSuiteTestCase.class, request_, result, ui_
 				.getBaseUriBuilder());
@@ -340,10 +341,10 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	 */
 	public TestSuiteSearchResultInfo findTestSuites(@Context final UriInfo ui_, @QueryParam("hasTestCasesInTestRunId") final Integer hasTestCasesInTestRunId_,
 			@QueryParam("includedTestCaseId") final Integer includedTestCaseId_, @QueryParam("includedTestCaseVersionId") final Integer includedTestCaseVesionId_,
-			@QueryParam("") final UtestSearchRequest request_) throws Exception
+			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestSuiteInfo.class, request_, ui_);
-		final UtestSearchResult result = testSuiteService.findTestSuites(search, hasTestCasesInTestRunId_, includedTestCaseId_, includedTestCaseVesionId_);
+		final UtestSearchResult result = testSuiteService.findTestSuites(search, hasTestCasesInTestRunId_, includedTestCaseId_, includedTestCaseVesionId_, includedEnvironmentId_);
 
 		return (TestSuiteSearchResultInfo) objectBuilderFactory.createResult(TestSuiteInfo.class, TestSuite.class, request_, result, ui_.getBaseUriBuilder());
 	}

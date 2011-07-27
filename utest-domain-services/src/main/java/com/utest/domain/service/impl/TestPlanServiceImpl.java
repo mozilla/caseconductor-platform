@@ -148,8 +148,20 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	}
 
 	@Override
-	public UtestSearchResult findTestPlans(final UtestSearch search_) throws Exception
+	public UtestSearchResult findTestPlans(final UtestSearch search_, Integer includedEnvironmentId_) throws Exception
 	{
+		if (includedEnvironmentId_ != null)
+		{
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironment(includedEnvironmentId_);
+			if (profileIds != null && !profileIds.isEmpty())
+			{
+				search_.addFilterIn("environmentProfileId", profileIds);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
 		return dao.getBySearch(TestPlan.class, search_);
 	}
 

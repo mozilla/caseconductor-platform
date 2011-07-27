@@ -65,10 +65,6 @@ public interface TestRunWebService
 
 	List<TestRunTestCaseInfo> createTestCasesFromTestSuite(UriInfo ui, Integer testRunId, Integer testSuiteId) throws Exception;
 
-	TestRunTestCaseAssignmentSearchResultInfo findTestRunAssignments(UriInfo ui, UtestSearchRequest request) throws Exception;
-
-	TestRunResultSearchResultInfo findTestRunResults(UriInfo ui, UtestSearchRequest request) throws Exception;
-
 	List<ProductComponentInfo> getTestRunComponents(UriInfo ui, Integer testRunId) throws Exception;
 
 	TestRunTestCaseInfo getTestRunTestCase(UriInfo ui, Integer includedTestCaseId) throws Exception;
@@ -102,8 +98,6 @@ public interface TestRunWebService
 	TestRunResultInfo rejectTestRunResult(UriInfo ui, Integer resultId, String comment, Integer originalVersionId) throws Exception;
 
 	List<EnvironmentInfo> getTestRunResultEnvironments(UriInfo ui, Integer resultId) throws Exception;
-
-	TestRunTestCaseSearchResultInfo findTestRunTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
 
 	TestRunTestCaseInfo createTestRunTestCase(UriInfo ui, Integer testRunId, Integer testCaseVersionId, Integer priorityId, Integer runOrder, String blocking) throws Exception;
 
@@ -168,7 +162,13 @@ public interface TestRunWebService
 
 	Boolean deleteAttachmentForTestRunResult(UriInfo ui, Integer testRunResultId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	TestRunSearchResultInfo findTestRuns(UriInfo ui, Integer includedTestSuiteId, Integer includedTestCaseId, Integer includedTestCaseVesionId, Integer teamMemberId,
-			UtestSearchRequest request) throws Exception;
+	TestRunTestCaseAssignmentSearchResultInfo findTestRunAssignments(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+
+	TestRunResultSearchResultInfo findTestRunResults(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+
+	TestRunSearchResultInfo findTestRuns(UriInfo ui, Integer includedEnvironmentId, Integer includedTestSuiteId, Integer includedTestCaseId, Integer includedTestCaseVesionId,
+			Integer teamMemberId, UtestSearchRequest request) throws Exception;
+
+	TestRunTestCaseSearchResultInfo findTestRunTestCases(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
 }

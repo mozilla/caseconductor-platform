@@ -74,9 +74,9 @@ public interface TestSuiteWebService
 
 	Boolean deleteAttachment(UriInfo ui, Integer testSuiteId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	TestSuiteTestCaseSearchResultInfo findTestSuiteTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
+	TestSuiteSearchResultInfo findTestSuites(UriInfo ui, Integer hasTestCasesInTestRunId, Integer includedTestCaseId, Integer includedTestCaseVesionId,
+			Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
-	TestSuiteSearchResultInfo findTestSuites(UriInfo ui, Integer hasTestCasesInTestRunId, Integer includedTestCaseId, Integer includedTestCaseVesionId, UtestSearchRequest request)
-			throws Exception;
+	TestSuiteTestCaseSearchResultInfo findTestSuiteTestCases(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
 }

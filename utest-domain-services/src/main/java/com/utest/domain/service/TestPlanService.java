@@ -36,7 +36,7 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 public interface TestPlanService
 {
 
-	UtestSearchResult findTestPlans(UtestSearch search) throws Exception;
+	UtestSearchResult findTestPlans(UtestSearch search, Integer includedEnvironmentId_) throws Exception;
 
 	TestPlan getTestPlan(Integer testPlanId) throws Exception;
 

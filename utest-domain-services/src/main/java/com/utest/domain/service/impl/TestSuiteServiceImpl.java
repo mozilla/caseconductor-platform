@@ -297,9 +297,21 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
-	public UtestSearchResult findTestSuites(final UtestSearch search_, Integer hasTestCasesInTestRunId_, Integer includedTestCaseId, Integer includedTestCaseVersionId)
-			throws Exception
+	public UtestSearchResult findTestSuites(final UtestSearch search_, Integer hasTestCasesInTestRunId_, Integer includedTestCaseId, Integer includedTestCaseVersionId,
+			Integer includedEnvironmentId_) throws Exception
 	{
+		if (includedEnvironmentId_ != null)
+		{
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironment(includedEnvironmentId_);
+			if (profileIds != null && !profileIds.isEmpty())
+			{
+				search_.addFilterIn("environmentProfileId", profileIds);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
 		// search in target test runs
 		if (hasTestCasesInTestRunId_ != null)
 		{
@@ -346,8 +358,20 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
-	public UtestSearchResult findTestSuiteTestCases(final UtestSearch search_) throws Exception
+	public UtestSearchResult findTestSuiteTestCases(final UtestSearch search_, Integer includedEnvironmentId_) throws Exception
 	{
+		if (includedEnvironmentId_ != null)
+		{
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironment(includedEnvironmentId_);
+			if (profileIds != null && !profileIds.isEmpty())
+			{
+				search_.addFilterIn("environmentProfileId", profileIds);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
 		return dao.getBySearch(TestSuiteTestCaseView.class, search_);
 	}
 

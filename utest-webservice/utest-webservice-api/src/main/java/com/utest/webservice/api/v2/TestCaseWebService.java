@@ -41,8 +41,6 @@ public interface TestCaseWebService
 
 	TestCaseVersionInfo cloneTestCase(UriInfo ui, Integer testCaseId) throws Exception;
 
-	TestCaseVersionSearchResultInfo findLatestTestCaseVersions(UriInfo ui, UtestSearchRequest request) throws Exception;
-
 	TestCaseVersionInfo getLatestTestCaseVersion(UriInfo ui, Integer testCaseId) throws Exception;
 
 	List<TestCaseVersionInfo> getTestCaseVersions(UriInfo ui, Integer testCaseId) throws Exception;
@@ -109,6 +107,9 @@ public interface TestCaseWebService
 
 	Boolean deleteAttachment(UriInfo ui, Integer testCaseId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	TestCaseVersionSearchResultInfo findTestCaseVersions(UriInfo ui, Integer includedInTestSuiteId, UtestSearchRequest request) throws Exception;
+	TestCaseVersionSearchResultInfo findTestCaseVersions(UriInfo ui, Integer includedEnvironmentId, Integer includedInTestSuiteId, UtestSearchRequest request) throws Exception;
+
+	TestCaseVersionSearchResultInfo findLatestTestCaseVersions(UriInfo ui, Integer includedEnvironmentId, Integer includedInTestSuiteId, UtestSearchRequest request)
+			throws Exception;
 
 }

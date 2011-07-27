@@ -327,12 +327,14 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public TestRunSearchResultInfo findTestRuns(@Context final UriInfo ui_, @QueryParam("includedTestSuiteId") final Integer includedTestSuiteId_,
-			@QueryParam("includedTestCaseId") final Integer includedTestCaseId_, @QueryParam("includedTestCaseVersionId") final Integer includedTestCaseVesionId_,
-			@QueryParam("teamMemberId") final Integer teamMemberId_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestRunSearchResultInfo findTestRuns(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+			@QueryParam("includedTestSuiteId") final Integer includedTestSuiteId_, @QueryParam("includedTestCaseId") final Integer includedTestCaseId_,
+			@QueryParam("includedTestCaseVersionId") final Integer includedTestCaseVesionId_, @QueryParam("teamMemberId") final Integer teamMemberId_,
+			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestRunInfo.class, request_, ui_);
-		final UtestSearchResult result = testRunService.findTestRuns(search, includedTestSuiteId_, includedTestCaseId_, includedTestCaseVesionId_, teamMemberId_);
+		final UtestSearchResult result = testRunService.findTestRuns(search, includedTestSuiteId_, includedTestCaseId_, includedTestCaseVesionId_, teamMemberId_,
+				includedEnvironmentId_);
 
 		return (TestRunSearchResultInfo) objectBuilderFactory.createResult(TestRunInfo.class, TestRun.class, request_, result, ui_.getBaseUriBuilder());
 	}
@@ -783,10 +785,11 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public TestRunTestCaseSearchResultInfo findTestRunTestCases(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestRunTestCaseSearchResultInfo findTestRunTestCases(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestRunTestCaseInfo.class, request_, ui_);
-		final UtestSearchResult result = testRunService.findTestRunTestCases(search);
+		final UtestSearchResult result = testRunService.findTestRunTestCases(search, includedEnvironmentId_);
 
 		return (TestRunTestCaseSearchResultInfo) objectBuilderFactory.createResult(TestRunTestCaseInfo.class, TestRunTestCase.class, request_, result, ui_.getBaseUriBuilder());
 	}
@@ -797,10 +800,11 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public TestRunTestCaseAssignmentSearchResultInfo findTestRunAssignments(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestRunTestCaseAssignmentSearchResultInfo findTestRunAssignments(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestRunTestCaseAssignmentInfo.class, request_, ui_);
-		final UtestSearchResult result = testRunService.findTestRunAssignments(search);
+		final UtestSearchResult result = testRunService.findTestRunAssignments(search, includedEnvironmentId_);
 
 		return (TestRunTestCaseAssignmentSearchResultInfo) objectBuilderFactory.createResult(TestRunTestCaseAssignmentInfo.class, TestRunTestCaseAssignment.class, request_,
 				result, ui_.getBaseUriBuilder());
@@ -812,10 +816,11 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public TestRunResultSearchResultInfo findTestRunResults(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestRunResultSearchResultInfo findTestRunResults(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestRunResultInfo.class, request_, ui_);
-		final UtestSearchResult result = testRunService.findTestRunResults(search);
+		final UtestSearchResult result = testRunService.findTestRunResults(search, includedEnvironmentId_);
 		return (TestRunResultSearchResultInfo) objectBuilderFactory.createResult(TestRunResultInfo.class, TestRunResult.class, request_, result, ui_.getBaseUriBuilder());
 	}
 

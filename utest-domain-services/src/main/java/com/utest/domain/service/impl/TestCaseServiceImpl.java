@@ -375,8 +375,35 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public UtestSearchResult findTestCaseVersions(final UtestSearch search_, Integer includedInTestSuiteId_) throws Exception
+	public UtestSearchResult findTestCaseVersions(final UtestSearch search_, Integer includedInTestSuiteId_, Integer includedEnvironmentId_) throws Exception
 	{
+		if (includedEnvironmentId_ != null)
+		{
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironment(includedEnvironmentId_);
+			if (profileIds != null && !profileIds.isEmpty())
+			{
+				search_.addFilterIn("environmentProfileId", profileIds);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
+		if (includedInTestSuiteId_ != null)
+		{
+			Search search = new Search(TestSuiteTestCase.class);
+			search.addField("testCaseVersionId");
+			search.addFilterEqual("testSuiteId", includedInTestSuiteId_);
+			final List<?> testCaseIdList = dao.search(TestSuiteTestCase.class, search);
+			if (testCaseIdList != null && !testCaseIdList.isEmpty())
+			{
+				search_.addFilterIn("id", testCaseIdList);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
 		List<UtestFilter> filters = search_.getFilters();
 		UtestSearch testCaseStepSearch = new UtestSearch();
 		UtestSearch testCaseSearch = new UtestSearch();
@@ -399,7 +426,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			List<?> testCaseSteps = testCaseStepSearchResult.getResults();
 			if (testCaseSteps == null || testCaseSteps.isEmpty())
 			{
-				return testCaseStepSearchResult;
+				return new UtestSearchResult();
 			}
 			List<Integer> ids = new ArrayList<Integer>();
 			for (Object testCaseStep : testCaseSteps)
@@ -407,21 +434,6 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 				ids.add(((TestCaseStep) testCaseStep).getTestCaseVersionId());
 			}
 			testCaseSearch.addFilterIn("id", ids);
-		}
-		if (includedInTestSuiteId_ != null)
-		{
-			Search search = new Search(TestSuiteTestCase.class);
-			search.addField("testCaseVersionId");
-			search.addFilterEqual("testSuiteId", includedInTestSuiteId_);
-			final List<?> testCaseIdList = dao.search(TestSuiteTestCase.class, search);
-			if (testCaseIdList != null && !testCaseIdList.isEmpty())
-			{
-				testCaseSearch.addFilterIn("id", testCaseIdList);
-			}
-			else
-			{
-				return new UtestSearchResult();
-			}
 		}
 		return dao.getBySearch(TestCaseVersionView.class, testCaseSearch);
 	}
@@ -433,17 +445,17 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public UtestSearchResult findLatestTestCaseVersions() throws Exception
+	public UtestSearchResult findLatestTestCaseVersions(Integer includedInTestSuiteId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final UtestSearch search = new UtestSearch();
-		return findLatestTestCaseVersions(search);
+		return findLatestTestCaseVersions(search, includedInTestSuiteId_, includedEnvironmentId_);
 	}
 
 	@Override
-	public UtestSearchResult findLatestTestCaseVersions(final UtestSearch search_) throws Exception
+	public UtestSearchResult findLatestTestCaseVersions(final UtestSearch search_, Integer includedInTestSuiteId_, Integer includedEnvironmentId_) throws Exception
 	{
 		search_.addFilterEqual("latestVersion", true);
-		return findTestCaseVersions(search_, null);
+		return findTestCaseVersions(search_, includedInTestSuiteId_, includedEnvironmentId_);
 	}
 
 	@Override

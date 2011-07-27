@@ -20,6 +20,7 @@
 package com.utest.domain.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -705,6 +706,55 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		{
 			return new ArrayList<EnvironmentGroup>();
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Integer> getGroupsContainingEnvironment(final Integer environmentId_) throws Exception
+	{
+		if (environmentId_ == null)
+		{
+			throw new IllegalArgumentException("environmentId_ is null in getGroupsContainingEnvironment() call.");
+		}
+		Search search = new Search(EnvironmentGroupEnvironment.class);
+		search.addField("environmentGroupId");
+		search.addFilterEqual("environmentId", environmentId_);
+		final List<?> groupIdList = dao.search(EnvironmentGroupEnvironment.class, search);
+		return (List<Integer>) groupIdList;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Integer> getProfilesContainingEnvironment(final Integer environmentId_) throws Exception
+	{
+		if (environmentId_ == null)
+		{
+			throw new IllegalArgumentException("environmentId_ is null in getProfilesContainingEnvironment() call.");
+		}
+		List<Integer> profiles = new ArrayList<Integer>();
+
+		Search search;
+		final List<?> groupIdList = getGroupsContainingEnvironment(environmentId_);
+		if (groupIdList != null && !groupIdList.isEmpty())
+		{
+			search = new Search(EnvironmentProfileEnvironmentGroup.class);
+			search.addField("environmentProfileId");
+			search.addFilterIn("environmentGroupId", groupIdList);
+			final List<?> profileIdList = dao.search(EnvironmentProfileEnvironmentGroup.class, search);
+			if (profileIdList != null && !profileIdList.isEmpty())
+			{
+				profiles.addAll((Collection<? extends Integer>) profileIdList);
+			}
+		}
+		search = new Search(EnvironmentProfileEnvironment.class);
+		search.addField("environmentProfileId");
+		search.addFilterEqual("environmentId", environmentId_);
+		final List<?> profileIdList = dao.search(EnvironmentProfileEnvironment.class, search);
+		if (profileIdList != null && !profileIdList.isEmpty())
+		{
+			profiles.addAll((Collection<? extends Integer>) profileIdList);
+		}
+		return profiles;
 	}
 
 	@Override

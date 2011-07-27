@@ -54,7 +54,7 @@ public interface TestRunService
 
 	void deleteTestRunTestCase(Integer testRunTestCaseId, final Integer originalVersionId_) throws Exception;
 
-	UtestSearchResult findTestRuns(UtestSearch search, Integer includedTestSuiteId_, Integer includedTestCaseId_, Integer includedTestCaseVersionId_, Integer teamMemberId_) throws Exception;
+	UtestSearchResult findTestRuns(UtestSearch search, Integer includedTestSuiteId_, Integer includedTestCaseId_, Integer includedTestCaseVersionId_, Integer teamMemberId_, Integer includedEnvironmentId_) throws Exception;
 
 	TestRun getTestRun(Integer testRunId) throws Exception;
 
@@ -72,9 +72,9 @@ public interface TestRunService
 
 	List<TestRunResult> getTestRunResults(Integer testRunId, Integer testerId, Integer environmentGroupId) throws Exception;
 
-	UtestSearchResult findTestRunAssignments(UtestSearch search) throws Exception;
+	UtestSearchResult findTestRunAssignments(UtestSearch search, Integer includedEnvironmentId_) throws Exception;
 
-	UtestSearchResult findTestRunResults(UtestSearch search) throws Exception;
+	UtestSearchResult findTestRunResults(UtestSearch search, Integer includedEnvironmentId_) throws Exception;
 
 	TestRunResult retestTestRunResult(Integer testRunResultId, Integer testerId) throws Exception;
 
@@ -138,7 +138,7 @@ public interface TestRunService
 
 	List<ProductComponent> getTestRunComponents(Integer testRunId) throws Exception;
 
-	UtestSearchResult findTestRunTestCases(UtestSearch search) throws Exception;
+	UtestSearchResult findTestRunTestCases(UtestSearch search, Integer includedEnvironmentId_) throws Exception;
 
 	TestRunResult finishExecutingAssignedTestCaseWithInvalidation(Integer testRunResultId, String comment, Integer originalVersionId) throws Exception;
 

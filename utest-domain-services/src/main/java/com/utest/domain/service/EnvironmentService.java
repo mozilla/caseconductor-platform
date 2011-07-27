@@ -159,4 +159,8 @@ public interface EnvironmentService
 
 	List<EnvironmentGroupExploded> getEnvironmentGroupsForProfileExploded(Integer environmentProfileId) throws Exception;
 
+	List<Integer> getProfilesContainingEnvironment(Integer environmentId) throws Exception;
+
+	List<Integer> getGroupsContainingEnvironment(Integer environmentId) throws Exception;
+
 }

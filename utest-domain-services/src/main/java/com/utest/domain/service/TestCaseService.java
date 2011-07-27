@@ -55,7 +55,7 @@ public interface TestCaseService
 
 	TestCaseVersion getTestCaseVersion(Integer testCaseVersionId_) throws Exception;
 
-	UtestSearchResult findTestCaseVersions(UtestSearch search_, Integer includedInTestSuiteId_) throws Exception;
+	UtestSearchResult findTestCaseVersions(UtestSearch search_, Integer includedInTestSuiteId_, Integer includedEnvironmentId_) throws Exception;
 
 	List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId_) throws Exception;
 
@@ -83,10 +83,6 @@ public interface TestCaseService
 	TestCaseVersion activateTestCaseVersion(Integer testCaseVersionId, Integer originalVersionId) throws Exception;
 
 	List<TestCaseStep> getTestCaseVersionSteps(Integer testCaseVersionId) throws Exception;
-
-	UtestSearchResult findLatestTestCaseVersions() throws Exception;
-
-	UtestSearchResult findLatestTestCaseVersions(UtestSearch search) throws Exception;
 
 	List<TestCaseVersion> getTestCaseVersions(Integer testCaseId) throws Exception;
 
@@ -130,4 +126,8 @@ public interface TestCaseService
 	Attachment addAttachmentForTestCase(String name, String description, String url, Double size, Integer testCaseId, Integer attachmentTypeId) throws Exception;
 
 	boolean deleteAttachment(Integer attachmentId, Integer originalVersionId) throws Exception;
+
+	UtestSearchResult findLatestTestCaseVersions(UtestSearch search, Integer includedInTestSuiteId, Integer includedEnvironmentId) throws Exception;
+
+	UtestSearchResult findLatestTestCaseVersions(Integer includedInTestSuiteId, Integer includedEnvironmentId) throws Exception;
 }

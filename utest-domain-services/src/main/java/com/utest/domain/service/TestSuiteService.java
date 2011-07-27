@@ -41,7 +41,7 @@ public interface TestSuiteService
 
 	TestSuite getTestSuite(Integer testSuiteId_) throws Exception;
 
-	UtestSearchResult findTestSuites(UtestSearch search_, Integer includedInTestRunId_, Integer includedTestCaseId, Integer includedTestCaseVersionId) throws Exception;
+	UtestSearchResult findTestSuites(UtestSearch search_, Integer includedInTestRunId_, Integer includedTestCaseId, Integer includedTestCaseVersionId, Integer includedEnvironmentId_) throws Exception;
 
 	void deleteTestSuiteTestCase(Integer testSuiteTestCaseId_, Integer originalVersionId) throws Exception;
 
@@ -70,7 +70,7 @@ public interface TestSuiteService
 
 	TestSuite cloneTestSuite(Integer fromTestSuiteId) throws Exception;
 
-	UtestSearchResult findTestSuiteTestCases(UtestSearch search) throws Exception;
+	UtestSearchResult findTestSuiteTestCases(UtestSearch search, Integer includedEnvironmentId_) throws Exception;
 
 	List<TestSuiteTestCaseView> getTestSuiteTestCasesViews(Integer testSuiteId) throws Exception;
 

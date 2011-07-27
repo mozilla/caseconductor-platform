@@ -181,11 +181,11 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.PRODUCT_VIEW)
-	public ProductSearchResultInfo findProducts(@Context final UriInfo ui_, @QueryParam("teamMemberId") final Integer teamMemberId, @QueryParam("") final UtestSearchRequest request)
-			throws Exception
+	public ProductSearchResultInfo findProducts(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+			@QueryParam("teamMemberId") final Integer teamMemberId, @QueryParam("") final UtestSearchRequest request) throws Exception
 	{
 		UtestSearch search = objectBuilderFactory.createSearch(ProductInfo.class, request, ui_);
-		UtestSearchResult result = productService.findProducts(search, teamMemberId);
+		UtestSearchResult result = productService.findProducts(search, teamMemberId, includedEnvironmentId_);
 		return (ProductSearchResultInfo) objectBuilderFactory.createResult(ProductInfo.class, Product.class, request, result, ui_.getBaseUriBuilder());
 	}
 

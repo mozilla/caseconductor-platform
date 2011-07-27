@@ -83,6 +83,6 @@ public interface ProductWebService
 
 	Boolean deleteAttachment(UriInfo ui, Integer productId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	ProductSearchResultInfo findProducts(UriInfo ui, Integer teamMemberId, UtestSearchRequest request) throws Exception;
+	ProductSearchResultInfo findProducts(UriInfo ui, Integer includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
 
 }

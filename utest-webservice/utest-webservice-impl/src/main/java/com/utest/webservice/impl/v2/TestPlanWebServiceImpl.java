@@ -305,10 +305,11 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	/**
 	 * Returns latest versions of test cases by default
 	 */
-	public TestPlanSearchResultInfo findTestPlans(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public TestPlanSearchResultInfo findTestPlans(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestPlanInfo.class, request_, ui_);
-		final UtestSearchResult result = testPlanService.findTestPlans(search);
+		final UtestSearchResult result = testPlanService.findTestPlans(search, includedEnvironmentId_);
 
 		return (TestPlanSearchResultInfo) objectBuilderFactory.createResult(TestPlanInfo.class, TestPlan.class, request_, result, ui_.getBaseUriBuilder());
 	}

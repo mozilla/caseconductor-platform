@@ -43,8 +43,6 @@ public interface TestPlanWebService
 
 	TestPlanInfo getTestPlan(UriInfo ui, Integer testPlanId) throws Exception;
 
-	TestPlanSearchResultInfo findTestPlans(UriInfo ui, UtestSearchRequest request) throws Exception;
-
 	TestPlanInfo activateTestPlan(UriInfo ui, Integer testPlanId, Integer originalVesionId) throws Exception;
 
 	TestPlanInfo deactivateTestPlan(UriInfo ui, Integer testPlanId, Integer originalVesionId) throws Exception;
@@ -70,5 +68,7 @@ public interface TestPlanWebService
 	AttachmentInfo createAttachment(UriInfo ui, Integer testPlanId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 
 	Boolean deleteAttachment(UriInfo ui, Integer testPlanId, Integer attachmentId, Integer originalVersionId) throws Exception;
+
+	TestPlanSearchResultInfo findTestPlans(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
 }
