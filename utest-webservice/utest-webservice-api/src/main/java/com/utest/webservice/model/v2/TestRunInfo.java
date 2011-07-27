@@ -65,6 +65,8 @@ public class TestRunInfo extends BaseInfo
 	private String			useLatestVersions;
 	@XmlElement(required = false)
 	private String			autoAssignToTeam;
+	@XmlElement(required = false)
+	private String			featured;
 
 	public TestRunInfo()
 	{
@@ -232,6 +234,16 @@ public class TestRunInfo extends BaseInfo
 	public String getAutoAssignToTeam()
 	{
 		return autoAssignToTeam;
+	}
+
+	public void setFeatured(String featured)
+	{
+		this.featured = featured;
+	}
+
+	public String getFeatured()
+	{
+		return featured;
 	}
 
 }

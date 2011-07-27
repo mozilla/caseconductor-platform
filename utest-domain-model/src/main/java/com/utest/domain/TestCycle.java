@@ -38,6 +38,7 @@ public class TestCycle extends TimelineEntity implements ProductDependable, Envi
 	private Date	endDate;
 	private boolean	communityAuthoringAllowed;
 	private boolean	communityAccessAllowed;
+	private boolean	featured;
 	private Integer	environmentProfileId;
 	private Integer	teamId;
 
@@ -154,6 +155,16 @@ public class TestCycle extends TimelineEntity implements ProductDependable, Envi
 	public Integer getTeamId()
 	{
 		return teamId;
+	}
+
+	public void setFeatured(boolean featured)
+	{
+		this.featured = featured;
+	}
+
+	public boolean isFeatured()
+	{
+		return featured;
 	}
 
 }

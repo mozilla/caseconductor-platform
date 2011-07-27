@@ -126,6 +126,34 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	}
 
 	@PUT
+	@Path("/{id}/feature_begin/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.FEATURED_LIST_EDIT })
+	public TestRunInfo featureTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @FormParam("originalVersionId") final Integer originalVersionId_)
+			throws Exception
+	{
+
+		final TestRun testRun = testRunService.featureTestRun(testRunId_, originalVersionId_);
+		return objectBuilderFactory.toInfo(TestRunInfo.class, testRun, ui_.getBaseUriBuilder());
+	}
+
+	@PUT
+	@Path("/{id}/feature_end/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.FEATURED_LIST_EDIT })
+	public TestRunInfo unfeatureTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @FormParam("originalVersionId") final Integer originalVersionId_)
+			throws Exception
+	{
+
+		final TestRun testRun = testRunService.featureTestRun(testRunId_, originalVersionId_);
+		return objectBuilderFactory.toInfo(TestRunInfo.class, testRun, ui_.getBaseUriBuilder());
+	}
+
+	@PUT
 	@Path("/{id}/approveallresults/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

@@ -54,7 +54,8 @@ public interface TestRunService
 
 	void deleteTestRunTestCase(Integer testRunTestCaseId, final Integer originalVersionId_) throws Exception;
 
-	UtestSearchResult findTestRuns(UtestSearch search, Integer includedTestSuiteId_, Integer includedTestCaseId_, Integer includedTestCaseVersionId_, Integer teamMemberId_, Integer includedEnvironmentId_) throws Exception;
+	UtestSearchResult findTestRuns(UtestSearch search, Integer includedTestSuiteId_, Integer includedTestCaseId_, Integer includedTestCaseVersionId_, Integer teamMemberId_,
+			Integer includedEnvironmentId_) throws Exception;
 
 	TestRun getTestRun(Integer testRunId) throws Exception;
 
@@ -194,4 +195,8 @@ public interface TestRunService
 	boolean deleteAttachmentForTestRun(Integer attachmentId, Integer entityId) throws Exception;
 
 	boolean deleteAttachmentForTestRunResult(Integer attachmentId, Integer entityId) throws Exception;
+
+	TestRun featureTestRun(Integer testRunId, Integer originalVersionId) throws Exception;
+
+	TestRun unfeatureTestRun(Integer testRunId, Integer originalVersionId) throws Exception;
 }

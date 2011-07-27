@@ -1544,6 +1544,33 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		}
 	}
 
+	@Override
+	public TestRun featureTestRun(final Integer testRunId_, final Integer originalVersionId_) throws Exception
+	{
+		return updateFeaturedStatus(testRunId_, true, originalVersionId_);
+	}
+
+	@Override
+	public TestRun unfeatureTestRun(final Integer testRunId_, final Integer originalVersionId_) throws Exception
+	{
+		return updateFeaturedStatus(testRunId_, false, originalVersionId_);
+	}
+
+	private TestRun updateFeaturedStatus(final Integer testRunId_, final boolean featured_, final Integer originalVersionId_) throws Exception
+	{
+		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
+		if (featured_ != testRun.isFeatured())
+		{
+			testRun.setVersion(originalVersionId_);
+			testRun.setFeatured(featured_);
+			return dao.merge(testRun);
+		}
+		else
+		{
+			return testRun;
+		}
+	}
+
 	private TestRunResult updateApprovalStatus(final Integer testRunResultId_, final String comment_, final Integer approvalStatus_, final Integer originalVersionId_)
 			throws Exception
 	{

@@ -25,6 +25,9 @@ public class Permission extends Entity implements Named
 {
 	// TODO - define permissions to modify roles and assign permissions to roles
 	// TODO - define super admin permissions and company level admin permissions
+	public static final String	FEATURED_LIST_EDIT				= "PERMISSION_FEATURED_LIST_EDIT";
+	public static final String	EXTERNAL_BUG_VIEW				= "PERMISSION_EXTERNAL_BUG_VIEW";
+	public static final String	EXTERNAL_BUG_EDIT				= "PERMISSION_EXTERNAL_BUG_EDIT";
 	public static final String	ATTACHMENT_VIEW					= "PERMISSION_ATTACHMENT_VIEW";
 	public static final String	ATTACHMENT_ADD					= "PERMISSION_ATTACHMENT_ADD";
 	public static final String	ATTACHMENT_EDIT					= "PERMISSION_ATTACHMENT_EDIT";

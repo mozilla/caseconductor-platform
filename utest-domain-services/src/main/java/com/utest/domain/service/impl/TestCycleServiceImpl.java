@@ -403,6 +403,33 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	}
 
 	@Override
+	public TestCycle featureTestCycle(final Integer testCycleId_, final Integer originalVersionId_) throws Exception
+	{
+		return updateFeaturedStatus(testCycleId_, true, originalVersionId_);
+	}
+
+	@Override
+	public TestCycle unfeatureTestCycle(final Integer testCycleId_, final Integer originalVersionId_) throws Exception
+	{
+		return updateFeaturedStatus(testCycleId_, false, originalVersionId_);
+	}
+
+	private TestCycle updateFeaturedStatus(final Integer testCycleId_, final boolean featured_, final Integer originalVersionId_) throws Exception
+	{
+		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
+		if (featured_ != testCycle.isFeatured())
+		{
+			testCycle.setVersion(originalVersionId_);
+			testCycle.setFeatured(featured_);
+			return dao.merge(testCycle);
+		}
+		else
+		{
+			return testCycle;
+		}
+	}
+
+	@Override
 	public Attachment addAttachmentForTestCycle(final String name, final String description, final String url, final Double size, final Integer testCycleId,
 			final Integer attachmentTypeId) throws Exception
 	{

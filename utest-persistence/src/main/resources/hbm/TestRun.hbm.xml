@@ -37,6 +37,9 @@
         <property name="endDate" type="timestamp">
             <column name="endDate" length="19" />
         </property>
+		<property name="featured" type="boolean">
+			<column name="featured" />
+		</property>
         <property name="useLatestVersions" type="boolean">
             <column name="useLatestVersions" not-null="true" />
         </property>

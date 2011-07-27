@@ -82,4 +82,8 @@ public interface TestCycleWebService
 	Boolean deleteAttachment(UriInfo ui, Integer testCycleId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
 	TestCycleSearchResultInfo findTestCycles(UriInfo ui, Integer includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
+
+	TestCycleInfo featureTestCycle(UriInfo ui, Integer testCycleId, Integer originalVersionId) throws Exception;
+
+	TestCycleInfo unfeatureTestCycle(UriInfo ui, Integer testCycleId, Integer originalVersionId) throws Exception;
 }

@@ -171,4 +171,8 @@ public interface TestRunWebService
 
 	TestRunTestCaseSearchResultInfo findTestRunTestCases(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
+	TestRunInfo featureTestRun(UriInfo ui, Integer testRunId, Integer originalVersionId) throws Exception;
+
+	TestRunInfo unfeatureTestRun(UriInfo ui, Integer testRunId, Integer originalVersionId) throws Exception;
+
 }

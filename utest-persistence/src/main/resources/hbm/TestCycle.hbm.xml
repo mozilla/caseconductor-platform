@@ -18,6 +18,9 @@
 		<property name="productId" type="java.lang.Integer">
 			<column name="productId" />
 		</property>
+		<property name="featured" type="boolean">
+			<column name="featured" />
+		</property>
 		<property name="communityAuthoringAllowed" type="boolean">
 			<column name="communityAuthoringAllowed" />
 		</property>

@@ -37,6 +37,7 @@ public class TestRun extends TimelineEntity implements ProductDependable, Enviro
 	private Integer	companyId;
 	private Date	startDate;
 	private Date	endDate;
+	private boolean	featured;
 	private boolean	useLatestVersions;
 	private boolean	autoAssignToTeam;
 	private boolean	selfAssignAllowed;
@@ -167,6 +168,16 @@ public class TestRun extends TimelineEntity implements ProductDependable, Enviro
 	public void setSelfAssignAllowed(final boolean selfAssignAllowed)
 	{
 		this.selfAssignAllowed = selfAssignAllowed;
+	}
+
+	public void setFeatured(boolean featured)
+	{
+		this.featured = featured;
+	}
+
+	public boolean isFeatured()
+	{
+		return featured;
 	}
 
 	public Integer getEnvironmentProfileId()

@@ -148,6 +148,34 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	}
 
 	@PUT
+	@Path("/{id}/feature_begin/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.FEATURED_LIST_EDIT })
+	public TestCycleInfo featureTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("originalVersionId") final Integer originalVersionId_)
+			throws Exception
+	{
+
+		final TestCycle testCycle = testCycleService.featureTestCycle(testCycleId_, originalVersionId_);
+		return objectBuilderFactory.toInfo(TestCycleInfo.class, testCycle, ui_.getBaseUriBuilder());
+	}
+
+	@PUT
+	@Path("/{id}/feature_end/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.FEATURED_LIST_EDIT })
+	public TestCycleInfo unfeatureTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_,
+			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
+	{
+
+		final TestCycle testCycle = testCycleService.featureTestCycle(testCycleId_, originalVersionId_);
+		return objectBuilderFactory.toInfo(TestCycleInfo.class, testCycle, ui_.getBaseUriBuilder());
+	}
+
+	@PUT
 	@Path("/{id}/environmentgroups/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })

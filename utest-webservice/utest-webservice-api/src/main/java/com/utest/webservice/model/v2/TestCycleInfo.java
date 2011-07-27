@@ -54,6 +54,8 @@ public class TestCycleInfo extends BaseInfo
 	private String			communityAuthoringAllowed;
 	@XmlElement(required = false)
 	private String			communityAccessAllowed;
+	@XmlElement(required = false)
+	private String			featured;
 
 	public TestCycleInfo()
 	{
@@ -171,6 +173,16 @@ public class TestCycleInfo extends BaseInfo
 	public void setCommunityAccessAllowed(String communityAccessAllowed)
 	{
 		this.communityAccessAllowed = communityAccessAllowed;
+	}
+
+	public void setFeatured(String featured)
+	{
+		this.featured = featured;
+	}
+
+	public String getFeatured()
+	{
+		return featured;
 	}
 
 }
