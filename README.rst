@@ -1,16 +1,18 @@
-uTest TCM Platform
-==================
+Case Conductor Platform
+=======================
 
 Documentation of setup (Tested on Ubuntu 10.10 desktop, 10.04 server, and Mac
 OS X).
 
-  * Build: Get Java and Maven installed and build the tcmplatform source
-  * Run: Setup JBoss, and copy the tcmplatform .war file to the right place
+  * Build: Get Java and Maven installed and build the caseconductor-platform
+    source
+  * Run: Setup JBoss, and copy the caseconductor-platform .war file to the
+    right place
   * Cheats: .bashrc settings to make re-building and running easier once
-             you're already setup
+    you're already setup
 
-Assumes that $TCMPLATFORM is the root directory of the checked-out tcmplatform
-repo (see Cheats section).
+Assumes that $CCPLATFORM is the root directory of the checked-out
+caseconductor-platform repo (see Cheats section).
 
 Build
 -----
@@ -22,7 +24,7 @@ First make sure we've got a JDK and Maven both available. On Ubuntu::
 On OS X, follow http://maven.apache.org/download.html. You may need to add
 something like this to your .bashrc::
 
-    export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home"
+    $ export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home"
 
 Note that if built with Maven 3, the platform will fail to start in the
 supported version of jBoss (5.1.0) due to a bug related to loading of XML
@@ -30,7 +32,7 @@ parsers. Maven 2 must be used instead.
 
 Now build the project::
 
-    $ cd $TCMPLATFORM; mvn clean install
+    $ cd $CCPLATFORM; mvn clean install
 
 This should generate the file ``utest-portal-webapp/target/tcm.war``. In the
 next step, we'll install this into jBoss.
@@ -46,12 +48,12 @@ Download and unzip jBoss 5.1::
 
 Copy the .war file in::
 
-    $ cp $TCMPLATFORM/utest-portal-webapp/target/tcm.war jboss-5.1.0.GA/server/default/deploy/
+    $ cp $CCPLATFORM/utest-portal-webapp/target/tcm.war jboss-5.1.0.GA/server/default/deploy/
 
 Add the MySQL connector jar and the datasource configuration into jBoss::
 
-    $ cp $TCMPLATFORM/deploy-config/mysql-connector-java-5.1.12.jar jboss-5.1.0.GA/server/default/lib/
-    $ cp $TCMPLATFORM/deploy-config/utest-ds.xml jboss-5.1.0.GA/server/default/deploy/
+    $ cp $CCPLATFORM/deploy-config/mysql-connector-java-5.1.12.jar jboss-5.1.0.GA/server/default/lib/
+    $ cp $CCPLATFORM/deploy-config/utest-ds.xml jboss-5.1.0.GA/server/default/deploy/
 
 Edit the copied utest-ds.xml file (the one under
 ``jboss-5.1.0.GA/server/default/deploy/utest-ds.xml``) to set the name of your
@@ -65,11 +67,11 @@ Create your MySQL database schema (if you are using a MySQL user other than
 root, you will probably need to comment out the ``GRANT ALL PRIVILEGES`` line
 near the top of this SQL script)::
 
-    $ mysql -uroot < $TCMPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_create_empty_db_script.sql
+    $ mysql -uroot < $CCPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_create_empty_db_script.sql
 
 You'll need to also execute each database update script in that same directory, in order. For example::
 
-    $ mysql -uroot < $TCMPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_update_db_script_1.sql
+    $ mysql -uroot < $CCPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_update_db_script_1.sql
 
 The shell script ``reset-mysql.sh`` automates setting up the initial schema and
 running all update scripts. (You may need to modify this script if using a
@@ -93,15 +95,15 @@ Future Updates
 
 If you ``git pull`` future updates to the platform code, you'll need to rebuild it::
 
-    $ cd $TCMPLATFORM; mvn clean install
+    $ cd $CCPLATFORM; mvn clean install
 
 And copy the built .war file into your jBoss installation::
 
-    $ cp $TCMPLATFORM/utest-portal-webapp/target/tcm.war jboss-5.1.0.GA/server/default/deploy/
+    $ cp $CCPLATFORM/utest-portal-webapp/target/tcm.war jboss-5.1.0.GA/server/default/deploy/
 
 If any new database update scripts were included in the platform update, you'll need to run them::
 
-    $ mysql -uroot < $TCMPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_update_db_script_29.sql
+    $ mysql -uroot < $CCPLATFORM/utest-persistence/src/main/resources/db_scripts/db_tcm_update_db_script_29.sql
 
 Alternatively, you can just run ``reset-mysql.sh`` again, if you don't mind
 losing any data in your local database and starting over with a fresh database.
@@ -113,20 +115,20 @@ Cheats
 You can add these lines to your .bashrc to make updating and running a tad
 easier.  Please modify the environment variables to match your system config::
 
-    export TCMPLATFORM=$HOME/gitspace/tcmplatform
+    export CCPLATFORM=$HOME/gitspace/caseconductor-platform
     export M2_HOME=/usr/local/apache-maven/apache-maven-2.2.1
     export M2=$M2_HOME/bin
     export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home
     export JBOSS_HOME=$HOME/CodeLibraries/jboss-5.1.0.GA
     export PATH=$M2:$PATH
 
-    # TCM
-    function tcmupdate() {
-        cd $TCMPLATFORM
+    # Case Conductor
+    function ccupdate() {
+        cd $CCPLATFORM
         mvn clean install
-        cp $TCMPLATFORM/utest-portal-webapp/target/tcm.war $JBOSS_HOME/server/default/deploy/
+        cp $CCPLATFORM/utest-portal-webapp/target/tcm.war $JBOSS_HOME/server/default/deploy/
         echo "DONE: tcm.war copied to JBoss"; echo
     }
-    function tcmrun() {
+    function ccrun() {
         $JBOSS_HOME/bin/run.sh
     }
