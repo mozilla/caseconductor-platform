@@ -17,6 +17,9 @@ caseconductor-platform repo (see Cheats section).
 Build
 -----
 
+If you have a pre-built WAR file (the Case Conductor UI repo provides one),
+you can skip this build step and go straight to the `Run` step.
+
 First make sure we've got a JDK and Maven both available. On Ubuntu::
 
     $ sudo aptitude install maven2 openjdk-6-jdk
@@ -46,7 +49,8 @@ Download and unzip jBoss 5.1::
     $ wget -O jboss-5.1.0.GA.zip http://sourceforge.net/projects/jboss/files/JBoss/JBoss-5.1.0.GA/jboss-5.1.0.GA.zip/download
     $ unzip jboss-5.1.GA.zip
 
-Copy the .war file in::
+Copy the .war file in (source location will differ if you didn't built it
+yourself but are using a pre-built .war)::
 
     $ cp $CCPLATFORM/utest-portal-webapp/target/tcm.war jboss-5.1.0.GA/server/default/deploy/
 
