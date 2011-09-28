@@ -1,4 +1,3 @@
-=================
 Case Conductor is a Test Case Management system.
 Copyright (C) 2011 uTest Inc.
 
