@@ -1642,7 +1642,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		}
 		// update team profile
 		Team team = null;
-		if ((testCycle.getTeamId() != null && testCycle.getTeamId() == testRun.getTeamId()) || testRun.getTeamId() == null)
+		if ((testCycle.getTeamId() != null && testCycle.getTeamId().equals(testRun.getTeamId())) || testRun.getTeamId() == null)
 		{
 			team = teamService.addTeam(product.getCompanyId(), "Created for test run : " + testRunId_, "Included users: " + userIds_.toString());
 			teamService.saveTeamUsers(team.getId(), userIds_, team.getVersion());

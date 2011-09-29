@@ -158,7 +158,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 		}
 		// update team profile
 		Team team = null;
-		if ((product.getTeamId() != null && product.getTeamId() == testCycle.getTeamId()) || testCycle.getTeamId() == null)
+		if ((product.getTeamId() != null && product.getTeamId().equals(testCycle.getTeamId())) || testCycle.getTeamId() == null)
 		{
 			team = teamService.addTeam(product.getCompanyId(), "Created for test cycle : " + testCycleId_, "Included users: " + userIds_.toString());
 			teamService.saveTeamUsers(team.getId(), userIds_, team.getVersion());
