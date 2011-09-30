@@ -381,7 +381,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public UtestSearchResult findTestCaseVersions(final UtestSearch search_, Integer includedInTestSuiteId_, Integer includedEnvironmentId_) throws Exception
+	public UtestSearchResult findTestCaseVersions(final UtestSearch search_, Integer includedInTestSuiteId_, Integer includedEnvironmentId_, String tag_) throws Exception
 	{
 		if (includedEnvironmentId_ != null)
 		{
@@ -404,6 +404,31 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			if (testCaseIdList != null && !testCaseIdList.isEmpty())
 			{
 				search_.addFilterIn("id", testCaseIdList);
+			}
+			else
+			{
+				return new UtestSearchResult();
+			}
+		}
+		if (tag_ != null)
+		{
+			Search search = new Search(Tag.class);
+			search.addFilterEqual("name", tag_);
+			Tag tag = (Tag) dao.searchUnique(Tag.class, search);
+			if (tag != null)
+			{
+				search = new Search(TestCaseTag.class);
+				search.addField("testCaseVersionId");
+				search.addFilterEqual("tagId", tag.getId());
+				final List<?> testCaseIdList = dao.search(TestCaseTag.class, search);
+				if (testCaseIdList != null && !testCaseIdList.isEmpty())
+				{
+					search_.addFilterIn("id", testCaseIdList);
+				}
+				else
+				{
+					return new UtestSearchResult();
+				}
 			}
 			else
 			{
@@ -454,14 +479,14 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public UtestSearchResult findLatestTestCaseVersions(Integer includedInTestSuiteId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final UtestSearch search = new UtestSearch();
-		return findLatestTestCaseVersions(search, includedInTestSuiteId_, includedEnvironmentId_);
+		return findLatestTestCaseVersions(search, includedInTestSuiteId_, includedEnvironmentId_, null);
 	}
 
 	@Override
-	public UtestSearchResult findLatestTestCaseVersions(final UtestSearch search_, Integer includedInTestSuiteId_, Integer includedEnvironmentId_) throws Exception
+	public UtestSearchResult findLatestTestCaseVersions(final UtestSearch search_, Integer includedInTestSuiteId_, Integer includedEnvironmentId_, String tag_) throws Exception
 	{
 		search_.addFilterEqual("latestVersion", true);
-		return findTestCaseVersions(search_, includedInTestSuiteId_, includedEnvironmentId_);
+		return findTestCaseVersions(search_, includedInTestSuiteId_, includedEnvironmentId_, tag_);
 	}
 
 	@Override

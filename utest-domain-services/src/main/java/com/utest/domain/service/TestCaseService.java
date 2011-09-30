@@ -56,7 +56,7 @@ public interface TestCaseService
 
 	TestCaseVersion getTestCaseVersion(Integer testCaseVersionId_) throws Exception;
 
-	UtestSearchResult findTestCaseVersions(UtestSearch search_, Integer includedInTestSuiteId_, Integer includedEnvironmentId_) throws Exception;
+	UtestSearchResult findTestCaseVersions(UtestSearch search_, Integer includedInTestSuiteId_, Integer includedEnvironmentId_, String tag_) throws Exception;
 
 	List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId_) throws Exception;
 
@@ -128,7 +128,7 @@ public interface TestCaseService
 
 	boolean deleteAttachment(Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	UtestSearchResult findLatestTestCaseVersions(UtestSearch search, Integer includedInTestSuiteId, Integer includedEnvironmentId) throws Exception;
+	UtestSearchResult findLatestTestCaseVersions(UtestSearch search, Integer includedInTestSuiteId, Integer includedEnvironmentId, String tag_) throws Exception;
 
 	UtestSearchResult findLatestTestCaseVersions(Integer includedInTestSuiteId, Integer includedEnvironmentId) throws Exception;
 

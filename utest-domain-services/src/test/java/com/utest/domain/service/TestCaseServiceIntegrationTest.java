@@ -119,7 +119,7 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		search.addFilterEqual("name", "test case 2");
 		// test case version field
 		search.addFilterEqual("description", "test case 2");
-		UtestSearchResult result = testCaseService.findTestCaseVersions(search, null, null);
+		UtestSearchResult result = testCaseService.findTestCaseVersions(search, null, null, null);
 		Assert.assertTrue(result.getResults() != null);
 
 	}

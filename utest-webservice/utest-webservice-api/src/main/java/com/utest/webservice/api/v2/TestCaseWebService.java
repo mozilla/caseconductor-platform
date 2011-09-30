@@ -108,11 +108,12 @@ public interface TestCaseWebService
 
 	Boolean deleteAttachment(UriInfo ui, Integer testCaseId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	TestCaseVersionSearchResultInfo findTestCaseVersions(UriInfo ui, Integer includedEnvironmentId, Integer includedInTestSuiteId, UtestSearchRequest request) throws Exception;
-
-	TestCaseVersionSearchResultInfo findLatestTestCaseVersions(UriInfo ui, Integer includedEnvironmentId, Integer includedInTestSuiteId, UtestSearchRequest request)
+	TestCaseVersionSearchResultInfo findLatestTestCaseVersions(UriInfo ui, Integer includedEnvironmentId, Integer includedInTestSuiteId, String tag, UtestSearchRequest request)
 			throws Exception;
 
 	List<EntityExternalBugInfo> getTestCaseBugs(UriInfo ui, Integer testCaseId) throws Exception;
+
+	TestCaseVersionSearchResultInfo findTestCaseVersions(UriInfo ui, Integer includedEnvironmentId, Integer includedInTestSuiteId, String tag, UtestSearchRequest request)
+			throws Exception;
 
 }
