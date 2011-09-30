@@ -244,20 +244,20 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	}
 
 	@GET
-	@Path("/{id}/attachments/")
+	@Path("/versions/{id}/attachments/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CASE_VIEW)
 	public List<AttachmentInfo> getTestCaseAttachments(@Context UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
 	{
-		final List<Attachment> attachments = testCaseService.getAttachmentsForTestCase(testCaseId_);
+		final List<Attachment> attachments = testCaseService.getAttachmentsForTestCaseVersion(testCaseId_);
 		final List<AttachmentInfo> attachmentsInfo = objectBuilderFactory.toInfo(AttachmentInfo.class, attachments, ui_.getBaseUriBuilder());
 		return attachmentsInfo;
 	}
 
 	@POST
-	@Path("/{id}/attachments/")
+	@Path("/versions/{id}/attachments/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -266,12 +266,12 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 			@FormParam("description") String description, @FormParam("url") String url, @FormParam("size") Double size, @FormParam("attachmentTypeId") Integer attachmentTypeId)
 			throws Exception
 	{
-		Attachment attachment = testCaseService.addAttachmentForTestCase(name, description, url, size, testCaseId, attachmentTypeId);
+		Attachment attachment = testCaseService.addAttachmentForTestCaseVersion(name, description, url, size, testCaseId, attachmentTypeId);
 		return objectBuilderFactory.toInfo(AttachmentInfo.class, attachment, ui.getBaseUriBuilder());
 	}
 
 	@DELETE
-	@Path("/{id}/attachments/{attachmentId}/")
+	@Path("/versions/{id}/attachments/{attachmentId}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override

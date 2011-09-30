@@ -560,24 +560,24 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public boolean deleteAttachment(final Integer attachmentId_, final Integer entityId_) throws Exception
 	{
-		final TestCase testCase = getRequiredEntityById(TestCase.class, entityId_);
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, entityId_);
 		// everyone has add test case permission by default, so need to check if
 		// user has permission to edit others test cases
-		checkEditPermission(testCase.getCreatedBy());
+		checkEditPermission(testCaseVersion.getCreatedBy());
 		return attachmentService.deleteAttachment(attachmentId_, entityId_, EntityType.TEST_CASE);
 	}
 
 	@Override
-	public Attachment addAttachmentForTestCase(final String name, final String description, final String url, final Double size, final Integer testCaseId,
+	public Attachment addAttachmentForTestCaseVersion(final String name, final String description, final String url, final Double size, final Integer testCaseVersionId,
 			final Integer attachmentTypeId) throws Exception
 	{
-		return attachmentService.addAttachment(name, description, url, size, EntityType.TEST_CASE, testCaseId, attachmentTypeId);
+		return attachmentService.addAttachment(name, description, url, size, EntityType.TEST_CASE, testCaseVersionId, attachmentTypeId);
 	}
 
 	@Override
-	public List<Attachment> getAttachmentsForTestCase(final Integer testCaseId_) throws Exception
+	public List<Attachment> getAttachmentsForTestCaseVersion(final Integer testCaseVersionId_) throws Exception
 	{
-		return attachmentService.getAttachmentsForEntity(testCaseId_, EntityType.TEST_CASE);
+		return attachmentService.getAttachmentsForEntity(testCaseVersionId_, EntityType.TEST_CASE);
 	}
 
 	@SuppressWarnings("unchecked")

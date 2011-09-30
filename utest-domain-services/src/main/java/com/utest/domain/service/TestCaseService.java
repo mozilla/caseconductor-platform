@@ -122,9 +122,9 @@ public interface TestCaseService
 
 	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCaseVersion(Integer testCaseVersionId) throws Exception;
 
-	List<Attachment> getAttachmentsForTestCase(Integer testCaseId) throws Exception;
+	List<Attachment> getAttachmentsForTestCaseVersion(Integer testCaseId) throws Exception;
 
-	Attachment addAttachmentForTestCase(String name, String description, String url, Double size, Integer testCaseId, Integer attachmentTypeId) throws Exception;
+	Attachment addAttachmentForTestCaseVersion(String name, String description, String url, Double size, Integer testCaseId, Integer attachmentTypeId) throws Exception;
 
 	boolean deleteAttachment(Integer attachmentId, Integer originalVersionId) throws Exception;
 
