@@ -631,11 +631,12 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		search.addFilterEqual("testCaseId", testCaseId_);
 		final List<?> tagIdList = dao.search(TestCaseTag.class, search);
 		search = new Search(Tag.class);
+		List<Tag> list = new ArrayList<Tag>();
 		if (tagIdList != null && !tagIdList.isEmpty())
 		{
 			search.addFilterIn("id", tagIdList);
+			list = dao.search(Tag.class, search);
 		}
-		final List<Tag> list = dao.search(Tag.class, search);
 		return list;
 	}
 
