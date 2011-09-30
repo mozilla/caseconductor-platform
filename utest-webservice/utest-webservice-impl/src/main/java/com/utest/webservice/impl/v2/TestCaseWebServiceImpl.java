@@ -593,7 +593,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	 */
 	public List<TestCaseVersionInfo> getTestCaseVersions(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
 	{
-		final List<TestCaseVersion> testCaseVersions = testCaseService.getTestCaseVersions(testCaseId_);
+		final List<TestCaseVersionView> testCaseVersions = testCaseService.getTestCaseVersionViews(testCaseId_);
 		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersions, ui_.getBaseUriBuilder());
 	}
 }
