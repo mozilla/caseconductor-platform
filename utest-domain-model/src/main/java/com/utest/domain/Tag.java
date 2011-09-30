@@ -29,31 +29,16 @@ public class Tag extends TimelineEntity implements CompanyDependable, Named
 {
 
 	private Integer	companyId;
-	private String	tag;
+	private String	name;
 
 	public Tag()
 	{
 	}
 
-	public Tag(Integer companyId, final String tag)
+	public Tag(Integer companyId, final String name)
 	{
 		this.companyId = companyId;
-		this.tag = tag;
-	}
-
-	public void setTag(String tag)
-	{
-		this.tag = tag;
-	}
-
-	public String getTag()
-	{
-		return tag;
-	}
-
-	public void setCompanyId(Integer companyId)
-	{
-		this.companyId = companyId;
+		this.name = name;
 	}
 
 	public Integer getCompanyId()
@@ -61,16 +46,19 @@ public class Tag extends TimelineEntity implements CompanyDependable, Named
 		return companyId;
 	}
 
-	@Override
+	public void setCompanyId(Integer companyId)
+	{
+		this.companyId = companyId;
+	}
+
 	public String getName()
 	{
-		return tag;
+		return name;
 	}
 
-	@Override
 	public void setName(String name)
 	{
-		tag = name;
-
+		this.name = name;
 	}
+
 }

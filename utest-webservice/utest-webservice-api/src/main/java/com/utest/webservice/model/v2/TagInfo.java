@@ -35,7 +35,7 @@ public class TagInfo extends BaseInfo
 	@XmlElement(type = ResourceLocator.class, name = "companyLocator")
 	private ResourceLocator	companyLocator;
 	@XmlElement(required = true)
-	private String			tag;
+	private String			name;
 
 	public Integer getCompanyId()
 	{
@@ -47,14 +47,14 @@ public class TagInfo extends BaseInfo
 		this.companyId = companyId;
 	}
 
-	public String getTag()
+	public String getName()
 	{
-		return tag;
+		return name;
 	}
 
-	public void setTag(String tag)
+	public void setName(String name)
 	{
-		this.tag = tag;
+		this.name = name;
 	}
 
 	public void setCompanyLocator(ResourceLocator companyLocator)

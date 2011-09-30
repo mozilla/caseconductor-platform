@@ -8,8 +8,8 @@
             <column name="testCaseTagId" />
             <generator class="identity" />
         </id>
-        <property name="testCaseId" type="java.lang.Integer">
-            <column name="testCaseId" not-null="true">
+        <property name="testCaseVersionId" type="java.lang.Integer">
+            <column name="testCaseVersionId" not-null="true">
                 <comment>Associated test case id.</comment>
             </column>
         </property>

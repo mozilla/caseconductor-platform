@@ -42,14 +42,12 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 	@Autowired
 	private UserService		userService;
 
-	// @Test(groups = { "integration" })
+	@Test(groups = { "integration" })
 	public void testAddTestCase() throws Exception
 	{
 		final User user = userService.getUser(1);
 		loginUser(user);
 		final Integer productId = 1;
-
-		// final Transaction tran = dao.getSession().beginTransaction();
 
 		final TestCase testCase11 = testCaseService.addTestCase(productId, 10, 5, "Test Case for product 1" + new Date().getTime(), "windows test calculator");
 		Assert.assertTrue(testCase11 != null);
@@ -66,9 +64,6 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 				2));
 
 		TestCaseVersion testCaseVersion = testCaseService.getTestCaseVersion(testCase11.getLatestVersion().getId());// testCase11.getLatestVersion().getId()
-
-		// tran.commit();
-
 		testCaseVersion = testCaseService.approveTestCaseVersion(testCaseVersion.getId(), testCaseVersion.getVersion());
 		testCaseVersion = testCaseService.activateTestCaseVersion(testCaseVersion.getId(), testCaseVersion.getVersion());
 

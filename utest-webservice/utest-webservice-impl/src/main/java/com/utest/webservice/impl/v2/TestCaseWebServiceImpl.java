@@ -283,7 +283,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	}
 
 	@GET
-	@Path("/{id}/tags/")
+	@Path("/versions/{id}/tags/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
@@ -291,22 +291,22 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	/**
 	 * Returns all tags of a test case
 	 */
-	public List<TagInfo> getTestCaseTags(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_) throws Exception
+	public List<TagInfo> getTestCaseVersionTags(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_) throws Exception
 	{
-		final List<Tag> tags = testCaseService.getTestCaseTags(testCaseId_);
+		final List<Tag> tags = testCaseService.getTestCaseVersionTags(testCaseVersionId_);
 		return objectBuilderFactory.toInfo(TagInfo.class, tags, ui_.getBaseUriBuilder());
 	}
 
 	@PUT
-	@Path("/{id}/tags/")
+	@Path("/versions/{id}/tags/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
-	public Boolean updateTestCaseTags(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_, @FormParam("tagIds") final ArrayList<Integer> tagIds_)
+	public Boolean updateTestCaseVersionTags(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_, @FormParam("tagIds") final ArrayList<Integer> tagIds_)
 			throws Exception
 	{
-		testCaseService.saveTagsForTestCase(testCaseId_, tagIds_, 0);
+		testCaseService.saveTagsForTestCaseVersion(testCaseVersionId_, tagIds_, 0);
 		return Boolean.TRUE;
 	}
 

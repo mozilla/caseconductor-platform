@@ -11,8 +11,8 @@
         <version name="version" type="java.lang.Integer">
             <column name="version" not-null="true" />
         </version>
-         <property name="tag" type="string">
-           <column name="tag" length="45" not-null="true">
+         <property name="name" type="string">
+           <column name="name" length="45" not-null="true">
                 <comment>Short text.</comment>
             </column>
         </property>

@@ -996,7 +996,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	public Tag saveTag(final Integer tagId_, String tag_, Integer originalVersionId_) throws Exception
 	{
 		final Tag tag = getRequiredEntityById(Tag.class, tagId_);
-		tag.setTag(tag_);
+		tag.setName(tag_);
 		tag.setVersion(originalVersionId_);
 		return dao.merge(tag);
 

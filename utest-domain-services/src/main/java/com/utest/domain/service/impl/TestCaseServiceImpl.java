@@ -130,23 +130,23 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public void addTestCaseTag(final Integer testCaseId_, final Integer tagId_) throws Exception
+	public void addTestCaseVersionTag(final Integer testCaseVersionId_, final Integer tagId_) throws Exception
 	{
-		final TestCase testCase = getRequiredEntityById(TestCase.class, testCaseId_);
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		final Tag tag = getRequiredEntityById(Tag.class, tagId_);
 		// check that Tag and TestCase from the same Company
-		Product product = getRequiredEntityById(Product.class, testCase.getProductId());
+		Product product = getRequiredEntityById(Product.class, testCaseVersion.getProductId());
 		List<CompanyDependable> entities = new ArrayList<CompanyDependable>();
 		entities.add(tag);
 		checkValidSelectionForCompany(product.getCompanyId(), entities);
 
 		final Search search = new Search(TestCaseTag.class);
-		search.addFilterEqual("testCaseId", testCaseId_);
+		search.addFilterEqual("testCaseVersionId", testCaseVersionId_);
 		search.addFilterEqual("tagId", tagId_);
 		TestCaseTag testCaseTag = (TestCaseTag) dao.searchUnique(TestCaseTag.class, search);
 		if (testCaseTag == null)
 		{
-			testCaseTag = new TestCaseTag(testCaseId_, tagId_);
+			testCaseTag = new TestCaseTag(testCaseVersionId_, tagId_);
 			dao.addAndReturnId(testCaseTag);
 		}
 	}
@@ -624,11 +624,11 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public List<Tag> getTestCaseTags(final Integer testCaseId_) throws Exception
+	public List<Tag> getTestCaseVersionTags(final Integer testCaseVersionId_) throws Exception
 	{
 		Search search = new Search(TestCaseTag.class);
 		search.addField("tagId");
-		search.addFilterEqual("testCaseId", testCaseId_);
+		search.addFilterEqual("testCaseVersionId", testCaseVersionId_);
 		final List<?> tagIdList = dao.search(TestCaseTag.class, search);
 		search = new Search(Tag.class);
 		List<Tag> list = new ArrayList<Tag>();
@@ -729,15 +729,15 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public void saveTagsForTestCase(final Integer testCaseId_, final List<Integer> tagIds_, final Integer originalVersionId_) throws Exception
+	public void saveTagsForTestCaseVersion(final Integer testCaseVersionId_, final List<Integer> tagIds_, final Integer originalVersionId_) throws Exception
 	{
-		final TestCase testCase = getRequiredEntityById(TestCase.class, testCaseId_);
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		// everyone has add test case permission by default, so need to check if
 		// user has permission to edit others test cases
-		checkEditPermission(testCase.getCreatedBy());
+		checkEditPermission(testCaseVersion.getCreatedBy());
 		// delete old tags before inserting new ones
 		Search search = new Search(TestCaseTag.class);
-		search.addFilterEqual("testCaseId", testCaseId_);
+		search.addFilterEqual("testCaseVersionId", testCaseVersionId_);
 		final List<TestCaseTag> foundTags = dao.search(TestCaseTag.class, search);
 		dao.delete(foundTags);
 		// insert new ones
@@ -745,7 +745,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		{
 			for (Integer tagId : tagIds_)
 			{
-				addTestCaseTag(testCaseId_, tagId);
+				addTestCaseVersionTag(testCaseVersionId_, tagId);
 			}
 		}
 	}

@@ -50,13 +50,13 @@ public interface TestCaseWebService
 
 	List<ProductComponentInfo> getTestCaseComponents(UriInfo ui, Integer testCaseId) throws Exception;
 
-	List<TagInfo> getTestCaseTags(UriInfo ui, Integer testCaseId) throws Exception;
+	List<TagInfo> getTestCaseVersionTags(UriInfo ui, Integer testCaseId) throws Exception;
 
 	TestCaseInfo getTestCase(UriInfo ui, Integer testCaseId) throws Exception;
 
 	TestCaseSearchResultInfo findTestCases(UriInfo ui, UtestSearchRequest request) throws Exception;
 
-	Boolean updateTestCaseTags(UriInfo ui, Integer testCaseId, ArrayList<Integer> tagIds) throws Exception;
+	Boolean updateTestCaseVersionTags(UriInfo ui, Integer testCaseId, ArrayList<Integer> tagIds) throws Exception;
 
 	TestCaseVersionInfo getTestCaseVersion(UriInfo ui, Integer testCaseVersionId) throws Exception;
 

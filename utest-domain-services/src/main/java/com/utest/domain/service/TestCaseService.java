@@ -87,7 +87,7 @@ public interface TestCaseService
 
 	List<TestCaseVersion> getTestCaseVersions(Integer testCaseId) throws Exception;
 
-	List<Tag> getTestCaseTags(Integer testCaseId) throws Exception;
+	List<Tag> getTestCaseVersionTags(Integer testCaseId) throws Exception;
 
 	TestCaseStep getTestCaseStep(Integer testCaseStepId) throws Exception;
 
@@ -97,9 +97,9 @@ public interface TestCaseService
 
 	void deleteTestCaseTag(Integer testCaseId, Integer tagId);
 
-	void addTestCaseTag(Integer testCaseId, Integer tagId) throws Exception;
+	void addTestCaseVersionTag(Integer testCaseId, Integer tagId) throws Exception;
 
-	void saveTagsForTestCase(Integer testCaseId, List<Integer> tagIds, Integer originalVersionId_) throws Exception;
+	void saveTagsForTestCaseVersion(Integer testCaseId, List<Integer> tagIds, Integer originalVersionId_) throws Exception;
 
 	void saveEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId, List<Integer> environmentGroupIds, Integer originalVersionId) throws ChangingActivatedEntityException,
 			UnsupportedEnvironmentSelectionException, Exception;
