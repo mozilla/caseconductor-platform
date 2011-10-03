@@ -26,14 +26,15 @@ package com.utest.domain;
  */
 public class TestCase extends TimelineEntity implements ProductDependable, Named
 {
+	public final static Integer	DEFAULT_STEP_ESTIMATED_TIME_IN_MIN	= new Integer(5);
 
-	private String			name;
-	private Integer			companyId;
-	private Integer			productId;
-	private Integer			maxAttachmentSizeInMbytes;
-	private Integer			maxNumberOfAttachments;
-	private Integer			testCycleId;
-	private TestCaseVersion	latestVersion;
+	private String				name;
+	private Integer				companyId;
+	private Integer				productId;
+	private Integer				maxAttachmentSizeInMbytes;
+	private Integer				maxNumberOfAttachments;
+	private Integer				testCycleId;
+	private TestCaseVersion		latestVersion;
 
 	public TestCase()
 	{

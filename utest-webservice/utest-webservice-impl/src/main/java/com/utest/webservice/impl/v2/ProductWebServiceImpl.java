@@ -19,6 +19,9 @@
  */
 package com.utest.webservice.impl.v2;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +39,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.cxf.helpers.IOUtils;
+import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import org.springframework.security.access.annotation.Secured;
 
 import com.utest.domain.AccessRole;
@@ -49,6 +54,7 @@ import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.ProductService;
+import com.utest.domain.service.TestCaseService;
 import com.utest.webservice.api.v2.ProductWebService;
 import com.utest.webservice.builders.ObjectBuilderFactory;
 import com.utest.webservice.model.v2.AttachmentInfo;
@@ -66,11 +72,13 @@ import com.utest.webservice.model.v2.UtestSearchRequest;
 public class ProductWebServiceImpl extends BaseWebServiceImpl implements ProductWebService
 {
 	private final ProductService	productService;
+	private final TestCaseService	testCaseService;
 
-	public ProductWebServiceImpl(ObjectBuilderFactory objectBuildFactory, ProductService productService)
+	public ProductWebServiceImpl(ObjectBuilderFactory objectBuildFactory, ProductService productService, TestCaseService testCaseService)
 	{
 		super(objectBuildFactory);
 		this.productService = productService;
+		this.testCaseService = testCaseService;
 	}
 
 	@POST
@@ -385,4 +393,20 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 		return environmentGroupsInfo;
 	}
 
+	@Override
+	@Secured(Permission.TEST_CASE_EDIT)
+	@POST
+	@Path("/{id}/import_testcases/")
+	public Boolean importTestCasesForProduct(MultipartBody body_, @PathParam("id") final Integer productId_) throws Exception
+	{
+		List<org.apache.cxf.jaxrs.ext.multipart.Attachment> attachments = body_.getAllAttachments();
+		javax.activation.DataHandler dataHandler = attachments.get(0).getDataHandler();
+		InputStream inputStream = dataHandler.getInputStream();
+		OutputStream outputStream = new ByteArrayOutputStream();
+		IOUtils.copy(inputStream, outputStream);
+		inputStream.close();
+		outputStream.close();
+		testCaseService.importTestCasesFromCsv(outputStream.toString(), productId_);
+		return Boolean.TRUE;
+	}
 }

@@ -99,5 +99,9 @@
 				<groupId>commons-discovery</groupId>
 				<artifactId>commons-discovery</artifactId>
 			</dependency>
+		<dependency>
+		    <groupId>net.sf.opencsv</groupId>
+		    <artifactId>opencsv</artifactId>
+		</dependency>
 	</dependencies>
 </project>

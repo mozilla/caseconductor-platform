@@ -24,6 +24,8 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
+
 import com.utest.webservice.model.v2.AttachmentInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
@@ -84,5 +86,7 @@ public interface ProductWebService
 	Boolean deleteAttachment(UriInfo ui, Integer productId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
 	ProductSearchResultInfo findProducts(UriInfo ui, Integer includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
+
+	Boolean importTestCasesForProduct(MultipartBody body, Integer productId) throws Exception;
 
 }

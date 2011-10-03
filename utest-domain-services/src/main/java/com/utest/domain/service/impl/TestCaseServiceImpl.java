@@ -19,12 +19,17 @@
  */
 package com.utest.domain.service.impl;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.access.AccessDeniedException;
+
+import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.bean.ColumnPositionMappingStrategy;
+import au.com.bytecode.opencsv.bean.CsvToBean;
 
 import com.trg.search.Search;
 import com.utest.dao.TypelessDAO;
@@ -56,6 +61,7 @@ import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.ExternalBugService;
 import com.utest.domain.service.TestCaseService;
 import com.utest.domain.service.UserService;
+import com.utest.domain.upload.TestCaseUpload;
 import com.utest.domain.util.DomainUtil;
 import com.utest.domain.view.TestCaseVersionView;
 import com.utest.exception.ActivatingIncompleteEntityException;
@@ -64,6 +70,7 @@ import com.utest.exception.ApprovingIncompleteEntityException;
 import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingActivatedEntityException;
 import com.utest.exception.DuplicateTestCaseStepException;
+import com.utest.exception.InvalidImportFileFormatException;
 import com.utest.exception.InvalidUserException;
 import com.utest.exception.NotFoundException;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
@@ -955,6 +962,60 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		}
 
 		return getTestCase(clonedTestCaseId);
+	}
+
+	@Override
+	public void importTestCasesFromCsv(final String cvs_, final Integer productId_) throws Exception
+	{
+
+		final String[] columns = { "type", "productName", "testCaseName", "createdBy", "createDate", "description", "stepNumber", "instruction", "expectedResult" };
+		final CSVReader reader = new CSVReader(new StringReader(cvs_));
+
+		final ColumnPositionMappingStrategy<TestCaseUpload> strat = new ColumnPositionMappingStrategy<TestCaseUpload>();
+		strat.setColumnMapping(columns);
+		strat.setType(TestCaseUpload.class);
+
+		final CsvToBean<TestCaseUpload> csvToBean = new CsvToBean<TestCaseUpload>();
+
+		final List<TestCaseUpload> nodes = csvToBean.parse(strat, reader);
+
+		TestCase testCase = null;
+		TestCaseVersion updatedTestCaseVersion = null;
+
+		try
+		{
+			for (final TestCaseUpload export : nodes)
+			{
+				if (TestCaseUpload.HEADER_TYPE.equalsIgnoreCase(export.getType()))
+				{
+					testCase = addTestCase(productId_, 10, 3, export.getTestCaseName(), export.getDescription());
+					updatedTestCaseVersion = testCase.getLatestVersion();
+				}
+				else if (TestCaseUpload.STEP_TYPE.equalsIgnoreCase(export.getType()))
+				{
+					if (updatedTestCaseVersion == null)
+					{
+						throw new InvalidImportFileFormatException(InvalidImportFileFormatException.ERROR_TEST_CASE_STEP_MUST_FOLLOW_HEADER);
+					}
+					else
+					{
+
+						int stepNumber = Integer.parseInt(export.getStepNumber());
+						addTestCaseStep(updatedTestCaseVersion.getId(), testCase.getName() + " : step" + stepNumber, stepNumber, export.getInstruction(), export
+								.getExpectedResult(), TestCase.DEFAULT_STEP_ESTIMATED_TIME_IN_MIN);
+					}
+				}
+			}
+		}
+		catch (final InvalidImportFileFormatException ex)
+		{
+			throw ex;
+		}
+		catch (final NumberFormatException ex)
+		{
+			throw new InvalidImportFileFormatException(InvalidImportFileFormatException.ERROR_INVALID_TEST_CASE_STEP_NUMBER);
+		}
+
 	}
 
 	private void checkEditPermission(Integer testerId_) throws AccessDeniedException

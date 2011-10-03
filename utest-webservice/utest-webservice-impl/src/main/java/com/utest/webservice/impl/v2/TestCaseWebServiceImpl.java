@@ -598,4 +598,5 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 		final List<TestCaseVersionView> testCaseVersions = testCaseService.getTestCaseVersionViews(testCaseId_);
 		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersions, ui_.getBaseUriBuilder());
 	}
+
 }

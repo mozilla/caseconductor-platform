@@ -133,4 +133,6 @@ public interface TestCaseService
 	UtestSearchResult findLatestTestCaseVersions(Integer includedInTestSuiteId, Integer includedEnvironmentId) throws Exception;
 
 	List<EntityExternalBug> getExternalBugsForTestCase(Integer testCaseId) throws Exception;
+
+	void importTestCasesFromCsv(String cvs, Integer productId) throws Exception;
 }

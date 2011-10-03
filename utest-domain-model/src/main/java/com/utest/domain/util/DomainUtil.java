@@ -19,7 +19,6 @@ import com.utest.domain.LocalizedEntity;
 import com.utest.domain.ParentDependable;
 import com.utest.domain.TimelineVersionable;
 import com.utest.domain.User;
-import com.utest.domain.search.UtestSearchResult;
 
 /**
  * @author VKISEN
