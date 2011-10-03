@@ -69,6 +69,21 @@ public class ExternalBugServiceImpl extends BaseServiceImpl implements ExternalB
 	}
 
 	@Override
+	public EntityExternalBug saveEntityExternalBug(final Integer entityExternalBugId_, final Integer entityId_, Integer entityTypeId_, final String externalIdentifier_,
+			final String url_) throws Exception
+	{
+		EntityExternalBug entityExternalBug = getRequiredEntityById(EntityExternalBug.class, entityExternalBugId_);
+		// make sure entity id and type matches before deleting
+		if (entityExternalBug.getEntityId().equals(entityId_) && entityExternalBug.getEntityTypeId().equals(entityTypeId_))
+		{
+			entityExternalBug.setExternalIdentifier(externalIdentifier_);
+			entityExternalBug.setUrl(url_);
+			dao.merge(entityExternalBug);
+		}
+		return entityExternalBug;
+	}
+
+	@Override
 	public UtestSearchResult findEntityExternalBugs(final UtestSearch search_) throws Exception
 	{
 		return dao.getBySearch(EntityExternalBug.class, search_);

@@ -24,6 +24,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -54,6 +55,19 @@ public class ExternalBugWebServiceImpl extends BaseWebServiceImpl implements Ext
 	{
 		super(objectBuildFactory);
 		this.externalBugService = externalBugService;
+	}
+
+	@PUT
+	@Path("/{id}")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.EXTERNAL_BUG_EDIT })
+	public EntityExternalBugInfo updateExternalBug(@Context final UriInfo ui_, @PathParam("id") final Integer externalBugId_, @FormParam("entityId") final Integer entityId_,
+			@FormParam("entityTypeId") final Integer entityTypeId_, @FormParam("externalIdentifier") String externalIdentifier_, @FormParam("url") String url_) throws Exception
+	{
+		EntityExternalBug attachment = externalBugService.saveEntityExternalBug(externalBugId_, entityId_, entityTypeId_, externalIdentifier_, url_);
+		return objectBuilderFactory.toInfo(EntityExternalBugInfo.class, attachment, ui_.getBaseUriBuilder());
 	}
 
 	@DELETE

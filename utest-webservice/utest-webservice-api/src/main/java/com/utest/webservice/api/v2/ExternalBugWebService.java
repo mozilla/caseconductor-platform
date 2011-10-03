@@ -33,4 +33,6 @@ public interface ExternalBugWebService
 	EntityExternalBugInfo createExternalBug(UriInfo ui, String externalIdentifier, String url, Integer entityTypeId, Integer entityId) throws Exception;
 
 	Boolean deleteExternalBug(UriInfo ui, Integer attachmentId, Integer entityId, Integer entityTypeId) throws Exception;
+
+	EntityExternalBugInfo updateExternalBug(UriInfo ui, Integer externalBugId, Integer entityId, Integer entityTypeId, String externalIdentifier, String url) throws Exception;
 }

@@ -36,4 +36,6 @@ public interface ExternalBugService
 	List<EntityExternalBug> getEntityExternalBugsForEntity(Integer entityId, Integer entityTypeId) throws Exception;
 
 	EntityExternalBug addEntityExternalBug(String externalIdentifier, String url, Integer entityTypeId, Integer entityId) throws Exception;
+
+	EntityExternalBug saveEntityExternalBug(Integer entityExternalBugId, Integer entityId, Integer entityTypeId, String externalIdentifier, String url) throws Exception;
 }
