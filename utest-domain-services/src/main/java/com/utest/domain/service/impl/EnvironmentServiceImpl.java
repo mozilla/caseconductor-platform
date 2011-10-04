@@ -82,14 +82,17 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public Tag addTag(Integer companyId_, String tag_) throws Exception
 	{
-
+		if (tag_ == null || tag_.length() == 0)
+		{
+			throw new IllegalArgumentException("Tag value is required");
+		}
 		if (companyId_ == null)
 		{
 			companyId_ = Company.SYSTEM_WIDE_COMPANY_ID;
 		}
 		final Search search = new Search(Tag.class);
 		search.addFilterEqual("companyId", companyId_);
-		search.addFilterEqual("tag", tag_);
+		search.addFilterEqual("name", tag_);
 		final List<Tag> tags = dao.search(Tag.class, search);
 		if ((tags != null) && !tags.isEmpty())
 		{
