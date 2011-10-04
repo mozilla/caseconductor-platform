@@ -182,7 +182,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.ENVIRONMENT_EDIT })
-	public TagInfo updateTag(@Context final UriInfo ui_, @PathParam("id") final Integer tagId_, @FormParam("tag") final String tag_,
+	public TagInfo updateTag(@Context final UriInfo ui_, @PathParam("id") final Integer tagId_, @FormParam("name") final String tag_,
 			@FormParam("originalVersionId") final Integer originalVersionId_) throws Exception
 	{
 		Tag tag = environmentService.saveTag(tagId_, tag_, originalVersionId_);
@@ -249,7 +249,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured( { Permission.ENVIRONMENT_EDIT })
-	public TagInfo createTag(@Context final UriInfo ui_, @FormParam("companyId") final Integer companyId_, @FormParam("tag") final String tag_) throws Exception
+	public TagInfo createTag(@Context final UriInfo ui_, @FormParam("companyId") final Integer companyId_, @FormParam("name") final String tag_) throws Exception
 	{
 		final Tag tag = environmentService.addTag(companyId_, tag_);
 
