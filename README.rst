@@ -64,8 +64,8 @@ Edit the copied utest-ds.xml file (the one under
 MySQL database (default is ``tcm``) and your MySQL user and password (defaults
 to ``root`` with no password).
 
-Note that the platform currently does not support MySQL 5.5 -- some operations
-will fail with foreign key constraint violations. MySQL 5.1 must be used.
+Note that the platform currently supports MySQL 5.1 and MySQL 5.5.8 and prior releases -- due to known bugs in MySQL 5.5.<9 through 16> 
+some operations will fail with foreign key constraint violations.
 
 Create your MySQL database schema (if you are using a MySQL user other than
 root, you will probably need to comment out the ``GRANT ALL PRIVILEGES`` line
@@ -80,6 +80,14 @@ You'll need to also execute each database update script in that same directory, 
 The shell script ``reset-mysql.sh`` automates setting up the initial schema and
 running all update scripts. (You may need to modify this script if using a
 database user other than root).
+
+There are 2 OPTIONAL scripts created for populating environment data related to Desktop and Mobile testing. 
+You don't need to run these scripts if you have your own seed data source or you are interested in testing some other types of environments.
+
+    db_tcm_seed_desktop_environments.sql - will populate Operating System, Operating System Version and Web Browser data and relationships between them;
+    
+    db_tcm_seed_mobile_environments.sql - will populate Mobile Manufacturers, Mobile Models and Mobile Operating System data and relationships between them
+
 
 And run the server::
 
