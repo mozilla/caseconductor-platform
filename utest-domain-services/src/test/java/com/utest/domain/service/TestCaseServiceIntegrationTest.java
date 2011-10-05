@@ -42,14 +42,14 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 	@Autowired
 	private UserService		userService;
 
-	@Test(groups = { "integration" })
+	@Test(groups = { "integration" }, enabled = false)
 	public void testAddTestCase() throws Exception
 	{
 		final User user = userService.getUser(1);
 		loginUser(user);
 		final Integer productId = 1;
 
-		final TestCase testCase11 = testCaseService.addTestCase(productId, 10, 5, "Test Case for product 1" + new Date().getTime(), "windows test calculator");
+		final TestCase testCase11 = testCaseService.addTestCase(productId, 10, 5, "Test Case for product 1" + new Date().getTime(), "windows test calculator", null);
 		Assert.assertTrue(testCase11 != null);
 		final List<TestCaseStep> steps = new ArrayList<TestCaseStep>();
 		steps.add(testCaseService.addTestCaseStep(testCase11.getLatestVersion().getId(), "Step 1", 1, "Press OK button", "See the totals calculated." + new Date().getTime(), 2));
@@ -121,6 +121,18 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		search.addFilterEqual("description", "test case 2");
 		UtestSearchResult result = testCaseService.findTestCaseVersions(search, null, null, null);
 		Assert.assertTrue(result.getResults() != null);
+
+	}
+
+	@Test(groups = { "integration" }, enabled = true)
+	public void testFindTestCaseExternalBugs() throws Exception
+	{
+
+		final User user = userService.getUser(1);
+		loginUser(user);
+
+		List<?> results = testCaseService.getExternalBugsForTestCase(6);
+		Assert.assertTrue(results != null);
 
 	}
 
