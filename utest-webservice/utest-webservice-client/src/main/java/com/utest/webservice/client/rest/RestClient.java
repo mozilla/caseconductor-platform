@@ -47,7 +47,7 @@ import org.apache.cxf.jaxrs.provider.AegisElementProvider;
 
 public class RestClient
 {
-	private static String	DEFAULT_ACCEPT	= "text/html,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
+	public static String	DEFAULT_ACCEPT	= "text/html,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
 	private String			baseUrl			= "https://localhost";
 	private String			servicePath		= "/tcm/services/v2/rest/";
 	private static String	kestorepassword	= null;

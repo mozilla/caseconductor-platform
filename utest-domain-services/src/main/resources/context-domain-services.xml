@@ -72,6 +72,7 @@
 		<constructor-arg ref="userService" />
 		<constructor-arg ref="attachmentService" />
 		<constructor-arg ref="externalBugService" />
+		<property name="testSuiteService" ref="testSuiteService" />
 	</bean>
 
 	<bean id="testSuiteService" class="com.utest.domain.service.impl.TestSuiteServiceImpl">

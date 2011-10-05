@@ -23,7 +23,13 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.springframework.security.access.AccessDeniedException;
 
@@ -51,6 +57,7 @@ import com.utest.domain.TestCaseStep;
 import com.utest.domain.TestCaseTag;
 import com.utest.domain.TestCaseVersion;
 import com.utest.domain.TestRunResult;
+import com.utest.domain.TestSuite;
 import com.utest.domain.TestSuiteTestCase;
 import com.utest.domain.VersionIncrement;
 import com.utest.domain.search.UtestFilter;
@@ -60,9 +67,11 @@ import com.utest.domain.service.AttachmentService;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.ExternalBugService;
 import com.utest.domain.service.TestCaseService;
+import com.utest.domain.service.TestSuiteService;
 import com.utest.domain.service.UserService;
-import com.utest.domain.upload.TestCaseUpload;
 import com.utest.domain.util.DomainUtil;
+import com.utest.domain.view.TestCaseExportSingleStepExtendedView;
+import com.utest.domain.view.TestCaseExportView;
 import com.utest.domain.view.TestCaseVersionView;
 import com.utest.exception.ActivatingIncompleteEntityException;
 import com.utest.exception.ActivatingNotApprovedEntityException;
@@ -84,6 +93,8 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	private final UserService			userService;
 	private final AttachmentService		attachmentService;
 	private final ExternalBugService	externalBugService;
+	// not loaded via constructor to avoid circular references
+	private TestSuiteService			testSuiteService;
 
 	/**
 	 * Default constructor
@@ -101,24 +112,31 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	public TestCase addTestCase(final Integer productId_, final Integer maxAttachmentSizeInMbytes_, final Integer maxNumberOfAttachments_, final String name_,
 			final String description_) throws Exception
 	{
-		return addTestCase(productId_, null, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, name_, description_);
+		return addTestCase(productId_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, name_, description_, null);
 	}
 
 	@Override
-	public TestCase addTestCase(final Integer productId_, final Integer testCycleId_, final Integer maxAttachmentSizeInMbytes_, final Integer maxNumberOfAttachments_,
-			final String name_, final String description_) throws Exception
+	public TestCase addTestCase(final Integer productId_, final Integer maxAttachmentSizeInMbytes_, final Integer maxNumberOfAttachments_, final String name_,
+			final String description_, String externalAuthorEmail_) throws Exception
 	{
-		return addTestCase(productId_, testCycleId_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, name_, description_, false, null);
+		return addTestCase(productId_, null, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, name_, description_, externalAuthorEmail_);
 	}
 
 	@Override
 	public TestCase addTestCase(final Integer productId_, final Integer testCycleId_, final Integer maxAttachmentSizeInMbytes_, final Integer maxNumberOfAttachments_,
-			final String name_, final String description_, final boolean automated_, final String automationUri_) throws Exception
+			final String name_, final String description_, String externalAuthorEmail_) throws Exception
+	{
+		return addTestCase(productId_, testCycleId_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, name_, description_, false, null, externalAuthorEmail_);
+	}
+
+	@Override
+	public TestCase addTestCase(final Integer productId_, final Integer testCycleId_, final Integer maxAttachmentSizeInMbytes_, final Integer maxNumberOfAttachments_,
+			final String name_, final String description_, final boolean automated_, final String automationUri_, String externalAuthorEmail_) throws Exception
 	{
 		final Product product = getRequiredEntityById(Product.class, productId_);
 		checkForDuplicateNameWithinParent(TestCase.class, name_, productId_, "productId", null);
 
-		final TestCase testCase = new TestCase(name_, productId_, product.getCompanyId(), maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, testCycleId_);
+		final TestCase testCase = new TestCase(name_, productId_, product.getCompanyId(), maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, testCycleId_, externalAuthorEmail_);
 		final Integer testCaseId = dao.addAndReturnId(testCase);
 
 		final TestCaseVersion testCaseVersion = new TestCaseVersion();
@@ -628,7 +646,16 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		UtestSearch bugSearch = new UtestSearch();
 		bugSearch.addFilterIn("entityId", resultIds);
 		bugSearch.addFilterEqual("entityTypeId", EntityType.TEST_RESULT);
-		return (List<EntityExternalBug>) externalBugService.findEntityExternalBugs(bugSearch).getResults();
+		List<EntityExternalBug> results = (List<EntityExternalBug>) externalBugService.findEntityExternalBugs(bugSearch).getResults();
+		List<EntityExternalBug> distinctResults = new ArrayList<EntityExternalBug>();
+		for (EntityExternalBug result : results)
+		{
+			if (!distinctResults.contains(result))
+			{
+				distinctResults.add(result);
+			}
+		}
+		return distinctResults;
 	}
 
 	@Override
@@ -965,33 +992,39 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
+	public UtestSearchResult findTestCasesInExportFormat(final UtestSearch search_)
+	{
+		return dao.getBySearch(TestCaseExportView.class, search_);
+	}
+
+	@Override
 	public void importTestCasesFromCsv(final String cvs_, final Integer productId_) throws Exception
 	{
 
 		final String[] columns = { "type", "productName", "testCaseName", "createdBy", "createDate", "description", "stepNumber", "instruction", "expectedResult" };
 		final CSVReader reader = new CSVReader(new StringReader(cvs_));
 
-		final ColumnPositionMappingStrategy<TestCaseUpload> strat = new ColumnPositionMappingStrategy<TestCaseUpload>();
+		final ColumnPositionMappingStrategy<TestCaseExportView> strat = new ColumnPositionMappingStrategy<TestCaseExportView>();
 		strat.setColumnMapping(columns);
-		strat.setType(TestCaseUpload.class);
+		strat.setType(TestCaseExportView.class);
 
-		final CsvToBean<TestCaseUpload> csvToBean = new CsvToBean<TestCaseUpload>();
+		final CsvToBean<TestCaseExportView> csvToBean = new CsvToBean<TestCaseExportView>();
 
-		final List<TestCaseUpload> nodes = csvToBean.parse(strat, reader);
+		final List<TestCaseExportView> nodes = csvToBean.parse(strat, reader);
 
 		TestCase testCase = null;
 		TestCaseVersion updatedTestCaseVersion = null;
 
 		try
 		{
-			for (final TestCaseUpload export : nodes)
+			for (final TestCaseExportView export : nodes)
 			{
-				if (TestCaseUpload.HEADER_TYPE.equalsIgnoreCase(export.getType()))
+				if (TestCaseExportView.HEADER_TYPE.equalsIgnoreCase(export.getType()))
 				{
-					testCase = addTestCase(productId_, 10, 3, export.getTestCaseName(), export.getDescription());
+					testCase = addTestCase(productId_, 10, 3, export.getTestCaseName(), export.getDescription(), null);
 					updatedTestCaseVersion = testCase.getLatestVersion();
 				}
-				else if (TestCaseUpload.STEP_TYPE.equalsIgnoreCase(export.getType()))
+				else if (TestCaseExportView.STEP_TYPE.equalsIgnoreCase(export.getType()))
 				{
 					if (updatedTestCaseVersion == null)
 					{
@@ -1018,11 +1051,119 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 
 	}
 
+	@Override
+	public void importTestCasesFromSingleStepExtendedCsv(final String cvs_, final Integer productId_) throws Exception
+	{
+
+		Product product = getRequiredEntityById(Product.class, productId_);
+
+		final String[] columns = { "testCaseName", "externalAuthorEmail", "createDate", "description", "bugList", "instruction", "expectedResult", "tagList", "testSuiteList",
+				"type" };
+		final CSVReader reader = new CSVReader(new StringReader(cvs_));
+
+		final ColumnPositionMappingStrategy<TestCaseExportSingleStepExtendedView> strat = new ColumnPositionMappingStrategy<TestCaseExportSingleStepExtendedView>();
+		strat.setColumnMapping(columns);
+		strat.setType(TestCaseExportSingleStepExtendedView.class);
+
+		final CsvToBean<TestCaseExportSingleStepExtendedView> csvToBean = new CsvToBean<TestCaseExportSingleStepExtendedView>();
+
+		final List<TestCaseExportSingleStepExtendedView> nodes = csvToBean.parse(strat, reader);
+
+		TestCase testCase = null;
+		TestCaseVersion testCaseVersion = null;
+		Map<String, Set<Integer>> tagMap = new HashMap<String, Set<Integer>>();
+		Map<String, Set<Integer>> suiteMap = new HashMap<String, Set<Integer>>();
+		// starting from 2nd row to skip header row
+		for (int i = 1; i < nodes.size(); i++)
+		{
+			final TestCaseExportSingleStepExtendedView export = nodes.get(i);
+			if (!TestCaseExportSingleStepExtendedView.HEADER_TYPE.equalsIgnoreCase(export.getType()))
+			{
+				throw new InvalidImportFileFormatException(InvalidImportFileFormatException.ERROR_INVALID_TEST_CASE_HEADER_TYPE + ", row: " + i);
+			}
+			// create test case with a single step
+			testCase = addTestCase(productId_, 10, 3, export.getTestCaseName() + " : " + new Date().getTime(), export.getDescription(), export.getExternalAuthorEmail());
+			testCaseVersion = testCase.getLatestVersion();
+			addTestCaseStep(testCaseVersion.getId(), testCase.getName() + " : step 1", 1, export.getInstruction(), export.getExpectedResult(),
+					TestCase.DEFAULT_STEP_ESTIMATED_TIME_IN_MIN);
+			// store associated tags
+			if (export.getTagList() != null && export.getTagList().length() > 0)
+			{
+				loadTestCaseAssociations(tagMap, export.getTagList(), ",", testCaseVersion.getId());
+			}
+			// store associated suites
+			if (export.getTestSuiteList() != null && export.getTestSuiteList().length() > 0)
+			{
+				loadTestCaseAssociations(suiteMap, export.getTestSuiteList(), ",", testCaseVersion.getId());
+			}
+		}
+
+		createAssociatedTags(tagMap, product);
+		createAssociatedTestSuites(suiteMap, product);
+	}
+
+	private void createAssociatedTestSuites(Map<String, Set<Integer>> suiteMap_, Product product_) throws Exception
+	{
+		Iterator<String> keys = suiteMap_.keySet().iterator();
+		for (; keys.hasNext();)
+		{
+			String key = keys.next();
+			TestSuite testSuite = testSuiteService.addTestSuite(product_.getId(), false, key, "Imported from CSV with test cases.");
+			Set<Integer> testCaseVersionIds = suiteMap_.get(key);
+			for (Integer testCaseVersionId : testCaseVersionIds)
+			{
+				testSuiteService.addTestSuiteTestCase(testSuite.getId(), testCaseVersionId);
+			}
+		}
+	}
+
+	private void createAssociatedTags(Map<String, Set<Integer>> tagMap_, Product product_) throws Exception
+	{
+		Iterator<String> keys = tagMap_.keySet().iterator();
+		for (; keys.hasNext();)
+		{
+			String key = keys.next();
+			Tag tag = environmentService.addTag(product_.getCompanyId(), key);
+			Set<Integer> testCaseVersionIds = tagMap_.get(key);
+			for (Integer testCaseVersionId : testCaseVersionIds)
+			{
+				addTestCaseVersionTag(testCaseVersionId, tag.getId());
+			}
+		}
+	}
+
+	private void loadTestCaseAssociations(Map<String, Set<Integer>> associationsMap_, String tokenizedAssociations_, String delimiter_, Integer testCaseVersionId_)
+	{
+
+		String token;
+		StringTokenizer st = new StringTokenizer(tokenizedAssociations_, delimiter_);
+		while (st.hasMoreTokens())
+		{
+			token = st.nextToken();
+			if (!associationsMap_.containsKey(token))
+			{
+				associationsMap_.put(token, new HashSet<Integer>());
+			}
+			associationsMap_.get(token).add(testCaseVersionId_);
+		}
+
+	}
+
 	private void checkEditPermission(Integer testerId_) throws AccessDeniedException
 	{
 		if (!getCurrentUserId().equals(testerId_) && !userService.isUserInPermission(getCurrentUserId(), Permission.TEST_CASE_EDIT))
 		{
 			throw new AccessDeniedException("User doesn't have permissions to edit test cases, created by someone else.");
 		}
+	}
+
+	public TestSuiteService getTestSuiteService()
+	{
+		return testSuiteService;
+	}
+
+	public void setTestSuiteService(TestSuiteService testSuiteService)
+	{
+		this.testSuiteService = testSuiteService;
 	}
 }

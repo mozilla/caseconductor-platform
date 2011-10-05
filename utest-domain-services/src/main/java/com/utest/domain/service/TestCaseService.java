@@ -64,10 +64,11 @@ public interface TestCaseService
 
 	TestCase cloneTestCase(Integer testCaseId) throws Exception;
 
-	TestCase addTestCase(Integer productId, Integer testCycleId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, String description)
-			throws Exception;
+	TestCase addTestCase(Integer productId, Integer testCycleId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, String description,
+			String externalAuthorEmail) throws Exception;
 
-	TestCase addTestCase(Integer productId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, String description) throws Exception;
+	TestCase addTestCase(Integer productId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, String description, String externalAuthorEmail)
+			throws Exception;
 
 	TestCaseVersion approveTestCaseVersion(Integer testCaseVersionId, Integer originalVersionId) throws Exception;
 
@@ -115,7 +116,7 @@ public interface TestCaseService
 	TestCaseVersionView getLastApprovedTestCaseVersionView(Integer testCaseId) throws Exception;
 
 	TestCase addTestCase(Integer productId, Integer testCycleId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, String description,
-			boolean automated, String automationUri) throws Exception;
+			boolean automated, String automationUri, String externalAuthorEmail_) throws Exception;
 
 	TestCaseVersion saveTestCaseVersion(Integer testCaseVersionId, String description, boolean automated, String automationUri, Integer originalVersion,
 			VersionIncrement versionIncrement) throws Exception;
@@ -135,4 +136,10 @@ public interface TestCaseService
 	List<EntityExternalBug> getExternalBugsForTestCase(Integer testCaseId) throws Exception;
 
 	void importTestCasesFromCsv(String cvs, Integer productId) throws Exception;
+
+	UtestSearchResult findTestCasesInExportFormat(UtestSearch search);
+
+	void importTestCasesFromSingleStepExtendedCsv(String cvs, Integer productId) throws Exception;
+
+	TestCase addTestCase(Integer productId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, String description) throws Exception;
 }

@@ -29,6 +29,7 @@ public class TestCase extends TimelineEntity implements ProductDependable, Named
 	public final static Integer	DEFAULT_STEP_ESTIMATED_TIME_IN_MIN	= new Integer(5);
 
 	private String				name;
+	private String				externalAuthorEmail;
 	private Integer				companyId;
 	private Integer				productId;
 	private Integer				maxAttachmentSizeInMbytes;
@@ -58,7 +59,7 @@ public class TestCase extends TimelineEntity implements ProductDependable, Named
 	}
 
 	public TestCase(final String name, final Integer productId, final Integer companyId, final Integer maxAttachmentSizeInMbytes, final Integer maxNumberOfAttachments,
-			final Integer testCycleId)
+			final Integer testCycleId, String externalAuthorEmail_)
 	{
 		this.name = name;
 		this.productId = productId;
@@ -66,6 +67,7 @@ public class TestCase extends TimelineEntity implements ProductDependable, Named
 		this.maxAttachmentSizeInMbytes = maxAttachmentSizeInMbytes;
 		this.maxNumberOfAttachments = maxNumberOfAttachments;
 		this.testCycleId = testCycleId;
+		this.externalAuthorEmail = externalAuthorEmail_;
 	}
 
 	public Integer getProductId()
@@ -136,5 +138,15 @@ public class TestCase extends TimelineEntity implements ProductDependable, Named
 	public Integer getCompanyId()
 	{
 		return companyId;
+	}
+
+	public void setExternalAuthorEmail(String externalAuthorEmail)
+	{
+		this.externalAuthorEmail = externalAuthorEmail;
+	}
+
+	public String getExternalAuthorEmail()
+	{
+		return externalAuthorEmail;
 	}
 }

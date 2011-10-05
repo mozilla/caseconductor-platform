@@ -24,6 +24,7 @@ public class InvalidImportFileFormatException extends DomainException
 	public static final String	ERROR_TEST_CASE_STEP_MUST_FOLLOW_HEADER		= "test.case.step.must.follow.header";
 	public static final String	ERROR_INVALID_TEST_CASE_STEP_NUMBER			= "invalid.test.case.step.number";
 	public static final String	ERROR_TEST_CASE_STEP_INSTRUCTION_IS_EMPTY	= "test.case.step.instruction.can.not.be.empty";
+	public static final String	ERROR_INVALID_TEST_CASE_HEADER_TYPE			= "test.case.type.can.not.be.empty";
 
 	public InvalidImportFileFormatException()
 	{

@@ -409,4 +409,21 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 		testCaseService.importTestCasesFromCsv(outputStream.toString(), productId_);
 		return Boolean.TRUE;
 	}
+
+	@Override
+	@Secured(Permission.TEST_CASE_EDIT)
+	@POST
+	@Path("/{id}/import_testcases_extended/")
+	public Boolean importTestCasesExtendedForProduct(MultipartBody body_, @PathParam("id") final Integer productId_) throws Exception
+	{
+		List<org.apache.cxf.jaxrs.ext.multipart.Attachment> attachments = body_.getAllAttachments();
+		javax.activation.DataHandler dataHandler = attachments.get(0).getDataHandler();
+		InputStream inputStream = dataHandler.getInputStream();
+		OutputStream outputStream = new ByteArrayOutputStream();
+		IOUtils.copy(inputStream, outputStream);
+		inputStream.close();
+		outputStream.close();
+		testCaseService.importTestCasesFromSingleStepExtendedCsv(outputStream.toString(), productId_);
+		return Boolean.TRUE;
+	}
 }

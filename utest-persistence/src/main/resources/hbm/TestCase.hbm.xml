@@ -14,6 +14,9 @@
         <property name="name" type="string">
             <column name="name" not-null="true" />
         </property>
+        <property name="externalAuthorEmail" type="string">
+            <column name="externalAuthorEmail" />
+        </property>
  		<property name="companyId" type="java.lang.Integer">
 			<column name="companyId" />
 		</property>

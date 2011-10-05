@@ -361,7 +361,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 			@FormParam("automationUri") final String automationUri_) throws Exception
 	{
 		final TestCase testCase = testCaseService.addTestCase(productId_, testCycleId_, maxAttachmentSizeInMbytes_, maxNumberOfAttachments_, name_, description_, "TRUE"
-				.equalsIgnoreCase(automated_), automationUri_);
+				.equalsIgnoreCase(automated_), automationUri_, null);
 		final TestCaseVersionView testCaseVersionView = testCaseService.getTestCaseVersionView(testCase.getLatestVersion().getId());
 		return objectBuilderFactory.toInfo(TestCaseVersionInfo.class, testCaseVersionView, ui_.getBaseUriBuilder());
 	}

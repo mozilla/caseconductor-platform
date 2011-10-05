@@ -89,4 +89,6 @@ public interface ProductWebService
 
 	Boolean importTestCasesForProduct(MultipartBody body, Integer productId) throws Exception;
 
+	Boolean importTestCasesExtendedForProduct(MultipartBody body, Integer productId) throws Exception;
+
 }
