@@ -71,4 +71,41 @@ public class EntityExternalBug extends TimelineEntity
 		this.entityId = entityId;
 	}
 
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((externalIdentifier == null) ? 0 : externalIdentifier.hashCode());
+		result = prime * result + ((url == null) ? 0 : url.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EntityExternalBug other = (EntityExternalBug) obj;
+		if (externalIdentifier == null)
+		{
+			if (other.externalIdentifier != null)
+				return false;
+		}
+		else if (!externalIdentifier.equals(other.externalIdentifier))
+			return false;
+		if (url == null)
+		{
+			if (other.url != null)
+				return false;
+		}
+		else if (!url.equals(other.url))
+			return false;
+		return true;
+	}
+
 }

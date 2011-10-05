@@ -628,7 +628,16 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		UtestSearch bugSearch = new UtestSearch();
 		bugSearch.addFilterIn("entityId", resultIds);
 		bugSearch.addFilterEqual("entityTypeId", EntityType.TEST_RESULT);
-		return (List<EntityExternalBug>) externalBugService.findEntityExternalBugs(bugSearch).getResults();
+		List<EntityExternalBug> results = (List<EntityExternalBug>) externalBugService.findEntityExternalBugs(bugSearch).getResults();
+		List<EntityExternalBug> distinctResults = new ArrayList<EntityExternalBug>();
+		for (EntityExternalBug result : results)
+		{
+			if (!distinctResults.contains(result))
+			{
+				distinctResults.add(result);
+			}
+		}
+		return distinctResults;
 	}
 
 	@Override
