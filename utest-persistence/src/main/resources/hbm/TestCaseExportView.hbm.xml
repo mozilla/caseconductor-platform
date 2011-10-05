@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 3, 2010 1:57:11 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.utest.domain.view.TestCaseExportView" table="TestCaseExportView" mutable="false">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+         <property name="type" type="string">
+            <column name="type"/>
+        </property>
+        <property name="productName" type="string">
+            <column name="productName"/>
+        </property>
+ 		 <property name="testCaseName" type="string">
+            <column name="testCaseName" />
+        </property>
+         <property name="createdBy" type="string">
+            <column name="createdBy"/>
+        </property>
+         <property name="description" type="string">
+            <column name="description"/>
+        </property>
+         <property name="instruction" type="string">
+            <column name="instruction"/>
+        </property>
+        <property name="stepNumber" type="java.lang.Integer">
+			<column name="stepNumber" />
+		</property>
+		 <property name="expectedResult" type="string">
+            <column name="expectedResult"/>
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="createDate" />
+        </property>
+         <property name="testCaseVersionId" type="java.lang.Integer">
+			<column name="testCaseVersionId" />
+		</property>
+    </class>
+</hibernate-mapping>
