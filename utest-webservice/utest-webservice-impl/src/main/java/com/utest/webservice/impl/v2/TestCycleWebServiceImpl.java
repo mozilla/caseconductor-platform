@@ -389,9 +389,10 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Override
 	@Secured(Permission.TEST_CYCLE_VIEW)
 	public List<CategoryValueInfo> getCoverageByResultStatus(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_,
-			@FormParam("testSuiteId") final Integer testSuiteId_, @FormParam("testRunId") final Integer testRunId_) throws Exception
+			@FormParam("testSuiteId") final Integer testSuiteId_, @FormParam("testRunId") final Integer testRunId_, @FormParam("testCaseId") final Integer testCaseId_)
+			throws Exception
 	{
-		final List<CategoryValue> results = testRunService.getCoverageByStatus(testRunId_, testCycleId_, testSuiteId_);
+		final List<CategoryValue> results = testRunService.getCoverageByStatus(testRunId_, testCycleId_, testSuiteId_, testCaseId_);
 		return objectBuilderFactory.toInfo(CategoryValueInfo.class, results, ui_.getBaseUriBuilder());
 	}
 

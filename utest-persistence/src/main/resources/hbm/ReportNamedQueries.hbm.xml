@@ -8,6 +8,7 @@
 		where (testRunId = :testRunId or -1 = :testRunId)
 		and (testCycleId = :testCycleId or -1 = :testCycleId)
 		and (testSuiteId = :testSuiteId or -1 = :testSuiteId)
+		and (testCaseId = :testCaseId or -1 = :testCaseId)
 		group by testRunResultStatusId
 		<return alias="statusTotals" class="com.utest.domain.view.CategoryValue" />
 	</sql-query>

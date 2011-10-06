@@ -85,5 +85,5 @@ public interface TestCycleWebService
 
 	TestCycleInfo unfeatureTestCycle(UriInfo ui, Integer testCycleId, Integer originalVersionId) throws Exception;
 
-	List<CategoryValueInfo> getCoverageByResultStatus(UriInfo ui, Integer testCycleId, Integer testSuiteId, Integer testRunId) throws Exception;
+	List<CategoryValueInfo> getCoverageByResultStatus(UriInfo ui, Integer testCycleId, Integer testSuiteId, Integer testRunId, Integer testCaseId) throws Exception;
 }
