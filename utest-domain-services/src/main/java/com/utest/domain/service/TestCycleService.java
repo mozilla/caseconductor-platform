@@ -31,7 +31,6 @@ import com.utest.domain.TestRun;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
-import com.utest.domain.view.CategoryValue;
 import com.utest.exception.UnsupportedEnvironmentSelectionException;
 
 /**
@@ -75,8 +74,6 @@ public interface TestCycleService
 	void approveAllTestRunResultsForTestCycle(Integer testCycleId) throws Exception;
 
 	TestCycle cloneTestCycle(Integer fromTestCycleId, boolean cloneAssignments) throws Exception;
-
-	List<CategoryValue> getCoverageByStatus(Integer testCycleId);
 
 	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCycle(Integer testCycleId) throws Exception;
 

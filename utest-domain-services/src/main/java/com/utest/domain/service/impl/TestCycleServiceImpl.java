@@ -44,7 +44,6 @@ import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.TeamService;
 import com.utest.domain.service.TestCycleService;
 import com.utest.domain.service.TestRunService;
-import com.utest.domain.view.CategoryValue;
 import com.utest.exception.ChangingActivatedEntityException;
 import com.utest.exception.DeletingActivatedEntityException;
 import com.utest.exception.NoTeamDefinitionException;
@@ -384,22 +383,6 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 		testCycle.setTestCycleStatusId(TestCycleStatus.LOCKED);
 		testCycle.setVersion(originalVersionId_);
 		return dao.merge(testCycle);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<CategoryValue> getCoverageByStatus(final Integer testCycleId_)
-	{
-		final int numParams = 1;
-		final String[] paramNames = new String[numParams];
-		final Object[] values = new Object[numParams];
-
-		final String namedQuery = "Report_TestCycleResultTotalsByStatus";
-		paramNames[0] = "testCycleId";
-		values[0] = testCycleId_;
-
-		return (List<CategoryValue>) dao.findByNamedQueryAndNamedParam(namedQuery, paramNames, values, false, false);
-
 	}
 
 	@Override

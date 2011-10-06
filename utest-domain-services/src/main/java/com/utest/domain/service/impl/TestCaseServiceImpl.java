@@ -998,7 +998,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public void importTestCasesFromCsv(final String cvs_, final Integer productId_) throws Exception
+	public void importMultiStepTestCasesFromCsv(final String cvs_, final Integer productId_) throws Exception
 	{
 
 		final String[] columns = { "type", "productName", "testCaseName", "createdBy", "createDate", "description", "stepNumber", "instruction", "expectedResult" };
@@ -1052,7 +1052,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public void importTestCasesFromSingleStepExtendedCsv(final String cvs_, final Integer productId_) throws Exception
+	public void importSingleStepTestCasesFromCsv(final String cvs_, final Integer productId_) throws Exception
 	{
 
 		Product product = getRequiredEntityById(Product.class, productId_);

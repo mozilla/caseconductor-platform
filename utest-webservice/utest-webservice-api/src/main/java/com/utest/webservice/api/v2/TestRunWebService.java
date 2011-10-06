@@ -26,13 +26,10 @@ import java.util.List;
 import javax.ws.rs.core.UriInfo;
 
 import com.utest.webservice.model.v2.AttachmentInfo;
-import com.utest.webservice.model.v2.CategoryValueInfo;
 import com.utest.webservice.model.v2.EntityExternalBugInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupExplodedInfo;
 import com.utest.webservice.model.v2.EnvironmentGroupInfo;
 import com.utest.webservice.model.v2.EnvironmentInfo;
-import com.utest.webservice.model.v2.TestRunTestCaseInfo;
-import com.utest.webservice.model.v2.TestRunTestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.ProductComponentInfo;
 import com.utest.webservice.model.v2.RoleInfo;
 import com.utest.webservice.model.v2.TestRunInfo;
@@ -41,6 +38,8 @@ import com.utest.webservice.model.v2.TestRunResultSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunSearchResultInfo;
 import com.utest.webservice.model.v2.TestRunTestCaseAssignmentInfo;
 import com.utest.webservice.model.v2.TestRunTestCaseAssignmentSearchResultInfo;
+import com.utest.webservice.model.v2.TestRunTestCaseInfo;
+import com.utest.webservice.model.v2.TestRunTestCaseSearchResultInfo;
 import com.utest.webservice.model.v2.TestSuiteInfo;
 import com.utest.webservice.model.v2.UserInfo;
 import com.utest.webservice.model.v2.UtestSearchRequest;
@@ -133,8 +132,6 @@ public interface TestRunWebService
 
 	TestRunResultInfo finishSkippedTestRunResultExecution(UriInfo ui, Integer resultId, String comment, Integer originalVersionId) throws Exception;
 
-	List<CategoryValueInfo> getCoverageByResultStatus(UriInfo ui, Integer testRunId) throws Exception;
-
 	List<TestRunResultInfo> retestTestRun(UriInfo ui, Integer testRunId, String failedResultsOnly) throws Exception;
 
 	TestRunInfo cloneTestRun(UriInfo ui, Integer testRunId, Integer targetTestCycleId, String cloneAssignments) throws Exception;
@@ -179,5 +176,4 @@ public interface TestRunWebService
 	List<EntityExternalBugInfo> getTestRunResultBugs(UriInfo ui, Integer testRunResultId) throws Exception;
 
 	EntityExternalBugInfo createExternalBugForTestRunResult(UriInfo ui, Integer testRunResultId, String externalIdentifier, String url) throws Exception;
-
 }

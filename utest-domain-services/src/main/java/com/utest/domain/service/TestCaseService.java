@@ -135,11 +135,11 @@ public interface TestCaseService
 
 	List<EntityExternalBug> getExternalBugsForTestCase(Integer testCaseId) throws Exception;
 
-	void importTestCasesFromCsv(String cvs, Integer productId) throws Exception;
+	void importMultiStepTestCasesFromCsv(String cvs, Integer productId) throws Exception;
 
 	UtestSearchResult findTestCasesInExportFormat(UtestSearch search);
 
-	void importTestCasesFromSingleStepExtendedCsv(String cvs, Integer productId) throws Exception;
+	void importSingleStepTestCasesFromCsv(String cvs, Integer productId) throws Exception;
 
 	TestCase addTestCase(Integer productId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, String description) throws Exception;
 }

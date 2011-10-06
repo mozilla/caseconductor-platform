@@ -169,6 +169,7 @@
 	<bean id="testCycleWebService" class="com.utest.webservice.impl.v2.TestCycleWebServiceImpl">
 		<constructor-arg ref="objectBuilderFactory" />
 		<constructor-arg ref="testCycleService" />
+		<constructor-arg ref="testRunService" />
 	</bean>
 
 	<bean id="testRunWebService" class="com.utest.webservice.impl.v2.TestRunWebServiceImpl">

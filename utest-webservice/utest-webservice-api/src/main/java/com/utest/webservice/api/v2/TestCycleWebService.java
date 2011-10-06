@@ -71,8 +71,6 @@ public interface TestCycleWebService
 
 	TestCycleInfo cloneTestCycle(UriInfo ui, Integer testCycleId, String cloneAssignments) throws Exception;
 
-	List<CategoryValueInfo> getCoverageByResultStatus(UriInfo ui, Integer testCycleId) throws Exception;
-
 	List<EnvironmentGroupExplodedInfo> getTestCycleEnvironmentGroupsExploded(UriInfo ui, Integer productId) throws Exception;
 
 	List<AttachmentInfo> getTestCycleAttachments(UriInfo ui, Integer testCycleId) throws Exception;
@@ -86,4 +84,6 @@ public interface TestCycleWebService
 	TestCycleInfo featureTestCycle(UriInfo ui, Integer testCycleId, Integer originalVersionId) throws Exception;
 
 	TestCycleInfo unfeatureTestCycle(UriInfo ui, Integer testCycleId, Integer originalVersionId) throws Exception;
+
+	List<CategoryValueInfo> getCoverageByResultStatus(UriInfo ui, Integer testCycleId, Integer testSuiteId, Integer testRunId) throws Exception;
 }

@@ -166,7 +166,7 @@ public interface TestRunService
 
 	TestRunResult finishExecutingAssignedTestCaseWithSkip(Integer testRunResultId, String comment, Integer originalVersionId) throws Exception;
 
-	List<CategoryValue> getCoverageByStatus(Integer testRunId);
+	List<CategoryValue> getCoverageByStatus(Integer testRunId_, Integer testCycleId_, Integer testSuiteId_);
 
 	void approveTestRunResults(List<Integer> testRunResultId) throws Exception;
 

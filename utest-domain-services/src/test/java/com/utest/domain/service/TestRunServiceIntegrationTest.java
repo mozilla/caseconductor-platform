@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.TestCycle;
@@ -65,38 +66,51 @@ public class TestRunServiceIntegrationTest extends BaseDomainServiceIntegrationT
 		Assert.assertTrue(testRun != null);
 	}
 
-	// @Test(groups = { "integration" })
+	@Test(groups = { "integration" }, enabled = true)
 	public void testAddTestRunFromTestSuite() throws Exception
 	{
 		final User user = userService.getUser(1);
 		loginUser(user);
 		final Integer productId = 1;
-		final TestSuite testSuite11 = testSuiteService.addTestSuite(productId, true, "Test Case for product 1: " + new Date().getTime(), "windows test calculator");
-		Assert.assertTrue(testSuite11 != null);
-
-		final Integer testSuiteId = testSuite11.getId();
-		Assert.assertTrue(testSuiteService.addTestSuiteTestCase(testSuiteId, 45) != null);
-		Assert.assertTrue(testSuiteService.addTestSuiteTestCase(testSuiteId, 54) != null);
-		Assert.assertTrue(testSuiteService.addTestSuiteTestCase(testSuiteId, 61) != null);
-
-		final TestSuite testSuite2 = testSuiteService.getTestSuite(testSuiteId);
-		Assert.assertTrue(testSuiteService.activateTestSuite(testSuiteId, testSuite2.getVersion()) != null);
-
-		final TestCycle testCycle11 = testCycleService.addTestCycle(productId, "Test Cycle for product 1" + new Date().getTime(), "Test cycle for windows test calculator",
-				new Date(), null, true, true);
-
-		final Integer testCycleId = 1;
-		Assert.assertTrue(testCycle11 != null);
-
-		final TestRun testRun = testRunService.addTestRun(testCycleId, true, "Test run from test suite: " + testSuiteId, "VMK test run from test suite.", new Date(), DateUtil
-				.addMonths(new Date(), 12), true, false, 3, false);
-		Assert.assertTrue(testRun != null);
-		final List<TestRunTestCase> includedCases = testRunService.addTestCasesFromTestSuite(testRun.getId(), testSuiteId);
-		final Integer testerId = 1;
-		for (final TestRunTestCase includedCase : includedCases)
-		{
-			Assert.assertTrue(testRunService.addAssignment(includedCase.getId(), testerId) != null);
-		}
+		// final TestSuite testSuite11 =
+		// testSuiteService.addTestSuite(productId, true,
+		// "Test Case for product 1: " + new Date().getTime(),
+		// "windows test calculator");
+		// Assert.assertTrue(testSuite11 != null);
+		//
+		// final Integer testSuiteId = testSuite11.getId();
+		// Assert.assertTrue(testSuiteService.addTestSuiteTestCase(testSuiteId,
+		// 45) != null);
+		// Assert.assertTrue(testSuiteService.addTestSuiteTestCase(testSuiteId,
+		// 54) != null);
+		// Assert.assertTrue(testSuiteService.addTestSuiteTestCase(testSuiteId,
+		// 61) != null);
+		//
+		// final TestSuite testSuite2 =
+		// testSuiteService.getTestSuite(testSuiteId);
+		// Assert.assertTrue(testSuiteService.activateTestSuite(testSuiteId,
+		// testSuite2.getVersion()) != null);
+		//
+		// final TestCycle testCycle11 =
+		// testCycleService.addTestCycle(productId, "Test Cycle for product 1" +
+		// new Date().getTime(), "Test cycle for windows test calculator",
+		// new Date(), null, true, true);
+		//
+		// final Integer testCycleId = 1;
+		// Assert.assertTrue(testCycle11 != null);
+		//
+		// final TestRun testRun = testRunService.addTestRun(testCycleId, true,
+		// "Test run from test suite: " + testSuiteId,
+		// "VMK test run from test suite.", new Date(), DateUtil
+		// .addMonths(new Date(), 12), true, false, 3, false);
+		// Assert.assertTrue(testRun != null);
+		final List<TestRunTestCase> includedCases = testRunService.addTestCasesFromTestSuite(1, 1);
+		// final Integer testerId = 1;
+		// for (final TestRunTestCase includedCase : includedCases)
+		// {
+		// Assert.assertTrue(testRunService.addAssignment(includedCase.getId(),
+		// testerId) != null);
+		// }
 	}
 
 	// @Test(groups = { "integration" })

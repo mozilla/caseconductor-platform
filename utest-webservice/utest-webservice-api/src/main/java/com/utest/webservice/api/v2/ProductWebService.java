@@ -87,8 +87,8 @@ public interface ProductWebService
 
 	ProductSearchResultInfo findProducts(UriInfo ui, Integer includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
 
-	Boolean importTestCasesForProduct(MultipartBody body, Integer productId) throws Exception;
+	Boolean importMultiStepTestCasesFromCsv(MultipartBody body, Integer productId) throws Exception;
 
-	Boolean importTestCasesExtendedForProduct(MultipartBody body, Integer productId) throws Exception;
+	Boolean importSingleStepTestCasesFromCsv(MultipartBody body, Integer productId) throws Exception;
 
 }

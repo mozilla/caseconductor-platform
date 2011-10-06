@@ -1698,15 +1698,41 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CategoryValue> getCoverageByStatus(final Integer testRunId_)
+	public List<CategoryValue> getCoverageByStatus(final Integer testRunId_, Integer testCycleId_, Integer testSuiteId_)
 	{
+		final int NOT_SUPPLIED = -1;
+
 		final int numParams = 1;
 		final String[] paramNames = new String[numParams];
 		final Object[] values = new Object[numParams];
-
 		final String namedQuery = "Report_TestRunResultTotalsByStatus";
 		paramNames[0] = "testRunId";
-		values[0] = testRunId_;
+		if (testRunId_ != null)
+		{
+			values[0] = testRunId_;
+		}
+		else
+		{
+			values[0] = NOT_SUPPLIED;
+		}
+		paramNames[0] = "testCycleId";
+		if (testRunId_ != null)
+		{
+			values[0] = testCycleId_;
+		}
+		else
+		{
+			values[0] = NOT_SUPPLIED;
+		}
+		paramNames[0] = "testSuiteId";
+		if (testRunId_ != null)
+		{
+			values[0] = testSuiteId_;
+		}
+		else
+		{
+			values[0] = NOT_SUPPLIED;
+		}
 
 		return (List<CategoryValue>) dao.findByNamedQueryAndNamedParam(namedQuery, paramNames, values, false, false);
 

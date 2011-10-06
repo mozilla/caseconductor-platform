@@ -396,8 +396,8 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
 	@POST
-	@Path("/{id}/import_testcases/")
-	public Boolean importTestCasesForProduct(MultipartBody body_, @PathParam("id") final Integer productId_) throws Exception
+	@Path("/{id}/import_multistep_testcases/")
+	public Boolean importMultiStepTestCasesFromCsv(MultipartBody body_, @PathParam("id") final Integer productId_) throws Exception
 	{
 		List<org.apache.cxf.jaxrs.ext.multipart.Attachment> attachments = body_.getAllAttachments();
 		javax.activation.DataHandler dataHandler = attachments.get(0).getDataHandler();
@@ -406,15 +406,15 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 		IOUtils.copy(inputStream, outputStream);
 		inputStream.close();
 		outputStream.close();
-		testCaseService.importTestCasesFromCsv(outputStream.toString(), productId_);
+		testCaseService.importMultiStepTestCasesFromCsv(outputStream.toString(), productId_);
 		return Boolean.TRUE;
 	}
 
 	@Override
 	@Secured(Permission.TEST_CASE_EDIT)
 	@POST
-	@Path("/{id}/import_testcases_extended/")
-	public Boolean importTestCasesExtendedForProduct(MultipartBody body_, @PathParam("id") final Integer productId_) throws Exception
+	@Path("/{id}/import_singlestep_testcases/")
+	public Boolean importSingleStepTestCasesFromCsv(MultipartBody body_, @PathParam("id") final Integer productId_) throws Exception
 	{
 		List<org.apache.cxf.jaxrs.ext.multipart.Attachment> attachments = body_.getAllAttachments();
 		javax.activation.DataHandler dataHandler = attachments.get(0).getDataHandler();
@@ -423,7 +423,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 		IOUtils.copy(inputStream, outputStream);
 		inputStream.close();
 		outputStream.close();
-		testCaseService.importTestCasesFromSingleStepExtendedCsv(outputStream.toString(), productId_);
+		testCaseService.importSingleStepTestCasesFromCsv(outputStream.toString(), productId_);
 		return Boolean.TRUE;
 	}
 }

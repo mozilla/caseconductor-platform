@@ -5,20 +5,10 @@
 	<sql-query cacheable="false" cache-mode="ignore" name="Report_TestRunResultTotalsByStatus" >
 		select concat(101, testRunResultStatusId) id, testRunResultStatusId categoryName, count(*) categoryValue
 		from TestRunResult
-		where
-		testRunId = :testRunId
-		group by
-		testRunResultStatusId
-		<return alias="statusTotals" class="com.utest.domain.view.CategoryValue" />
-	</sql-query>
-	<sql-query cacheable="false" cache-mode="ignore" name="Report_TestCycleResultTotalsByStatus">
-		select concat(102, testRunResultStatusId) id, testRunResultStatusId categoryName, count(*) categoryValue
-		from TestRunResult trr
-		join TestRun tr on tr.testRunId = trr.testRunId
-		where
-		tr.testCycleId = :testCycleId
-		group by
-		testRunResultStatusId
+		where (testRunId = :testRunId or -1 = :testRunId)
+		and (testCycleId = :testCycleId or -1 = :testCycleId)
+		and (testSuiteId = :testSuiteId or -1 = :testSuiteId)
+		group by testRunResultStatusId
 		<return alias="statusTotals" class="com.utest.domain.view.CategoryValue" />
 	</sql-query>
 </hibernate-mapping>
