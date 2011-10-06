@@ -71,7 +71,7 @@ import com.utest.domain.service.TestSuiteService;
 import com.utest.domain.service.UserService;
 import com.utest.domain.util.DomainUtil;
 import com.utest.domain.view.TestCaseExportSingleStepExtendedView;
-import com.utest.domain.view.TestCaseExportView;
+import com.utest.domain.view.TestCaseExportSingleStepExtendedView;
 import com.utest.domain.view.TestCaseVersionView;
 import com.utest.exception.ActivatingIncompleteEntityException;
 import com.utest.exception.ActivatingNotApprovedEntityException;
@@ -994,61 +994,72 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	@Override
 	public UtestSearchResult findTestCasesInExportFormat(final UtestSearch search_)
 	{
-		return dao.getBySearch(TestCaseExportView.class, search_);
+		return dao.getBySearch(TestCaseExportSingleStepExtendedView.class, search_);
 	}
 
 	@Override
 	public void importMultiStepTestCasesFromCsv(final String cvs_, final Integer productId_) throws Exception
 	{
+		Product product = getRequiredEntityById(Product.class, productId_);
 
-		final String[] columns = { "type", "productName", "testCaseName", "createdBy", "createDate", "description", "stepNumber", "instruction", "expectedResult" };
+		final String[] columns = { "type", "productName", "testCaseName", "createdBy", "createDate", "description", "stepNumber", "instruction", "expectedResult", "tagList",
+				"testSuiteList" };
 		final CSVReader reader = new CSVReader(new StringReader(cvs_));
 
-		final ColumnPositionMappingStrategy<TestCaseExportView> strat = new ColumnPositionMappingStrategy<TestCaseExportView>();
+		final ColumnPositionMappingStrategy<TestCaseExportSingleStepExtendedView> strat = new ColumnPositionMappingStrategy<TestCaseExportSingleStepExtendedView>();
 		strat.setColumnMapping(columns);
-		strat.setType(TestCaseExportView.class);
+		strat.setType(TestCaseExportSingleStepExtendedView.class);
 
-		final CsvToBean<TestCaseExportView> csvToBean = new CsvToBean<TestCaseExportView>();
+		final CsvToBean<TestCaseExportSingleStepExtendedView> csvToBean = new CsvToBean<TestCaseExportSingleStepExtendedView>();
 
-		final List<TestCaseExportView> nodes = csvToBean.parse(strat, reader);
+		final List<TestCaseExportSingleStepExtendedView> nodes = csvToBean.parse(strat, reader);
 
 		TestCase testCase = null;
-		TestCaseVersion updatedTestCaseVersion = null;
+		TestCaseVersion testCaseVersion = null;
 
-		try
+		Map<String, Set<Integer>> tagMap = new HashMap<String, Set<Integer>>();
+		Map<String, Set<Integer>> suiteMap = new HashMap<String, Set<Integer>>();
+		// starting from 2nd row to skip header row
+		for (int i = 1; i < nodes.size(); i++)
 		{
-			for (final TestCaseExportView export : nodes)
+			final TestCaseExportSingleStepExtendedView export = nodes.get(i);
+			if (!TestCaseExportSingleStepExtendedView.HEADER_TYPE.equalsIgnoreCase(export.getType())
+					&& !TestCaseExportSingleStepExtendedView.STEP_TYPE.equalsIgnoreCase(export.getType()))
 			{
-				if (TestCaseExportView.HEADER_TYPE.equalsIgnoreCase(export.getType()))
+				throw new InvalidImportFileFormatException(InvalidImportFileFormatException.ERROR_INVALID_TEST_CASE_HEADER_TYPE + ", row: " + i);
+			}
+			if (TestCaseExportSingleStepExtendedView.HEADER_TYPE.equalsIgnoreCase(export.getType()))
+			{
+				testCase = addTestCase(productId_, 10, 3, export.getTestCaseName(), export.getDescription(), null);
+				testCaseVersion = testCase.getLatestVersion();
+				// store associated tags
+				if (export.getTagList() != null && export.getTagList().length() > 0)
 				{
-					testCase = addTestCase(productId_, 10, 3, export.getTestCaseName(), export.getDescription(), null);
-					updatedTestCaseVersion = testCase.getLatestVersion();
+					loadTestCaseAssociations(tagMap, export.getTagList(), ",", testCaseVersion.getId());
 				}
-				else if (TestCaseExportView.STEP_TYPE.equalsIgnoreCase(export.getType()))
+				// store associated suites
+				if (export.getTestSuiteList() != null && export.getTestSuiteList().length() > 0)
 				{
-					if (updatedTestCaseVersion == null)
-					{
-						throw new InvalidImportFileFormatException(InvalidImportFileFormatException.ERROR_TEST_CASE_STEP_MUST_FOLLOW_HEADER);
-					}
-					else
-					{
+					loadTestCaseAssociations(suiteMap, export.getTestSuiteList(), ",", testCaseVersion.getId());
+				}
+			}
+			else if (TestCaseExportSingleStepExtendedView.STEP_TYPE.equalsIgnoreCase(export.getType()))
+			{
+				if (testCaseVersion == null)
+				{
+					throw new InvalidImportFileFormatException(InvalidImportFileFormatException.ERROR_TEST_CASE_STEP_MUST_FOLLOW_HEADER);
+				}
+				else
+				{
 
-						int stepNumber = Integer.parseInt(export.getStepNumber());
-						addTestCaseStep(updatedTestCaseVersion.getId(), testCase.getName() + " : step" + stepNumber, stepNumber, export.getInstruction(), export
-								.getExpectedResult(), TestCase.DEFAULT_STEP_ESTIMATED_TIME_IN_MIN);
-					}
+					int stepNumber = Integer.parseInt(export.getStepNumber());
+					addTestCaseStep(testCaseVersion.getId(), testCase.getName() + " : step" + stepNumber, stepNumber, export.getInstruction(), export.getExpectedResult(),
+							TestCase.DEFAULT_STEP_ESTIMATED_TIME_IN_MIN);
 				}
 			}
 		}
-		catch (final InvalidImportFileFormatException ex)
-		{
-			throw ex;
-		}
-		catch (final NumberFormatException ex)
-		{
-			throw new InvalidImportFileFormatException(InvalidImportFileFormatException.ERROR_INVALID_TEST_CASE_STEP_NUMBER);
-		}
-
+		createAssociatedTags(tagMap, product);
+		createAssociatedTestSuites(suiteMap, product);
 	}
 
 	@Override
