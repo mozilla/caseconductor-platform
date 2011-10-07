@@ -206,4 +206,6 @@ public interface TestRunService extends BaseService
 	boolean deleteExternalBugForTestRunResult(Integer attachmentId, Integer entityId) throws Exception;
 
 	List<EntityExternalBug> getExternalBugsForTestRunResult(Integer testRunResultId) throws Exception;
+
+	CategoryValue getCoverageCompletionPercent(Integer testRunId, Integer testCycleId);
 }

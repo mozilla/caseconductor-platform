@@ -90,4 +90,6 @@ public interface TestCycleWebService
 	Boolean undeleteTestCycle(UriInfo ui, Integer testCycleId, Integer originalVesionId) throws Exception;
 
 	TestCycleSearchResultInfo findDeletedTestCycles(UriInfo ui, Integer includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
+
+	CategoryValueInfo getCoveragePercentComplete(UriInfo ui, Integer testCycleId, Integer testRunId) throws Exception;
 }

@@ -426,4 +426,17 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 		return objectBuilderFactory.toInfo(CategoryValueInfo.class, results, ui_.getBaseUriBuilder());
 	}
 
+	@GET
+	@Path("/{id}/reports/coverage/percentcomplete")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CYCLE_VIEW)
+	public CategoryValueInfo getCoveragePercentComplete(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("testRunId") final Integer testRunId_)
+			throws Exception
+	{
+		final CategoryValue result = testRunService.getCoverageCompletionPercent(testRunId_, testCycleId_);
+		return objectBuilderFactory.toInfo(CategoryValueInfo.class, result, ui_.getBaseUriBuilder());
+	}
+
 }

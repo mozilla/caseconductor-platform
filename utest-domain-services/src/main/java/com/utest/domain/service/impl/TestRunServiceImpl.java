@@ -1747,6 +1747,43 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public CategoryValue getCoverageCompletionPercent(final Integer testRunId_, Integer testCycleId_)
+	{
+		final int NOT_SUPPLIED = -1;
+
+		final int numParams = 2;
+		final String[] paramNames = new String[numParams];
+		final Object[] values = new Object[numParams];
+		final String namedQuery = "Report_TestRunResultPercentComplete";
+		paramNames[0] = "testRunId";
+		if (testRunId_ != null)
+		{
+			values[0] = testRunId_;
+		}
+		else
+		{
+			values[0] = NOT_SUPPLIED;
+		}
+		paramNames[1] = "testCycleId";
+		if (testCycleId_ != null)
+		{
+			values[1] = testCycleId_;
+		}
+		else
+		{
+			values[1] = NOT_SUPPLIED;
+		}
+
+		List<CategoryValue> results = (List<CategoryValue>) dao.findByNamedQueryAndNamedParam(namedQuery, paramNames, values, false, false);
+		if (results.size() > 0)
+		{
+			return results.get(0);
+		}
+		return null;
+	}
+
 	@Override
 	public boolean deleteAttachmentForTestRun(final Integer attachmentId_, final Integer entityId_) throws Exception
 	{
