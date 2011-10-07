@@ -97,4 +97,8 @@ public interface UserWebService
 
 	Boolean deleteAttachment(UriInfo ui, Integer userId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
+	Boolean undeleteRole(UriInfo ui, Integer roleId, Integer originalVersionId) throws Exception;
+
+	RoleSearchResultInfo findDeletedRoles(UriInfo ui, UtestSearchRequest request) throws Exception;
+
 }

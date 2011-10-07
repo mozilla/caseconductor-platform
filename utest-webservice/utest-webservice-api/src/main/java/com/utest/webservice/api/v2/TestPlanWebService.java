@@ -71,4 +71,8 @@ public interface TestPlanWebService
 
 	TestPlanSearchResultInfo findTestPlans(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
+	Boolean undeleteTestPlan(UriInfo ui, Integer testPlanId, Integer originalVesionId) throws Exception;
+
+	TestPlanSearchResultInfo findDeletedTestPlans(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+
 }

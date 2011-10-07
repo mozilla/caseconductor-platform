@@ -32,7 +32,7 @@ import com.utest.domain.search.UtestSearchResult;
  * 
  * @author Vadim Kisen
  */
-public interface CompanyService
+public interface CompanyService extends BaseService
 {
 	// Company related methods
 	Company getCompany(Integer companyId_) throws Exception;

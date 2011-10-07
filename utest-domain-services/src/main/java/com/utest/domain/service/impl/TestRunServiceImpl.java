@@ -1716,7 +1716,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			values[0] = NOT_SUPPLIED;
 		}
 		paramNames[1] = "testCycleId";
-		if (testRunId_ != null)
+		if (testCycleId_ != null)
 		{
 			values[1] = testCycleId_;
 		}
@@ -1725,7 +1725,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			values[1] = NOT_SUPPLIED;
 		}
 		paramNames[2] = "testSuiteId";
-		if (testRunId_ != null)
+		if (testSuiteId_ != null)
 		{
 			values[2] = testSuiteId_;
 		}
@@ -1734,7 +1734,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 			values[2] = NOT_SUPPLIED;
 		}
 		paramNames[3] = "testCaseId";
-		if (testRunId_ != null)
+		if (testCaseId_ != null)
 		{
 			values[3] = testCaseId_;
 		}

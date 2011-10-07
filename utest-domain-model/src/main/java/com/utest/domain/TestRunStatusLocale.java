@@ -28,6 +28,7 @@ public class TestRunStatusLocale implements LocaleDescriptable
 	private TestRunStatusLocaleId	id;
 	private String					name;
 	private Integer					sortOrder;
+	private boolean					deleted;
 
 	public TestRunStatusLocale()
 	{
@@ -80,5 +81,15 @@ public class TestRunStatusLocale implements LocaleDescriptable
 	public String getLocaleCode()
 	{
 		return getId().getLocaleCode();
+	}
+
+	public void setDeleted(boolean deleted)
+	{
+		this.deleted = deleted;
+	}
+
+	public boolean isDeleted()
+	{
+		return deleted;
 	}
 }

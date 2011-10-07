@@ -86,4 +86,8 @@ public interface TestCycleWebService
 	TestCycleInfo unfeatureTestCycle(UriInfo ui, Integer testCycleId, Integer originalVersionId) throws Exception;
 
 	List<CategoryValueInfo> getCoverageByResultStatus(UriInfo ui, Integer testCycleId, Integer testSuiteId, Integer testRunId, Integer testCaseId) throws Exception;
+
+	Boolean undeleteTestCycle(UriInfo ui, Integer testCycleId, Integer originalVesionId) throws Exception;
+
+	TestCycleSearchResultInfo findDeletedTestCycles(UriInfo ui, Integer includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
 }

@@ -30,6 +30,7 @@ public class EntityTypeLocale implements LocaleDescriptable
 	private EntityTypeLocaleId	id;
 	private String				name;
 	private Integer				sortOrder;
+	private boolean				deleted;
 
 	public EntityTypeLocale()
 	{
@@ -82,5 +83,15 @@ public class EntityTypeLocale implements LocaleDescriptable
 	public String getLocaleCode()
 	{
 		return getId().getLocaleCode();
+	}
+
+	public void setDeleted(boolean deleted)
+	{
+		this.deleted = deleted;
+	}
+
+	public boolean isDeleted()
+	{
+		return deleted;
 	}
 }

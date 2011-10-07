@@ -21,6 +21,7 @@ package com.utest.dao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,6 +43,7 @@ import com.trg.search.ISearch;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 import com.trg.search.Sort;
+import com.utest.domain.Entity;
 import com.utest.domain.LocaleDescriptable;
 import com.utest.domain.LocalizedEntity;
 import com.utest.domain.search.UtestFilter;
@@ -58,6 +60,11 @@ import com.utest.domain.util.DomainUtil;
 public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements TypelessDAO
 {
 	private Boolean	permanentDeletionEnabled;
+
+	public TypelessHibernateDAOImpl()
+	{
+		super();
+	}
 
 	@Autowired
 	@Override
@@ -214,6 +221,7 @@ public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements Typele
 		return getSessionFactory().getClassMetadata(entity_.getClass().getSimpleName());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getById(final Class<T> type_, final Serializable id_)
 	{
@@ -221,7 +229,10 @@ public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements Typele
 		{
 			throw new IllegalArgumentException(type_.getSimpleName() + " ID is null.");
 		}
-		return super._get(type_, id_);
+		final Search s = new Search(type_);
+		s.addFilterEqual("id", id_);
+		applyDeletedFilter(s, type_);
+		return (T) super._searchUnique(type_, s);
 	}
 
 	@Override
@@ -230,6 +241,7 @@ public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements Typele
 
 		final Search s = new Search(type_);
 		s.addFilterIn("id", ids_);
+		applyDeletedFilter(s, type_);
 		final List<T> list = search(type_, s);
 		return list;
 	}
@@ -238,9 +250,17 @@ public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements Typele
 	public <T> List<T> getAll(final Class<T> type_)
 	{
 		final Search s = new Search(type_);
-
+		applyDeletedFilter(s, type_);
 		final List<T> list = search(type_, s);
 		return list;
+	}
+
+	private <T> void applyDeletedFilter(final Search search, final Class<T> type)
+	{
+		if (!permanentDeletionEnabled)
+		{
+			search.addFilterNotEqual("deleted", true);
+		}
 	}
 
 	/**
@@ -302,9 +322,26 @@ public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements Typele
 	 * @return
 	 */
 	@Override
+	public UtestSearchResult getDeletedBySearch(final Class<?> type_, final UtestSearch search_)
+	{
+		final Search s = convertSearch(type_, search_);
+		(s).addFilterEqual("deleted", true);
+		final SearchResult<?> result = super._searchAndCount(type_, s);
+		return convertResult(result);
+	}
+
+	/**
+	 * Retrieves a list of Entities based on dynamic search, page and sort.
+	 * 
+	 * @param type_
+	 * @param search_
+	 * @return
+	 */
+	@Override
 	public UtestSearchResult getBySearch(final Class<?> type_, final UtestSearch search_)
 	{
 		final Search s = convertSearch(type_, search_);
+		applyDeletedFilter(s, type_);
 		final SearchResult<?> result = super._searchAndCount(type_, s);
 		return convertResult(result);
 	}
@@ -317,17 +354,31 @@ public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements Typele
 		{
 			checkForNullFilters(search_.getFilters());
 		}
+		applyDeletedFilter((Search) search_, type_);
 		return super._search(type_, search_);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Object searchUnique(final Class<T> clazz_, final ISearch search_)
+	public <T> List<T> searchDeleted(final Class<T> type_, final ISearch search_)
 	{
 		if (search_ != null)
 		{
 			checkForNullFilters(search_.getFilters());
 		}
-		return super._searchUnique(clazz_, search_);
+		((Search) search_).addFilterEqual("deleted", true);
+		return super._search(type_, search_);
+	}
+
+	@Override
+	public <T> Object searchUnique(final Class<T> type_, final ISearch search_)
+	{
+		if (search_ != null)
+		{
+			checkForNullFilters(search_.getFilters());
+		}
+		applyDeletedFilter((Search) search_, type_);
+		return super._searchUnique(type_, search_);
 	}
 
 	@Override
@@ -384,32 +435,93 @@ public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements Typele
 	@Override
 	public <T> boolean delete(final Class<T> type_, final Serializable id_)
 	{
-		return super._deleteById(type_, id_);
+		if (!permanentDeletionEnabled)
+		{
+			T t = getById(type_, id_);
+			if (t instanceof Entity)
+			{
+				((Entity) t).setDeleted(true);
+				update(t);
+				return true;
+			}
+			else
+			{
+				return super._deleteById(type_, id_);
+			}
+		}
+		else
+		{
+			return super._deleteById(type_, id_);
+		}
+	}
+
+	@Override
+	public <T> boolean undoDeletedEntity(final Class<T> type_, final Serializable id_)
+	{
+		if (!permanentDeletionEnabled)
+		{
+			T t = getById(type_, id_);
+			if (t instanceof Entity)
+			{
+				((Entity) t).setDeleted(false);
+				update(t);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	@Override
 	public <T> void delete(final Class<T> type_, final Serializable[] ids_)
 	{
-		super._deleteById(type_, ids_);
+		for (Serializable id : Arrays.asList(ids_))
+		{
+			delete(type_, id);
+		}
 	}
 
 	@Override
 	public void delete(final Object[] entities_)
 	{
-		super._deleteEntities(entities_);
+		delete(Arrays.asList(entities_));
 	}
 
 	@Override
 	public void delete(final List<?> entities_)
 	{
-		final Object[] arr = new Object[entities_.size()];
-		super._deleteEntities(entities_.toArray(arr));
+		for (Object entity : entities_)
+		{
+			delete(entity);
+		}
 	}
 
 	@Override
 	public void delete(final Object entity_)
 	{
-		super._deleteEntities(entity_);
+		if (!permanentDeletionEnabled)
+		{
+			if (entity_ instanceof Entity)
+			{
+				((Entity) entity_).setDeleted(true);
+				update(entity_);
+			}
+			else
+			{
+				super._deleteEntities(entity_);
+			}
+		}
+		else
+		{
+			super._deleteEntities(entity_);
+		}
+
 	}
 
 	@Override
@@ -887,13 +999,14 @@ public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements Typele
 		return String.valueOf(operator);
 	}
 
+	public Boolean getPermanentDeletionEnabled()
+	{
+		return permanentDeletionEnabled;
+	}
+
 	public void setPermanentDeletionEnabled(Boolean permanentDeletionEnabled)
 	{
 		this.permanentDeletionEnabled = permanentDeletionEnabled;
 	}
 
-	public Boolean getPermanentDeletionEnabled()
-	{
-		return permanentDeletionEnabled;
-	}
 }

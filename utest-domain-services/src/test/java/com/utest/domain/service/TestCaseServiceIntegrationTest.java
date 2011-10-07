@@ -20,6 +20,7 @@
 package com.utest.domain.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -124,7 +125,7 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 
 	}
 
-	@Test(groups = { "integration" }, enabled = true)
+	@Test(groups = { "integration" }, enabled = false)
 	public void testFindTestCaseExternalBugs() throws Exception
 	{
 
@@ -227,4 +228,22 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 		testCaseService.activateTestCaseVersion(testCaseVersion.getId(), testCaseVersion.getVersion());
 	}
 
+	@Test(groups = { "integration" }, enabled = true)
+	public void testDeleteTestCase() throws Exception
+	{
+		// final User user = userService.getUser(1);
+		// loginUser(user);
+		// final Integer testCaseId = 1;
+		// testCaseService.deleteTestCase(testCaseId, 0);
+		// Assert.assertTrue(true);
+
+		// TestCase testCase = testCaseService.getTestCase(1);
+		// Assert.assertTrue(testCase == null);
+
+		UtestSearch search = new UtestSearch();
+		search.addFilterIn("id", Arrays.asList(1, 2, 3));
+		UtestSearchResult result = testCaseService.findTestCases(search);
+		Assert.assertTrue(result != null);
+
+	}
 }

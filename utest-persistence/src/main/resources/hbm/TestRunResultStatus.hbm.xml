@@ -13,5 +13,8 @@
         	<map-key type="string" formula="localeCode"/>
         	<one-to-many class="com.utest.domain.TestRunResultStatusLocale" />
         </map>
+       <property name="deleted" type="boolean">
+            <column name="deleted"/>
+        </property>
     </class>
 </hibernate-mapping>

@@ -74,6 +74,9 @@
         <property name="lastChangeDate" type="timestamp">
             <column name="lastChangeDate" length="19" not-null="true" />
         </property>
+       <property name="deleted" type="boolean">
+            <column name="deleted"/>
+        </property>
 		<!-- 
 		<bag name="steps" table="TestCaseStep" lazy="false" inverse="true" cascade="all" order-by="stepNumber">
 			<key column="testCaseVersionId" />

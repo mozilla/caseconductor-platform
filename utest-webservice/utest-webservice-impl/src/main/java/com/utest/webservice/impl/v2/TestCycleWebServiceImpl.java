@@ -299,6 +299,22 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 		return Boolean.TRUE;
 	}
 
+	@PUT
+	@Path("/{id}/undo_delete/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CYCLE_EDIT)
+	public Boolean undeleteTestCycle(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("originalVersionId") final Integer originalVesionId_)
+			throws Exception
+	{
+		UtestSearch search = new UtestSearch();
+		search.addFilterEqual("testCycleId", testCycleId_);
+		// undo test cycle test runs
+		testCycleService.undoAllDeletedEntities(TestRun.class, search);
+		return testCycleService.undoDeletedEntity(TestCycle.class, testCycleId_);
+	}
+
 	@GET
 	@Path("/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -321,6 +337,20 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestCycleInfo.class, request_, ui_);
 		final UtestSearchResult result = testCycleService.findTestCycles(search, teamMemberId_, includedEnvironmentId_);
+
+		return (TestCycleSearchResultInfo) objectBuilderFactory.createResult(TestCycleInfo.class, TestCycle.class, request_, result, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_CYCLE_VIEW)
+	public TestCycleSearchResultInfo findDeletedTestCycles(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+			@QueryParam("teamMemberId") final Integer teamMemberId_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	{
+		final UtestSearch search = objectBuilderFactory.createSearch(TestCycleInfo.class, request_, ui_);
+		final UtestSearchResult result = testCycleService.findDeletedEntities(TestCycle.class, search);
 
 		return (TestCycleSearchResultInfo) objectBuilderFactory.createResult(TestCycleInfo.class, TestCycle.class, request_, result, ui_.getBaseUriBuilder());
 	}

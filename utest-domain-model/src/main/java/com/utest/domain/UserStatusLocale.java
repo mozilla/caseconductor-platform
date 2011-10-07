@@ -30,6 +30,7 @@ public class UserStatusLocale implements LocaleDescriptable
 	private UserStatusLocaleId	id;
 	private String				name;
 	private Integer				sortOrder;
+	private boolean				deleted;
 
 	public UserStatusLocale()
 	{
@@ -82,5 +83,15 @@ public class UserStatusLocale implements LocaleDescriptable
 	public String getLocaleCode()
 	{
 		return getId().getLocaleCode();
+	}
+
+	public void setDeleted(boolean deleted)
+	{
+		this.deleted = deleted;
+	}
+
+	public boolean isDeleted()
+	{
+		return deleted;
 	}
 }

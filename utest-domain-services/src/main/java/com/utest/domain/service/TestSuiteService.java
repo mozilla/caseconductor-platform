@@ -34,14 +34,15 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 /**
  * Service to handle all domain operations related to the Test Suite Management.
  */
-public interface TestSuiteService
+public interface TestSuiteService extends BaseService
 {
 	// TestSuite related methods
 	TestSuite addTestSuite(Integer productId, boolean useLatestVersiuons, String name, String description) throws Exception;
 
 	TestSuite getTestSuite(Integer testSuiteId_) throws Exception;
 
-	UtestSearchResult findTestSuites(UtestSearch search_, Integer includedInTestRunId_, Integer includedTestCaseId, Integer includedTestCaseVersionId, Integer includedEnvironmentId_) throws Exception;
+	UtestSearchResult findTestSuites(UtestSearch search_, Integer includedInTestRunId_, Integer includedTestCaseId, Integer includedTestCaseVersionId,
+			Integer includedEnvironmentId_) throws Exception;
 
 	void deleteTestSuiteTestCase(Integer testSuiteTestCaseId_, Integer originalVersionId) throws Exception;
 

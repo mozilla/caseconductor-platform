@@ -30,6 +30,7 @@ public class ApprovalStatusLocale implements LocaleDescriptable
 	private ApprovalStatusLocaleId	id;
 	private String					name;
 	private Integer					sortOrder;
+	private boolean					deleted;
 
 	public ApprovalStatusLocale()
 	{
@@ -82,5 +83,15 @@ public class ApprovalStatusLocale implements LocaleDescriptable
 	public String getLocaleCode()
 	{
 		return getId().getLocaleCode();
+	}
+
+	public void setDeleted(boolean deleted)
+	{
+		this.deleted = deleted;
+	}
+
+	public boolean isDeleted()
+	{
+		return deleted;
 	}
 }

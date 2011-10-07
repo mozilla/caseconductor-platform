@@ -316,6 +316,22 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 		return Boolean.TRUE;
 	}
 
+	@PUT
+	@Path("/{id}/undo_delete/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_SUITE_EDIT, Permission.DELETED_ENTITY_UNDO })
+	public Boolean undeleteTestSuite(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_, @FormParam("originalVersionId") final Integer originalVesionId_)
+			throws Exception
+	{
+		UtestSearch search = new UtestSearch();
+		search.addFilterEqual("testSuiteId", testSuiteId_);
+		// undo user roles
+		testSuiteService.undoAllDeletedEntities(TestSuiteTestCase.class, search);
+		return testSuiteService.undoDeletedEntity(TestSuite.class, testSuiteId_);
+	}
+
 	@GET
 	@Path("/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -345,6 +361,22 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestSuiteInfo.class, request_, ui_);
 		final UtestSearchResult result = testSuiteService.findTestSuites(search, hasTestCasesInTestRunId_, includedTestCaseId_, includedTestCaseVesionId_, includedEnvironmentId_);
+
+		return (TestSuiteSearchResultInfo) objectBuilderFactory.createResult(TestSuiteInfo.class, TestSuite.class, request_, result, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_SUITE_VIEW, Permission.DELETED_ENTITY_VIEW })
+	@Path("/deleted/")
+	public TestSuiteSearchResultInfo findDeletedTestSuites(@Context final UriInfo ui_, @QueryParam("hasTestCasesInTestRunId") final Integer hasTestCasesInTestRunId_,
+			@QueryParam("includedTestCaseId") final Integer includedTestCaseId_, @QueryParam("includedTestCaseVersionId") final Integer includedTestCaseVesionId_,
+			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	{
+		final UtestSearch search = objectBuilderFactory.createSearch(TestSuiteInfo.class, request_, ui_);
+		final UtestSearchResult result = testSuiteService.findDeletedEntities(TestSuite.class, search);
 
 		return (TestSuiteSearchResultInfo) objectBuilderFactory.createResult(TestSuiteInfo.class, TestSuite.class, request_, result, ui_.getBaseUriBuilder());
 	}

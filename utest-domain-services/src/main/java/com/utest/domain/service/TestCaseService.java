@@ -40,7 +40,7 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 /**
  * Service to handle all domain operations related to the Test Cases.
  */
-public interface TestCaseService
+public interface TestCaseService extends BaseService
 {
 	TestCaseVersion getLatestTestCaseVersion(Integer testCaseId) throws Exception;
 

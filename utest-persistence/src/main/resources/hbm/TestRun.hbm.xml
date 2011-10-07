@@ -73,5 +73,8 @@
         <property name="lastChangeDate" type="timestamp">
             <column name="lastChangeDate" length="19" not-null="true" />
         </property>
+       <property name="deleted" type="boolean">
+            <column name="deleted"/>
+        </property>
     </class>
 </hibernate-mapping>

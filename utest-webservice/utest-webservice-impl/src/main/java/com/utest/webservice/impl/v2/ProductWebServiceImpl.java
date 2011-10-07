@@ -120,6 +120,23 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 		return Boolean.TRUE;
 	}
 
+	@PUT
+	@Path("/{id}/undo_delete/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.PRODUCT_EDIT, Permission.DELETED_ENTITY_UNDO })
+	public Boolean undeleteProduct(@Context final UriInfo ui_, @PathParam("id") final Integer productId, @FormParam("originalVersionId") final Integer originalVersionId_)
+			throws Exception
+	{
+		UtestSearch search = new UtestSearch();
+		search.addFilterEqual("productId", productId);
+		// undo components
+		productService.undoAllDeletedEntities(ProductComponent.class, search);
+		// undo product
+		return productService.undoDeletedEntity(Product.class, productId);
+	}
+
 	@DELETE
 	@Path("/components/{id}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -190,6 +207,20 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Override
 	@Secured(Permission.PRODUCT_VIEW)
 	public ProductSearchResultInfo findProducts(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+			@QueryParam("teamMemberId") final Integer teamMemberId, @QueryParam("") final UtestSearchRequest request) throws Exception
+	{
+		UtestSearch search = objectBuilderFactory.createSearch(ProductInfo.class, request, ui_);
+		UtestSearchResult result = productService.findProducts(search, teamMemberId, includedEnvironmentId_);
+		return (ProductSearchResultInfo) objectBuilderFactory.createResult(ProductInfo.class, Product.class, request, result, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.PRODUCT_VIEW, Permission.DELETED_ENTITY_VIEW })
+	@Path("/deleted/")
+	public ProductSearchResultInfo findDeletedProducts(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
 			@QueryParam("teamMemberId") final Integer teamMemberId, @QueryParam("") final UtestSearchRequest request) throws Exception
 	{
 		UtestSearch search = objectBuilderFactory.createSearch(ProductInfo.class, request, ui_);

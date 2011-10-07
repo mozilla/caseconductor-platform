@@ -46,7 +46,9 @@ import com.utest.domain.AccessRole;
 import com.utest.domain.Attachment;
 import com.utest.domain.AuthenticatedUserInfo;
 import com.utest.domain.Permission;
+import com.utest.domain.RolePermission;
 import com.utest.domain.User;
+import com.utest.domain.UserRole;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.UserService;
@@ -371,6 +373,25 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 	}
 
 	@PUT
+	@Path("/roles/{id}/undo_delete/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.USER_ACCOUNT_EDIT, Permission.DELETED_ENTITY_UNDO })
+	public Boolean undeleteRole(@Context final UriInfo ui_, @PathParam("id") final Integer roleId_, @FormParam("originalVersionId") final Integer originalVersionId_)
+			throws Exception
+	{
+		UtestSearch search = new UtestSearch();
+		search.addFilterEqual("accessRoleId", roleId_);
+		// undo user roles
+		userService.undoAllDeletedEntities(UserRole.class, search);
+		// undo role permissions
+		userService.undoAllDeletedEntities(RolePermission.class, search);
+		// undo role
+		return userService.undoDeletedEntity(AccessRole.class, roleId_);
+	}
+
+	@PUT
 	@Path("/roles/{id}/permissions/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -424,7 +445,7 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 		return objectBuilderFactory.toInfo(UserInfo.class, user, ui_.getBaseUriBuilder());
 	}
 
-	@DELETE
+	@PUT
 	@Path("/roles/{id}/permissions/{permissionId}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -461,6 +482,19 @@ public class UserWebServiceImpl extends BaseWebServiceImpl implements UserWebSer
 		final UtestSearch search = objectBuilderFactory.createSearch(RoleInfo.class, request, ui_);
 		final UtestSearchResult result = userService.findRoles(search);
 
+		return (RoleSearchResultInfo) objectBuilderFactory.createResult(RoleInfo.class, AccessRole.class, request, result, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Path("/roles/deleted/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.USER_ACCOUNT_VIEW, Permission.DELETED_ENTITY_VIEW })
+	public RoleSearchResultInfo findDeletedRoles(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
+	{
+		final UtestSearch search = objectBuilderFactory.createSearch(RoleInfo.class, request, ui_);
+		final UtestSearchResult result = userService.findDeletedEntities(AccessRole.class, search);
 		return (RoleSearchResultInfo) objectBuilderFactory.createResult(RoleInfo.class, AccessRole.class, request, result, ui_.getBaseUriBuilder());
 	}
 

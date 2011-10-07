@@ -33,6 +33,7 @@ public class Locale implements java.io.Serializable
 	private String				code;
 	private String				name;
 	private Integer				sortOrder;
+	private boolean				deleted;
 
 	public Locale()
 	{
@@ -66,5 +67,15 @@ public class Locale implements java.io.Serializable
 	public Integer getSortOrder()
 	{
 		return sortOrder;
+	}
+
+	public void setDeleted(boolean deleted)
+	{
+		this.deleted = deleted;
+	}
+
+	public boolean isDeleted()
+	{
+		return deleted;
 	}
 }

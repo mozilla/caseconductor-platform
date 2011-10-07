@@ -25,6 +25,7 @@ public class Entity implements Serializable
 {
 
 	private Integer	id;
+	private boolean	deleted;
 
 	public Integer getId()
 	{
@@ -95,5 +96,15 @@ public class Entity implements Serializable
 	public boolean isNew()
 	{
 		return ((id == null) || (id == 0));
+	}
+
+	public void setDeleted(boolean deleted)
+	{
+		this.deleted = deleted;
+	}
+
+	public boolean isDeleted()
+	{
+		return deleted;
 	}
 }

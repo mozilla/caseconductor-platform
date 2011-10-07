@@ -176,4 +176,9 @@ public interface TestRunWebService
 	List<EntityExternalBugInfo> getTestRunResultBugs(UriInfo ui, Integer testRunResultId) throws Exception;
 
 	EntityExternalBugInfo createExternalBugForTestRunResult(UriInfo ui, Integer testRunResultId, String externalIdentifier, String url) throws Exception;
+
+	Boolean undeleteTestRun(UriInfo ui, Integer testRunId, Integer originalVersionId) throws Exception;
+
+	TestRunSearchResultInfo findDeletedTestRuns(UriInfo ui, Integer includedEnvironmentId, Integer includedTestSuiteId, Integer includedTestCaseId,
+			Integer includedTestCaseVesionId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
 }

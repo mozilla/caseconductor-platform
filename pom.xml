@@ -40,7 +40,7 @@
         <context.root>tcm</context.root>
 
         <login.expiration.seconds>3600</login.expiration.seconds>
-        <permanent.deletion.enabled>true</permanent.deletion.enabled>
+        <permanent.deletion.enabled>false</permanent.deletion.enabled>
 
     </properties>
     <developers>

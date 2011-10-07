@@ -17,5 +17,8 @@
         <property  name="assignable" type="boolean">
             <column  name="assignable" />
         </property>
+       <property name="deleted" type="boolean">
+            <column name="deleted"/>
+        </property>
     </class>
 </hibernate-mapping>

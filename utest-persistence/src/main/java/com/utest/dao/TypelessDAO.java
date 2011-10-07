@@ -101,4 +101,10 @@ public interface TypelessDAO
 
 	UtestSearchResult getByLocalizedSearch(Class<?> type, Class<?> localLype, UtestSearch search);
 
+	<T> List<T> searchDeleted(Class<T> type, ISearch search);
+
+	UtestSearchResult getDeletedBySearch(Class<?> type, UtestSearch search);
+
+	<T> boolean undoDeletedEntity(Class<T> type, Serializable id);
+
 }

@@ -33,7 +33,7 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 /**
  * Service to handle all domain operations related to the Test Plan Management.
  */
-public interface TestPlanService
+public interface TestPlanService extends BaseService
 {
 
 	UtestSearchResult findTestPlans(UtestSearch search, Integer includedEnvironmentId_) throws Exception;

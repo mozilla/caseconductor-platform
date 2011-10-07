@@ -14,5 +14,8 @@
         <property name="sortOrder" type="java.lang.Integer">
             <column name="sortOrder" not-null="true" />
         </property>
+       <property name="deleted" type="boolean">
+            <column name="deleted"/>
+        </property>
     </class>
 </hibernate-mapping>

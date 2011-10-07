@@ -71,7 +71,6 @@ import com.utest.domain.service.TestSuiteService;
 import com.utest.domain.service.UserService;
 import com.utest.domain.util.DomainUtil;
 import com.utest.domain.view.TestCaseExportSingleStepExtendedView;
-import com.utest.domain.view.TestCaseExportSingleStepExtendedView;
 import com.utest.domain.view.TestCaseVersionView;
 import com.utest.exception.ActivatingIncompleteEntityException;
 import com.utest.exception.ActivatingNotApprovedEntityException;

@@ -35,6 +35,8 @@ import com.utest.domain.Named;
 import com.utest.domain.ProductDependable;
 import com.utest.domain.Versioned;
 import com.utest.domain.search.UtestSearch;
+import com.utest.domain.search.UtestSearchResult;
+import com.utest.domain.service.BaseService;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.util.UserUtil;
 import com.utest.exception.DuplicateNameException;
@@ -42,7 +44,7 @@ import com.utest.exception.InvalidParentChildEnvironmentException;
 import com.utest.exception.NoProductMatchException;
 import com.utest.exception.NotFoundException;
 
-public abstract class BaseServiceImpl
+public abstract class BaseServiceImpl implements BaseService
 {
 	protected final TypelessDAO		dao;
 	protected EnvironmentService	environmentService;
@@ -203,6 +205,32 @@ public abstract class BaseServiceImpl
 		if (result == null)
 		{
 			throw new NotFoundException(type_.getSimpleName() + " not found: " + id_);
+		}
+		return result;
+	}
+
+	@Override
+	public UtestSearchResult findDeletedEntities(final Class<?> type_, final UtestSearch search_)
+	{
+		return dao.getDeletedBySearch(type_, search_);
+	}
+
+	@Override
+	public boolean undoDeletedEntity(final Class<?> type_, final Serializable id_)
+	{
+		return dao.undoDeletedEntity(type_, id_);
+	}
+
+	@Override
+	public UtestSearchResult undoAllDeletedEntities(final Class<?> type_, final UtestSearch search_)
+	{
+		UtestSearchResult result = dao.getDeletedBySearch(type_, search_);
+		for (Object entity : result.getResults())
+		{
+			if (entity instanceof Entity)
+			{
+				dao.undoDeletedEntity(type_, ((Entity) entity).getId());
+			}
 		}
 		return result;
 	}

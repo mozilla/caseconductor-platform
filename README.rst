@@ -81,14 +81,6 @@ The shell script ``reset-mysql.sh`` automates setting up the initial schema and
 running all update scripts. (You may need to modify this script if using a
 database user other than root).
 
-There are 2 OPTIONAL scripts created for populating environment data related to Desktop and Mobile testing. 
-You don't need to run these scripts if you have your own seed data source or you are interested in testing some other types of environments.
-
-    db_tcm_seed_desktop_environments.sql - will populate Operating System, Operating System Version and Web Browser data and relationships between them;
-    
-    db_tcm_seed_mobile_environments.sql - will populate Mobile Manufacturers, Mobile Models and Mobile Operating System data and relationships between them
-
-
 And run the server::
 
     $ jboss-5.1.0.GA/bin/run.sh
@@ -144,3 +136,28 @@ easier.  Please modify the environment variables to match your system config::
     function ccrun() {
         $JBOSS_HOME/bin/run.sh
     }
+
+
+Seeding environment data
+------------------------
+
+There are 2 OPTIONAL scripts created for populating environment data related to Desktop and Mobile testing. 
+You don't need to run these scripts if you have your own seed data source or you are interested in testing some other types of environments.
+
+    db_tcm_seed_desktop_environments.sql - will populate Operating System, Operating System Version and Web Browser data and relationships between them;
+    
+    db_tcm_seed_mobile_environments.sql - will populate Mobile Manufacturers, Mobile Models and Mobile Operating System data and relationships between them
+
+
+Configuring your application for reversable deletes 
+---------------------------------------------------
+
+The application could be configured to never physically remove deleted records from the database, but just mark them as "deleted" instead.
+"Deleted" records will not show up in results of queries and will queries will result in 404 - NOT FOUND response code when searched by ID of a deleted entity.
+
+There is a flag in the application pom.xml file, which will indicate whether application will implement "hard" or "soft" deletes:
+
+   <permanent.deletion.enabled>false</permanent.deletion.enabled>
+
+For "hard" deletes set this flag to true before building the application, or to false for "soft" deletes.
+

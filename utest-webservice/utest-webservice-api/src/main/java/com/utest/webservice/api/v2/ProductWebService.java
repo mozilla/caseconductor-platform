@@ -91,4 +91,8 @@ public interface ProductWebService
 
 	Boolean importSingleStepTestCasesFromCsv(MultipartBody body, Integer productId) throws Exception;
 
+	Boolean undeleteProduct(UriInfo ui, Integer productId, Integer originalVersionId) throws Exception;
+
+	ProductSearchResultInfo findDeletedProducts(UriInfo ui, Integer includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
+
 }

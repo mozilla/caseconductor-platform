@@ -282,6 +282,23 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 		return Boolean.TRUE;
 	}
 
+	@PUT
+	@Path("/{id}/undo_delete/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_PLAN_EDIT)
+	public Boolean undeleteTestPlan(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_, @FormParam("originalVersionId") final Integer originalVesionId_)
+			throws Exception
+	{
+		UtestSearch search = new UtestSearch();
+		search.addFilterEqual("testPlanId", testPlanId_);
+		// undo test suites
+		testPlanService.undoAllDeletedEntities(TestPlanTestSuite.class, search);
+		// undo role
+		return testPlanService.undoDeletedEntity(TestPlan.class, testPlanId_);
+	}
+
 	@GET
 	@Path("/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -314,4 +331,18 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 		return (TestPlanSearchResultInfo) objectBuilderFactory.createResult(TestPlanInfo.class, TestPlan.class, request_, result, ui_.getBaseUriBuilder());
 	}
 
+	@GET
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_PLAN_VIEW, Permission.DELETED_ENTITY_VIEW })
+	@Path("/deleted/")
+	public TestPlanSearchResultInfo findDeletedTestPlans(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+			@QueryParam("") final UtestSearchRequest request_) throws Exception
+	{
+		final UtestSearch search = objectBuilderFactory.createSearch(TestPlanInfo.class, request_, ui_);
+		final UtestSearchResult result = testPlanService.findDeletedEntities(TestPlan.class, search);
+
+		return (TestPlanSearchResultInfo) objectBuilderFactory.createResult(TestPlanInfo.class, TestPlan.class, request_, result, ui_.getBaseUriBuilder());
+	}
 }

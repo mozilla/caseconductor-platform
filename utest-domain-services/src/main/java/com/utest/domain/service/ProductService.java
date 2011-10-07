@@ -35,7 +35,7 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 /**
  * Service to handle all domain operations related to Product.
  */
-public interface ProductService
+public interface ProductService extends BaseService
 {
 	Product addProduct(Integer companyId, String name, String description) throws Exception;
 

@@ -36,7 +36,6 @@ public class User extends TimelineEntity implements CompanyDependable, Named
 	private boolean				forumUser;
 	private boolean				confirmedEmail;
 	private Integer				userStatusId;
-	private UserContext			context;
 	private List<AccessRole>	roles;
 	private List<Permission>	permissions;
 	private Date				lastLoginDate;
@@ -147,23 +146,6 @@ public class User extends TimelineEntity implements CompanyDependable, Named
 	public void setUserStatusId(final Integer userStatusId)
 	{
 		this.userStatusId = userStatusId;
-	}
-
-	/**
-	 * @return the context
-	 */
-	public UserContext getContext()
-	{
-		return context;
-	}
-
-	/**
-	 * @param context
-	 *            the context to set
-	 */
-	public void setContext(final UserContext context)
-	{
-		this.context = context;
 	}
 
 	/**

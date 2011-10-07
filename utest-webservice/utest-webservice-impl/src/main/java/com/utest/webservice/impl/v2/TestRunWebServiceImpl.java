@@ -324,6 +324,27 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 		return objectBuilderFactory.toInfo(TestRunInfo.class, testRun, ui_.getBaseUriBuilder());
 	}
 
+	@PUT
+	@Path("/{id}/undo_delete/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_RUN_EDIT, Permission.DELETED_ENTITY_UNDO })
+	public Boolean undeleteTestRun(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_, @FormParam("originalVersionId") final Integer originalVersionId_)
+			throws Exception
+	{
+		UtestSearch search = new UtestSearch();
+		search.addFilterEqual("testRunId", testRunId_);
+		// undo results
+		testRunService.undoAllDeletedEntities(TestRunResult.class, search);
+		// undo assignments
+		testRunService.undoAllDeletedEntities(TestRunTestCaseAssignment.class, search);
+		// undo test cases
+		testRunService.undoAllDeletedEntities(TestRunTestCase.class, search);
+		// undo role
+		return testRunService.undoDeletedEntity(TestRun.class, testRunId_);
+	}
+
 	@DELETE
 	@Path("/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -356,6 +377,24 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
 	public TestRunSearchResultInfo findTestRuns(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+			@QueryParam("includedTestSuiteId") final Integer includedTestSuiteId_, @QueryParam("includedTestCaseId") final Integer includedTestCaseId_,
+			@QueryParam("includedTestCaseVersionId") final Integer includedTestCaseVesionId_, @QueryParam("teamMemberId") final Integer teamMemberId_,
+			@QueryParam("") final UtestSearchRequest request_) throws Exception
+	{
+		final UtestSearch search = objectBuilderFactory.createSearch(TestRunInfo.class, request_, ui_);
+		final UtestSearchResult result = testRunService.findTestRuns(search, includedTestSuiteId_, includedTestCaseId_, includedTestCaseVesionId_, teamMemberId_,
+				includedEnvironmentId_);
+
+		return (TestRunSearchResultInfo) objectBuilderFactory.createResult(TestRunInfo.class, TestRun.class, request_, result, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.TEST_RUN_VIEW)
+	@Path("/deleted/")
+	public TestRunSearchResultInfo findDeletedTestRuns(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
 			@QueryParam("includedTestSuiteId") final Integer includedTestSuiteId_, @QueryParam("includedTestCaseId") final Integer includedTestCaseId_,
 			@QueryParam("includedTestCaseVersionId") final Integer includedTestCaseVesionId_, @QueryParam("teamMemberId") final Integer teamMemberId_,
 			@QueryParam("") final UtestSearchRequest request_) throws Exception

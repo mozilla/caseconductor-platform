@@ -25,6 +25,7 @@ public class AttachmentTypeLocale implements LocaleDescriptable
 	private AttachmentTypeLocaleId	id;
 	private String					name;
 	private Integer					sortOrder;
+	private boolean					deleted;
 
 	public AttachmentTypeLocale()
 	{
@@ -70,6 +71,16 @@ public class AttachmentTypeLocale implements LocaleDescriptable
 	public String getLocaleCode()
 	{
 		return id.getLocaleCode();
+	}
+
+	public void setDeleted(boolean deleted)
+	{
+		this.deleted = deleted;
+	}
+
+	public boolean isDeleted()
+	{
+		return deleted;
 	}
 
 }

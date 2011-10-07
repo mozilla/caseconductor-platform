@@ -79,4 +79,9 @@ public interface TestSuiteWebService
 
 	TestSuiteTestCaseSearchResultInfo findTestSuiteTestCases(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
+	Boolean undeleteTestSuite(UriInfo ui, Integer testSuiteId, Integer originalVesionId) throws Exception;
+
+	TestSuiteSearchResultInfo findDeletedTestSuites(UriInfo ui, Integer hasTestCasesInTestRunId, Integer includedTestCaseId, Integer includedTestCaseVesionId,
+			Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+
 }

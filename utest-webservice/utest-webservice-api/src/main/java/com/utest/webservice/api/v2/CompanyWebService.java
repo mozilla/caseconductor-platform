@@ -59,4 +59,8 @@ public interface CompanyWebService
 	AttachmentInfo createAttachment(UriInfo ui, Integer companyId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
 
 	Boolean deleteAttachment(UriInfo ui, Integer companyId, Integer attachmentId, Integer originalVersionId) throws Exception;
+
+	Boolean undeleteCompany(UriInfo ui, Integer companyId, Integer originalVersionId) throws Exception;
+
+	CompanySearchResultInfo findDeletedCompanies(UriInfo ui, UtestSearchRequest request) throws Exception;
 }

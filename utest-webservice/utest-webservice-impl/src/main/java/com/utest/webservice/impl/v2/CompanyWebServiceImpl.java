@@ -102,6 +102,20 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 	}
 
 	@PUT
+	@Path("/{id}/undo_delete/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.COMPANY_INFO_EDIT, Permission.DELETED_ENTITY_UNDO })
+	public Boolean undeleteCompany(@Context final UriInfo ui_, @PathParam("id") final Integer companyId_, @FormParam("originalVersionId") final Integer originalVersionId_)
+			throws Exception
+	{
+		companyService.undoDeletedEntity(Company.class, companyId_);
+
+		return Boolean.TRUE;
+	}
+
+	@PUT
 	@Path("/{id}")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -125,6 +139,20 @@ public class CompanyWebServiceImpl extends BaseWebServiceImpl implements Company
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(CompanyInfo.class, request, ui_);
 		final UtestSearchResult result = companyService.findCompanies(search);
+
+		return (CompanySearchResultInfo) objectBuilderFactory.createResult(CompanyInfo.class, Company.class, request, result, ui_.getBaseUriBuilder());
+	}
+
+	@GET
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured(Permission.COMPANY_INFO_VIEW)
+	@Path("/deleted/")
+	public CompanySearchResultInfo findDeletedCompanies(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request) throws Exception
+	{
+		final UtestSearch search = objectBuilderFactory.createSearch(CompanyInfo.class, request, ui_);
+		final UtestSearchResult result = companyService.findDeletedEntities(Company.class, search);
 
 		return (CompanySearchResultInfo) objectBuilderFactory.createResult(CompanyInfo.class, Company.class, request, result, ui_.getBaseUriBuilder());
 	}

@@ -44,7 +44,7 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 /**
  * Service to handle all domain operations related to the Test Case Management.
  */
-public interface TestRunService
+public interface TestRunService extends BaseService
 {
 
 	List<EnvironmentGroup> getEnvironmentGroupsForTestRun(Integer testRunId) throws Exception;

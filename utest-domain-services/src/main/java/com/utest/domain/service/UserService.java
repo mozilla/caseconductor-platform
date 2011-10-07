@@ -32,7 +32,7 @@ import com.utest.domain.search.UtestSearchResult;
 /**
  * Service to handle all domain operations related to User Management.
  */
-public interface UserService
+public interface UserService extends BaseService
 {
 	boolean isUserExists(String email_);
 

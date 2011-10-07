@@ -36,7 +36,7 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 /**
  * Service to handle all domain operations related to the Test Cycle Management.
  */
-public interface TestCycleService
+public interface TestCycleService extends BaseService
 {
 
 	TestCycle addTestCycle(Integer productId, String name, String description, Date startDate, Date endDate, boolean communityAuthoringAllowed, boolean communityAccessAllowed)
