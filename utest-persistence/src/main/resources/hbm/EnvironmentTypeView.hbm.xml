@@ -43,5 +43,8 @@
 		<property name="lastChangedBy" type="java.lang.Integer">
 			<column name="lastChangedBy" />
 		</property>
+       <property name="deleted" type="boolean">
+            <column name="deleted"/>
+        </property>
     </class>
 </hibernate-mapping>
