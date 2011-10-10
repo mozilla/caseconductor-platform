@@ -425,6 +425,20 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 		return objectBuilderFactory.toInfo(TestCaseStepInfo.class, testCaseStep, ui_.getBaseUriBuilder());
 	}
 
+	@PUT
+	@Path("/{id}/undo_delete/")
+	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Override
+	@Secured( { Permission.TEST_CASE_ADD, Permission.TEST_CASE_EDIT })
+	public Boolean undeleteTestCase(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseId_, @FormParam("originalVersionId") final Integer originalVesionId_)
+			throws Exception
+	{
+		testCaseService.undeleteTestCase(testCaseId_);
+
+		return Boolean.TRUE;
+	}
+
 	@DELETE
 	@Path("/{id}/")
 	@Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -448,12 +462,8 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	public Boolean undeleteTestCaseVersion(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
 			@FormParam("originalVersionId") final Integer originalVesionId_) throws Exception
 	{
-		UtestSearch search = new UtestSearch();
-		search.addFilterEqual("testCaseVersionId", testCaseVersionId_);
-		// undo steps
-		testCaseService.undoAllDeletedEntities(TestCaseStep.class, search);
-		// undo version
-		return testCaseService.undoDeletedEntity(TestCaseVersion.class, testCaseVersionId_);
+		testCaseService.undeleteTestCaseVersion(testCaseVersionId_);
+		return Boolean.TRUE;
 	}
 
 	@GET

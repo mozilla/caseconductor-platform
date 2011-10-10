@@ -235,6 +235,20 @@ public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements Typele
 		return (T) super._searchUnique(type_, s);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getDeletedById(final Class<T> type_, final Serializable id_)
+	{
+		if (id_ == null)
+		{
+			throw new IllegalArgumentException(type_.getSimpleName() + " ID is null.");
+		}
+		final Search s = new Search(type_);
+		s.addFilterEqual("id", id_);
+		s.addFilterEqual("deleted", true);
+		return (T) super._searchUnique(type_, s);
+	}
+
 	@Override
 	public <T> List<T> getByIds(final Class<T> type_, final List<Integer> ids_)
 	{

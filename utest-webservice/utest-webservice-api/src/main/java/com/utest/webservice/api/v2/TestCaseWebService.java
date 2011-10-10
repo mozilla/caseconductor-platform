@@ -120,4 +120,6 @@ public interface TestCaseWebService
 
 	TestCaseVersionSearchResultInfo findDeletedTestCaseVersions(UriInfo ui, Integer includedEnvironmentId, Integer includedInTestSuiteId, String tag, UtestSearchRequest request)
 			throws Exception;
+
+	Boolean undeleteTestCase(UriInfo ui, Integer testCaseId, Integer originalVesionId) throws Exception;
 }

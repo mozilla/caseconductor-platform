@@ -107,4 +107,6 @@ public interface TypelessDAO
 
 	<T> boolean undoDeletedEntity(Class<T> type, Serializable id);
 
+	<T> T getDeletedById(Class<T> type, Serializable id);
+
 }

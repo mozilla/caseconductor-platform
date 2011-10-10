@@ -14,4 +14,6 @@ public interface BaseService
 
 	UtestSearchResult undoAllDeletedEntities(Class<?> type, UtestSearch search);
 
+	<T> T getDeletedEntityById(Class<T> type, Serializable id);
+
 }

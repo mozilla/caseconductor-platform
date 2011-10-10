@@ -210,6 +210,13 @@ public abstract class BaseServiceImpl implements BaseService
 	}
 
 	@Override
+	public <T> T getDeletedEntityById(final Class<T> type_, final Serializable id_)
+	{
+		final T result = dao.getDeletedById(type_, id_);
+		return result;
+	}
+
+	@Override
 	public UtestSearchResult findDeletedEntities(final Class<?> type_, final UtestSearch search_)
 	{
 		return dao.getDeletedBySearch(type_, search_);

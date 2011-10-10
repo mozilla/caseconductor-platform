@@ -274,6 +274,27 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		dao.delete(testCase);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public void undeleteTestCase(final Integer testCaseId_) throws Exception
+	{
+		UtestSearch search = new UtestSearch();
+		search.addFilterEqual("testCaseId", testCaseId_);
+		// find deleted versions
+		UtestSearchResult result = findDeletedEntities(TestCaseVersion.class, search);
+		for (TestCaseVersion testCaseVersion : (List<TestCaseVersion>) result.getResults())
+		{
+			search = new UtestSearch();
+			search.addFilterEqual("testCaseVersionId", testCaseVersion.getId());
+			// undo steps
+			undoAllDeletedEntities(TestCaseStep.class, search);
+			// undo version
+			undoDeletedEntity(TestCaseVersion.class, testCaseVersion.getId());
+		}
+		// undo test case
+		undoDeletedEntity(TestCase.class, testCaseId_);
+	}
+
 	@Override
 	public void deleteTestCaseStep(final Integer testCaseStepId_, final Integer originalVersionId_) throws Exception
 	{
@@ -373,17 +394,31 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public void deleteTestCaseTag(final Integer testCaseId_, final Integer tagId_)
+	public void deleteTestCaseVersionTag(final Integer testCaseVersionId_, final Integer tagId_)
 	{
 		final Search search = new Search(TestCaseTag.class);
-		search.addFilterEqual("testCaseId", testCaseId_);
+		search.addFilterEqual("testCaseVersionId", testCaseVersionId_);
 		search.addFilterEqual("tagId", tagId_);
 		final TestCaseTag testCaseTag = (TestCaseTag) dao.searchUnique(TestCaseTag.class, search);
 		if (testCaseTag == null)
 		{
-			throw new NotFoundException("Tag not found. Id: " + tagId_ + " For TestCase: " + testCaseId_);
+			throw new NotFoundException("Tag not found. Id: " + tagId_ + " For TestCase Version: " + testCaseVersionId_);
 		}
 		dao.delete(testCaseTag);
+	}
+
+	private void deleteAllTestCaseVersionTags(final Integer testCaseVersionId_)
+	{
+		final Search search = new Search(TestCaseTag.class);
+		search.addFilterEqual("testCaseVersionId", testCaseVersionId_);
+		final List<TestCaseTag> testCaseTags = dao.search(TestCaseTag.class, search);
+		if (testCaseTags != null && !testCaseTags.isEmpty())
+		{
+			for (TestCaseTag testCaseTag : testCaseTags)
+			{
+				dao.delete(testCaseTag);
+			}
+		}
 	}
 
 	@Override
@@ -400,8 +435,69 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		// delete all steps
 		final List<TestCaseStep> steps = getTestCaseVersionSteps(testCaseVersionId_);
 		dao.delete(steps);
+		// delete all tags
+		deleteAllTestCaseVersionTags(testCaseVersionId_);
+		// delete version
 		testCaseVersion.setVersion(originalVersionId_);
 		dao.delete(testCaseVersion);
+		// if latest version need to find prior one and mark it as latest.
+		if (testCaseVersion.isLatestVersion())
+		{
+			final Search search = new Search(TestCaseVersion.class);
+			search.addFilterEqual("testCaseId", testCaseVersion.getTestCaseId());
+			search.addFilterNotEqual("id", testCaseVersion.getId());
+			search.addSortDesc("id");
+			final List<TestCaseVersion> foundEntities = dao.search(TestCaseVersion.class, search);
+			if ((foundEntities != null) && !foundEntities.isEmpty())
+			{
+				TestCaseVersion priorVersion = foundEntities.get(0);
+				priorVersion.setLatestVersion(true);
+			}
+			// if no more versions exist need to delete test case as well.
+			else
+			{
+				dao.delete(TestCase.class, testCaseVersion.getTestCaseId());
+			}
+
+		}
+	}
+
+	@Override
+	public void undeleteTestCaseVersion(final Integer testCaseVersionId_) throws Exception
+	{
+		final TestCaseVersion testCaseVersion = getDeletedEntityById(TestCaseVersion.class, testCaseVersionId_);
+		// everyone has add test case permission by default, so need to check if
+		// user has permission to edit others test cases
+		checkEditPermission(testCaseVersion.getCreatedBy());
+
+		UtestSearch usearch = new UtestSearch();
+		usearch.addFilterEqual("testCaseVersionId", testCaseVersionId_);
+		// undo delete all steps
+		undoAllDeletedEntities(TestCaseStep.class, usearch);
+
+		// undo version
+		undoDeletedEntity(TestCaseVersion.class, testCaseVersionId_);
+
+		// if latest version need to find prior one and mark it as not latest.
+		if (testCaseVersion.isLatestVersion())
+		{
+			final Search search = new Search(TestCaseVersion.class);
+			search.addFilterEqual("testCaseId", testCaseVersion.getTestCaseId());
+			search.addFilterNotEqual("id", testCaseVersion.getId());
+			search.addFilterEqual("latestVersion", true);
+			final List<TestCaseVersion> foundEntities = dao.search(TestCaseVersion.class, search);
+			if ((foundEntities != null) && !foundEntities.isEmpty())
+			{
+				TestCaseVersion priorVersion = foundEntities.get(0);
+				priorVersion.setLatestVersion(false);
+			}
+			// if no more versions exist need to undo delete test case as well.
+			else
+			{
+				undoDeletedEntity(TestCase.class, testCaseVersion.getTestCaseId());
+			}
+
+		}
 	}
 
 	@Override

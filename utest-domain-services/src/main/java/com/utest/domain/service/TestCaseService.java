@@ -96,8 +96,6 @@ public interface TestCaseService extends BaseService
 
 	UtestSearchResult findTestCases(UtestSearch search) throws Exception;
 
-	void deleteTestCaseTag(Integer testCaseId, Integer tagId);
-
 	void addTestCaseVersionTag(Integer testCaseId, Integer tagId) throws Exception;
 
 	void saveTagsForTestCaseVersion(Integer testCaseId, List<Integer> tagIds, Integer originalVersionId_) throws Exception;
@@ -142,4 +140,10 @@ public interface TestCaseService extends BaseService
 	void importSingleStepTestCasesFromCsv(String cvs, Integer productId) throws Exception;
 
 	TestCase addTestCase(Integer productId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name, String description) throws Exception;
+
+	void deleteTestCaseVersionTag(Integer testCaseVersionId, Integer tagId);
+
+	void undeleteTestCase(Integer testCaseId) throws Exception;
+
+	void undeleteTestCaseVersion(Integer testCaseVersionId) throws Exception;
 }
