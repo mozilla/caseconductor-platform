@@ -1,4 +1,4 @@
-USE tcm;
+
 
 DROP TABLE IF EXISTS AttachmentTestCaseVersion;
 DROP TABLE IF EXISTS UserPreference;
