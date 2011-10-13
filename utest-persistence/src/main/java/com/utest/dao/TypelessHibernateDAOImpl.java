@@ -474,7 +474,7 @@ public class TypelessHibernateDAOImpl extends HibernateBaseDAO implements Typele
 	{
 		if (!permanentDeletionEnabled)
 		{
-			T t = getById(type_, id_);
+			T t = getDeletedById(type_, id_);
 			if (t instanceof Entity)
 			{
 				((Entity) t).setDeleted(false);

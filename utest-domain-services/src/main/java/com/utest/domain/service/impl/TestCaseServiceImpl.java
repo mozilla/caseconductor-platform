@@ -266,7 +266,9 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 			for (final TestCaseVersion testCaseVersion : foundEntities)
 			{
 				// cannot delete if any of test case versions activated
-				deleteTestCaseVersion(testCaseVersion.getId(), testCaseVersion.getVersion());
+				// pass false to indicate no manipulation fo finding prior
+				// latest version are needed
+				deleteTestCaseVersion(testCaseVersion, false);
 			}
 		}
 		// delete main test case
@@ -421,45 +423,52 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 		}
 	}
 
-	@Override
-	public void deleteTestCaseVersion(final Integer testCaseVersionId_, final Integer originalVersionId_) throws Exception
+	private void deleteTestCaseVersion(final TestCaseVersion testCaseVersion_, final boolean singleVersionRemoval_) throws Exception
 	{
-		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
+
 		// everyone has add test case permission by default, so need to check if
 		// user has permission to edit others test cases
-		checkEditPermission(testCaseVersion.getCreatedBy());
-		if (!TestCaseStatus.PENDING.equals(testCaseVersion.getTestCaseStatusId()))
+		checkEditPermission(testCaseVersion_.getCreatedBy());
+		if (!TestCaseStatus.PENDING.equals(testCaseVersion_.getTestCaseStatusId()))
 		{
 			throw new DeletingActivatedEntityException(TestCaseVersion.class.getSimpleName());
 		}
 		// delete all steps
-		final List<TestCaseStep> steps = getTestCaseVersionSteps(testCaseVersionId_);
+		final List<TestCaseStep> steps = getTestCaseVersionSteps(testCaseVersion_.getId());
 		dao.delete(steps);
 		// delete all tags
-		deleteAllTestCaseVersionTags(testCaseVersionId_);
+		deleteAllTestCaseVersionTags(testCaseVersion_.getId());
 		// delete version
-		testCaseVersion.setVersion(originalVersionId_);
-		dao.delete(testCaseVersion);
-		// if latest version need to find prior one and mark it as latest.
-		if (testCaseVersion.isLatestVersion())
+		dao.delete(testCaseVersion_);
+		if (singleVersionRemoval_)
 		{
-			final Search search = new Search(TestCaseVersion.class);
-			search.addFilterEqual("testCaseId", testCaseVersion.getTestCaseId());
-			search.addFilterNotEqual("id", testCaseVersion.getId());
-			search.addSortDesc("id");
-			final List<TestCaseVersion> foundEntities = dao.search(TestCaseVersion.class, search);
-			if ((foundEntities != null) && !foundEntities.isEmpty())
+			// if latest version need to find prior one and mark it as latest.
+			if (testCaseVersion_.isLatestVersion())
 			{
-				TestCaseVersion priorVersion = foundEntities.get(0);
-				priorVersion.setLatestVersion(true);
+				final Search search = new Search(TestCaseVersion.class);
+				search.addFilterEqual("testCaseId", testCaseVersion_.getTestCaseId());
+				search.addFilterNotEqual("id", testCaseVersion_.getId());
+				search.addSortDesc("id");
+				final List<TestCaseVersion> foundEntities = dao.search(TestCaseVersion.class, search);
+				if ((foundEntities != null) && !foundEntities.isEmpty())
+				{
+					TestCaseVersion priorVersion = foundEntities.get(0);
+					priorVersion.setLatestVersion(true);
+				}
+				// if no more versions exist need to delete test case as well.
+				else
+				{
+					dao.delete(TestCase.class, testCaseVersion_.getTestCaseId());
+				}
 			}
-			// if no more versions exist need to delete test case as well.
-			else
-			{
-				dao.delete(TestCase.class, testCaseVersion.getTestCaseId());
-			}
-
 		}
+	}
+
+	@Override
+	public void deleteTestCaseVersion(final Integer testCaseVersionId_, final Integer originalVersionId_) throws Exception
+	{
+		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
+		deleteTestCaseVersion(testCaseVersion, true);
 	}
 
 	@Override
