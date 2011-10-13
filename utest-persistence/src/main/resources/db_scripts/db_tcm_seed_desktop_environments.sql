@@ -17,7 +17,7 @@
  *
  * copyright 2011 by uTest 
  */
-USE  tcm;
+set foreign_key_checks=0;
 
 insert into EnvironmentType (environmentTypeId, parentEnvironmentTypeId, companyId, createdBy, createDate, lastChangedBy, lastChangeDate, version) values (14, null, -22222, 1, '2010-11-03 00:00:00', 1, '2010-11-03 00:00:00', 0);
 insert into EnvironmentType (environmentTypeId, parentEnvironmentTypeId, companyId, createdBy, createDate, lastChangedBy, lastChangeDate, version) values (15, 14, -22222, 1, '2010-11-03 00:00:00', 1, '2010-11-03 00:00:00', 0);
