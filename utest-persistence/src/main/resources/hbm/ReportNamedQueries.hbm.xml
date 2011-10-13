@@ -9,6 +9,7 @@
 		and (testCycleId = :testCycleId or -1 = :testCycleId)
 		and (testSuiteId = :testSuiteId or -1 = :testSuiteId)
 		and (testCaseId = :testCaseId or -1 = :testCaseId)
+		and deleted = false
 		group by testRunResultStatusId
 		<return alias="statusTotals" class="com.utest.domain.view.CategoryValue" />
 	</sql-query>
@@ -22,6 +23,7 @@
 			where (trr.testCycleId = :testCycleId or -1 = :testCycleId)
 			and (trr.testRunId = :testRunId or -1 = :testRunId)
 			and trr.testRunResultId != 1
+			and trr.deleted = false
 			) 
 		
 		/
@@ -31,6 +33,7 @@
 			join TestRunTestCase trtc on trtc.environmentProfileId = epeg.environmentProfileId
 			where (trtc.testCycleId = :testCycleId or -1 = :testCycleId)
 			and (trtc.testRunId = :testRunId or -1 = :testRunId)
+			and trtc.deleted = false
 			) 
 		, 0)
 		* 100 categoryValue
