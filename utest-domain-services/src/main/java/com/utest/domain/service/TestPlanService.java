@@ -44,7 +44,7 @@ public interface TestPlanService extends BaseService
 
 	TestPlan addTestPlan(Integer productId, String name, String description) throws Exception;
 
-	List<EnvironmentGroup> getEnvironmentGroupsForTestPlan(Integer testPlanId) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestPlan(Integer testPlanId, Integer includedEnvironmentId_) throws Exception;
 
 	TestPlan activateTestPlan(Integer testPlanId, Integer originalVersionId) throws Exception;
 
@@ -67,7 +67,7 @@ public interface TestPlanService extends BaseService
 
 	TestPlanTestSuite getTestPlanTestSuite(Integer testPlanTestSuiteId) throws Exception;
 
-	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestPlan(Integer testPlanId) throws Exception;
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestPlan(Integer testPlanId, Integer includedEnvironmentId_) throws Exception;
 
 	List<Attachment> getAttachmentsForTestPlan(Integer testPlanId) throws Exception;
 

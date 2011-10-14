@@ -47,7 +47,7 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 public interface TestRunService extends BaseService
 {
 
-	List<EnvironmentGroup> getEnvironmentGroupsForTestRun(Integer testRunId) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestRun(Integer testRunId, Integer includedEnvironmentId_) throws Exception;
 
 	TestRunTestCase addTestRunTestCase(Integer testRunId, Integer testCaseVersionId) throws Exception;
 
@@ -181,7 +181,7 @@ public interface TestRunService extends BaseService
 
 	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForAssignment(Integer assignmentId) throws Exception;
 
-	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRun(Integer testRunId) throws Exception;
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRun(Integer testRunId, Integer includedEnvironmentId_) throws Exception;
 
 	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRunTestCase(Integer testRunTestCaseId) throws Exception;
 

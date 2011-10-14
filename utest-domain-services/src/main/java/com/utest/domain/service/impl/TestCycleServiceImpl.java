@@ -209,12 +209,12 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	}
 
 	@Override
-	public List<EnvironmentGroup> getEnvironmentGroupsForTestCycle(final Integer testCycleId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForTestCycle(final Integer testCycleId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
 		if (testCycle.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfile(testCycle.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfile(testCycle.getEnvironmentProfileId(), includedEnvironmentId_);
 		}
 		else
 		{
@@ -223,12 +223,12 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	}
 
 	@Override
-	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCycle(final Integer testCycleId_) throws Exception
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCycle(final Integer testCycleId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
 		if (testCycle.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfileExploded(testCycle.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfileExploded(testCycle.getEnvironmentProfileId(), includedEnvironmentId_);
 		}
 		else
 		{

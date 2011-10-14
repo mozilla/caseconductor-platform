@@ -265,9 +265,10 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	/**
 	 * Returns all versions of a test case
 	 */
-	public List<EnvironmentGroupInfo> getProductEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
+	public List<EnvironmentGroupInfo> getProductEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
+			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
 	{
-		final List<EnvironmentGroup> groups = productService.getEnvironmentGroupsForProduct(productId_);
+		final List<EnvironmentGroup> groups = productService.getEnvironmentGroupsForProduct(productId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 
@@ -319,9 +320,10 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	/**
 	 * Returns all versions of a test case
 	 */
-	public List<EnvironmentGroupExplodedInfo> getProductEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
+	public List<EnvironmentGroupExplodedInfo> getProductEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
+			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
 	{
-		final List<EnvironmentGroupExploded> groups = productService.getEnvironmentGroupsExplodedForProduct(productId_);
+		final List<EnvironmentGroupExploded> groups = productService.getEnvironmentGroupsExplodedForProduct(productId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 

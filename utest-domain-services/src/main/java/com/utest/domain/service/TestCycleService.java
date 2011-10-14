@@ -42,7 +42,7 @@ public interface TestCycleService extends BaseService
 	TestCycle addTestCycle(Integer productId, String name, String description, Date startDate, Date endDate, boolean communityAuthoringAllowed, boolean communityAccessAllowed)
 			throws Exception;
 
-	List<EnvironmentGroup> getEnvironmentGroupsForTestCycle(Integer testCycleId_) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestCycle(Integer testCycleId_, Integer includedEnvironmentId_) throws Exception;
 
 	List<TestRun> getTestRunsForTestCycle(Integer testCycleId) throws Exception;
 
@@ -75,7 +75,7 @@ public interface TestCycleService extends BaseService
 
 	TestCycle cloneTestCycle(Integer fromTestCycleId, boolean cloneAssignments) throws Exception;
 
-	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCycle(Integer testCycleId) throws Exception;
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCycle(Integer testCycleId, Integer includedEnvironmentId_) throws Exception;
 
 	List<Attachment> getAttachmentsForTestCycle(Integer testCycleId) throws Exception;
 

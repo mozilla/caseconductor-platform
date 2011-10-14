@@ -283,12 +283,12 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	}
 
 	@Override
-	public List<EnvironmentGroup> getEnvironmentGroupsForTestPlan(final Integer testPlanId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForTestPlan(final Integer testPlanId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);
 		if (testPlan.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfile(testPlan.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfile(testPlan.getEnvironmentProfileId(), includedEnvironmentId_);
 		}
 		else
 		{
@@ -316,12 +316,12 @@ public class TestPlanServiceImpl extends BaseServiceImpl implements TestPlanServ
 	}
 
 	@Override
-	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestPlan(final Integer testPlanId_) throws Exception
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestPlan(final Integer testPlanId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final TestPlan testPlan = getRequiredEntityById(TestPlan.class, testPlanId_);
 		if (testPlan.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfileExploded(testPlan.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfileExploded(testPlan.getEnvironmentProfileId(), includedEnvironmentId_);
 		}
 		else
 		{

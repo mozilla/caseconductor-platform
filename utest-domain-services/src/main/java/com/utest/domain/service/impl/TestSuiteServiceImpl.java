@@ -128,12 +128,12 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
-	public List<EnvironmentGroup> getEnvironmentGroupsForTestSuite(final Integer testSuiteId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForTestSuite(final Integer testSuiteId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
 		if (testSuite.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfile(testSuite.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfile(testSuite.getEnvironmentProfileId(), includedEnvironmentId_);
 		}
 		else
 		{
@@ -142,12 +142,12 @@ public class TestSuiteServiceImpl extends BaseServiceImpl implements TestSuiteSe
 	}
 
 	@Override
-	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestSuite(final Integer testSuiteId_) throws Exception
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestSuite(final Integer testSuiteId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final TestSuite testSuite = getRequiredEntityById(TestSuite.class, testSuiteId_);
 		if (testSuite.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfileExploded(testSuite.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfileExploded(testSuite.getEnvironmentProfileId(), includedEnvironmentId_);
 		}
 		else
 		{

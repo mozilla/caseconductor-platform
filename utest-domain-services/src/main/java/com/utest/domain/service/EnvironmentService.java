@@ -63,7 +63,7 @@ public interface EnvironmentService
 
 	List<Environment> getEnvironmentsForGroup(Integer environmentGroupId_) throws Exception;
 
-	UtestSearchResult findEnvironmentGroups(UtestSearch search_) throws Exception;
+	UtestSearchResult findEnvironmentGroups(UtestSearch search_, Integer includedEnvironmentId_) throws Exception;
 
 	// Environment Profile related methods
 	EnvironmentProfile saveEnvironmentGroupsForProfile(Integer environmentProfileId_, List<Integer> environmentGroupIds_) throws Exception;
@@ -73,7 +73,7 @@ public interface EnvironmentService
 
 	EnvironmentProfile getEnvironmentProfile(Integer environmentProfileId_) throws Exception;
 
-	List<EnvironmentGroup> getEnvironmentGroupsForProfile(Integer environmentProfileId_) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForProfile(Integer environmentProfileId_, Integer includedEnvironmentId_) throws Exception;
 
 	UtestSearchResult findEnvironmentProfiles(UtestSearch search_) throws Exception;
 
@@ -151,16 +151,16 @@ public interface EnvironmentService
 
 	EnvironmentGroupExploded getEnvironmentGroupExploded(Integer environmentGroupId) throws Exception;
 
-	UtestSearchResult findEnvironmentGroupsExploded(UtestSearch search) throws Exception;
+	UtestSearchResult findEnvironmentGroupsExploded(UtestSearch search, Integer includedEnvironmentId_) throws Exception;
 
 	EnvironmentProfileExploded getEnvironmentProfileExploded(Integer environmentProfileId) throws Exception;
 
 	List<Environment> getEnvironmentsForProfile(Integer environmentProfileId) throws Exception;
 
-	List<EnvironmentGroupExploded> getEnvironmentGroupsForProfileExploded(Integer environmentProfileId) throws Exception;
+	List<EnvironmentGroupExploded> getEnvironmentGroupsForProfileExploded(Integer environmentProfileId, Integer includedEnvironmentId_) throws Exception;
 
 	List<Integer> getProfilesContainingEnvironment(Integer environmentId) throws Exception;
 
-	List<Integer> getGroupsContainingEnvironment(Integer environmentId) throws Exception;
+	List<Integer> getGroupsContainingEnvironment(Integer environmentId, Integer environmentProfileId_) throws Exception;
 
 }

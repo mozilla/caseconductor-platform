@@ -50,8 +50,6 @@ public interface EnvironmentWebService
 
 	EnvironmentGroupInfo getEnvironmentGroup(UriInfo ui, Integer environmentGroupId) throws Exception;
 
-	EnvironmentGroupSearchResultInfo findEnvironmentGroups(UriInfo ui, UtestSearchRequest request) throws Exception;
-
 	Boolean updateEnvironmentGroupEnvironments(UriInfo ui, Integer environmentGroupId, ArrayList<Integer> environmentIds) throws Exception;
 
 	List<EnvironmentInfo> getEnvironmentGroupEnvironments(UriInfo ui, Integer environmentGroupId, UtestSearchRequest request) throws Exception;
@@ -87,9 +85,11 @@ public interface EnvironmentWebService
 
 	EnvironmentGroupInfo createEnvironmentGroup(UriInfo ui, Integer companyId, Integer environmentTypeId, String name, String description) throws Exception;
 
-	EnvironmentGroupExplodedSearchResultInfo findEnvironmentGroupsExploded(UriInfo ui, UtestSearchRequest request) throws Exception;
-
 	EnvironmentGroupExplodedInfo getEnvironmentGroupExploded(UriInfo ui, Integer environmentGroupId) throws Exception;
 
 	EnvironmentProfileExplodedInfo getEnvironmentProfileExploded(UriInfo ui, Integer environmentProfileId) throws Exception;
+
+	EnvironmentGroupSearchResultInfo findEnvironmentGroups(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+
+	EnvironmentGroupExplodedSearchResultInfo findEnvironmentGroupsExploded(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
 }

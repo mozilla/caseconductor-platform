@@ -89,8 +89,6 @@ public interface TestCaseWebService
 	TestCaseStepInfo updateTestCaseStep(UriInfo ui, Integer testCaseStepId, Integer stepNumber, String name, String instruction, String expectedResult, Integer estimatedTimeInMin,
 			Integer originalVersionId) throws Exception;
 
-	List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseVersionId) throws Exception;
-
 	TestCaseVersionInfo updateTestCaseVersion(UriInfo ui, Integer testCaseVersionId, String versionIncrement, String description, Integer originalVersionId, String automated,
 			String automationUri) throws Exception;
 
@@ -99,8 +97,6 @@ public interface TestCaseWebService
 
 	TestCaseVersionInfo createTestCase(UriInfo ui, Integer productId, Integer testCycleId, Integer maxAttachmentSizeInMbytes, Integer maxNumberOfAttachments, String name,
 			String description, String automated, String automationUri) throws Exception;
-
-	List<EnvironmentGroupExplodedInfo> getTestCaseEnvironmentGroupsExploded(UriInfo ui, Integer productId) throws Exception;
 
 	List<AttachmentInfo> getTestCaseAttachments(UriInfo ui, Integer testCaseId) throws Exception;
 
@@ -122,4 +118,8 @@ public interface TestCaseWebService
 			throws Exception;
 
 	Boolean undeleteTestCase(UriInfo ui, Integer testCaseId, Integer originalVesionId) throws Exception;
+
+	List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseVersionId, Integer includedEnvironmentId) throws Exception;
+
+	List<EnvironmentGroupExplodedInfo> getTestCaseEnvironmentGroupsExploded(UriInfo ui, Integer productId, Integer includedEnvironmentId) throws Exception;
 }

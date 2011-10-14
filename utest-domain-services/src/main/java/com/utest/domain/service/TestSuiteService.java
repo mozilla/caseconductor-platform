@@ -48,7 +48,7 @@ public interface TestSuiteService extends BaseService
 
 	List<TestSuiteTestCase> getTestSuiteTestCases(Integer testSuiteId) throws Exception;
 
-	List<EnvironmentGroup> getEnvironmentGroupsForTestSuite(Integer testSuiteId) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestSuite(Integer testSuiteId, Integer includedEnvironmentId_) throws Exception;
 
 	TestSuiteTestCase getTestSuiteTestCase(Integer testSuiteTestCaseId) throws Exception;
 
@@ -77,7 +77,7 @@ public interface TestSuiteService extends BaseService
 
 	TestSuiteTestCaseView getTestSuiteTestCaseView(Integer testSuiteTestCaseId) throws Exception;
 
-	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestSuite(Integer testSuiteId) throws Exception;
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestSuite(Integer testSuiteId, Integer includedEnvironmentId_) throws Exception;
 
 	List<Attachment> getAttachmentsForTestSuite(Integer testSuiteId) throws Exception;
 

@@ -41,8 +41,6 @@ public interface TestCycleWebService
 
 	Boolean updateTestCycleEnvironmentGroups(UriInfo ui, Integer testCycleId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
 
-	List<EnvironmentGroupInfo> getTestCycleEnvironmentGroups(UriInfo ui, Integer testCycleId) throws Exception;
-
 	TestCycleInfo getTestCycle(UriInfo ui, Integer testCycleId) throws Exception;
 
 	List<TestRunInfo> getTestCycleTestRuns(UriInfo ui, Integer testCycleId) throws Exception;
@@ -71,8 +69,6 @@ public interface TestCycleWebService
 
 	TestCycleInfo cloneTestCycle(UriInfo ui, Integer testCycleId, String cloneAssignments) throws Exception;
 
-	List<EnvironmentGroupExplodedInfo> getTestCycleEnvironmentGroupsExploded(UriInfo ui, Integer productId) throws Exception;
-
 	List<AttachmentInfo> getTestCycleAttachments(UriInfo ui, Integer testCycleId) throws Exception;
 
 	AttachmentInfo createAttachment(UriInfo ui, Integer testCycleId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
@@ -92,4 +88,8 @@ public interface TestCycleWebService
 	TestCycleSearchResultInfo findDeletedTestCycles(UriInfo ui, Integer includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
 
 	CategoryValueInfo getCoveragePercentComplete(UriInfo ui, Integer testCycleId, Integer testRunId) throws Exception;
+
+	List<EnvironmentGroupInfo> getTestCycleEnvironmentGroups(UriInfo ui, Integer testCycleId, Integer includedEnvironmentId) throws Exception;
+
+	List<EnvironmentGroupExplodedInfo> getTestCycleEnvironmentGroupsExploded(UriInfo ui, Integer productId, Integer includedEnvironmentId) throws Exception;
 }

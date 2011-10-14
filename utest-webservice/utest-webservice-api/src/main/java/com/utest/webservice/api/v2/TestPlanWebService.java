@@ -37,8 +37,6 @@ public interface TestPlanWebService
 
 	Boolean updateTestPlanEnvironmentGroups(UriInfo ui, Integer testPlanId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
 
-	List<EnvironmentGroupInfo> getTestPlanEnvironmentGroups(UriInfo ui, Integer testPlanId) throws Exception;
-
 	List<IncludedTestSuiteInfo> getTestPlanTestSuites(UriInfo ui, Integer testPlanId) throws Exception;
 
 	TestPlanInfo getTestPlan(UriInfo ui, Integer testPlanId) throws Exception;
@@ -61,8 +59,6 @@ public interface TestPlanWebService
 
 	TestPlanInfo updateTestPlan(UriInfo ui, Integer testPlanId, String name, String description, Integer originalVesionId) throws Exception;
 
-	List<EnvironmentGroupExplodedInfo> getTestPlanEnvironmentGroupsExploded(UriInfo ui, Integer productId) throws Exception;
-
 	List<AttachmentInfo> getTestPlanAttachments(UriInfo ui, Integer testPlanId) throws Exception;
 
 	AttachmentInfo createAttachment(UriInfo ui, Integer testPlanId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
@@ -74,5 +70,9 @@ public interface TestPlanWebService
 	Boolean undeleteTestPlan(UriInfo ui, Integer testPlanId, Integer originalVesionId) throws Exception;
 
 	TestPlanSearchResultInfo findDeletedTestPlans(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+
+	List<EnvironmentGroupInfo> getTestPlanEnvironmentGroups(UriInfo ui, Integer testPlanId, Integer includedEnvironmentId) throws Exception;
+
+	List<EnvironmentGroupExplodedInfo> getTestPlanEnvironmentGroupsExploded(UriInfo ui, Integer productId, Integer includedEnvironmentId) throws Exception;
 
 }

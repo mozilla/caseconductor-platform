@@ -169,9 +169,10 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_SUITE_VIEW)
-	public List<EnvironmentGroupInfo> getTestSuiteEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_) throws Exception
+	public List<EnvironmentGroupInfo> getTestSuiteEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_,
+			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
 	{
-		final List<EnvironmentGroup> groups = testSuiteService.getEnvironmentGroupsForTestSuite(testSuiteId_);
+		final List<EnvironmentGroup> groups = testSuiteService.getEnvironmentGroupsForTestSuite(testSuiteId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 
@@ -184,9 +185,10 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	/**
 	 * Returns all versions of a test case
 	 */
-	public List<EnvironmentGroupExplodedInfo> getTestSuiteEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer productId_) throws Exception
+	public List<EnvironmentGroupExplodedInfo> getTestSuiteEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
+			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
 	{
-		final List<EnvironmentGroupExploded> groups = testSuiteService.getEnvironmentGroupsExplodedForTestSuite(productId_);
+		final List<EnvironmentGroupExploded> groups = testSuiteService.getEnvironmentGroupsExplodedForTestSuite(productId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 

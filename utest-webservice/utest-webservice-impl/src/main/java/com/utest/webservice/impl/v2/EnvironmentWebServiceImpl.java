@@ -329,10 +329,11 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
-	public EnvironmentGroupSearchResultInfo findEnvironmentGroups(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public EnvironmentGroupSearchResultInfo findEnvironmentGroups(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(EnvironmentGroupInfo.class, request_, ui_);
-		final UtestSearchResult result = environmentService.findEnvironmentGroups(search);
+		final UtestSearchResult result = environmentService.findEnvironmentGroups(search, includedEnvironmentId_);
 
 		return (EnvironmentGroupSearchResultInfo) objectBuilderFactory.createResult(EnvironmentGroupInfo.class, EnvironmentGroup.class, request_, result, ui_.getBaseUriBuilder());
 	}
@@ -343,10 +344,11 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
-	public EnvironmentGroupExplodedSearchResultInfo findEnvironmentGroupsExploded(@Context final UriInfo ui_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+	public EnvironmentGroupExplodedSearchResultInfo findEnvironmentGroupsExploded(@Context final UriInfo ui_,
+			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(EnvironmentGroupInfo.class, request_, ui_);
-		final UtestSearchResult result = environmentService.findEnvironmentGroupsExploded(search);
+		final UtestSearchResult result = environmentService.findEnvironmentGroupsExploded(search, includedEnvironmentId_);
 
 		return (EnvironmentGroupExplodedSearchResultInfo) objectBuilderFactory.createResult(EnvironmentGroupExplodedInfo.class, EnvironmentGroupExploded.class, request_, result,
 				ui_.getBaseUriBuilder());

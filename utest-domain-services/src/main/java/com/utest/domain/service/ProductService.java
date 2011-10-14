@@ -51,7 +51,7 @@ public interface ProductService extends BaseService
 
 	ProductComponent addProductComponent(Integer productId, String name, String description) throws Exception;
 
-	List<EnvironmentGroup> getEnvironmentGroupsForProduct(Integer productId) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForProduct(Integer productId, Integer includedEnvironmentId_) throws Exception;
 
 	void saveEnvironmentGroupsForProduct(Integer productId, List<Integer> environmentGroupIds, Integer originalVesionId) throws UnsupportedEnvironmentSelectionException, Exception;
 
@@ -77,7 +77,7 @@ public interface ProductService extends BaseService
 
 	List<AccessRole> getTestingTeamMemberRolesForProduct(Integer productId, Integer userId) throws Exception;
 
-	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForProduct(Integer productId) throws Exception;
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForProduct(Integer productId, Integer includedEnvironmentId_) throws Exception;
 
 	List<Attachment> getAttachmentsForProduct(Integer productId) throws Exception;
 

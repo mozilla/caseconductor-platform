@@ -38,8 +38,6 @@ public interface TestSuiteWebService
 
 	Boolean updateTestSuiteEnvironmentGroups(UriInfo ui, Integer testSuiteId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
 
-	List<EnvironmentGroupInfo> getTestSuiteEnvironmentGroups(UriInfo ui, Integer testSuiteId) throws Exception;
-
 	TestSuiteInfo getTestSuite(UriInfo ui, Integer testSuiteId) throws Exception;
 
 	List<TestSuiteTestCaseInfo> getTestSuiteTestCases(UriInfo ui, Integer testSuiteId) throws Exception;
@@ -66,8 +64,6 @@ public interface TestSuiteWebService
 
 	TestSuiteInfo cloneTestSuite(UriInfo ui, Integer testSuiteId) throws Exception;
 
-	List<EnvironmentGroupExplodedInfo> getTestSuiteEnvironmentGroupsExploded(UriInfo ui, Integer productId) throws Exception;
-
 	List<AttachmentInfo> getTestSuiteAttachments(UriInfo ui, Integer testSuiteId) throws Exception;
 
 	AttachmentInfo createAttachment(UriInfo ui, Integer testSuiteId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
@@ -83,5 +79,9 @@ public interface TestSuiteWebService
 
 	TestSuiteSearchResultInfo findDeletedTestSuites(UriInfo ui, Integer hasTestCasesInTestRunId, Integer includedTestCaseId, Integer includedTestCaseVesionId,
 			Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+
+	List<EnvironmentGroupInfo> getTestSuiteEnvironmentGroups(UriInfo ui, Integer testSuiteId, Integer includedEnvironmentId) throws Exception;
+
+	List<EnvironmentGroupExplodedInfo> getTestSuiteEnvironmentGroupsExploded(UriInfo ui, Integer productId, Integer includedEnvironmentId) throws Exception;
 
 }

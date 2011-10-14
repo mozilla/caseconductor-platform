@@ -49,8 +49,6 @@ public interface TestRunWebService
 
 	Boolean updateTestRunEnvironmentGroups(UriInfo ui, Integer testRunId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
 
-	List<EnvironmentGroupInfo> getTestRunEnvironmentGroups(UriInfo ui, Integer testRunId) throws Exception;
-
 	TestRunInfo getTestRun(UriInfo ui, Integer testRunId) throws Exception;
 
 	List<TestRunTestCaseInfo> getTestRunTestCases(UriInfo ui, Integer testRunId) throws Exception;
@@ -141,8 +139,6 @@ public interface TestRunWebService
 	TestRunInfo updateTestRun(UriInfo ui, Integer testRunId, String name, String description, String useLatestVersions, String selfAssignAllowed, String selfAssignPerEnvironment,
 			Integer selfAssignLimit, Date startDate, Date endDate, Integer originalVersionId, String autoAssignToTeam) throws Exception;
 
-	List<EnvironmentGroupExplodedInfo> getTestRunEnvironmentGroupsExploded(UriInfo ui, Integer testRunId) throws Exception;
-
 	List<EnvironmentGroupExplodedInfo> getTestRunTestCaseEnvironmentGroupsExploded(UriInfo ui, Integer includedTestCaseId) throws Exception;
 
 	List<EnvironmentGroupExplodedInfo> getTestRunTestCaseAssignmentEnvironmentGroupsExploded(UriInfo ui, Integer assignmentId) throws Exception;
@@ -181,4 +177,8 @@ public interface TestRunWebService
 
 	TestRunSearchResultInfo findDeletedTestRuns(UriInfo ui, Integer includedEnvironmentId, Integer includedTestSuiteId, Integer includedTestCaseId,
 			Integer includedTestCaseVesionId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
+
+	List<EnvironmentGroupInfo> getTestRunEnvironmentGroups(UriInfo ui, Integer testRunId, Integer includedEnvironmentId) throws Exception;
+
+	List<EnvironmentGroupExplodedInfo> getTestRunEnvironmentGroupsExploded(UriInfo ui, Integer testRunId, Integer includedEnvironmentId) throws Exception;
 }

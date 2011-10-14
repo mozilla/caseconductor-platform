@@ -47,8 +47,6 @@ public interface ProductWebService
 
 	List<ProductComponentInfo> getProductComponents(UriInfo ui, Integer productId) throws Exception;
 
-	List<EnvironmentGroupInfo> getProductEnvironmentGroups(UriInfo ui, Integer productId) throws Exception;
-
 	Boolean updateProductEnvironmentGroups(UriInfo ui, Integer productId, ArrayList<Integer> environmentGroupIds, Integer originalVesionId) throws Exception;
 
 	List<EnvironmentGroupInfo> generateEnvironmentGroupFromEnvironments(UriInfo ui, Integer productId, ArrayList<Integer> environmentIds, Integer originalVesionId)
@@ -77,8 +75,6 @@ public interface ProductWebService
 
 	Boolean updateProductTeamMemberRoles(UriInfo ui, Integer productId, Integer userId, ArrayList<Integer> roleIds, Integer originalVersionId) throws Exception;
 
-	List<EnvironmentGroupExplodedInfo> getProductEnvironmentGroupsExploded(UriInfo ui, Integer productId) throws Exception;
-
 	List<AttachmentInfo> getProductAttachments(UriInfo ui, Integer productId) throws Exception;
 
 	AttachmentInfo createAttachment(UriInfo ui, Integer productId, String name, String description, String url, Double size, Integer attachmentTypeId) throws Exception;
@@ -94,5 +90,9 @@ public interface ProductWebService
 	Boolean undeleteProduct(UriInfo ui, Integer productId, Integer originalVersionId) throws Exception;
 
 	ProductSearchResultInfo findDeletedProducts(UriInfo ui, Integer includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
+
+	List<EnvironmentGroupInfo> getProductEnvironmentGroups(UriInfo ui, Integer productId, Integer includedEnvironmentId) throws Exception;
+
+	List<EnvironmentGroupExplodedInfo> getProductEnvironmentGroupsExploded(UriInfo ui, Integer productId, Integer includedEnvironmentId) throws Exception;
 
 }

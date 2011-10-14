@@ -355,8 +355,8 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		final EnvironmentProfile profile1 = getRequiredEntityById(EnvironmentProfile.class, profileId1_);
 		final EnvironmentProfile profile2 = getRequiredEntityById(EnvironmentProfile.class, profileId2_);
 
-		final List<EnvironmentGroup> groups1 = getEnvironmentGroupsForProfile(profile1.getId());
-		final List<EnvironmentGroup> groups2 = getEnvironmentGroupsForProfile(profile2.getId());
+		final List<EnvironmentGroup> groups1 = getEnvironmentGroupsForProfile(profile1.getId(), null);
+		final List<EnvironmentGroup> groups2 = getEnvironmentGroupsForProfile(profile2.getId(), null);
 		final List<Integer> resultGroupIds = new ArrayList<Integer>();
 		// intersect profile groups
 		for (final EnvironmentGroup group1 : groups1)
@@ -664,14 +664,14 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	}
 
 	@Override
-	public UtestSearchResult findEnvironmentGroups(final UtestSearch search_) throws Exception
+	public UtestSearchResult findEnvironmentGroups(final UtestSearch search_, Integer includedEnvironmentId_) throws Exception
 	{
 		return dao.getBySearch(EnvironmentGroup.class, search_);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public UtestSearchResult findEnvironmentGroupsExploded(final UtestSearch search_) throws Exception
+	public UtestSearchResult findEnvironmentGroupsExploded(final UtestSearch search_, Integer includedEnvironmentId_) throws Exception
 	{
 		UtestSearchResult result = dao.getBySearch(EnvironmentGroupExploded.class, search_);
 		List<EnvironmentGroupExploded> groups = (List<EnvironmentGroupExploded>) result.getResults();
@@ -684,23 +684,34 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	}
 
 	@Override
-	public List<EnvironmentGroup> getEnvironmentGroupsForProfile(final Integer environmentProfileId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForProfile(final Integer environmentProfileId_, Integer includedEnvironmentId_) throws Exception
 	{
 		if (environmentProfileId_ == null)
 		{
 			throw new IllegalArgumentException("environmentProfileId_ is null in getEnvironmentGroupsForProfile() call.");
 		}
-		Search search = new Search(EnvironmentProfileEnvironmentGroup.class);
-		search.addFilterEqual("environmentProfileId", environmentProfileId_);
-		final List<EnvironmentProfileEnvironmentGroup> foundGroups = dao.search(EnvironmentProfileEnvironmentGroup.class, search);
-		if ((foundGroups != null) && !foundGroups.isEmpty())
+		List<Integer> ids = new ArrayList<Integer>();
+		if (includedEnvironmentId_ != null)
 		{
-			final List<Integer> ids = new ArrayList<Integer>();
-			for (final EnvironmentProfileEnvironmentGroup idHolder : foundGroups)
+			ids = getGroupsContainingEnvironment(includedEnvironmentId_, environmentProfileId_);
+		}
+		else
+		{
+			Search search = new Search(EnvironmentProfileEnvironmentGroup.class);
+			search.addFilterEqual("environmentProfileId", environmentProfileId_);
+			final List<EnvironmentProfileEnvironmentGroup> foundGroups = dao.search(EnvironmentProfileEnvironmentGroup.class, search);
+			if ((foundGroups != null) && !foundGroups.isEmpty())
 			{
-				ids.add(idHolder.getEnvironmentGroupId());
+
+				for (final EnvironmentProfileEnvironmentGroup idHolder : foundGroups)
+				{
+					ids.add(idHolder.getEnvironmentGroupId());
+				}
 			}
-			search = new Search(EnvironmentGroup.class);
+		}
+		if ((ids != null) && !ids.isEmpty())
+		{
+			Search search = new Search(EnvironmentGroup.class);
 			search.addFilterIn("id", ids);
 			search.addFilterNotEqual("deprecated", true);
 			return dao.search(EnvironmentGroup.class, search);
@@ -713,16 +724,33 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Integer> getGroupsContainingEnvironment(final Integer environmentId_) throws Exception
+	public List<Integer> getGroupsContainingEnvironment(final Integer environmentId_, Integer environmentProfileId_) throws Exception
 	{
+		Search search;
+		List<?> groupIdList = null;
+		if (environmentProfileId_ != null)
+		{
+			search = new Search(EnvironmentProfileEnvironmentGroup.class);
+			search.addField("environmentGroupId");
+			search.addFilterEqual("environmentProfileId", environmentProfileId_);
+			groupIdList = dao.search(EnvironmentProfileEnvironmentGroup.class, search);
+			if (groupIdList == null || groupIdList.isEmpty())
+			{
+				return new ArrayList<Integer>();
+			}
+		}
 		if (environmentId_ == null)
 		{
 			throw new IllegalArgumentException("environmentId_ is null in getGroupsContainingEnvironment() call.");
 		}
-		Search search = new Search(EnvironmentGroupEnvironment.class);
+		search = new Search(EnvironmentGroupEnvironment.class);
 		search.addField("environmentGroupId");
 		search.addFilterEqual("environmentId", environmentId_);
-		final List<?> groupIdList = dao.search(EnvironmentGroupEnvironment.class, search);
+		if (groupIdList != null)
+		{
+			search.addFilterIn("environmentGroupId", groupIdList);
+		}
+		groupIdList = dao.search(EnvironmentGroupEnvironment.class, search);
 		return (List<Integer>) groupIdList;
 	}
 
@@ -737,7 +765,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		List<Integer> profiles = new ArrayList<Integer>();
 
 		Search search;
-		final List<?> groupIdList = getGroupsContainingEnvironment(environmentId_);
+		final List<?> groupIdList = getGroupsContainingEnvironment(environmentId_, null);
 		if (groupIdList != null && !groupIdList.isEmpty())
 		{
 			search = new Search(EnvironmentProfileEnvironmentGroup.class);
@@ -761,22 +789,20 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	}
 
 	@Override
-	public List<EnvironmentGroupExploded> getEnvironmentGroupsForProfileExploded(final Integer environmentProfileId_) throws Exception
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsForProfileExploded(final Integer environmentProfileId_, Integer includedEnvironmentId_) throws Exception
 	{
 
 		if (environmentProfileId_ == null)
 		{
 			throw new IllegalArgumentException("environmentProfileId_ is null in getEnvironmentGroupsForProfile() call.");
 		}
-		Search search = new Search(EnvironmentProfileEnvironmentGroup.class);
-		search.addFilterEqual("environmentProfileId", environmentProfileId_);
-		final List<EnvironmentProfileEnvironmentGroup> foundGroups = dao.search(EnvironmentProfileEnvironmentGroup.class, search);
-		if ((foundGroups != null) && !foundGroups.isEmpty())
+		final List<Integer> ids = getGroupsContainingEnvironment(includedEnvironmentId_, environmentProfileId_);
+		if ((ids != null) && !ids.isEmpty())
 		{
 			final List<EnvironmentGroupExploded> groups = new ArrayList<EnvironmentGroupExploded>();
-			for (final EnvironmentProfileEnvironmentGroup idHolder : foundGroups)
+			for (Integer id : ids)
 			{
-				groups.add(getEnvironmentGroupExploded(idHolder.getEnvironmentGroupId()));
+				groups.add(getEnvironmentGroupExploded(id));
 			}
 			return groups;
 		}
@@ -941,7 +967,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	{
 		final EnvironmentProfileExploded environmentProfile = getRequiredEntityById(EnvironmentProfileExploded.class, environmentProfileId_);
 		environmentProfile.setEnvironments(getEnvironmentsForProfile(environmentProfile.getId()));
-		environmentProfile.setEnvironmentGroups(getEnvironmentGroupsForProfileExploded(environmentProfile.getId()));
+		environmentProfile.setEnvironmentGroups(getEnvironmentGroupsForProfileExploded(environmentProfile.getId(), null));
 		return environmentProfile;
 	}
 
@@ -1173,7 +1199,7 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		{
 			return true;
 		}
-		final List<EnvironmentGroup> parentGroups = getEnvironmentGroupsForProfile(parentEnvironmentProfile_);
+		final List<EnvironmentGroup> parentGroups = getEnvironmentGroupsForProfile(parentEnvironmentProfile_, null);
 		final List<Integer> parentGroupIds = DomainUtil.extractEntityIds(parentGroups);
 		return parentGroupIds.containsAll(environmentGroupIds_);
 	}

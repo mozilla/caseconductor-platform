@@ -309,12 +309,12 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public List<EnvironmentGroup> getEnvironmentGroupsForTestRun(final Integer testRunId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForTestRun(final Integer testRunId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		if (testRun.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfile(testRun.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfile(testRun.getEnvironmentProfileId(), includedEnvironmentId_);
 		}
 		else
 		{
@@ -323,12 +323,12 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRun(final Integer testRunId_) throws Exception
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRun(final Integer testRunId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		if (testRun.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfileExploded(testRun.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfileExploded(testRun.getEnvironmentProfileId(), includedEnvironmentId_);
 		}
 		else
 		{
@@ -342,7 +342,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final TestRunTestCase testRunTestCase = getRequiredEntityById(TestRunTestCase.class, testRunTestCaseId_);
 		if (testRunTestCase.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfile(testRunTestCase.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfile(testRunTestCase.getEnvironmentProfileId(), null);
 		}
 		else
 		{
@@ -356,7 +356,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final TestRunTestCase testRunTestCase = getRequiredEntityById(TestRunTestCase.class, testRunTestCaseId_);
 		if (testRunTestCase.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfileExploded(testRunTestCase.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfileExploded(testRunTestCase.getEnvironmentProfileId(), null);
 		}
 		else
 		{
@@ -384,7 +384,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final TestRunTestCaseAssignment assignment = getRequiredEntityById(TestRunTestCaseAssignment.class, assignmentId_);
 		if (assignment.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfile(assignment.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfile(assignment.getEnvironmentProfileId(), null);
 		}
 		else
 		{
@@ -398,7 +398,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		final TestRunTestCaseAssignment assignment = getRequiredEntityById(TestRunTestCaseAssignment.class, assignmentId_);
 		if (assignment.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfileExploded(assignment.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfileExploded(assignment.getEnvironmentProfileId(), null);
 		}
 		else
 		{
@@ -763,7 +763,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		// insert new results
 		if (assignment_.getEnvironmentProfileId() != null)
 		{
-			final List<EnvironmentGroup> groups = environmentService.getEnvironmentGroupsForProfile(assignment_.getEnvironmentProfileId());
+			final List<EnvironmentGroup> groups = environmentService.getEnvironmentGroupsForProfile(assignment_.getEnvironmentProfileId(), null);
 			for (final EnvironmentGroup group : groups)
 			{
 				addResultForEnvironmentGroup(assignment_, group.getId());
@@ -900,7 +900,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	{
 		if (includedEnvironmentId_ != null)
 		{
-			List<Integer> profileIds = environmentService.getGroupsContainingEnvironment(includedEnvironmentId_);
+			List<Integer> profileIds = environmentService.getGroupsContainingEnvironment(includedEnvironmentId_, null);
 			if (profileIds != null && !profileIds.isEmpty())
 			{
 				search_.addFilterIn("environmentGroupId", profileIds);

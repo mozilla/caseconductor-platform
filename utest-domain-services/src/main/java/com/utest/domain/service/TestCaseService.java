@@ -58,7 +58,7 @@ public interface TestCaseService extends BaseService
 
 	UtestSearchResult findTestCaseVersions(UtestSearch search_, Integer includedInTestSuiteId_, Integer includedEnvironmentId_, String tag_) throws Exception;
 
-	List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId_) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId_, Integer includedEnvironmentId_) throws Exception;
 
 	TestCaseVersion getLastApprovedTestCaseVersion(Integer testCaseId) throws Exception;
 
@@ -119,7 +119,7 @@ public interface TestCaseService extends BaseService
 	TestCaseVersion saveTestCaseVersion(Integer testCaseVersionId, String description, boolean automated, String automationUri, Integer originalVersion,
 			VersionIncrement versionIncrement) throws Exception;
 
-	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCaseVersion(Integer testCaseVersionId) throws Exception;
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCaseVersion(Integer testCaseVersionId, Integer includedEnvironmentId_) throws Exception;
 
 	List<Attachment> getAttachmentsForTestCaseVersion(Integer testCaseId) throws Exception;
 

@@ -673,26 +673,26 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(final Integer testCaseVersionId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(final Integer testCaseVersionId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		if (testCaseVersion != null)
 		{
 			if (testCaseVersion.getEnvironmentProfileId() != null)
 			{
-				return environmentService.getEnvironmentGroupsForProfile(testCaseVersion.getEnvironmentProfileId());
+				return environmentService.getEnvironmentGroupsForProfile(testCaseVersion.getEnvironmentProfileId(), includedEnvironmentId_);
 			}
 		}
 		return new ArrayList<EnvironmentGroup>();
 	}
 
 	@Override
-	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCaseVersion(final Integer testCaseVersionId_) throws Exception
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCaseVersion(final Integer testCaseVersionId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		if (testCaseVersion.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfileExploded(testCaseVersion.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfileExploded(testCaseVersion.getEnvironmentProfileId(), includedEnvironmentId_);
 		}
 		else
 		{

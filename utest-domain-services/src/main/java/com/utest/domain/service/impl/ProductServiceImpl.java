@@ -216,12 +216,12 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	}
 
 	@Override
-	public List<EnvironmentGroup> getEnvironmentGroupsForProduct(final Integer productId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForProduct(final Integer productId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final Product product = getRequiredEntityById(Product.class, productId_);
 		if (product.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfile(product.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfile(product.getEnvironmentProfileId(), includedEnvironmentId_);
 		}
 		else
 		{
@@ -230,12 +230,12 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	}
 
 	@Override
-	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForProduct(final Integer productId_) throws Exception
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForProduct(final Integer productId_, Integer includedEnvironmentId_) throws Exception
 	{
 		final Product product = getRequiredEntityById(Product.class, productId_);
 		if (product.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfileExploded(product.getEnvironmentProfileId());
+			return environmentService.getEnvironmentGroupsForProfileExploded(product.getEnvironmentProfileId(), includedEnvironmentId_);
 		}
 		else
 		{

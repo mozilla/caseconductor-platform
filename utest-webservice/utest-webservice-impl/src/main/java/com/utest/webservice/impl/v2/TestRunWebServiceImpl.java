@@ -264,9 +264,10 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public List<EnvironmentGroupInfo> getTestRunEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_) throws Exception
+	public List<EnvironmentGroupInfo> getTestRunEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
+			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
 	{
-		final List<EnvironmentGroup> groups = testRunService.getEnvironmentGroupsForTestRun(testRunId_);
+		final List<EnvironmentGroup> groups = testRunService.getEnvironmentGroupsForTestRun(testRunId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 
@@ -276,9 +277,10 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public List<EnvironmentGroupExplodedInfo> getTestRunEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_) throws Exception
+	public List<EnvironmentGroupExplodedInfo> getTestRunEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
+			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
 	{
-		final List<EnvironmentGroupExploded> groups = testRunService.getEnvironmentGroupsExplodedForTestRun(testRunId_);
+		final List<EnvironmentGroupExploded> groups = testRunService.getEnvironmentGroupsExplodedForTestRun(testRunId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
 	}
 
