@@ -37,6 +37,9 @@ import com.utest.domain.Team;
 import com.utest.domain.TeamUser;
 import com.utest.domain.TestCase;
 import com.utest.domain.TestCaseProductComponent;
+import com.utest.domain.TestCycle;
+import com.utest.domain.TestPlan;
+import com.utest.domain.TestSuite;
 import com.utest.domain.User;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
@@ -271,13 +274,10 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	public void deleteProduct(final Integer productId_, final Integer originalVersionId_) throws Exception
 	{
 		Product product = getRequiredEntityById(Product.class, productId_);
-		final Search search = new Search(TestCase.class);
-		search.addFilterEqual("productId", productId_);
-		final List<TestCase> foundTestCases = dao.search(TestCase.class, search);
-		if ((foundTestCases != null) && !foundTestCases.isEmpty())
-		{
-			throw new DeletingUsedEntityException(Product.class.getSimpleName() + " : " + productId_);
-		}
+		checkProductUsage(productId_, TestCase.class);
+		checkProductUsage(productId_, TestCycle.class);
+		checkProductUsage(productId_, TestSuite.class);
+		checkProductUsage(productId_, TestPlan.class);
 		// delete all product components
 		final List<ProductComponent> components = getComponentsForProduct(productId_);
 		dao.delete(components);

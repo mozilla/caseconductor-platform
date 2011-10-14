@@ -32,13 +32,16 @@ import com.utest.domain.EnvironmentDependable;
 import com.utest.domain.EnvironmentProfile;
 import com.utest.domain.Locale;
 import com.utest.domain.Named;
+import com.utest.domain.Product;
 import com.utest.domain.ProductDependable;
+import com.utest.domain.TestCase;
 import com.utest.domain.Versioned;
 import com.utest.domain.search.UtestSearch;
 import com.utest.domain.search.UtestSearchResult;
 import com.utest.domain.service.BaseService;
 import com.utest.domain.service.EnvironmentService;
 import com.utest.domain.service.util.UserUtil;
+import com.utest.exception.DeletingUsedEntityException;
 import com.utest.exception.DuplicateNameException;
 import com.utest.exception.InvalidParentChildEnvironmentException;
 import com.utest.exception.NoProductMatchException;
@@ -100,6 +103,7 @@ public abstract class BaseServiceImpl implements BaseService
 		final Search search = new Search(type_);
 		search.addFilterEqual(parentColumn_, parentId_);
 		search.addFilterEqual("name", name_);
+		search.addFilterNotEqual("deleted", true);
 		if (entityId_ != null)
 		{
 			search.addFilterNotEqual("id", entityId_);
@@ -145,6 +149,7 @@ public abstract class BaseServiceImpl implements BaseService
 		// check for duplicate name within a product
 		final Search search = new Search(type_);
 		search.addFilterEqual("name", name_);
+		search.addFilterNotEqual("deleted", true);
 		if (entityId_ != null)
 		{
 			search.addFilterNotEqual("id", entityId_);
@@ -162,6 +167,17 @@ public abstract class BaseServiceImpl implements BaseService
 		if (!isValidSelectionForCompany(companyId_, companyDependableEntitiesIds_, type_))
 		{
 			throw new InvalidParentChildEnvironmentException("Invalid selection for company: " + companyId_);
+		}
+	}
+
+	protected <T extends ProductDependable> void checkProductUsage(final Integer productId_, final Class<T> type_) throws Exception
+	{
+		Search search = new Search(type_);
+		search.addFilterEqual("productId", productId_);
+		final List<T> foundEntities = dao.search(type_, search);
+		if ((foundEntities != null) && !foundEntities.isEmpty())
+		{
+			throw new DeletingUsedEntityException("Product : " + productId_ + " used in " + type_.getSimpleName());
 		}
 	}
 
