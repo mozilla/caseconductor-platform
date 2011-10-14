@@ -23,6 +23,8 @@
         <property name="sessionId" type="string">
             <column name="sessionId" length="19" not-null="true" />
         </property>
-        
+        <property name="deleted" type="boolean">
+            <column name="deleted"/>
+        </property>
     </class>
 </hibernate-mapping>
