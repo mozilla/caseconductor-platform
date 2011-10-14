@@ -791,16 +791,33 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 	@Override
 	public List<EnvironmentGroupExploded> getEnvironmentGroupsForProfileExploded(final Integer environmentProfileId_, Integer includedEnvironmentId_) throws Exception
 	{
-
 		if (environmentProfileId_ == null)
 		{
 			throw new IllegalArgumentException("environmentProfileId_ is null in getEnvironmentGroupsForProfile() call.");
 		}
-		final List<Integer> ids = getGroupsContainingEnvironment(includedEnvironmentId_, environmentProfileId_);
+		List<Integer> ids = new ArrayList<Integer>();
+		if (includedEnvironmentId_ != null)
+		{
+			ids = getGroupsContainingEnvironment(includedEnvironmentId_, environmentProfileId_);
+		}
+		else
+		{
+			Search search = new Search(EnvironmentProfileEnvironmentGroup.class);
+			search.addFilterEqual("environmentProfileId", environmentProfileId_);
+			final List<EnvironmentProfileEnvironmentGroup> foundGroups = dao.search(EnvironmentProfileEnvironmentGroup.class, search);
+			if ((foundGroups != null) && !foundGroups.isEmpty())
+			{
+
+				for (final EnvironmentProfileEnvironmentGroup idHolder : foundGroups)
+				{
+					ids.add(idHolder.getEnvironmentGroupId());
+				}
+			}
+		}
 		if ((ids != null) && !ids.isEmpty())
 		{
 			final List<EnvironmentGroupExploded> groups = new ArrayList<EnvironmentGroupExploded>();
-			for (Integer id : ids)
+			for (final Integer id : ids)
 			{
 				groups.add(getEnvironmentGroupExploded(id));
 			}
