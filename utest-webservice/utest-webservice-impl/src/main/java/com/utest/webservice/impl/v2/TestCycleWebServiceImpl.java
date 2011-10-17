@@ -421,7 +421,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Override
 	@Secured(Permission.TEST_CYCLE_VIEW)
 	public List<CategoryValueInfo> getCoverageByResultStatus(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_,
-			@FormParam("testSuiteId") final Integer testSuiteId_, @FormParam("testRunId") final Integer testRunId_, @FormParam("testCaseId") final Integer testCaseId_)
+			@QueryParam("testSuiteId") final Integer testSuiteId_, @QueryParam("testRunId") final Integer testRunId_, @QueryParam("testCaseId") final Integer testCaseId_)
 			throws Exception
 	{
 		final List<CategoryValue> results = testRunService.getCoverageByStatus(testRunId_, testCycleId_, testSuiteId_, testCaseId_);
@@ -434,7 +434,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CYCLE_VIEW)
-	public CategoryValueInfo getCoveragePercentComplete(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @FormParam("testRunId") final Integer testRunId_)
+	public CategoryValueInfo getCoveragePercentComplete(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_, @QueryParam("testRunId") final Integer testRunId_)
 			throws Exception
 	{
 		final CategoryValue result = testRunService.getCoverageCompletionPercent(testRunId_, testCycleId_);
