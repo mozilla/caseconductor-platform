@@ -16,26 +16,25 @@
 	
 	<sql-query cacheable="false" cache-mode="ignore" name="Report_TestRunResultPercentComplete" >
 		select 101 id, 'percentComplete' categoryName,
-		ifnull(
-			(
-			select count(distinct environmentGroupId) *  count(distinct testCaseId)
+		(
+			
+			(select count(distinct environmentGroupId) *  count(distinct testCaseId)
 			from TestRunResult trr
 			where (trr.testCycleId = :testCycleId or -1 = :testCycleId)
 			and (trr.testRunId = :testRunId or -1 = :testRunId)
-			and trr.testRunResultId != 1
-			and trr.deleted = false
-			) 
-		
+			and trr.testRunResultStatusId != 1
+			and trr.deleted = false)
+				
 		/
-			(
-			select count(distinct environmentGroupId) *  count(distinct testCaseId)
+			
+			(select count(distinct environmentGroupId) *  count(distinct testCaseId)
 			from EnvironmentProfileEnvironmentGroup epeg
 			join TestRunTestCase trtc on trtc.environmentProfileId = epeg.environmentProfileId
 			where (trtc.testCycleId = :testCycleId or -1 = :testCycleId)
 			and (trtc.testRunId = :testRunId or -1 = :testRunId)
-			and trtc.deleted = false
-			) 
-		, 0)
+			and trtc.deleted = false)
+			
+		)
 		* 100 categoryValue
 		<return alias="statusTotals" class="com.utest.domain.view.CategoryValue" />
 	</sql-query>
