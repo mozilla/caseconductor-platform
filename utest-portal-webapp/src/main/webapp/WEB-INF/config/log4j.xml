@@ -3,7 +3,7 @@
 
 	<!--  Default appender -->
   <appender name="defaultFileAppender" class="org.apache.log4j.RollingFileAppender">
-     <param name="File" value="${jboss.server.log.dir}/utest/utest-default.log"/>
+     <param name="File" value="${jboss.server.log.dir}/{log.filename}"/>
      <param name="Append" value="true"/>
      <param name="MaxFileSize" value="10000KB"/>
      <param name="MaxBackupIndex" value="5"/>
@@ -12,125 +12,9 @@
        <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
     </layout>    
    </appender>
-
-
-  <appender name="EmailMessageDelegate" class="org.apache.log4j.RollingFileAppender">
-     <param name="File" value="${jboss.server.log.dir}/utest/EmailMessageDelegate-error.log"/>
-     <param name="Append" value="true"/>
-     <param name="MaxFileSize" value="10000KB"/>
-     <param name="MaxBackupIndex" value="5"/>
-
-    <layout class="org.apache.log4j.PatternLayout">
-       <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
-    </layout>    
-   </appender>
-
-  <appender name="EmailMessageDelegate-filtered" class="org.apache.log4j.RollingFileAppender">
-     <param name="File" value="${jboss.server.log.dir}/utest/EmailMessageDelegate-filtered.log"/>
-     <param name="Append" value="true"/>
-     <param name="MaxFileSize" value="10000KB"/>
-     <param name="MaxBackupIndex" value="5"/>
-
-    <layout class="org.apache.log4j.PatternLayout">
-       <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
-    </layout>    
-   </appender>
-
-  <appender name="EmailMessageDelegate-sent" class="org.apache.log4j.RollingFileAppender">
-     <param name="File" value="${jboss.server.log.dir}/utest/EmailMessageDelegate-sent.log"/>
-     <param name="Append" value="true"/>
-     <param name="MaxFileSize" value="10000KB"/>
-     <param name="MaxBackupIndex" value="5"/>
-
-    <layout class="org.apache.log4j.PatternLayout">
-       <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
-    </layout>    
-   </appender>
-
-  <appender name="JiraHandler" class="org.apache.log4j.RollingFileAppender">
-     <param name="File" value="${jboss.server.log.dir}/utest/JiraHandler.log"/>
-     <param name="Append" value="true"/>
-     <param name="MaxFileSize" value="10000KB"/>
-     <param name="MaxBackupIndex" value="5"/>
-
-    <layout class="org.apache.log4j.PatternLayout">
-       <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
-    </layout>    
-    
-   </appender>
-     <appender name="FileUploadUtil" class="org.apache.log4j.RollingFileAppender">
-     <param name="File" value="${jboss.server.log.dir}/utest/FileUploadUtil.log"/>
-     <param name="Append" value="true"/>
-     <param name="MaxFileSize" value="10000KB"/>
-     <param name="MaxBackupIndex" value="5"/>
-
-    <layout class="org.apache.log4j.PatternLayout">
-       <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
-    </layout>    
-   </appender>
-
-   <!-- A size based file rolling appender-->
-   <appender name="BugInfoAppender" class="org.apache.log4j.RollingFileAppender">
-     <param name="File" value="${jboss.server.log.dir}/utest/BugInfo.log"/>
-     <param name="Append" value="true"/>
-     <param name="MaxFileSize" value="500KB"/>
-     <param name="MaxBackupIndex" value="5"/>
-
-    <layout class="org.apache.log4j.PatternLayout">
-       <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
-    </layout>    
-   </appender>
    
-   <!-- A size based file rolling appender-->
-   <appender name="HibernateSQLInfoAppender" class="org.apache.log4j.RollingFileAppender">
-     <param name="File" value="${jboss.server.log.dir}/utest/HibernateSQLInfo.log"/>
-     <param name="Append" value="true"/>
-     <param name="MaxFileSize" value="500KB"/>
-     <param name="MaxBackupIndex" value="5"/>
-
-    <layout class="org.apache.log4j.PatternLayout">
-       <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
-    </layout>    
-   </appender>
-   
-   <category name="BugInfoLogger">
-     <priority value="INFO" />
-     <appender-ref ref="BugInfoAppender"/>
-   </category>
-   
-	<category name="org.hibernate.SQL" additivity="false">
-      <priority value="INFO" />
-      <appender-ref ref="HibernateSQLInfoAppender" />
-   </category>
- 
-   <category name="EmailMessageDelegate">
-     <priority value="debug" />
-     <appender-ref ref="EmailMessageDelegate"/>
-   </category>
- 
-    <category name="EmailMessageDelegate-filtered">
-     <priority value="debug" />
-     <appender-ref ref="EmailMessageDelegate-filtered"/>
-   </category>
- 
-    <category name="EmailMessageDelegate-sent">
-     <priority value="debug" />
-     <appender-ref ref="EmailMessageDelegate-sent"/>
-   </category>
-   
-   <category name="com.utest.domain.service.impl.JiraHandler">
-     <priority value="debug" />
-     <appender-ref ref="JiraHandler"/>
-   </category>
-   
-      <category name="com.utest.domain.service.util.FileUploadUtil">
-     <priority value="debug" />
-     <appender-ref ref="FileUploadUtil"/>
-   </category>
-   
-   
-    <root>
+   <root>
     	<priority value ="debug" />
     	<appender-ref ref="defaultFileAppender"/>
-  	</root>
+  </root>
 </log4j:configuration>

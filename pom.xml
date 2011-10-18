@@ -41,6 +41,7 @@
 
         <login.expiration.seconds>3600</login.expiration.seconds>
         <permanent.deletion.enabled>false</permanent.deletion.enabled>
+        <log.filename>utest/utest-default.log</log.filename>
 
     </properties>
     <developers>
