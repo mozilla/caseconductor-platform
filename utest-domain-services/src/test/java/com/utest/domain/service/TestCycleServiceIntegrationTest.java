@@ -1,10 +1,10 @@
 /**
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the GNU General Public License (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.gnu.org/licenses/gpl.txt
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import com.utest.dao.TypelessDAO;
 import com.utest.domain.TestCycle;
@@ -68,13 +69,13 @@ public class TestCycleServiceIntegrationTest extends BaseDomainServiceIntegratio
 
 	}
 
-	// @Test(groups = { "integration" })
+	@Test(groups = { "integration" }, enabled = true)
 	public void testActivateTestCycle() throws Exception
 	{
 
 		final User user = userService.getUser(1);
 		loginUser(user);
-		Assert.assertTrue(testCycleService.activateTestCycle(3, 1) != null);
+		Assert.assertTrue(testCycleService.lockTestCycle(1, 0) != null);
 
 	}
 

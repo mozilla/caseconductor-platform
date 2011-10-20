@@ -1,10 +1,10 @@
 /**
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the GNU General Public License (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.gnu.org/licenses/gpl.txt
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import com.utest.domain.Environment;
 import com.utest.domain.EnvironmentGroup;
@@ -43,12 +44,12 @@ public class ProductServiceIntegrationTest extends BaseDomainServiceIntegrationT
 	@Autowired
 	private EnvironmentService	environmentService;
 
-	// @Test(groups = { "integration" })
+	@Test(groups = { "integration" }, enabled = true)
 	public void testAddProduct() throws Exception
 	{
 		final User user = userService.getUser(1);
 		loginUser(user);
-		final Integer companyId = 9;
+		final Integer companyId = 1;
 		final Product product0 = productService.getProduct(1);
 		Assert.assertTrue(product0 != null);
 		final Product product1 = productService.addProduct(companyId, "VMK Web product - windows", "windows test");

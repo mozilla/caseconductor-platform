@@ -1,10 +1,10 @@
 /**
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the GNU General Public License (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.gnu.org/licenses/gpl.txt
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -231,14 +231,14 @@ public class TestCaseServiceIntegrationTest extends BaseDomainServiceIntegration
 	@Test(groups = { "integration" }, enabled = true)
 	public void testDeleteTestCase() throws Exception
 	{
-		// final User user = userService.getUser(1);
-		// loginUser(user);
-		// final Integer testCaseId = 1;
-		// testCaseService.deleteTestCase(testCaseId, 0);
-		// Assert.assertTrue(true);
+		final User user = userService.getUser(1);
+		loginUser(user);
+		final Integer testCaseId = 1;
+		testCaseService.undeleteTestCase(testCaseId);
+		Assert.assertTrue(true);
 
-		// TestCase testCase = testCaseService.getTestCase(1);
-		// Assert.assertTrue(testCase == null);
+		TestCase testCase = testCaseService.getTestCase(1);
+		Assert.assertTrue(testCase == null);
 
 		UtestSearch search = new UtestSearch();
 		search.addFilterIn("id", Arrays.asList(1, 2, 3));
