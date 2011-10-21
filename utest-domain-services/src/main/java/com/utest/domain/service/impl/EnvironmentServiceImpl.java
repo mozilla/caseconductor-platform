@@ -1105,6 +1105,9 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		final EnvironmentGroup newGroup = new EnvironmentGroup();
 		newGroup.setName("Cloned from group: " + group_.getId() + " [" + group_.getName() + "]");
 		newGroup.setDescription(group_.getDescription());
+		newGroup.setCompanyId(group_.getCompanyId());
+		newGroup.setEnvironmentTypeId(group_.getEnvironmentTypeId());
+		newGroup.setExternalIdentifier(group_.getExternalIdentifier());
 		final Integer newGroupId = dao.addAndReturnId(newGroup);
 		// add environments to new group
 		for (final Integer environmentId : environmentIds_)
