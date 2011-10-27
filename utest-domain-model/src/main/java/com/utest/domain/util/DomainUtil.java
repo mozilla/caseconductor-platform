@@ -1,5 +1,6 @@
 package com.utest.domain.util;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -47,6 +48,30 @@ public class DomainUtil
 			}
 		}
 		return ids;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> extractObjectsFieldsAsList(final Class<T> type, final String property, final List<?> objects)
+	{
+		final List<T> results = new ArrayList<T>();
+		for (final Object object : objects)
+		{
+			final Class objectClass = object.getClass();
+			try
+			{
+				final Method getter = objectClass.getMethod("get" + property.substring(0, 1).toUpperCase() + property.substring(1), new Class[] {});
+				if (getter.getReturnType().equals(type))
+				{
+					results.add((T) getter.invoke(object));
+				}
+			}
+			catch (final Exception ex)
+			{
+				ex.printStackTrace();
+				continue;
+			}
+		}
+		return results;
 	}
 
 	public static List<Integer> extractLocalDescriptableIds(final List<?> entities_)

@@ -784,6 +784,32 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<Integer> filterGroupsContainingEnvironments(final List<Integer> environmentIds_, List<Integer> sourceGroupIds_) throws Exception
+	{
+		Search search;
+		List<?> groupIdList = null;
+		if (sourceGroupIds_ == null || sourceGroupIds_.isEmpty())
+		{
+			throw new IllegalArgumentException("sourceGroupIds_ is empty in filterGroupsContainingEnvironments() call.");
+		}
+		if (environmentIds_ == null || environmentIds_.isEmpty())
+		{
+			throw new IllegalArgumentException("environmentId_ is empty in filterGroupsContainingEnvironments() call.");
+		}
+		search = new Search(EnvironmentGroupEnvironment.class);
+		search.addField("environmentGroupId");
+		search.addFilterIn("environmentGroupId", sourceGroupIds_);
+		search.addFilterIn("environmentId", environmentIds_);
+		if (groupIdList != null)
+		{
+			search.addFilterIn("environmentGroupId", groupIdList);
+		}
+		groupIdList = dao.search(EnvironmentGroupEnvironment.class, search);
+		return (List<Integer>) groupIdList;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<Integer> getProfilesContainingEnvironments(final List<Integer> environmentIds_) throws Exception
 	{
 		List<Integer> profiles = new ArrayList<Integer>();

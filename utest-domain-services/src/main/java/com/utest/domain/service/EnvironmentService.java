@@ -163,4 +163,6 @@ public interface EnvironmentService
 
 	List<Integer> getGroupsContainingEnvironments(List<Integer> environmentId, Integer environmentProfileId_) throws Exception;
 
+	List<Integer> filterGroupsContainingEnvironments(List<Integer> environmentIds, List<Integer> sourceGroupIds) throws Exception;
+
 }

@@ -69,6 +69,7 @@ import com.utest.domain.service.TestPlanService;
 import com.utest.domain.service.TestRunService;
 import com.utest.domain.service.TestSuiteService;
 import com.utest.domain.service.UserService;
+import com.utest.domain.util.DomainUtil;
 import com.utest.domain.view.CategoryValue;
 import com.utest.domain.view.TestRunTestCaseView;
 import com.utest.exception.ActivatingIncompleteEntityException;
@@ -895,22 +896,37 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 		return dao.getBySearch(TestRunTestCaseView.class, search_);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public UtestSearchResult findTestRunResults(final UtestSearch search_, List<Integer> includedEnvironmentId_) throws Exception
+	public UtestSearchResult findTestRunResults(final UtestSearch search_, List<Integer> includedEnvironmentIds_) throws Exception
 	{
-		if (includedEnvironmentId_ != null && !includedEnvironmentId_.isEmpty())
+		UtestSearchResult searchResult = dao.getBySearch(TestRunResult.class, search_);
+		if (includedEnvironmentIds_ != null && !includedEnvironmentIds_.isEmpty())
 		{
-			List<Integer> profileIds = environmentService.getGroupsContainingEnvironments(includedEnvironmentId_, null);
-			if (profileIds != null && !profileIds.isEmpty())
+			List<TestRunResult> results = (List<TestRunResult>) searchResult.getResults();
+			if (results != null && !results.isEmpty())
 			{
-				search_.addFilterIn("environmentGroupId", profileIds);
-			}
-			else
-			{
-				return new UtestSearchResult();
+				List<Integer> groupIds = environmentService.filterGroupsContainingEnvironments(includedEnvironmentIds_, DomainUtil.extractObjectsFieldsAsList(Integer.class,
+						"environmentGroupId", results));
+				if (groupIds != null && !groupIds.isEmpty())
+				{
+					List<TestRunResult> filteredResults = new ArrayList<TestRunResult>();
+					for (TestRunResult result : results)
+					{
+						if (groupIds.contains(result.getEnvironmentGroupId()))
+						{
+							filteredResults.add(result);
+						}
+					}
+					searchResult.setResults(filteredResults);
+				}
+				else
+				{
+					return new UtestSearchResult();
+				}
 			}
 		}
-		return dao.getBySearch(TestRunResult.class, search_);
+		return searchResult;
 	}
 
 	@Override
