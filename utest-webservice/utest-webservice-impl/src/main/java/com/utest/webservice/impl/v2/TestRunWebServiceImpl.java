@@ -265,7 +265,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
 	public List<EnvironmentGroupInfo> getTestRunEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final List<EnvironmentGroup> groups = testRunService.getEnvironmentGroupsForTestRun(testRunId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
@@ -278,7 +278,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
 	public List<EnvironmentGroupExplodedInfo> getTestRunEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer testRunId_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final List<EnvironmentGroupExploded> groups = testRunService.getEnvironmentGroupsExplodedForTestRun(testRunId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
@@ -378,7 +378,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public TestRunSearchResultInfo findTestRuns(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+	public TestRunSearchResultInfo findTestRuns(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_,
 			@QueryParam("includedTestSuiteId") final Integer includedTestSuiteId_, @QueryParam("includedTestCaseId") final Integer includedTestCaseId_,
 			@QueryParam("includedTestCaseVersionId") final Integer includedTestCaseVesionId_, @QueryParam("teamMemberId") final Integer teamMemberId_,
 			@QueryParam("") final UtestSearchRequest request_) throws Exception
@@ -402,8 +402,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestRunInfo.class, request_, ui_);
-		final UtestSearchResult result = testRunService.findTestRuns(search, includedTestSuiteId_, includedTestCaseId_, includedTestCaseVesionId_, teamMemberId_,
-				includedEnvironmentId_);
+		final UtestSearchResult result = testRunService.findDeletedEntities(TestRun.class, search);
 
 		return (TestRunSearchResultInfo) objectBuilderFactory.createResult(TestRunInfo.class, TestRun.class, request_, result, ui_.getBaseUriBuilder());
 	}
@@ -880,7 +879,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public TestRunTestCaseSearchResultInfo findTestRunTestCases(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+	public TestRunTestCaseSearchResultInfo findTestRunTestCases(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_,
 			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestRunTestCaseInfo.class, request_, ui_);
@@ -895,7 +894,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public TestRunTestCaseAssignmentSearchResultInfo findTestRunAssignments(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+	public TestRunTestCaseAssignmentSearchResultInfo findTestRunAssignments(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_,
 			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestRunTestCaseAssignmentInfo.class, request_, ui_);
@@ -911,7 +910,7 @@ public class TestRunWebServiceImpl extends BaseWebServiceImpl implements TestRun
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public TestRunResultSearchResultInfo findTestRunResults(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+	public TestRunResultSearchResultInfo findTestRunResults(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_,
 			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestRunResultInfo.class, request_, ui_);

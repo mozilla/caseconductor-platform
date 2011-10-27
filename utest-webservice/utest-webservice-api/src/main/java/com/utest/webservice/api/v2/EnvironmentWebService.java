@@ -89,7 +89,7 @@ public interface EnvironmentWebService
 
 	EnvironmentProfileExplodedInfo getEnvironmentProfileExploded(UriInfo ui, Integer environmentProfileId) throws Exception;
 
-	EnvironmentGroupSearchResultInfo findEnvironmentGroups(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+	EnvironmentGroupSearchResultInfo findEnvironmentGroups(UriInfo ui, List<Integer> includedEnvironmentIds, UtestSearchRequest request) throws Exception;
 
-	EnvironmentGroupExplodedSearchResultInfo findEnvironmentGroupsExploded(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+	EnvironmentGroupExplodedSearchResultInfo findEnvironmentGroupsExploded(UriInfo ui, List<Integer> includedEnvironmentIds, UtestSearchRequest request) throws Exception;
 }

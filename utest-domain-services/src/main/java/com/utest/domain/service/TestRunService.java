@@ -47,7 +47,7 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 public interface TestRunService extends BaseService
 {
 
-	List<EnvironmentGroup> getEnvironmentGroupsForTestRun(Integer testRunId, Integer includedEnvironmentId_) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestRun(Integer testRunId, List<Integer> includedEnvironmentId_) throws Exception;
 
 	TestRunTestCase addTestRunTestCase(Integer testRunId, Integer testCaseVersionId) throws Exception;
 
@@ -56,7 +56,7 @@ public interface TestRunService extends BaseService
 	void deleteTestRunTestCase(Integer testRunTestCaseId, final Integer originalVersionId_) throws Exception;
 
 	UtestSearchResult findTestRuns(UtestSearch search, Integer includedTestSuiteId_, Integer includedTestCaseId_, Integer includedTestCaseVersionId_, Integer teamMemberId_,
-			Integer includedEnvironmentId_) throws Exception;
+			List<Integer> includedEnvironmentId_) throws Exception;
 
 	TestRun getTestRun(Integer testRunId) throws Exception;
 
@@ -74,9 +74,9 @@ public interface TestRunService extends BaseService
 
 	List<TestRunResult> getTestRunResults(Integer testRunId, Integer testerId, Integer environmentGroupId) throws Exception;
 
-	UtestSearchResult findTestRunAssignments(UtestSearch search, Integer includedEnvironmentId_) throws Exception;
+	UtestSearchResult findTestRunAssignments(UtestSearch search, List<Integer> includedEnvironmentId_) throws Exception;
 
-	UtestSearchResult findTestRunResults(UtestSearch search, Integer includedEnvironmentId_) throws Exception;
+	UtestSearchResult findTestRunResults(UtestSearch search, List<Integer> includedEnvironmentId_) throws Exception;
 
 	TestRunResult retestTestRunResult(Integer testRunResultId, Integer testerId) throws Exception;
 
@@ -140,7 +140,7 @@ public interface TestRunService extends BaseService
 
 	List<ProductComponent> getTestRunComponents(Integer testRunId) throws Exception;
 
-	UtestSearchResult findTestRunTestCases(UtestSearch search, Integer includedEnvironmentId_) throws Exception;
+	UtestSearchResult findTestRunTestCases(UtestSearch search, List<Integer> includedEnvironmentId_) throws Exception;
 
 	TestRunResult finishExecutingAssignedTestCaseWithInvalidation(Integer testRunResultId, String comment, Integer originalVersionId) throws Exception;
 
@@ -181,7 +181,7 @@ public interface TestRunService extends BaseService
 
 	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForAssignment(Integer assignmentId) throws Exception;
 
-	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRun(Integer testRunId, Integer includedEnvironmentId_) throws Exception;
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRun(Integer testRunId, List<Integer> includedEnvironmentId_) throws Exception;
 
 	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRunTestCase(Integer testRunTestCaseId) throws Exception;
 

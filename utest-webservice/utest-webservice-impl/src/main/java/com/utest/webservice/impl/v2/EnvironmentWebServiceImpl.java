@@ -329,7 +329,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Consumes( { MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
-	public EnvironmentGroupSearchResultInfo findEnvironmentGroups(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+	public EnvironmentGroupSearchResultInfo findEnvironmentGroups(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_,
 			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(EnvironmentGroupInfo.class, request_, ui_);
@@ -345,7 +345,7 @@ public class EnvironmentWebServiceImpl extends BaseWebServiceImpl implements Env
 	@Override
 	@Secured(Permission.ENVIRONMENT_VIEW)
 	public EnvironmentGroupExplodedSearchResultInfo findEnvironmentGroupsExploded(@Context final UriInfo ui_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(EnvironmentGroupInfo.class, request_, ui_);
 		final UtestSearchResult result = environmentService.findEnvironmentGroupsExploded(search, includedEnvironmentId_);

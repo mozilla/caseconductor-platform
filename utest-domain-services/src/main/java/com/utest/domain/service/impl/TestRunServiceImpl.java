@@ -309,7 +309,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public List<EnvironmentGroup> getEnvironmentGroupsForTestRun(final Integer testRunId_, Integer includedEnvironmentId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForTestRun(final Integer testRunId_, List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		if (testRun.getEnvironmentProfileId() != null)
@@ -323,7 +323,7 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRun(final Integer testRunId_, Integer includedEnvironmentId_) throws Exception
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestRun(final Integer testRunId_, List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final TestRun testRun = getRequiredEntityById(TestRun.class, testRunId_);
 		if (testRun.getEnvironmentProfileId() != null)
@@ -860,11 +860,11 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public UtestSearchResult findTestRunAssignments(final UtestSearch search_, Integer includedEnvironmentId_) throws Exception
+	public UtestSearchResult findTestRunAssignments(final UtestSearch search_, List<Integer> includedEnvironmentId_) throws Exception
 	{
-		if (includedEnvironmentId_ != null)
+		if (includedEnvironmentId_ != null && !includedEnvironmentId_.isEmpty())
 		{
-			List<Integer> profileIds = environmentService.getProfilesContainingEnvironment(includedEnvironmentId_);
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironments(includedEnvironmentId_);
 			if (profileIds != null && !profileIds.isEmpty())
 			{
 				search_.addFilterIn("environmentProfileId", profileIds);
@@ -878,11 +878,11 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public UtestSearchResult findTestRunTestCases(final UtestSearch search_, Integer includedEnvironmentId_) throws Exception
+	public UtestSearchResult findTestRunTestCases(final UtestSearch search_, List<Integer> includedEnvironmentId_) throws Exception
 	{
 		if (includedEnvironmentId_ != null)
 		{
-			List<Integer> profileIds = environmentService.getProfilesContainingEnvironment(includedEnvironmentId_);
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironments(includedEnvironmentId_);
 			if (profileIds != null && !profileIds.isEmpty())
 			{
 				search_.addFilterIn("environmentProfileId", profileIds);
@@ -896,11 +896,11 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public UtestSearchResult findTestRunResults(final UtestSearch search_, Integer includedEnvironmentId_) throws Exception
+	public UtestSearchResult findTestRunResults(final UtestSearch search_, List<Integer> includedEnvironmentId_) throws Exception
 	{
-		if (includedEnvironmentId_ != null)
+		if (includedEnvironmentId_ != null && !includedEnvironmentId_.isEmpty())
 		{
-			List<Integer> profileIds = environmentService.getGroupsContainingEnvironment(includedEnvironmentId_, null);
+			List<Integer> profileIds = environmentService.getGroupsContainingEnvironments(includedEnvironmentId_, null);
 			if (profileIds != null && !profileIds.isEmpty())
 			{
 				search_.addFilterIn("environmentGroupId", profileIds);
@@ -915,11 +915,11 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 
 	@Override
 	public UtestSearchResult findTestRuns(final UtestSearch search_, Integer includedTestSuiteId_, Integer includedTestCaseId_, Integer includedTestCaseVersionId_,
-			Integer teamMemberId_, Integer includedEnvironmentId_) throws Exception
+			Integer teamMemberId_, List<Integer> includedEnvironmentId_) throws Exception
 	{
-		if (includedEnvironmentId_ != null)
+		if (includedEnvironmentId_ != null && !includedEnvironmentId_.isEmpty())
 		{
-			List<Integer> profileIds = environmentService.getProfilesContainingEnvironment(includedEnvironmentId_);
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironments(includedEnvironmentId_);
 			if (profileIds != null && !profileIds.isEmpty())
 			{
 				search_.addFilterIn("environmentProfileId", profileIds);

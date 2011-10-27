@@ -81,7 +81,7 @@ public interface ProductWebService
 
 	Boolean deleteAttachment(UriInfo ui, Integer productId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	ProductSearchResultInfo findProducts(UriInfo ui, Integer includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
+	ProductSearchResultInfo findProducts(UriInfo ui, List<Integer> includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
 
 	Boolean importMultiStepTestCasesFromCsv(MultipartBody body, Integer productId) throws Exception;
 
@@ -91,8 +91,8 @@ public interface ProductWebService
 
 	ProductSearchResultInfo findDeletedProducts(UriInfo ui, Integer includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
 
-	List<EnvironmentGroupInfo> getProductEnvironmentGroups(UriInfo ui, Integer productId, Integer includedEnvironmentId) throws Exception;
+	List<EnvironmentGroupInfo> getProductEnvironmentGroups(UriInfo ui, Integer productId, List<Integer> includedEnvironmentId) throws Exception;
 
-	List<EnvironmentGroupExplodedInfo> getProductEnvironmentGroupsExploded(UriInfo ui, Integer productId, Integer includedEnvironmentId) throws Exception;
+	List<EnvironmentGroupExplodedInfo> getProductEnvironmentGroupsExploded(UriInfo ui, Integer productId, List<Integer> includedEnvironmentId) throws Exception;
 
 }

@@ -237,7 +237,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Override
 	@Secured(Permission.TEST_CYCLE_VIEW)
 	public List<EnvironmentGroupInfo> getTestCycleEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testCycleId_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final List<EnvironmentGroup> groups = testCycleService.getEnvironmentGroupsForTestCycle(testCycleId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
@@ -253,7 +253,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	 * Returns all versions of a test case
 	 */
 	public List<EnvironmentGroupExplodedInfo> getTestCycleEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final List<EnvironmentGroupExploded> groups = testCycleService.getEnvironmentGroupsExplodedForTestCycle(productId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
@@ -334,7 +334,7 @@ public class TestCycleWebServiceImpl extends BaseWebServiceImpl implements TestC
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_CYCLE_VIEW)
-	public TestCycleSearchResultInfo findTestCycles(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+	public TestCycleSearchResultInfo findTestCycles(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_,
 			@QueryParam("teamMemberId") final Integer teamMemberId_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestCycleInfo.class, request_, ui_);

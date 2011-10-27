@@ -65,14 +65,14 @@ public interface TestPlanWebService
 
 	Boolean deleteAttachment(UriInfo ui, Integer testPlanId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	TestPlanSearchResultInfo findTestPlans(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+	TestPlanSearchResultInfo findTestPlans(UriInfo ui, List<Integer> includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
 	Boolean undeleteTestPlan(UriInfo ui, Integer testPlanId, Integer originalVesionId) throws Exception;
 
 	TestPlanSearchResultInfo findDeletedTestPlans(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
-	List<EnvironmentGroupInfo> getTestPlanEnvironmentGroups(UriInfo ui, Integer testPlanId, Integer includedEnvironmentId) throws Exception;
+	List<EnvironmentGroupInfo> getTestPlanEnvironmentGroups(UriInfo ui, Integer testPlanId, List<Integer> includedEnvironmentId) throws Exception;
 
-	List<EnvironmentGroupExplodedInfo> getTestPlanEnvironmentGroupsExploded(UriInfo ui, Integer productId, Integer includedEnvironmentId) throws Exception;
+	List<EnvironmentGroupExplodedInfo> getTestPlanEnvironmentGroupsExploded(UriInfo ui, Integer productId, List<Integer> includedEnvironmentId) throws Exception;
 
 }

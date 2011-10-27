@@ -42,13 +42,13 @@ public interface TestSuiteService extends BaseService
 	TestSuite getTestSuite(Integer testSuiteId_) throws Exception;
 
 	UtestSearchResult findTestSuites(UtestSearch search_, Integer includedInTestRunId_, Integer includedTestCaseId, Integer includedTestCaseVersionId,
-			Integer includedEnvironmentId_) throws Exception;
+			List<Integer> includedEnvironmentId_) throws Exception;
 
 	void deleteTestSuiteTestCase(Integer testSuiteTestCaseId_, Integer originalVersionId) throws Exception;
 
 	List<TestSuiteTestCase> getTestSuiteTestCases(Integer testSuiteId) throws Exception;
 
-	List<EnvironmentGroup> getEnvironmentGroupsForTestSuite(Integer testSuiteId, Integer includedEnvironmentId_) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestSuite(Integer testSuiteId, List<Integer> includedEnvironmentId_) throws Exception;
 
 	TestSuiteTestCase getTestSuiteTestCase(Integer testSuiteTestCaseId) throws Exception;
 
@@ -71,13 +71,13 @@ public interface TestSuiteService extends BaseService
 
 	TestSuite cloneTestSuite(Integer fromTestSuiteId) throws Exception;
 
-	UtestSearchResult findTestSuiteTestCases(UtestSearch search, Integer includedEnvironmentId_) throws Exception;
+	UtestSearchResult findTestSuiteTestCases(UtestSearch search, List<Integer> includedEnvironmentId_) throws Exception;
 
 	List<TestSuiteTestCaseView> getTestSuiteTestCasesViews(Integer testSuiteId) throws Exception;
 
 	TestSuiteTestCaseView getTestSuiteTestCaseView(Integer testSuiteTestCaseId) throws Exception;
 
-	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestSuite(Integer testSuiteId, Integer includedEnvironmentId_) throws Exception;
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestSuite(Integer testSuiteId, List<Integer> includedEnvironmentId_) throws Exception;
 
 	List<Attachment> getAttachmentsForTestSuite(Integer testSuiteId) throws Exception;
 

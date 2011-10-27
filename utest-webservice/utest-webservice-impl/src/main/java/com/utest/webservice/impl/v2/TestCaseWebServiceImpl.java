@@ -330,7 +330,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	@Override
 	@Secured(Permission.TEST_CASE_VIEW)
 	public List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testCaseVersionId_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final List<EnvironmentGroup> groups = testCaseService.getEnvironmentGroupsForTestCaseVersion(testCaseVersionId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
@@ -346,7 +346,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	 * Returns all versions of a test case
 	 */
 	public List<EnvironmentGroupExplodedInfo> getTestCaseEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final List<EnvironmentGroupExploded> groups = testCaseService.getEnvironmentGroupsExplodedForTestCaseVersion(productId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
@@ -555,7 +555,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	/**
 	 * Returns versions of test cases based on search parameters
 	 */
-	public TestCaseVersionSearchResultInfo findTestCaseVersions(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+	public TestCaseVersionSearchResultInfo findTestCaseVersions(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_,
 			@QueryParam("includedInTestSuiteId") final Integer includedInTestSuiteId_, @QueryParam("tag") final String tag_, @QueryParam("") final UtestSearchRequest request_)
 			throws Exception
 	{
@@ -590,7 +590,7 @@ public class TestCaseWebServiceImpl extends BaseWebServiceImpl implements TestCa
 	/**
 	 * Returns latest versions of test cases by default
 	 */
-	public TestCaseVersionSearchResultInfo findLatestTestCaseVersions(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+	public TestCaseVersionSearchResultInfo findLatestTestCaseVersions(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_,
 			@QueryParam("includedInTestSuiteId") final Integer includedInTestSuiteId_, @QueryParam("tag") final String tag_, @QueryParam("") final UtestSearchRequest request_)
 			throws Exception
 	{

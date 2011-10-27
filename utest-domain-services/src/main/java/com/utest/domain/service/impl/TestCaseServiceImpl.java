@@ -510,11 +510,11 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public UtestSearchResult findTestCaseVersions(final UtestSearch search_, Integer includedInTestSuiteId_, Integer includedEnvironmentId_, String tag_) throws Exception
+	public UtestSearchResult findTestCaseVersions(final UtestSearch search_, Integer includedInTestSuiteId_, List<Integer> includedEnvironmentId_, String tag_) throws Exception
 	{
-		if (includedEnvironmentId_ != null)
+		if (includedEnvironmentId_ != null && !includedEnvironmentId_.isEmpty())
 		{
-			List<Integer> profileIds = environmentService.getProfilesContainingEnvironment(includedEnvironmentId_);
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironments(includedEnvironmentId_);
 			if (profileIds != null && !profileIds.isEmpty())
 			{
 				search_.addFilterIn("environmentProfileId", profileIds);
@@ -605,14 +605,14 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public UtestSearchResult findLatestTestCaseVersions(Integer includedInTestSuiteId_, Integer includedEnvironmentId_) throws Exception
+	public UtestSearchResult findLatestTestCaseVersions(Integer includedInTestSuiteId_, List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final UtestSearch search = new UtestSearch();
 		return findLatestTestCaseVersions(search, includedInTestSuiteId_, includedEnvironmentId_, null);
 	}
 
 	@Override
-	public UtestSearchResult findLatestTestCaseVersions(final UtestSearch search_, Integer includedInTestSuiteId_, Integer includedEnvironmentId_, String tag_) throws Exception
+	public UtestSearchResult findLatestTestCaseVersions(final UtestSearch search_, Integer includedInTestSuiteId_, List<Integer> includedEnvironmentId_, String tag_) throws Exception
 	{
 		search_.addFilterEqual("latestVersion", true);
 		return findTestCaseVersions(search_, includedInTestSuiteId_, includedEnvironmentId_, tag_);
@@ -673,7 +673,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(final Integer testCaseVersionId_, Integer includedEnvironmentId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(final Integer testCaseVersionId_, List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		if (testCaseVersion != null)
@@ -687,7 +687,7 @@ public class TestCaseServiceImpl extends BaseServiceImpl implements TestCaseServ
 	}
 
 	@Override
-	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCaseVersion(final Integer testCaseVersionId_, Integer includedEnvironmentId_) throws Exception
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCaseVersion(final Integer testCaseVersionId_, List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final TestCaseVersion testCaseVersion = getRequiredEntityById(TestCaseVersion.class, testCaseVersionId_);
 		if (testCaseVersion.getEnvironmentProfileId() != null)

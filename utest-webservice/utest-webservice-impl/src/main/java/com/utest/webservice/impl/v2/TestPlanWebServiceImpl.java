@@ -169,7 +169,7 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	@Override
 	@Secured(Permission.TEST_PLAN_VIEW)
 	public List<EnvironmentGroupInfo> getTestPlanEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testPlanId_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final List<EnvironmentGroup> groups = testPlanService.getEnvironmentGroupsForTestPlan(testPlanId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
@@ -185,7 +185,7 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	 * Returns all versions of a test case
 	 */
 	public List<EnvironmentGroupExplodedInfo> getTestPlanEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final List<EnvironmentGroupExploded> groups = testPlanService.getEnvironmentGroupsExplodedForTestPlan(productId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
@@ -324,7 +324,7 @@ public class TestPlanWebServiceImpl extends BaseWebServiceImpl implements TestPl
 	/**
 	 * Returns latest versions of test cases by default
 	 */
-	public TestPlanSearchResultInfo findTestPlans(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+	public TestPlanSearchResultInfo findTestPlans(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_,
 			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestPlanInfo.class, request_, ui_);

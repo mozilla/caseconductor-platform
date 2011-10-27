@@ -216,12 +216,12 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	}
 
 	@Override
-	public List<EnvironmentGroup> getEnvironmentGroupsForProduct(final Integer productId_, Integer includedEnvironmentId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForProduct(final Integer productId_, List<Integer> includedEnvironmentIds_) throws Exception
 	{
 		final Product product = getRequiredEntityById(Product.class, productId_);
 		if (product.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfile(product.getEnvironmentProfileId(), includedEnvironmentId_);
+			return environmentService.getEnvironmentGroupsForProfile(product.getEnvironmentProfileId(), includedEnvironmentIds_);
 		}
 		else
 		{
@@ -230,12 +230,12 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	}
 
 	@Override
-	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForProduct(final Integer productId_, Integer includedEnvironmentId_) throws Exception
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForProduct(final Integer productId_, List<Integer> includedEnvironmentIds_) throws Exception
 	{
 		final Product product = getRequiredEntityById(Product.class, productId_);
 		if (product.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfileExploded(product.getEnvironmentProfileId(), includedEnvironmentId_);
+			return environmentService.getEnvironmentGroupsForProfileExploded(product.getEnvironmentProfileId(), includedEnvironmentIds_);
 		}
 		else
 		{
@@ -303,11 +303,11 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	}
 
 	@Override
-	public UtestSearchResult findProducts(final UtestSearch search_, Integer teamMemberId_, Integer includedEnvironmentId_) throws Exception
+	public UtestSearchResult findProducts(final UtestSearch search_, Integer teamMemberId_, List<Integer> includedEnvironmentIds_) throws Exception
 	{
-		if (includedEnvironmentId_ != null)
+		if (includedEnvironmentIds_ != null)
 		{
-			List<Integer> profileIds = environmentService.getProfilesContainingEnvironment(includedEnvironmentId_);
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironments(includedEnvironmentIds_);
 			if (profileIds != null && !profileIds.isEmpty())
 			{
 				search_.addFilterIn("environmentProfileId", profileIds);

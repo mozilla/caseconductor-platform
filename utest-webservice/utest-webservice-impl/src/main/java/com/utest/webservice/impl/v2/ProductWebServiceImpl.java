@@ -206,7 +206,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.PRODUCT_VIEW)
-	public ProductSearchResultInfo findProducts(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+	public ProductSearchResultInfo findProducts(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_,
 			@QueryParam("teamMemberId") final Integer teamMemberId, @QueryParam("") final UtestSearchRequest request) throws Exception
 	{
 		UtestSearch search = objectBuilderFactory.createSearch(ProductInfo.class, request, ui_);
@@ -224,7 +224,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 			@QueryParam("teamMemberId") final Integer teamMemberId, @QueryParam("") final UtestSearchRequest request) throws Exception
 	{
 		UtestSearch search = objectBuilderFactory.createSearch(ProductInfo.class, request, ui_);
-		UtestSearchResult result = productService.findProducts(search, teamMemberId, includedEnvironmentId_);
+		UtestSearchResult result = productService.findDeletedEntities(Product.class, search);
 		return (ProductSearchResultInfo) objectBuilderFactory.createResult(ProductInfo.class, Product.class, request, result, ui_.getBaseUriBuilder());
 	}
 
@@ -266,7 +266,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	 * Returns all versions of a test case
 	 */
 	public List<EnvironmentGroupInfo> getProductEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final List<EnvironmentGroup> groups = productService.getEnvironmentGroupsForProduct(productId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
@@ -321,7 +321,7 @@ public class ProductWebServiceImpl extends BaseWebServiceImpl implements Product
 	 * Returns all versions of a test case
 	 */
 	public List<EnvironmentGroupExplodedInfo> getProductEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final List<EnvironmentGroupExploded> groups = productService.getEnvironmentGroupsExplodedForProduct(productId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());

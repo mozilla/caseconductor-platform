@@ -75,7 +75,7 @@ public interface TestCycleWebService
 
 	Boolean deleteAttachment(UriInfo ui, Integer testCycleId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	TestCycleSearchResultInfo findTestCycles(UriInfo ui, Integer includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
+	TestCycleSearchResultInfo findTestCycles(UriInfo ui, List<Integer> includedEnvironmentId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
 
 	TestCycleInfo featureTestCycle(UriInfo ui, Integer testCycleId, Integer originalVersionId) throws Exception;
 
@@ -89,7 +89,7 @@ public interface TestCycleWebService
 
 	CategoryValueInfo getCoveragePercentComplete(UriInfo ui, Integer testCycleId, Integer testRunId) throws Exception;
 
-	List<EnvironmentGroupInfo> getTestCycleEnvironmentGroups(UriInfo ui, Integer testCycleId, Integer includedEnvironmentId) throws Exception;
+	List<EnvironmentGroupInfo> getTestCycleEnvironmentGroups(UriInfo ui, Integer testCycleId, List<Integer> includedEnvironmentId) throws Exception;
 
-	List<EnvironmentGroupExplodedInfo> getTestCycleEnvironmentGroupsExploded(UriInfo ui, Integer productId, Integer includedEnvironmentId) throws Exception;
+	List<EnvironmentGroupExplodedInfo> getTestCycleEnvironmentGroupsExploded(UriInfo ui, Integer productId, List<Integer> includedEnvironmentId) throws Exception;
 }

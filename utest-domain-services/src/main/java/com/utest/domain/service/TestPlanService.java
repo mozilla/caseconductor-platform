@@ -36,7 +36,7 @@ import com.utest.exception.UnsupportedEnvironmentSelectionException;
 public interface TestPlanService extends BaseService
 {
 
-	UtestSearchResult findTestPlans(UtestSearch search, Integer includedEnvironmentId_) throws Exception;
+	UtestSearchResult findTestPlans(UtestSearch search, List<Integer> includedEnvironmentId_) throws Exception;
 
 	TestPlan getTestPlan(Integer testPlanId) throws Exception;
 
@@ -44,7 +44,7 @@ public interface TestPlanService extends BaseService
 
 	TestPlan addTestPlan(Integer productId, String name, String description) throws Exception;
 
-	List<EnvironmentGroup> getEnvironmentGroupsForTestPlan(Integer testPlanId, Integer includedEnvironmentId_) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestPlan(Integer testPlanId, List<Integer> includedEnvironmentId_) throws Exception;
 
 	TestPlan activateTestPlan(Integer testPlanId, Integer originalVersionId) throws Exception;
 
@@ -67,7 +67,7 @@ public interface TestPlanService extends BaseService
 
 	TestPlanTestSuite getTestPlanTestSuite(Integer testPlanTestSuiteId) throws Exception;
 
-	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestPlan(Integer testPlanId, Integer includedEnvironmentId_) throws Exception;
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestPlan(Integer testPlanId, List<Integer> includedEnvironmentId_) throws Exception;
 
 	List<Attachment> getAttachmentsForTestPlan(Integer testPlanId) throws Exception;
 

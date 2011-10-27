@@ -209,7 +209,7 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	}
 
 	@Override
-	public List<EnvironmentGroup> getEnvironmentGroupsForTestCycle(final Integer testCycleId_, Integer includedEnvironmentId_) throws Exception
+	public List<EnvironmentGroup> getEnvironmentGroupsForTestCycle(final Integer testCycleId_, List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
 		if (testCycle.getEnvironmentProfileId() != null)
@@ -223,12 +223,12 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	}
 
 	@Override
-	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCycle(final Integer testCycleId_, Integer includedEnvironmentId_) throws Exception
+	public List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCycle(final Integer testCycleId_, List<Integer> includedEnvironmentIds_) throws Exception
 	{
 		final TestCycle testCycle = getRequiredEntityById(TestCycle.class, testCycleId_);
 		if (testCycle.getEnvironmentProfileId() != null)
 		{
-			return environmentService.getEnvironmentGroupsForProfileExploded(testCycle.getEnvironmentProfileId(), includedEnvironmentId_);
+			return environmentService.getEnvironmentGroupsForProfileExploded(testCycle.getEnvironmentProfileId(), includedEnvironmentIds_);
 		}
 		else
 		{
@@ -278,11 +278,11 @@ public class TestCycleServiceImpl extends BaseServiceImpl implements TestCycleSe
 	}
 
 	@Override
-	public UtestSearchResult findTestCycles(final UtestSearch search_, Integer teamMemberId_, Integer includedEnvironmentId_) throws Exception
+	public UtestSearchResult findTestCycles(final UtestSearch search_, Integer teamMemberId_, List<Integer> includedEnvironmentIds_) throws Exception
 	{
-		if (includedEnvironmentId_ != null)
+		if (includedEnvironmentIds_ != null && !includedEnvironmentIds_.isEmpty())
 		{
-			List<Integer> profileIds = environmentService.getProfilesContainingEnvironment(includedEnvironmentId_);
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironments(includedEnvironmentIds_);
 			if (profileIds != null && !profileIds.isEmpty())
 			{
 				search_.addFilterIn("environmentProfileId", profileIds);

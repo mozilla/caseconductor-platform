@@ -56,9 +56,9 @@ public interface TestCaseService extends BaseService
 
 	TestCaseVersion getTestCaseVersion(Integer testCaseVersionId_) throws Exception;
 
-	UtestSearchResult findTestCaseVersions(UtestSearch search_, Integer includedInTestSuiteId_, Integer includedEnvironmentId_, String tag_) throws Exception;
+	UtestSearchResult findTestCaseVersions(UtestSearch search_, Integer includedInTestSuiteId_, List<Integer> includedEnvironmentId_, String tag_) throws Exception;
 
-	List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId_, Integer includedEnvironmentId_) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForTestCaseVersion(Integer testCaseVersionId_, List<Integer> includedEnvironmentId_) throws Exception;
 
 	TestCaseVersion getLastApprovedTestCaseVersion(Integer testCaseId) throws Exception;
 
@@ -119,7 +119,7 @@ public interface TestCaseService extends BaseService
 	TestCaseVersion saveTestCaseVersion(Integer testCaseVersionId, String description, boolean automated, String automationUri, Integer originalVersion,
 			VersionIncrement versionIncrement) throws Exception;
 
-	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCaseVersion(Integer testCaseVersionId, Integer includedEnvironmentId_) throws Exception;
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForTestCaseVersion(Integer testCaseVersionId, List<Integer> includedEnvironmentId_) throws Exception;
 
 	List<Attachment> getAttachmentsForTestCaseVersion(Integer testCaseId) throws Exception;
 
@@ -127,9 +127,9 @@ public interface TestCaseService extends BaseService
 
 	boolean deleteAttachment(Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	UtestSearchResult findLatestTestCaseVersions(UtestSearch search, Integer includedInTestSuiteId, Integer includedEnvironmentId, String tag_) throws Exception;
+	UtestSearchResult findLatestTestCaseVersions(UtestSearch search, Integer includedInTestSuiteId, List<Integer> includedEnvironmentId, String tag_) throws Exception;
 
-	UtestSearchResult findLatestTestCaseVersions(Integer includedInTestSuiteId, Integer includedEnvironmentId) throws Exception;
+	UtestSearchResult findLatestTestCaseVersions(Integer includedInTestSuiteId, List<Integer> includedEnvironmentId) throws Exception;
 
 	List<EntityExternalBug> getExternalBugsForTestCase(Integer testCaseId) throws Exception;
 

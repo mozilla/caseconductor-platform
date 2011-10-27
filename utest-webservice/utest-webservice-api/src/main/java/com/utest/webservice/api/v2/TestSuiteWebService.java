@@ -71,17 +71,17 @@ public interface TestSuiteWebService
 	Boolean deleteAttachment(UriInfo ui, Integer testSuiteId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
 	TestSuiteSearchResultInfo findTestSuites(UriInfo ui, Integer hasTestCasesInTestRunId, Integer includedTestCaseId, Integer includedTestCaseVesionId,
-			Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+			List<Integer> includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
-	TestSuiteTestCaseSearchResultInfo findTestSuiteTestCases(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+	TestSuiteTestCaseSearchResultInfo findTestSuiteTestCases(UriInfo ui, List<Integer> includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
 	Boolean undeleteTestSuite(UriInfo ui, Integer testSuiteId, Integer originalVesionId) throws Exception;
 
 	TestSuiteSearchResultInfo findDeletedTestSuites(UriInfo ui, Integer hasTestCasesInTestRunId, Integer includedTestCaseId, Integer includedTestCaseVesionId,
 			Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
-	List<EnvironmentGroupInfo> getTestSuiteEnvironmentGroups(UriInfo ui, Integer testSuiteId, Integer includedEnvironmentId) throws Exception;
+	List<EnvironmentGroupInfo> getTestSuiteEnvironmentGroups(UriInfo ui, Integer testSuiteId, List<Integer> includedEnvironmentId) throws Exception;
 
-	List<EnvironmentGroupExplodedInfo> getTestSuiteEnvironmentGroupsExploded(UriInfo ui, Integer productId, Integer includedEnvironmentId) throws Exception;
+	List<EnvironmentGroupExplodedInfo> getTestSuiteEnvironmentGroupsExploded(UriInfo ui, Integer productId, List<Integer> includedEnvironmentId) throws Exception;
 
 }

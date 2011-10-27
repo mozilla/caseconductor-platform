@@ -104,12 +104,12 @@ public interface TestCaseWebService
 
 	Boolean deleteAttachment(UriInfo ui, Integer testCaseId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	TestCaseVersionSearchResultInfo findLatestTestCaseVersions(UriInfo ui, Integer includedEnvironmentId, Integer includedInTestSuiteId, String tag, UtestSearchRequest request)
+	TestCaseVersionSearchResultInfo findLatestTestCaseVersions(UriInfo ui, List<Integer> includedEnvironmentId, Integer includedInTestSuiteId, String tag, UtestSearchRequest request)
 			throws Exception;
 
 	List<EntityExternalBugInfo> getTestCaseBugs(UriInfo ui, Integer testCaseId) throws Exception;
 
-	TestCaseVersionSearchResultInfo findTestCaseVersions(UriInfo ui, Integer includedEnvironmentId, Integer includedInTestSuiteId, String tag, UtestSearchRequest request)
+	TestCaseVersionSearchResultInfo findTestCaseVersions(UriInfo ui, List<Integer> includedEnvironmentId, Integer includedInTestSuiteId, String tag, UtestSearchRequest request)
 			throws Exception;
 
 	Boolean undeleteTestCaseVersion(UriInfo ui, Integer testCaseVersionId, Integer originalVesionId) throws Exception;
@@ -119,7 +119,7 @@ public interface TestCaseWebService
 
 	Boolean undeleteTestCase(UriInfo ui, Integer testCaseId, Integer originalVesionId) throws Exception;
 
-	List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseVersionId, Integer includedEnvironmentId) throws Exception;
+	List<EnvironmentGroupInfo> getTestCaseEnvironmentGroups(UriInfo ui, Integer testCaseVersionId, List<Integer> includedEnvironmentId) throws Exception;
 
-	List<EnvironmentGroupExplodedInfo> getTestCaseEnvironmentGroupsExploded(UriInfo ui, Integer productId, Integer includedEnvironmentId) throws Exception;
+	List<EnvironmentGroupExplodedInfo> getTestCaseEnvironmentGroupsExploded(UriInfo ui, Integer productId, List<Integer> includedEnvironmentId) throws Exception;
 }

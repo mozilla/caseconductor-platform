@@ -43,7 +43,7 @@ public interface ProductService extends BaseService
 
 	List<ProductComponent> getComponentsForProduct(Integer productId) throws Exception;
 
-	UtestSearchResult findProducts(UtestSearch search, Integer teamMemberId, Integer includedEnvironmentId_) throws Exception;
+	UtestSearchResult findProducts(UtestSearch search, Integer teamMemberId, List<Integer> includedEnvironmentId_) throws Exception;
 
 	UtestSearchResult findProductComponents(UtestSearch search) throws Exception;
 
@@ -51,7 +51,7 @@ public interface ProductService extends BaseService
 
 	ProductComponent addProductComponent(Integer productId, String name, String description) throws Exception;
 
-	List<EnvironmentGroup> getEnvironmentGroupsForProduct(Integer productId, Integer includedEnvironmentId_) throws Exception;
+	List<EnvironmentGroup> getEnvironmentGroupsForProduct(Integer productId, List<Integer> includedEnvironmentId_) throws Exception;
 
 	void saveEnvironmentGroupsForProduct(Integer productId, List<Integer> environmentGroupIds, Integer originalVesionId) throws UnsupportedEnvironmentSelectionException, Exception;
 
@@ -77,7 +77,7 @@ public interface ProductService extends BaseService
 
 	List<AccessRole> getTestingTeamMemberRolesForProduct(Integer productId, Integer userId) throws Exception;
 
-	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForProduct(Integer productId, Integer includedEnvironmentId_) throws Exception;
+	List<EnvironmentGroupExploded> getEnvironmentGroupsExplodedForProduct(Integer productId, List<Integer> includedEnvironmentId_) throws Exception;
 
 	List<Attachment> getAttachmentsForProduct(Integer productId) throws Exception;
 

@@ -170,7 +170,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Override
 	@Secured(Permission.TEST_SUITE_VIEW)
 	public List<EnvironmentGroupInfo> getTestSuiteEnvironmentGroups(@Context final UriInfo ui_, @PathParam("id") final Integer testSuiteId_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final List<EnvironmentGroup> groups = testSuiteService.getEnvironmentGroupsForTestSuite(testSuiteId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupInfo.class, groups, ui_.getBaseUriBuilder());
@@ -186,7 +186,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	 * Returns all versions of a test case
 	 */
 	public List<EnvironmentGroupExplodedInfo> getTestSuiteEnvironmentGroupsExploded(@Context final UriInfo ui_, @PathParam("id") final Integer productId_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_) throws Exception
 	{
 		final List<EnvironmentGroupExploded> groups = testSuiteService.getEnvironmentGroupsExplodedForTestSuite(productId_, includedEnvironmentId_);
 		return objectBuilderFactory.toInfo(EnvironmentGroupExplodedInfo.class, groups, ui_.getBaseUriBuilder());
@@ -198,7 +198,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	@Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	@Override
 	@Secured(Permission.TEST_RUN_VIEW)
-	public TestSuiteTestCaseSearchResultInfo findTestSuiteTestCases(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_,
+	public TestSuiteTestCaseSearchResultInfo findTestSuiteTestCases(@Context final UriInfo ui_, @QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_,
 			@QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestSuiteTestCaseInfo.class, request_, ui_);
@@ -359,7 +359,7 @@ public class TestSuiteWebServiceImpl extends BaseWebServiceImpl implements TestS
 	 */
 	public TestSuiteSearchResultInfo findTestSuites(@Context final UriInfo ui_, @QueryParam("hasTestCasesInTestRunId") final Integer hasTestCasesInTestRunId_,
 			@QueryParam("includedTestCaseId") final Integer includedTestCaseId_, @QueryParam("includedTestCaseVersionId") final Integer includedTestCaseVesionId_,
-			@QueryParam("includedEnvironmentId") final Integer includedEnvironmentId_, @QueryParam("") final UtestSearchRequest request_) throws Exception
+			@QueryParam("includedEnvironmentId") final List<Integer> includedEnvironmentId_, @QueryParam("") final UtestSearchRequest request_) throws Exception
 	{
 		final UtestSearch search = objectBuilderFactory.createSearch(TestSuiteInfo.class, request_, ui_);
 		final UtestSearchResult result = testSuiteService.findTestSuites(search, hasTestCasesInTestRunId_, includedTestCaseId_, includedTestCaseVesionId_, includedEnvironmentId_);

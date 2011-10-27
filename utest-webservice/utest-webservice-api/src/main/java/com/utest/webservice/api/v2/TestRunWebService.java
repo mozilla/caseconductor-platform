@@ -156,14 +156,14 @@ public interface TestRunWebService
 
 	Boolean deleteAttachmentForTestRunResult(UriInfo ui, Integer testRunResultId, Integer attachmentId, Integer originalVersionId) throws Exception;
 
-	TestRunTestCaseAssignmentSearchResultInfo findTestRunAssignments(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+	TestRunTestCaseAssignmentSearchResultInfo findTestRunAssignments(UriInfo ui, List<Integer> includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
-	TestRunResultSearchResultInfo findTestRunResults(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+	TestRunResultSearchResultInfo findTestRunResults(UriInfo ui, List<Integer> includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
-	TestRunSearchResultInfo findTestRuns(UriInfo ui, Integer includedEnvironmentId, Integer includedTestSuiteId, Integer includedTestCaseId, Integer includedTestCaseVesionId,
+	TestRunSearchResultInfo findTestRuns(UriInfo ui, List<Integer> includedEnvironmentId, Integer includedTestSuiteId, Integer includedTestCaseId, Integer includedTestCaseVesionId,
 			Integer teamMemberId, UtestSearchRequest request) throws Exception;
 
-	TestRunTestCaseSearchResultInfo findTestRunTestCases(UriInfo ui, Integer includedEnvironmentId, UtestSearchRequest request) throws Exception;
+	TestRunTestCaseSearchResultInfo findTestRunTestCases(UriInfo ui, List<Integer> includedEnvironmentId, UtestSearchRequest request) throws Exception;
 
 	TestRunInfo featureTestRun(UriInfo ui, Integer testRunId, Integer originalVersionId) throws Exception;
 
@@ -178,7 +178,7 @@ public interface TestRunWebService
 	TestRunSearchResultInfo findDeletedTestRuns(UriInfo ui, Integer includedEnvironmentId, Integer includedTestSuiteId, Integer includedTestCaseId,
 			Integer includedTestCaseVesionId, Integer teamMemberId, UtestSearchRequest request) throws Exception;
 
-	List<EnvironmentGroupInfo> getTestRunEnvironmentGroups(UriInfo ui, Integer testRunId, Integer includedEnvironmentId) throws Exception;
+	List<EnvironmentGroupInfo> getTestRunEnvironmentGroups(UriInfo ui, Integer testRunId, List<Integer> includedEnvironmentId) throws Exception;
 
-	List<EnvironmentGroupExplodedInfo> getTestRunEnvironmentGroupsExploded(UriInfo ui, Integer testRunId, Integer includedEnvironmentId) throws Exception;
+	List<EnvironmentGroupExplodedInfo> getTestRunEnvironmentGroupsExploded(UriInfo ui, Integer testRunId, List<Integer> includedEnvironmentId) throws Exception;
 }
