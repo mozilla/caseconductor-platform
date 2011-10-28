@@ -771,39 +771,44 @@ public class EnvironmentServiceImpl extends BaseServiceImpl implements Environme
 		{
 			throw new IllegalArgumentException("environmentId_ is empty in getGroupsContainingEnvironment() call.");
 		}
-		search = new Search(EnvironmentGroupEnvironment.class);
-		search.addField("environmentGroupId");
-		search.addFilterIn("environmentId", environmentIds_);
-		if (groupIdList != null)
-		{
-			search.addFilterIn("environmentGroupId", groupIdList);
-		}
-		groupIdList = dao.search(EnvironmentGroupEnvironment.class, search);
-		return (List<Integer>) groupIdList;
+		return filterGroupsContainingEnvironments(environmentIds_, (List<Integer>) groupIdList);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Integer> filterGroupsContainingEnvironments(final List<Integer> environmentIds_, List<Integer> sourceGroupIds_) throws Exception
 	{
+		if (environmentIds_ == null || environmentIds_.isEmpty())
+		{
+			throw new IllegalArgumentException("environmentId_ is empty in filterGroupsContainingEnvironments() call.");
+		}
+
+		for (Integer environmentId : environmentIds_)
+		{
+			sourceGroupIds_ = filterGroupsContainingEnvironment(environmentId, sourceGroupIds_);
+			if (sourceGroupIds_.isEmpty())
+			{
+				break;
+			}
+		}
+		return sourceGroupIds_;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<Integer> filterGroupsContainingEnvironment(final Integer environmentId_, List<Integer> sourceGroupIds_) throws Exception
+	{
 		Search search;
 		List<?> groupIdList = null;
-		if (sourceGroupIds_ == null || sourceGroupIds_.isEmpty())
-		{
-			throw new IllegalArgumentException("sourceGroupIds_ is empty in filterGroupsContainingEnvironments() call.");
-		}
-		if (environmentIds_ == null || environmentIds_.isEmpty())
+		if (environmentId_ == null)
 		{
 			throw new IllegalArgumentException("environmentId_ is empty in filterGroupsContainingEnvironments() call.");
 		}
 		search = new Search(EnvironmentGroupEnvironment.class);
 		search.addField("environmentGroupId");
-		search.addFilterIn("environmentGroupId", sourceGroupIds_);
-		search.addFilterIn("environmentId", environmentIds_);
-		if (groupIdList != null)
+		if (sourceGroupIds_ != null && !sourceGroupIds_.isEmpty())
 		{
-			search.addFilterIn("environmentGroupId", groupIdList);
+			search.addFilterIn("environmentGroupId", sourceGroupIds_);
 		}
+		search.addFilterEqual("environmentId", environmentId_);
 		groupIdList = dao.search(EnvironmentGroupEnvironment.class, search);
 		return (List<Integer>) groupIdList;
 	}
