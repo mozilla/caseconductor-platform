@@ -305,7 +305,7 @@ public class ProductServiceImpl extends BaseServiceImpl implements ProductServic
 	@Override
 	public UtestSearchResult findProducts(final UtestSearch search_, Integer teamMemberId_, List<Integer> includedEnvironmentIds_) throws Exception
 	{
-		if (includedEnvironmentIds_ != null)
+		if (includedEnvironmentIds_ != null && !includedEnvironmentIds_.isEmpty())
 		{
 			List<Integer> profileIds = environmentService.getProfilesContainingEnvironments(includedEnvironmentIds_);
 			if (profileIds != null && !profileIds.isEmpty())

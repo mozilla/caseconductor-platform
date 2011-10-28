@@ -879,11 +879,11 @@ public class TestRunServiceImpl extends BaseServiceImpl implements TestRunServic
 	}
 
 	@Override
-	public UtestSearchResult findTestRunTestCases(final UtestSearch search_, List<Integer> includedEnvironmentId_) throws Exception
+	public UtestSearchResult findTestRunTestCases(final UtestSearch search_, List<Integer> includedEnvironmentIds_) throws Exception
 	{
-		if (includedEnvironmentId_ != null)
+		if (includedEnvironmentIds_ != null && !includedEnvironmentIds_.isEmpty())
 		{
-			List<Integer> profileIds = environmentService.getProfilesContainingEnvironments(includedEnvironmentId_);
+			List<Integer> profileIds = environmentService.getProfilesContainingEnvironments(includedEnvironmentIds_);
 			if (profileIds != null && !profileIds.isEmpty())
 			{
 				search_.addFilterIn("environmentProfileId", profileIds);
