@@ -18,7 +18,7 @@
 		select 101 id, 'percentComplete' categoryName,
 		(
 			
-			(select count(distinct environmentGroupId) *  count(distinct testCaseId)
+			(select count(distinct environmentGroupId, testCaseId)
 			from TestRunResult trr
 			where (trr.testCycleId = :testCycleId or -1 = :testCycleId)
 			and (trr.testRunId = :testRunId or -1 = :testRunId)
